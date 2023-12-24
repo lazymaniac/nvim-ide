@@ -7,9 +7,7 @@ local M = {}
 local defaults = {
   -- colorscheme can be a string like `catppuccin` or a function that will load the colorscheme
   ---@type string|fun()
-  colorscheme = function()
-    require('tokyonight').load()
-  end,
+  colorscheme = 'everforest',
   -- load the default settings
   defaults = {
     autocmds = true, -- config.autocmds
@@ -125,31 +123,6 @@ local defaults = {
   },
 }
 
-M.json = {
-  version = 2,
-  data = {
-    version = nil, ---@type string?
-    news = {}, ---@type table<string, string>
-    extras = {}, ---@type string[]
-  },
-}
-
-function M.json.load()
-  local path = vim.fn.stdpath 'config' .. '/lazyvim.json'
-  local f = io.open(path, 'r')
-  if f then
-    local data = f:read '*a'
-    f:close()
-    local ok, json = pcall(vim.json.decode, data, { luanil = { object = true, array = true } })
-    if ok then
-      M.json.data = vim.tbl_deep_extend('force', M.json.data, json or {})
-      if M.json.data.version ~= M.json.version then
-        Util.json.migrate()
-      end
-    end
-  end
-end
-
 ---@type LazyVimOptions
 local options
 
@@ -174,7 +147,6 @@ function M.setup(opts)
       M.load 'keymaps'
 
       Util.format.setup()
-      Util.news.setup()
       Util.root.setup()
     end,
   })
@@ -256,9 +228,6 @@ function M.init()
   -- this is needed to make sure options will be correctly applied
   -- after installing missing plugins
   M.load 'options'
-
-  Util.plugin.setup()
-  M.json.load()
 end
 
 setmetatable(M, {

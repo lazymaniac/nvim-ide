@@ -2,16 +2,16 @@ return {
 
   -- tokyonight
   {
-    "folke/tokyonight.nvim",
+    'folke/tokyonight.nvim',
     lazy = true,
-    opts = { style = "moon" },
+    opts = { style = 'moon' },
   },
 
   -- catppuccin
   {
-    "catppuccin/nvim",
+    'catppuccin/nvim',
     lazy = true,
-    name = "catppuccin",
+    name = 'catppuccin',
     opts = {
       integrations = {
         aerial = true,
@@ -31,13 +31,13 @@ return {
         native_lsp = {
           enabled = true,
           underlines = {
-            errors = { "undercurl" },
-            hints = { "undercurl" },
-            warnings = { "undercurl" },
-            information = { "undercurl" },
+            errors = { 'undercurl' },
+            hints = { 'undercurl' },
+            warnings = { 'undercurl' },
+            information = { 'undercurl' },
           },
         },
-        navic = { enabled = true, custom_bg = "lualine" },
+        navic = { enabled = true, custom_bg = 'lualine' },
         neotest = true,
         neotree = true,
         noice = true,
@@ -49,5 +49,17 @@ return {
         which_key = true,
       },
     },
+  },
+  {
+    'sainnhe/everforest',
+    init = function()
+      vim.cmd [[let g:everforest_background = 'hard']]
+    end,
+  },
+
+  {
+    'oxfist/night-owl.nvim',
+    lazy = false, -- make sure we load this during startup if it is your main colorscheme
+    priority = 1000, -- make sure to load this before all the other start plugins
   },
 }
