@@ -511,11 +511,17 @@ return {
           header = vim.split(logo, '\n'),
           -- stylua: ignore
           shortcut = {
-            { desc = '󰊳 Update', group = '@property', action = 'Lazy update', key = 'u' },
+            {
+              desc = '󰊳 Lazy Update',
+              group = '@property',
+              action = 'Lazy update',
+              key = 'u'
+            },
+            
             {
               icon = ' ',
               icon_hl = '@variable',
-              desc = 'Files',
+              desc = 'Find Files',
               group = 'Label',
               action = 'Telescope find_files',
               key = 'f',

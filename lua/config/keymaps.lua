@@ -3,6 +3,14 @@ local Util = require 'util'
 
 local map = Util.safe_keymap_set
 
+-- Modes
+--   normal_mode = "n",
+--   insert_mode = "i",
+--   visual_mode = "v",
+--   visual_block_mode = "x",
+--   term_mode = "t",
+--   command_mode = "c",
+
 -- better up/down
 map({ 'n', 'x' }, 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 map({ 'n', 'x' }, '<Down>', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
@@ -29,7 +37,7 @@ map('i', '<A-k>', '<esc><cmd>m .-2<cr>==gi', { desc = 'Move up' })
 map('v', '<A-j>', ":m '>+1<cr>gv=gv", { desc = 'Move down' })
 map('v', '<A-k>', ":m '<-2<cr>gv=gv", { desc = 'Move up' })
 
--- buffers
+-- Buffers
 map('n', '<S-h>', '<cmd>bprevious<cr>', { desc = 'Prev buffer' })
 map('n', '<S-l>', '<cmd>bnext<cr>', { desc = 'Next buffer' })
 map('n', '[b', '<cmd>bprevious<cr>', { desc = 'Prev buffer' })
@@ -57,18 +65,19 @@ map('i', ',', ',<c-g>u')
 map('i', '.', '.<c-g>u')
 map('i', ';', ';<c-g>u')
 
--- save file
+-- Save file
 map({ 'i', 'x', 'n', 's' }, '<C-s>', '<cmd>w<cr><esc>', { desc = 'Save file' })
 
---keywordprg
+--Keywordprg
 map('n', '<leader>K', '<cmd>norm! K<cr>', { desc = 'Keywordprg' })
 
--- better indenting
-map('v', '<', '<gv')
-map('v', '>', '>gv')
+-- Better indenting
+map('v', '<', '<gv^')
+map('v', '>', '>gv^')
 
--- lazy
+-- Lazy & Mason
 map('n', '<leader>l', '<cmd>Lazy<cr>', { desc = 'Lazy' })
+map('n', '<leader>m', '<cmd>Mason<cr>', { desc = 'Mason' })
 
 -- new file
 map('n', '<leader>fn', '<cmd>enew<cr>', { desc = 'New File' })
@@ -123,11 +132,7 @@ map("n", "<leader>uT", function() if vim.b.ts_highlight then vim.treesitter.stop
   { desc = "Toggle Treesitter Highlight" })
 
 -- lazygit
-map("n", "<leader>gg",
-  function() Util.terminal({ "lazygit" }, { cwd = Util.root(), esc_esc = false, ctrl_hjkl = false }) end,
-  { desc = "Lazygit (root dir)" })
-map("n", "<leader>gG", function() Util.terminal({ "lazygit" }, { esc_esc = false, ctrl_hjkl = false }) end,
-  { desc = "Lazygit (cwd)" })
+map("n", "<leader>gg", "<cmd>lua _LAZYGIT_TOGGLE()<cr>", { desc = "Lazygit (root dir)" })
 
 -- quit
 map("n", "<leader>qq", "<cmd>qa<cr>", { desc = "Quit all" })
@@ -139,20 +144,13 @@ map("n", "<leader>ui", vim.show_pos, { desc = "Inspect Pos" })
 map("n", "<leader>L", function() Util.news.changelog() end, { desc = "LazyVim Changelog" })
 
 -- floating terminal
--- TODO: Add toggle term plugin or other to handle terminal in nvim
--- map("n", "<leader>ft", lazyterm, { desc = "Terminal (root dir)" })
--- map("n", "<leader>fT", function() Util.terminal() end, { desc = "Terminal (cwd)" })
--- map("n", "<c-/>", lazyterm, { desc = "Terminal (root dir)" })
--- map("n", "<c-_>", lazyterm, { desc = "which_key_ignore" })
-
--- Terminal Mappings
-map("t", "<esc><esc>", "<c-\\><c-n>", { desc = "Enter Normal Mode" })
-map("t", "<C-h>", "<cmd>wincmd h<cr>", { desc = "Go to left window" })
-map("t", "<C-j>", "<cmd>wincmd j<cr>", { desc = "Go to lower window" })
-map("t", "<C-k>", "<cmd>wincmd k<cr>", { desc = "Go to upper window" })
-map("t", "<C-l>", "<cmd>wincmd l<cr>", { desc = "Go to right window" })
-map("t", "<C-/>", "<cmd>close<cr>", { desc = "Hide Terminal" })
-map("t", "<c-_>", "<cmd>close<cr>", { desc = "which_key_ignore" })
+map("n", "<leader>tn", "<cmd>lua _NODE_TOGGLE()<cr>", { desc = "Node" })
+map("n", "<leader>tu", "<cmd>lua _NCDU_TOGGLE()<cr>", { desc = "NCDU" })
+map("n", "<leader>tb", "<cmd>lua _BTOP_TOGGLE()<cr>", { desc = "Btop" })
+map("n", "<leader>tp", "<cmd>lua _PYTHON_TOGGLE()<cr>", { desc = "Python" })
+map("n", "<leader>tf", "<cmd>ToggleTerm direction=float<cr>", { desc = "Terminal Float" })
+map("n", "<leader>th", "<cmd>ToggleTerm size=10 direction=horizontal<cr>", { desc = "Terminal Horizontal" })
+map("n", "<leader>tv", "<cmd>ToggleTerm size=80 direction=vertical<cr>", { desc = "Terminal Vertical" })
 
 -- windows
 map("n", "<leader>ww", "<C-W>p", { desc = "Other window", remap = true })
