@@ -2,6 +2,7 @@ local Util = require 'util'
 
 return {
   -- Better `vim.notify()`
+  -- see: `:h notify`
   {
     'rcarriga/nvim-notify',
     keys = {
@@ -14,17 +15,37 @@ return {
       },
     },
     opts = {
-      timeout = 3000,
+      timeout = 2500, -- Time to show Notification in ms, set to false ti disable timeout.
+      fps = 30, -- Frames per second for animnation stages, higher value means smoother animations but more CPU usage.
+      level = 2, -- Minimum log level to display. See vim.log.levels.
+      minimum_width = 50, -- Minimum width for notification window.
+      render = 'wrapped-compact', -- 'default' | 'minimal' | 'simple' | 'wrapped-compact'. Function to render a notification buffer or a build-in renderer name
+      stages = 'fade', -- 'slide' | 'fade' | 'static' | 'fade_in_slide_out' Animation stages.
+      top_down = true, -- Whether or not to position the notification at the top or not
+      icons = { -- Icons for each log level (upper case names)
+        DEBUG = '',
+        ERROR = '',
+        INFO = '',
+        TRACE = '✎',
+        WARN = '',
+      },
+      -- Max number of lines for message.
       max_height = function()
         return math.floor(vim.o.lines * 0.75)
       end,
+      -- Max number of columns for message.
       max_width = function()
         return math.floor(vim.o.columns * 0.75)
       end,
+      -- Function called when a new window is openend, use for changing win settings/config
       on_open = function(win)
         vim.api.nvim_win_set_config(win, { zindex = 100 })
       end,
+      -- on_close = Function -- Function called when window is closed.
     },
+    config = function(_, opts)
+      require('notify').setup(opts)
+    end,
     init = function()
       -- when noice is not enabled, install notify on VeryLazy
       if not Util.has 'noice.nvim' then
@@ -36,9 +57,148 @@ return {
   },
 
   -- better vim.ui
+  -- see `:h dressing`
   {
     'stevearc/dressing.nvim',
-    lazy = true,
+    opts = {
+      input = {
+        enabled = true, -- Set to false to disable the vim.ui.input implementation
+        default_prompt = 'Input:', -- Default prompt string
+        title_pos = 'center', -- Can be 'left', 'right', or 'center'
+        insert_only = true, -- When true, <Esc> will close the modal
+        start_in_insert = true, -- When true, input will start in insert mode.
+        border = 'rounded', -- These are passed to nvim_open_win
+        relative = 'cursor', -- 'editor' and 'win' will default to being centered
+        prefer_width = 40, -- These can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
+        width = nil,
+        -- min_width and max_width can be a list of mixed types.
+        -- min_width = {20, 0.2} means "the greater of 20 columns or 20% of total"
+        max_width = { 140, 0.9 },
+        min_width = { 20, 0.2 },
+        buf_options = {},
+        win_options = {
+          wrap = false, -- Disable line wrapping
+          list = true, -- Indicator for when text exceeds window
+          listchars = 'precedes:…,extends:…',
+          sidescrolloff = 4, -- Increase this for more context when text scrolls off the window
+        },
+        -- Set to `false` to disable
+        mappings = {
+          n = {
+            ['<Esc>'] = 'Close',
+            ['<CR>'] = 'Confirm',
+          },
+          i = {
+            ['<C-c>'] = 'Close',
+            ['<CR>'] = 'Confirm',
+            ['<Up>'] = 'HistoryPrev',
+            ['<Down>'] = 'HistoryNext',
+          },
+        },
+
+        override = function(conf)
+          -- This is the config that will be passed to nvim_open_win.
+          -- Change values here to customize the layout
+          return conf
+        end,
+
+        get_config = nil, -- see :help dressing_get_config
+      },
+      select = {
+        enabled = true, -- Set to false to disable the vim.ui.select implementation
+        backend = { 'telescope', 'fzf_lua', 'fzf', 'builtin', 'nui' }, -- Priority list of preferred vim.select implementations
+        trim_prompt = true, -- Trim trailing `:` from prompt
+
+        -- Options for telescope selector
+        -- These are passed into the telescope picker directly. Can be used like:
+        -- telescope = require('telescope.themes').get_ivy({...})
+        telescope = nil,
+
+        -- Options for fzf selector
+        fzf = {
+          window = {
+            width = 0.5,
+            height = 0.4,
+          },
+        },
+
+        -- Options for fzf-lua
+        fzf_lua = {
+          -- winopts = {
+          --   height = 0.5,
+          --   width = 0.5,
+          -- },
+        },
+
+        -- Options for nui Menu
+        nui = {
+          position = '50%',
+          size = nil,
+          relative = 'editor',
+          border = {
+            style = 'rounded',
+          },
+          buf_options = {
+            swapfile = false,
+            filetype = 'DressingSelect',
+          },
+          win_options = {
+            winblend = 0,
+          },
+          max_width = 80,
+          max_height = 40,
+          min_width = 40,
+          min_height = 10,
+        },
+
+        -- Options for built-in selector
+        builtin = {
+          show_numbers = true, -- Display numbers for options and set up keymaps
+          border = 'rounded', -- These are passed to nvim_open_win
+          relative = 'editor', -- 'editor' and 'win' will default to being centered
+
+          buf_options = {},
+          win_options = {
+            cursorline = true,
+            cursorlineopt = 'both',
+          },
+
+          -- These can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
+          -- the min_ and max_ options can be a list of mixed types.
+          -- max_width = {140, 0.8} means "the lesser of 140 columns or 80% of total"
+          width = nil,
+          max_width = { 140, 0.8 },
+          min_width = { 40, 0.2 },
+          height = nil,
+          max_height = 0.9,
+          min_height = { 10, 0.2 },
+          mappings = { -- Set to `false` to disable
+            ['<Esc>'] = 'Close',
+            ['<C-c>'] = 'Close',
+            ['<CR>'] = 'Confirm',
+          },
+
+          override = function(conf)
+            -- This is the config that will be passed to nvim_open_win.
+            -- Change values here to customize the layout
+            return conf
+          end,
+        },
+        format_item_override = {}, -- Used to override format_item. See :help dressing-format
+        -- see :help dressing_get_config
+        get_config = function(opts)
+          if opts.kind == 'codeaction' then
+            return {
+              backend = 'nui',
+              nui = {
+                relative = 'cursor',
+                max_width = 40,
+              },
+            }
+          end
+        end,
+      },
+    },
     init = function()
       ---@diagnostic disable-next-line: duplicate-set-field
       vim.ui.select = function(...)
@@ -54,6 +214,7 @@ return {
   },
 
   -- This is what powers fancy-looking tabs, which include filetype icons and close buttons.
+  -- see: `:h bufferline`
   {
     'akinsho/bufferline.nvim',
     event = 'VeryLazy',
@@ -70,17 +231,16 @@ return {
     },
     opts = {
       options = {
-        numbers = 'ordinal', -- | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
+        mode = 'buffers', -- Set to "tabs" to only show tabpages instead
+        -- style_preset = require('bufferline').style_preset.minimal, -- or style_preset.minimal
+        themable = true, --Allows highlight groups to be overriden i.e. sets highlights as default
+        numbers = 'none', -- "none" | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
         -- stylua: ignore
         close_command = function(n) require("mini.bufremove").delete(n, false) end, -- can be a string | function, see "Mouse actions"
         -- stylua: ignore
         right_mouse_command = function(n) require("mini.bufremove").delete(n, false) end, -- can be a string | function, see "Mouse actions"
         left_mouse_command = 'buffer %d', -- can be a string | function, see "Mouse actions"
         middle_mouse_command = nil, -- can be a string | function, see "Mouse actions"
-        -- NOTE: this plugin is designed with this icon in mind,
-        -- and so changing this is NOT recommended, this is intended
-        -- as an escape hatch for people who cannot bear it for whatever reason
-        indicator_icon = nil,
         indicator = { style = 'icon', icon = '▎' },
         buffer_close_icon = '',
         modified_icon = '●',
@@ -99,6 +259,7 @@ return {
         -- end,
         max_name_length = 30,
         max_prefix_length = 30, -- prefix used when a buffer is de-duplicated
+        truncate_names = true, -- Whether ot not tab names should be truncated
         tab_size = 21,
         diagnostics = 'nvim_lsp', -- | "nvim_lsp" | "coc" | false
         diagnostics_update_in_insert = false,
@@ -118,16 +279,35 @@ return {
         --     return true
         --   end
         -- end,
-        show_buffer_icons = true,
+        color_icons = true, -- Whether or not to add the filetype icon to highlights
+        -- get_element_icon = function(element)
+        --   -- element consists of {filetype: string, path: string, extension: string, directory: string}
+        --   -- This can be used to change how bufferline fetches the icon
+        --   -- for an element e.g. a buffer or a tab.
+        --   -- e.g.
+        --   local icon, hl = require('nvim-web-devicons').get_icon_by_filetype(element.filetype, { default = false })
+        --   return icon, hl
+        --   -- or
+        --   local custom_map = {my_thing_ft: {icon = "my_thing_icon", hl}}
+        --   return custom_map[element.filetype]
+        -- end,
+        show_buffer_icons = true, -- Disable filetype icons for buffers
         show_buffer_close_icons = true,
         show_close_icon = true,
         show_tab_indicators = true,
-        persist_buffer_sort = true, -- whether or not custom sorted buffers should persist
+        show_duplicate_prefix = true, -- Whether to show duplicate buffer prefix
+        persist_buffer_sort = true, -- Whether or not custom sorted buffers should persist
+        move_wraps_at_ends = false, -- whether or not the move command "wraps" at the first or last position
         -- can also be a table containing 2 custom separators
         -- [focused and unfocused]. eg: { '|', '|' }
-        separator_style = 'thin', -- | "thick" | "thin" | { 'any', 'any' },
+        separator_style = 'slant', -- 'slant' | 'slope' | 'thick' | 'thin' | { 'any', 'any' },
         enforce_regular_tabs = true,
         always_show_bufferline = false,
+        hover = {
+          enabled = true,
+          delay = 200,
+          reveal = { 'close' },
+        },
         -- sort_by = 'id' | 'extension' | 'relative_directory' | 'directory' | 'tabs' | function(buffer_a, buffer_b)
         --   -- add custom logic
         --   return buffer_a.modified > buffer_b.modified
@@ -140,103 +320,10 @@ return {
         offsets = {
           {
             filetype = 'neo-tree',
-            text = 'Neo-tree',
+            text = 'Explorer',
             highlight = 'Directory',
             text_align = 'left',
           },
-        },
-      },
-      highlights = {
-        fill = {
-          fg = { attribute = 'fg', highlight = 'Visual' },
-          bg = { attribute = 'bg', highlight = 'TabLine' },
-        },
-        background = {
-          fg = { attribute = 'fg', highlight = 'TabLine' },
-          bg = { attribute = 'bg', highlight = 'TabLine' },
-        },
-
-        -- buffer_selected = {
-        --   fg = {attribute='fg',highlight='#ff0000'},
-        --   bg = {attribute='bg',highlight='#0000ff'},
-        --   gui = 'none'
-        --   },
-        buffer_visible = {
-          fg = { attribute = 'fg', highlight = 'TabLine' },
-          bg = { attribute = 'bg', highlight = 'TabLine' },
-        },
-
-        close_button = {
-          fg = { attribute = 'fg', highlight = 'TabLine' },
-          bg = { attribute = 'bg', highlight = 'TabLine' },
-        },
-        close_button_visible = {
-          fg = { attribute = 'fg', highlight = 'TabLine' },
-          bg = { attribute = 'bg', highlight = 'TabLine' },
-        },
-        -- close_button_selected = {
-        --   fg = {attribute='fg',highlight='TabLineSel'},
-        --   bg ={attribute='bg',highlight='TabLineSel'}
-        --   },
-
-        tab_selected = {
-          fg = { attribute = 'fg', highlight = 'Normal' },
-          bg = { attribute = 'bg', highlight = 'Normal' },
-        },
-        tab = {
-          fg = { attribute = 'fg', highlight = 'TabLine' },
-          bg = { attribute = 'bg', highlight = 'TabLine' },
-        },
-        tab_close = {
-          -- fg = {attribute='fg',highlight='LspDiagnosticsDefaultError'},
-          fg = { attribute = 'fg', highlight = 'TabLineSel' },
-          bg = { attribute = 'bg', highlight = 'Normal' },
-        },
-
-        duplicate_selected = {
-          fg = { attribute = 'fg', highlight = 'TabLineSel' },
-          bg = { attribute = 'bg', highlight = 'TabLineSel' },
-          underline = true,
-        },
-        duplicate_visible = {
-          fg = { attribute = 'fg', highlight = 'TabLine' },
-          bg = { attribute = 'bg', highlight = 'TabLine' },
-          underline = true,
-        },
-        duplicate = {
-          fg = { attribute = 'fg', highlight = 'TabLine' },
-          bg = { attribute = 'bg', highlight = 'TabLine' },
-          underline = true,
-        },
-
-        modified = {
-          fg = { attribute = 'fg', highlight = 'TabLine' },
-          bg = { attribute = 'bg', highlight = 'TabLine' },
-        },
-        modified_selected = {
-          fg = { attribute = 'fg', highlight = 'Normal' },
-          bg = { attribute = 'bg', highlight = 'Normal' },
-        },
-        modified_visible = {
-          fg = { attribute = 'fg', highlight = 'TabLine' },
-          bg = { attribute = 'bg', highlight = 'TabLine' },
-        },
-
-        separator = {
-          fg = { attribute = 'bg', highlight = 'TabLine' },
-          bg = { attribute = 'bg', highlight = 'TabLine' },
-        },
-        separator_selected = {
-          fg = { attribute = 'bg', highlight = 'Normal' },
-          bg = { attribute = 'bg', highlight = 'Normal' },
-        },
-        -- separator_visible = {
-        --   fg = {attribute='bg',highlight='TabLine'},
-        --   bg = {attribute='bg',highlight='TabLine'}
-        --   },
-        indicator_selected = {
-          fg = { attribute = 'fg', highlight = 'LspDiagnosticsDefaultHint' },
-          bg = { attribute = 'bg', highlight = 'Normal' },
         },
       },
     },
