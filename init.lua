@@ -16,6 +16,7 @@ require 'config.lazy'
 require('config').setup {}
 
 -- [[TERMINAL]] global functions
+-- TODO: Find better place for this config
 function _G.set_terminal_keymaps()
   local opts = { noremap = true }
   -- vim.api.nvim_buf_set_keymap(0, 't', '<esc>', [[<C-\><C-n>]], opts)

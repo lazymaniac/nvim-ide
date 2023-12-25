@@ -186,17 +186,17 @@ return {
         },
         format_item_override = {}, -- Used to override format_item. See :help dressing-format
         -- see :help dressing_get_config
-        get_config = function(opts)
-          if opts.kind == 'codeaction' then
-            return {
-              backend = 'nui',
-              nui = {
-                relative = 'cursor',
-                max_width = 40,
-              },
-            }
-          end
-        end,
+        -- get_config = function(opts)
+        --   if opts.kind == 'codeaction' then
+        --     return {
+        --       backend = 'nui',
+        --       nui = {
+        --         relative = 'cursor',
+        --         max_width = 40,
+        --       },
+        --     }
+        --   end
+        -- end,
       },
     },
     init = function()
@@ -234,7 +234,7 @@ return {
         mode = 'buffers', -- Set to "tabs" to only show tabpages instead
         -- style_preset = require('bufferline').style_preset.minimal, -- or style_preset.minimal
         themable = true, --Allows highlight groups to be overriden i.e. sets highlights as default
-        numbers = 'none', -- "none" | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
+        numbers = 'ordinal', -- "none" | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
         -- stylua: ignore
         close_command = function(n) require("mini.bufremove").delete(n, false) end, -- can be a string | function, see "Mouse actions"
         -- stylua: ignore
@@ -260,8 +260,8 @@ return {
         max_name_length = 30,
         max_prefix_length = 30, -- prefix used when a buffer is de-duplicated
         truncate_names = true, -- Whether ot not tab names should be truncated
-        tab_size = 21,
-        diagnostics = 'nvim_lsp', -- | "nvim_lsp" | "coc" | false
+        tab_size = 18,
+        diagnostics = false, -- | "nvim_lsp" | "coc" | false
         diagnostics_update_in_insert = false,
         -- NOTE: this will be called a lot so don't do any heavy processing here
         -- custom_filter = function(buf_number)
@@ -340,52 +340,49 @@ return {
     end,
   },
 
-  -- statusline
+  -- [[lualine] statusline configuration
+  -- see: `h: lualine`
   {
     'nvim-lualine/lualine.nvim',
     event = 'VeryLazy',
-    init = function()
-      vim.g.lualine_laststatus = vim.o.laststatus
-      if vim.fn.argc(-1) > 0 then
-        -- set an empty statusline till lualine loads
-        vim.o.statusline = ' '
-      else
-        -- hide the statusline on the starter page
-        vim.o.laststatus = 0
-      end
+    -- init = function()
+    --   vim.g.lualine_laststatus = vim.o.laststatus
+    --   if vim.fn.argc(-1) > 0 then
+    --     -- set an empty statusline till lualine loads
+    --     vim.o.statusline = ' '
+    --   else
+    --     -- hide the statusline on the starter page
+    --     vim.o.laststatus = 0
+    --   end
+    -- end,
+    config = function(_, opts)
+      require('lualine').setup(opts)
     end,
     opts = function()
-      -- PERF: we don't need this lualine require madness 🤷
-      local lualine_require = require 'lualine_require'
-      lualine_require.require = require
-
       local icons = require('config').icons
-
-      vim.o.laststatus = vim.g.lualine_laststatus
-
       return {
         options = {
-          theme = 'auto',
-          globalstatus = true,
+          icons_enabled = true,
+          theme = 'everforest',
+          -- section_separators = { left = '', right = '' },
+          -- component_separators = { left = '', right = '' },
+          component_separators = { left = '', right = '' },
+          section_separators = { left = '', right = '' },
           disabled_filetypes = { statusline = { 'dashboard', 'alpha', 'starter' } },
+          ignore_focus = {},
+          always_divide_middle = true,
+          globalstatus = true,
+          refresh = {
+            statusline = 500,
+            tabline = 500,
+            winbar = 500,
+          },
         },
         sections = {
           lualine_a = { 'mode' },
           lualine_b = { 'branch' },
-
           lualine_c = {
-            Util.lualine.root_dir(),
-            {
-              'diagnostics',
-              symbols = {
-                error = icons.diagnostics.Error,
-                warn = icons.diagnostics.Warn,
-                info = icons.diagnostics.Info,
-                hint = icons.diagnostics.Hint,
-              },
-            },
-            { 'filetype', icon_only = true, separator = '', padding = { left = 1, right = 0 } },
-            { Util.lualine.pretty_path() },
+            'hostname',
           },
           lualine_x = {
             -- stylua: ignore
@@ -411,6 +408,27 @@ return {
               cond = require('lazy.status').has_updates,
               color = Util.ui.fg 'Special',
             },
+            { 'searchcount' },
+            { 'selectioncount' },
+          },
+          lualine_y = {
+            { 'progress', separator = ' ', padding = { left = 1, right = 0 } },
+            { 'location', padding = { left = 0, right = 1 } },
+          },
+          lualine_z = {
+            'datetime',
+          },
+        },
+        inactive_sections = {},
+        tabline = {},
+        winbar = {
+          lualine_a = {
+            Util.lualine.root_dir(),
+          },
+          lualine_b = {
+            { Util.lualine.pretty_path() },
+          },
+          lualine_c = {
             {
               'diff',
               symbols = {
@@ -429,17 +447,35 @@ return {
                 end
               end,
             },
+            {
+              'diagnostics',
+              symbols = {
+                error = icons.diagnostics.Error,
+                warn = icons.diagnostics.Warn,
+                info = icons.diagnostics.Info,
+                hint = icons.diagnostics.Hint,
+              },
+            },
           },
-          lualine_y = {
-            { 'progress', separator = ' ', padding = { left = 1, right = 0 } },
-            { 'location', padding = { left = 0, right = 1 } },
+          lualine_x = {
+            {
+              'filetype',
+              icon_only = false,
+              colored = true,
+              separator = '',
+              padding = { left = 1, right = 1 },
+              icon = {
+                align = 'right',
+              },
+            },
+            { 'encoding' },
+            { 'fileformat' },
+            { 'filesize' },
           },
-          lualine_z = {
-            function()
-              return ' ' .. os.date '%R'
-            end,
-          },
+          lualine_y = {},
+          lualine_z = {},
         },
+        inactive_winbar = {},
         extensions = { 'neo-tree', 'lazy' },
       }
     end,
@@ -604,7 +640,6 @@ return {
               action = 'Lazy update',
               key = 'u'
             },
-            
             {
               icon = ' ',
               icon_hl = '@variable',

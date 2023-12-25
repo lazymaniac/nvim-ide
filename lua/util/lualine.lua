@@ -106,7 +106,7 @@ function M.root_dir(opts)
     parent = true,
     other = true,
     icon = '󱉭 ',
-    color = Util.ui.fg 'Special',
+    color = Util.ui.fg 'Black',
   }, opts or {})
 
   local function get()

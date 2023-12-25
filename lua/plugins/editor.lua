@@ -883,11 +883,17 @@ return {
   },
 
   -- Git related plugins
-  { 'tpope/vim-fugitive' },
-  { 'tpope/vim-rhubarb' },
+  {
+    'tpope/vim-fugitive',
+  },
+  {
+    'tpope/vim-rhubarb',
+  },
 
   -- Detect tabstop and shiftwidth automatically
-  { 'tpope/vim-sleuth' },
+  {
+    'tpope/vim-sleuth',
+  },
 
   -- Automatically highlights other instances of the word under your cursor.
   -- This works with LSP, Treesitter, and regexp matching to find the other
@@ -1009,19 +1015,6 @@ return {
     'andrewferrier/textobj-diagnostic.nvim',
     config = function()
       require('textobj-diagnostic').setup()
-    end,
-  },
-
-  -- Show summary of diagnostics in the buffer
-  {
-    'ivanjermakov/troublesum.nvim',
-    config = function()
-      require('troublesum').setup {
-        enabled = true,
-        autocmd = true,
-        severity_format = { 'E', 'W', 'I', 'H' },
-        severity_highlight = { 'DiagnosticError', 'DiagnosticWarn', 'DiagnosticInfo', 'DiagnosticHint' },
-      }
     end,
   },
 
