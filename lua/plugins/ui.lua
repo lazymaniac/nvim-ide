@@ -863,54 +863,13 @@ return {
           header = vim.split(logo, '\n'),
           -- stylua: ignore
           shortcut = {
-            {
-              icon = ' ',
-              icon_hl = '@variable',
-              desc = 'Find Files',
-              group = 'Label',
-              action = 'Telescope find_files',
-              key = 'f',
-            },
-            {
-              icon = ' ',
-              icon_hl = '@variable',
-              desc = 'Find Text',
-              group = 'Label',
-              action = 'Telescope live_grep',
-              key = 'g',
-            },
-            {
-              icon = ' ',
-              desc = 'New file',
-              group = 'Label',
-              action = 'ene | startinsert',
-              key = 'n',
-            },
-            {
-              icon = ' ',
-              desc = 'Config Files',
-              group = 'Label',
-              action = [[lua require("util").telescope.config_files()()]],
-              key = 'c',
-            },
-            {
-              desc = '󰊳 Lazy',
-              group = '@property',
-              action = 'Lazy',
-              key = 'l'
-            },
-            {
-              desc = '󰊳 Mason',
-              group = '@property',
-              action = 'Mason',
-              key = 'm'
-            },
-            {
-              desc = ' Theme',
-              group = 'Number',
-              action = 'Telescope colorscheme',
-              key = 'd',
-            },
+            { icon = ' ', icon_hl = '@variable', desc = 'Find Files', group = 'Label', action = 'Telescope find_files', key = 'f', },
+            { icon = ' ', icon_hl = '@variable', desc = 'Find Text', group = 'Label', action = 'Telescope live_grep', key = 'g', },
+            { icon = ' ', desc = 'New file', group = 'Label', action = 'ene | startinsert', key = 'n', },
+            { icon = ' ', desc = 'Config Files', group = 'Label', action = [[lua require("util").telescope.config_files()()]], key = 'c', },
+            { desc = '󰊳 Lazy', group = '@property', action = 'Lazy', key = 'l' },
+            { desc = '󰊳 Mason', group = '@property', action = 'Mason', key = 'm' },
+            { desc = ' Theme', group = 'Number', action = 'Telescope colorscheme', key = 'd', },
           },
           center = {
             { action = 'Telescope find_files', desc = ' Find file', icon = ' ', key = 'f' },
