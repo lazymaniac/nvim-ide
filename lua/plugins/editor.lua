@@ -168,14 +168,14 @@ return {
             bd(0)
           end
         end,
-        desc = 'Delete Buffer',
+        desc = '[B]uffer [D]elete',
       },
       {
         '<leader>bD',
         function()
           require('mini.bufremove').delete(0, true)
         end,
-        desc = 'Delete Buffer (Force)',
+        desc = '[B]uffer [D]elete (Force)',
       },
     },
   },
@@ -233,6 +233,15 @@ return {
     config = function()
       require('textobj-diagnostic').setup()
     end,
+    keys = {
+      {
+        '<leader>xn',
+        function()
+          require('textobj-diagnostic').nearest_diag()
+        end,
+        desc = 'Diagnostic [N]earest',
+      },
+    },
   },
 
   -- Finds and lists all of the TODO, HACK, BUG, etc comment
@@ -248,14 +257,14 @@ return {
         function()
           require('todo-comments').jump_next()
         end,
-        desc = 'Next todo comment',
+        desc = 'Next [t]odo comment',
       },
       {
         '[t',
         function()
           require('todo-comments').jump_prev()
         end,
-        desc = 'Previous todo comment',
+        desc = 'Previous [t]odo comment',
       },
       { '<leader>xt', '<cmd>TodoTrouble<cr>', desc = 'Todo (Trouble)' },
       { '<leader>xT', '<cmd>TodoTrouble keywords=TODO,FIX,FIXME<cr>', desc = 'Todo/Fix/Fixme (Trouble)' },
@@ -278,7 +287,7 @@ return {
         '<leader>o',
         '<cmd>Outline<cr>',
         mode = { 'n' },
-        desc = 'Toggle outline',
+        desc = 'Toggle [o]utline',
       },
     },
     config = function()

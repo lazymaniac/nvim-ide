@@ -15,7 +15,12 @@ return {
   {
     'folke/persistence.nvim',
     event = 'BufReadPre',
-    opts = { options = vim.opt.sessionoptions:get() },
+    opts = {
+      dir = vim.fn.expand(vim.fn.stdpath 'state' .. '/sessions/'), -- directory where session files are saved
+      options = vim.opt.sessionoptions:get(),
+      pre_save = nil, -- a function to call before saving the session
+      save_empty = false, -- don't save if there are no open file buffers
+    },
     keys = {
       {
         '<leader>qs',
@@ -51,9 +56,9 @@ return {
   -- :Hardtime enable enable hardtime.nvim
   -- :Hardtime disable disable hardtime.nvim
   -- :Hardtime toggle toggle hardtime.nvim
-  -- You can view the most frequently seen hints with :Hardtime report.
+  -- View the most frequently seen hints with :Hardtime report.
 
-  -- Your log file is at ~/.cache/nvim/hardtime.nvim.log.
+  -- Log file is at ~/.cache/nvim/hardtime.nvim.log.
   {
     'm4xshen/hardtime.nvim',
     dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim' },
@@ -80,6 +85,7 @@ return {
   },
 
   -- Coding cheatsheet
+  -- see: `h: cheatsheet`
   {
     'sudormrfbin/cheatsheet.nvim',
     dependencies = {
@@ -87,5 +93,37 @@ return {
       { 'nvim-lua/popup.nvim' },
       { 'nvim-lua/plenary.nvim' },
     },
+    config = function()
+      require('cheatsheet').setup {
+        -- Whether to show bundled cheatsheets
+
+        -- For generic cheatsheets like default, unicode, nerd-fonts, etc
+        -- bundled_cheatsheets = {
+        --     enabled = {},
+        --     disabled = {},
+        -- },
+        bundled_cheatsheets = true,
+
+        -- For plugin specific cheatsheets
+        -- bundled_plugin_cheatsheets = {
+        --     enabled = {},
+        --     disabled = {},
+        -- }
+        bundled_plugin_cheatsheets = true,
+
+        -- For bundled plugin cheatsheets, do not show a sheet if you
+        -- don't have the plugin installed (searches runtimepath for
+        -- same directory name)
+        include_only_installed_plugins = true,
+
+        -- Key mappings bound inside the telescope window
+        telescope_mappings = {
+          ['<CR>'] = require('cheatsheet.telescope.actions').select_or_fill_commandline,
+          ['<A-CR>'] = require('cheatsheet.telescope.actions').select_or_execute,
+          ['<C-Y>'] = require('cheatsheet.telescope.actions').copy_cheat_value,
+          ['<C-E>'] = require('cheatsheet.telescope.actions').edit_user_cheatsheet,
+        },
+      }
+    end,
   },
 }
