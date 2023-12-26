@@ -193,7 +193,7 @@ function M.load(name)
   end
   -- always load lazyvim, then user file
   if M.defaults[name] or name == 'options' then
-    _load('lazyvim.config.' .. name)
+    _load('config.' .. name)
   end
   _load('config.' .. name)
   if vim.bo.filetype == 'lazy' then

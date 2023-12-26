@@ -183,88 +183,53 @@ return {
     end,
   },
 
-  -- Flash enhances the built-in search functionality by showing labels
-  -- at the end of each match, letting you quickly jump to a specific
-  -- location.
+  -- easily jump to any location and enhanced f/t motions for Leap
   {
-    'folke/flash.nvim',
-    event = 'VeryLazy',
-    vscode = true,
-    ---@type Flash.Config
-    opts = {},
+    'ggandor/flit.nvim',
+    keys = function()
+      ---@type LazyKeys[]
+      local ret = {}
+      for _, key in ipairs { 'f', 'F', 't', 'T' } do
+        ret[#ret + 1] = { key, mode = { 'n', 'x', 'o' }, desc = key }
+      end
+      return ret
+    end,
+    opts = { labeled_modes = 'nx' },
+  },
+  {
+    'ggandor/leap.nvim',
     keys = {
-      {
-        's',
-        mode = { 'n', 'x', 'o' },
-        function()
-          require('flash').jump()
-        end,
-        desc = 'Flash',
-      },
-      {
-        'S',
-        mode = { 'n', 'o', 'x' },
-        function()
-          require('flash').treesitter()
-        end,
-        desc = 'Flash Treesitter',
-      },
-      {
-        'r',
-        mode = 'o',
-        function()
-          require('flash').remote()
-        end,
-        desc = 'Remote Flash',
-      },
-      {
-        'R',
-        mode = { 'o', 'x' },
-        function()
-          require('flash').treesitter_search()
-        end,
-        desc = 'Treesitter Search',
-      },
-      {
-        '<c-s>',
-        mode = { 'c' },
-        function()
-          require('flash').toggle()
-        end,
-        desc = 'Toggle Flash Search',
+      { 's', mode = { 'n', 'x', 'o' }, desc = 'Leap forward to' },
+      { 'S', mode = { 'n', 'x', 'o' }, desc = 'Leap backward to' },
+      { 'gs', mode = { 'n', 'x', 'o' }, desc = 'Leap from windows' },
+    },
+    config = function(_, opts)
+      local leap = require 'leap'
+      for k, v in pairs(opts) do
+        leap.opts[k] = v
+      end
+      leap.add_default_mappings(true)
+      vim.keymap.del({ 'x', 'o' }, 'x')
+      vim.keymap.del({ 'x', 'o' }, 'X')
+    end,
+  },
+
+  -- rename surround mappings from gs to gz to prevent conflict with leap
+  {
+    'echasnovski/mini.surround',
+    opts = {
+      mappings = {
+        add = 'gza', -- Add surrounding in Normal and Visual modes
+        delete = 'gzd', -- Delete surrounding
+        find = 'gzf', -- Find surrounding (to the right)
+        find_left = 'gzF', -- Find surrounding (to the left)
+        highlight = 'gzh', -- Highlight surrounding
+        replace = 'gzr', -- Replace surrounding
+        update_n_lines = 'gzn', -- Update `n_lines`
       },
     },
   },
 
-  -- Flash Telescope config
-  {
-    'nvim-telescope/telescope.nvim',
-    optional = true,
-    opts = function(_, opts)
-      if not Util.has 'flash.nvim' then
-        return
-      end
-      local function flash(prompt_bufnr)
-        require('flash').jump {
-          pattern = '^',
-          label = { after = { 0, 0 } },
-          search = {
-            mode = 'search',
-            exclude = {
-              function(win)
-                return vim.bo[vim.api.nvim_win_get_buf(win)].filetype ~= 'TelescopeResults'
-              end,
-            },
-          },
-          action = function(match)
-            local picker = require('telescope.actions.state').get_current_picker(prompt_bufnr)
-            picker:set_selection(match.pos[1] - 1)
-          end,
-        }
-      end
-      opts.defaults = vim.tbl_deep_extend('force', opts.defaults or {}, {
-        mappings = { n = { s = flash }, i = { ['<c-s>'] = flash } },
-      })
-    end,
-  },
+  -- makes some plugins dot-repeatable like leap
+  { 'tpope/vim-repeat', event = 'VeryLazy' },
 }

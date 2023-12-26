@@ -92,7 +92,7 @@ return {
       quickfix = {
         enabled = true,
         open = function()
-          if require('lazyvim.util').has 'trouble.nvim' then
+          if require('util').has 'trouble.nvim' then
             require('trouble').open { mode = 'quickfix', focus = false }
           else
             vim.cmd 'copen'

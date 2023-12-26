@@ -1,4 +1,4 @@
--- This file is automatically loaded by lazyvim.config.init
+-- This file is automatically loaded by config.init
 local Util = require 'util'
 
 local map = Util.safe_keymap_set
@@ -159,11 +159,6 @@ map('n', '<leader>qq', '<cmd>qa<cr>', { desc = 'Quit all' })
 
 -- highlights under cursor
 map('n', '<leader>ui', vim.show_pos, { desc = 'Inspect Pos' })
-
--- LazyVim Changelog
-map('n', '<leader>L', function()
-  Util.news.changelog()
-end, { desc = 'LazyVim Changelog' })
 
 -- floating terminal
 map('n', '<leader>tn', '<cmd>lua _NODE_TOGGLE()<cr>', { desc = 'Node' })

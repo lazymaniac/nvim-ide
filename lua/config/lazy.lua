@@ -12,6 +12,7 @@ require('lazy').setup {
   spec = {
     -- Import plugins
     { import = 'plugins' },
+    { import = 'plugins.lsp.lang' },
   },
   defaults = {
     -- Disable lazy loading of plugins
