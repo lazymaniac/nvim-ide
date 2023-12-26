@@ -14,7 +14,6 @@ return {
       history = true,
       delete_check_events = 'TextChanged',
     },
-    -- stylua: ignore
     keys = {
       -- Disabled. Used cmp supertab
       -- {
@@ -284,7 +283,6 @@ return {
   -- comments
   {
     'JoosepAlviste/nvim-ts-context-commentstring',
-    lazy = true,
     opts = {
       enable_autocmd = false,
     },

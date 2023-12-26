@@ -225,10 +225,12 @@ return {
         -- style_preset = require('bufferline').style_preset.minimal, -- or style_preset.minimal
         themable = true, --Allows highlight groups to be overriden i.e. sets highlights as default
         numbers = 'ordinal', -- "none" | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
-        -- stylua: ignore
-        close_command = function(n) require("mini.bufremove").delete(n, false) end, -- can be a string | function, see "Mouse actions"
-        -- stylua: ignore
-        right_mouse_command = function(n) require("mini.bufremove").delete(n, false) end, -- can be a string | function, see "Mouse actions"
+        close_command = function(n)
+          require('mini.bufremove').delete(n, false)
+        end, -- can be a string | function, see "Mouse actions"
+        right_mouse_command = function(n)
+          require('mini.bufremove').delete(n, false)
+        end, -- can be a string | function, see "Mouse actions"
         left_mouse_command = 'buffer %d', -- can be a string | function, see "Mouse actions"
         middle_mouse_command = nil, -- can be a string | function, see "Mouse actions"
         indicator = { style = 'icon', icon = '▎' },
@@ -365,23 +367,32 @@ return {
             'hostname',
           },
           lualine_x = {
-            -- stylua: ignore
             {
-              function() return require("noice").api.status.command.get() end,
-              cond = function() return package.loaded["noice"] and require("noice").api.status.command.has() end,
-              color = Util.ui.fg("Statement"),
+              function()
+                return require('noice').api.status.command.get()
+              end,
+              cond = function()
+                return package.loaded['noice'] and require('noice').api.status.command.has()
+              end,
+              color = Util.ui.fg 'Statement',
             },
-            -- stylua: ignore
             {
-              function() return require("noice").api.status.mode.get() end,
-              cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
-              color = Util.ui.fg("Constant"),
+              function()
+                return require('noice').api.status.mode.get()
+              end,
+              cond = function()
+                return package.loaded['noice'] and require('noice').api.status.mode.has()
+              end,
+              color = Util.ui.fg 'Constant',
             },
-            -- stylua: ignore
             {
-              function() return "  " .. require("dap").status() end,
-              cond = function() return package.loaded["dap"] and require("dap").status() ~= "" end,
-              color = Util.ui.fg("Debug"),
+              function()
+                return '  ' .. require('dap').status()
+              end,
+              cond = function()
+                return package.loaded['dap'] and require('dap').status() ~= ''
+              end,
+              color = Util.ui.fg 'Debug',
             },
             {
               require('lazy.status').updates,
@@ -872,15 +883,14 @@ return {
             enable = true,
           },
           header = vim.split(logo, '\n'),
-          -- stylua: ignore
           shortcut = {
-            { icon = ' ', icon_hl = '@variable', desc = 'Find Files', group = 'Label', action = 'Telescope find_files', key = 'f', },
-            { icon = ' ', icon_hl = '@variable', desc = 'Find Text', group = 'Label', action = 'Telescope live_grep', key = 'g', },
-            { icon = ' ', desc = 'New file', group = 'Label', action = 'ene | startinsert', key = 'n', },
-            { icon = ' ', desc = 'Config Files', group = 'Label', action = [[lua require("util").telescope.config_files()()]], key = 'c', },
+            { icon = ' ', icon_hl = '@variable', desc = 'Find Files', group = 'Label', action = 'Telescope find_files', key = 'f' },
+            { icon = ' ', icon_hl = '@variable', desc = 'Find Text', group = 'Label', action = 'Telescope live_grep', key = 'g' },
+            { icon = ' ', desc = 'New file', group = 'Label', action = 'ene | startinsert', key = 'n' },
+            { icon = ' ', desc = 'Config Files', group = 'Label', action = [[lua require("util").telescope.config_files()()]], key = 'c' },
             { desc = '󰊳 Lazy', group = '@property', action = 'Lazy', key = 'l' },
             { desc = '󰊳 Mason', group = '@property', action = 'Mason', key = 'm' },
-            { desc = ' Theme', group = 'Number', action = 'Telescope colorscheme', key = 'd', },
+            { desc = ' Theme', group = 'Number', action = 'Telescope colorscheme', key = 'd' },
           },
           center = {
             { action = 'Telescope find_files', desc = ' Find file', icon = ' ', key = 'f' },
