@@ -842,6 +842,8 @@ return {
   -- ui components
   { 'MunifTanjim/nui.nvim', event = 'VeryLazy' },
 
+  -- Welcome dashboard
+  -- see: ':h dashboard'
   {
     'nvimdev/dashboard-nvim',
     event = 'VimEnter',
@@ -920,6 +922,7 @@ return {
   },
 
   -- Vim help shown in flaoting popup
+  -- see: 'h: floating-help'
   {
     'Tyler-Barham/floating-help.nvim',
     config = function()
@@ -949,6 +952,7 @@ return {
   },
 
   -- Show lightbulb where code action is available
+  -- see: `:h lightbulb`
   {
     'kosayoda/nvim-lightbulb',
     config = function()
@@ -974,6 +978,7 @@ return {
   },
 
   -- Rainbow colored delimiters
+  -- see: `:h rainbow-delimiters`
   {
     'HiPhish/rainbow-delimiters.nvim',
     config = function()
@@ -1147,9 +1152,9 @@ return {
         handlers = {
           cursor = true,
           diagnostic = true,
-          gitsigns = false, -- Requires gitsigns
+          gitsigns = true, -- Requires gitsigns
           handle = true,
-          search = false, -- Requires hlslens
+          search = true, -- Requires hlslens
           ale = false, -- Requires ALE
         },
       }
@@ -1160,6 +1165,19 @@ return {
   {
     'kevinhwang91/nvim-hlslens',
     config = function()
+      require('hlslens').setup {
+        build_position_cb = function(plist, _, _, _)
+          require('scrollbar.handlers.search').handler.show(plist.start_pos)
+        end,
+      }
+
+      vim.cmd [[
+        augroup scrollbar_search_hide
+            autocmd!
+            autocmd CmdlineLeave : lua require('scrollbar.handlers.search').handler.hide()
+        augroup END
+    ]]
+
       -- require('hlslens').setup() is not required
       require('scrollbar.handlers.search').setup {
         -- hlslens config overrides

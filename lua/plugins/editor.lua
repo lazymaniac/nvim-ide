@@ -153,7 +153,7 @@ return {
           required_width = 110, -- min width of window required to show this column
         },
         symlink_target = {
-          enabled = false,
+          enabled = true,
         },
       },
       -- A list of functions, each representing a global custom command
@@ -773,6 +773,7 @@ return {
         ['<leader>gh'] = { name = '+hunks' },
         ['<leader>q'] = { name = '+quit/session' },
         ['<leader>s'] = { name = '+search' },
+        ['<leader>t'] = { name = '+terminal' },
         ['<leader>u'] = { name = '+ui' },
         ['<leader>w'] = { name = '+windows' },
         ['<leader>x'] = { name = '+diagnostics/quickfix' },
@@ -791,6 +792,10 @@ return {
   {
     'lewis6991/gitsigns.nvim',
     event = 'VeryLazy',
+    config = function(_, opts)
+      require('gitsigns').setup(opts)
+      require('scrollbar.handlers.gitsigns').setup()
+    end,
     opts = {
       signs = {
         add = { hl = 'GitSignsAdd', text = ' ', numhl = 'GitSignsAddNr', linehl = 'GitSignsAddLn' },
@@ -938,7 +943,6 @@ return {
   -- buffer remove
   {
     'echasnovski/mini.bufremove',
-
     keys = {
       {
         '<leader>bd',
