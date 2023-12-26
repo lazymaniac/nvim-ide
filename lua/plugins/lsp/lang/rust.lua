@@ -36,7 +36,6 @@ return {
   -- Ensure Rust debugger is installed
   {
     'williamboman/mason.nvim',
-    optional = true,
     opts = function(_, opts)
       if type(opts.ensure_installed) == 'table' then
         vim.list_extend(opts.ensure_installed, { 'codelldb' })
@@ -46,7 +45,6 @@ return {
 
   {
     'simrat39/rust-tools.nvim',
-    lazy = true,
     opts = function()
       local ok, mason_registry = pcall(require, 'mason-registry')
       local adapter ---@type any
@@ -149,7 +147,6 @@ return {
 
   {
     'nvim-neotest/neotest',
-    optional = true,
     dependencies = {
       'rouge8/neotest-rust',
     },

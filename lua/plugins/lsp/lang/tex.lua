@@ -1,7 +1,6 @@
 return {
   {
     'folke/which-key.nvim',
-    optional = true,
     opts = {
       defaults = {
         ['<localLeader>l'] = { name = '+vimtex' },
@@ -26,7 +25,6 @@ return {
 
   {
     'lervag/vimtex',
-    lazy = false, -- lazy-loading will disable inverse search
     config = function()
       vim.api.nvim_create_autocmd({ 'FileType' }, {
         group = vim.api.nvim_create_augroup('lazyvim_vimtex_conceal', { clear = true }),
@@ -44,7 +42,6 @@ return {
   -- Correctly setup lspconfig for LaTeX 🚀
   {
     'neovim/nvim-lspconfig',
-    optional = true,
     opts = {
       servers = {
         texlab = {

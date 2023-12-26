@@ -19,7 +19,6 @@ return {
   },
   {
     'nvim-neotest/neotest',
-    optional = true,
     dependencies = {
       'jfpedroza/neotest-elixir',
     },
@@ -31,7 +30,6 @@ return {
   },
   {
     'nvimtools/none-ls.nvim',
-    optional = true,
     opts = function(_, opts)
       if vim.fn.executable 'credo' == 0 then
         return
@@ -44,7 +42,6 @@ return {
   },
   {
     'mfussenegger/nvim-lint',
-    optional = true,
     opts = function(_, opts)
       if vim.fn.executable 'credo' == 0 then
         return

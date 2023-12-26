@@ -63,6 +63,7 @@ return {
   },
   {
     'mfussenegger/nvim-jdtls',
+    ft = java_filetypes,
     opts = function()
       return {
         -- How to find the root dir for a given filename. The default comes from
