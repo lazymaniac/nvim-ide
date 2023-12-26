@@ -860,49 +860,27 @@ return {
     event = 'VimEnter',
     dependencies = { { 'nvim-tree/nvim-web-devicons' } },
     opts = function()
-      local logo = [[
-           ██╗   ██╗██╗███╗   ███╗
-           ██║   ██║██║████╗ ████║
-           ██║   ██║██║██╔████╔██║
-           ╚██╗ ██╔╝██║██║╚██╔╝██║
-            ╚████╔╝ ██║██║ ╚═╝ ██║
-             ╚═══╝  ╚═╝╚═╝     ╚═╝
-      ]]
-
-      logo = string.rep('\n', 8) .. logo .. '\n\n'
-
       local opts = {
         theme = 'hyper',
         hide = {
           -- this is taken care of by lualine
           -- enabling this messes up the actual laststatus setting after loading a file
-          statusline = false,
+          statusline = true,
         },
         config = {
           week_header = {
             enable = true,
           },
-          header = vim.split(logo, '\n'),
           shortcut = {
             { icon = ' ', icon_hl = '@variable', desc = 'Find Files', group = 'Label', action = 'Telescope find_files', key = 'f' },
             { icon = ' ', icon_hl = '@variable', desc = 'Find Text', group = 'Label', action = 'Telescope live_grep', key = 'g' },
-            { icon = ' ', desc = 'New file', group = 'Label', action = 'ene | startinsert', key = 'n' },
             { icon = ' ', desc = 'Config Files', group = 'Label', action = [[lua require("util").telescope.config_files()()]], key = 'c' },
-            { desc = '󰊳 Lazy', group = '@property', action = 'Lazy', key = 'l' },
+            { icon = ' ', desc = 'Projects', action = 'Telescope projects', key = 'p' },
+            { desc = '󰊳 Lazy', group = '@property', action = 'Lazy update', key = 'l' },
             { desc = '󰊳 Mason', group = '@property', action = 'Mason', key = 'm' },
             { desc = ' Theme', group = 'Number', action = 'Telescope colorscheme', key = 'd' },
           },
-          center = {
-            { action = 'Telescope find_files', desc = ' Find file', icon = ' ', key = 'f' },
-            { action = 'ene | startinsert', desc = ' New file', icon = ' ', key = 'n' },
-            { action = 'Telescope oldfiles', desc = ' Recent files', icon = ' ', key = 'r' },
-            { action = 'Telescope live_grep', desc = ' Find text', icon = ' ', key = 'g' },
-            { action = [[lua require("util").telescope.config_files()()]], desc = ' Config', icon = ' ', key = 'c' },
-            { action = 'lua require("persistence").load()', desc = ' Restore Session', icon = ' ', key = 's' },
-            { action = 'Lazy', desc = ' Lazy', icon = '󰒲 ', key = 'l' },
-            { action = 'Mason', desc = ' Mason', icon = ' ', key = 'm' },
-            { action = 'qa', desc = ' Quit', icon = ' ', key = 'q' },
-          },
+          packages = { enabled = true },
           footer = function()
             local stats = require('lazy').stats()
             local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
@@ -910,11 +888,6 @@ return {
           end,
         },
       }
-
-      for _, button in ipairs(opts.config.center) do
-        button.desc = button.desc .. string.rep(' ', 43 - #button.desc)
-        button.key_format = '  %s'
-      end
 
       -- close Lazy and re-open when the dashboard is ready
       if vim.o.filetype == 'lazy' then
