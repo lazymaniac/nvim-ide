@@ -545,6 +545,7 @@ return {
   },
 
   -- Highly experimental plugin that completely replaces the UI for messages, cmdline and the popupmenu.
+  -- see: `:h noice`
   {
     'folke/noice.nvim',
     event = 'VeryLazy',
@@ -651,7 +652,7 @@ return {
       },
       lsp = {
         progress = {
-          enabled = true,
+          enabled = false,
           -- Lsp Progress is formatted using the builtins for lsp_progress. See config.format.builtin
           -- See the section on formatting for more details on how to customize.
           --- @type NoiceFormat|string
@@ -753,6 +754,14 @@ return {
         {
           filter = {
             event = 'msg_show',
+            kind = '',
+            find = 'written',
+          },
+          opts = { skip = true },
+        },
+        {
+          filter = {
+            event = 'msg_show',
             any = {
               { find = '%d+L, %d+B' },
               { find = '; after #%d+' },
@@ -828,10 +837,10 @@ return {
   },
 
   -- icons
-  { 'nvim-tree/nvim-web-devicons' },
+  { 'nvim-tree/nvim-web-devicons', event = 'VeryLazy' },
 
   -- ui components
-  { 'MunifTanjim/nui.nvim' },
+  { 'MunifTanjim/nui.nvim', event = 'VeryLazy' },
 
   {
     'nvimdev/dashboard-nvim',
@@ -916,9 +925,9 @@ return {
     config = function()
       require('floating-help').setup {
         -- Defaults
-        width = 90, -- Whole numbers are columns/rows
-        height = 0.9, -- Decimals are a percentage of the editor
-        position = 'E', -- NW,N,NW,W,C,E,SW,S,SE (C==center)
+        width = 80, -- Whole numbers are columns/rows
+        height = 0.80, -- Decimals are a percentage of the editor
+        position = 'NE', -- NW,N,NW,W,C,E,SW,S,SE (C==center)
         borderchars = { '─', '│', '─', '│', '╭', '╮', '╯', '╰' },
       }
       -- Only replace cmds, not search; only replace the first instance
@@ -1292,12 +1301,7 @@ return {
   {
     'folke/zen-mode.nvim',
     keys = {
-      {
-        '<leader>Z',
-        '<cmd>ZenMode<cr>',
-        mode = { 'n' },
-        desc = 'Zen Mode',
-      },
+      { '<leader>Z', '<cmd>ZenMode<cr>', mode = { 'n' }, desc = 'Zen Mode' },
     },
     opts = {
       -- your configuration comes here
@@ -1335,7 +1339,7 @@ return {
           laststatus = 0, -- turn off the statusline in zen mode
         },
         twilight = { enabled = true }, -- enable to start Twilight when zen mode opens
-        gitsigns = { enabled = false }, -- disables git signs
+        gitsigns = { enabled = true }, -- disables git signs
         tmux = { enabled = false }, -- disables the tmux statusline
         -- this will change the font size on kitty when in zen mode
         -- to make this work, you need to set the following kitty options:
