@@ -42,8 +42,8 @@ map('n', '<S-h>', '<cmd>bprevious<cr>', { desc = 'Prev buffer' })
 map('n', '<S-l>', '<cmd>bnext<cr>', { desc = 'Next buffer' })
 map('n', '[b', '<cmd>bprevious<cr>', { desc = 'Prev buffer' })
 map('n', ']b', '<cmd>bnext<cr>', { desc = 'Next buffer' })
-map('n', '<leader>bb', '<cmd>e #<cr>', { desc = 'Switch to Other Buffer' })
-map('n', '<leader>`', '<cmd>e #<cr>', { desc = 'Switch to Other Buffer' })
+map('n', '<leader>bb', '<cmd>e #<cr>', { desc = 'Switch to Other [B]uffer' })
+map('n', '<leader>`', '<cmd>e #<cr>', { desc = 'Switch to Other [B]uffer' })
 
 -- Clear search with <esc>
 map({ 'i', 'n' }, '<esc>', '<cmd>noh<cr><esc>', { desc = 'Escape and clear hlsearch' })
@@ -76,8 +76,8 @@ map('v', '<', '<gv^')
 map('v', '>', '>gv^')
 
 -- Lazy & Mason
-map('n', '<leader>l', '<cmd>Lazy<cr>', { desc = 'Lazy' })
-map('n', '<leader>m', '<cmd>Mason<cr>', { desc = 'Mason' })
+map('n', '<leader>l', '<cmd>Lazy<cr>', { desc = '[L]azy' })
+map('n', '<leader>m', '<cmd>Mason<cr>', { desc = '[M]ason' })
 
 -- new file
 map('n', '<leader>fn', '<cmd>enew<cr>', { desc = 'New File' })
@@ -101,7 +101,7 @@ local diagnostic_goto = function(next, severity)
     go { severity = severity }
   end
 end
-map('n', '<leader>cd', vim.diagnostic.open_float, { desc = 'Line Diagnostics' })
+map('n', '<leader>cd', vim.diagnostic.open_float, { desc = '[C]ode [D]iagnostics' })
 map('n', ']d', diagnostic_goto(true), { desc = 'Next Diagnostic' })
 map('n', '[d', diagnostic_goto(false), { desc = 'Prev Diagnostic' })
 map('n', ']e', diagnostic_goto(true, 'ERROR'), { desc = 'Next Error' })
@@ -152,7 +152,7 @@ map('n', '<leader>uT', function()
 end, { desc = 'Toggle Treesitter Highlight' })
 
 -- lazygit
-map('n', '<leader>gg', '<cmd>lua _LAZYGIT_TOGGLE()<cr>', { desc = 'Lazygit (root dir)' })
+map('n', '<leader>gg', '<cmd>lua _LAZYGIT_TOGGLE()<cr>', { desc = 'Lazygit' })
 
 -- quit
 map('n', '<leader>qq', '<cmd>qa<cr>', { desc = 'Quit all' })
@@ -161,26 +161,26 @@ map('n', '<leader>qq', '<cmd>qa<cr>', { desc = 'Quit all' })
 map('n', '<leader>ui', vim.show_pos, { desc = 'Inspect Pos' })
 
 -- floating terminal
-map('n', '<leader>tn', '<cmd>lua _NODE_TOGGLE()<cr>', { desc = 'Node' })
-map('n', '<leader>tu', '<cmd>lua _NCDU_TOGGLE()<cr>', { desc = 'NCDU' })
-map('n', '<leader>tb', '<cmd>lua _BTOP_TOGGLE()<cr>', { desc = 'Btop' })
-map('n', '<leader>tp', '<cmd>lua _PYTHON_TOGGLE()<cr>', { desc = 'Python' })
-map('n', '<leader>tf', '<cmd>ToggleTerm direction=float<cr>', { desc = 'Terminal Float' })
-map('n', '<leader>th', '<cmd>ToggleTerm size=10 direction=horizontal<cr>', { desc = 'Terminal Horizontal' })
-map('n', '<leader>tv', '<cmd>ToggleTerm size=80 direction=vertical<cr>', { desc = 'Terminal Vertical' })
+map('n', '<leader>Tn', '<cmd>lua _NODE_TOGGLE()<cr>', { desc = '[T]erminal [N]ode' })
+map('n', '<leader>Tu', '<cmd>lua _NCDU_TOGGLE()<cr>', { desc = '[T]erminal NCD[U]' })
+map('n', '<leader>Tb', '<cmd>lua _BTOP_TOGGLE()<cr>', { desc = '[T]erminal [B]top' })
+map('n', '<leader>Tp', '<cmd>lua _PYTHON_TOGGLE()<cr>', { desc = '[T]erminal [P]ython' })
+map('n', '<leader>Tf', '<cmd>ToggleTerm direction=float<cr>', { desc = '[T]erminal [F]loat' })
+map('n', '<leader>Th', '<cmd>ToggleTerm size=10 direction=horizontal<cr>', { desc = '[T]erminal [H]orizontal' })
+map('n', '<leader>Tv', '<cmd>ToggleTerm size=80 direction=vertical<cr>', { desc = '[T]erminal [V]ertical' })
 
 -- windows
-map('n', '<leader>ww', '<C-W>p', { desc = 'Other window', remap = true })
-map('n', '<leader>wd', '<C-W>c', { desc = 'Delete window', remap = true })
-map('n', '<leader>w-', '<C-W>s', { desc = 'Split window below', remap = true })
-map('n', '<leader>w|', '<C-W>v', { desc = 'Split window right', remap = true })
-map('n', '<leader>-', '<C-W>s', { desc = 'Split window below', remap = true })
-map('n', '<leader>|', '<C-W>v', { desc = 'Split window right', remap = true })
+map('n', '<leader>ww', '<C-W>p', { desc = 'Other [W]indo[w]', remap = true })
+map('n', '<leader>wd', '<C-W>c', { desc = '[W]indow [D]elete', remap = true })
+map('n', '<leader>w-', '<C-W>s', { desc = '[W]indow Split Below [-]', remap = true })
+map('n', '<leader>w|', '<C-W>v', { desc = '[W]indow Split Right [|]', remap = true })
+map('n', '<leader>-', '<C-W>s', { desc = 'Window Split Below [-]', remap = true })
+map('n', '<leader>|', '<C-W>v', { desc = 'Window Split Right [|]', remap = true })
 
 -- tabs
-map('n', '<leader><tab>l', '<cmd>tablast<cr>', { desc = 'Last Tab' })
-map('n', '<leader><tab>f', '<cmd>tabfirst<cr>', { desc = 'First Tab' })
-map('n', '<leader><tab><tab>', '<cmd>tabnew<cr>', { desc = 'New Tab' })
-map('n', '<leader><tab>]', '<cmd>tabnext<cr>', { desc = 'Next Tab' })
-map('n', '<leader><tab>d', '<cmd>tabclose<cr>', { desc = 'Close Tab' })
-map('n', '<leader><tab>[', '<cmd>tabprevious<cr>', { desc = 'Previous Tab' })
+map('n', '<leader><tab>l', '<cmd>tablast<cr>', { desc = '[Tab] [L]ast' })
+map('n', '<leader><tab>f', '<cmd>tabfirst<cr>', { desc = '[Tab] [F]irst' })
+map('n', '<leader><tab><tab>', '<cmd>tabnew<cr>', { desc = '[Tab] New' })
+map('n', '<leader><tab>]', '<cmd>tabnext<cr>', { desc = '[Tab] Next' })
+map('n', '<leader><tab>d', '<cmd>tabclose<cr>', { desc = '[Tab] [D]elete' })
+map('n', '<leader><tab>[', '<cmd>tabprevious<cr>', { desc = '[Tab] Previous' })

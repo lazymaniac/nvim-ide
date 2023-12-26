@@ -1,5 +1,25 @@
 # NV-IDE personalized mix of available NVIM distros
 
+<!--toc:start-->
+- [NV-IDE personalized mix of available NVIM distros](#nv-ide-personalized-mix-of-available-nvim-distros)
+    - [TODO](#todo)
+    - [Introduction](#introduction)
+    - [Installation](#installation)
+    - [Post Installation](#post-installation)
+    - [Recommended Steps](#recommended-steps)
+    - [Configuration And Extension](#configuration-and-extension)
+      - [Example: Adding an autopairs plugin](#example-adding-an-autopairs-plugin)
+      - [Example: Adding a file tree plugin](#example-adding-a-file-tree-plugin)
+    - [Windows Installation](#windows-installation)
+<!--toc:end-->
+
+### TODO
+
+- better LSP config for java
+- configuration for edgy.nvim
+- code cleanup
+- script installing all the required dependencies for OpenSuse in wsl
+
 ### Introduction
 
 - NVIM distribution created to support my workflows. From java, rust to jupyter notebooks.
