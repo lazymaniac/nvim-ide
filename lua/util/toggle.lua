@@ -41,7 +41,7 @@ function M.number()
   end
 end
 
-local enabled = true
+local enabled = not vim.diagnostic.is_disabled()
 function M.diagnostics()
   enabled = not enabled
   if enabled then

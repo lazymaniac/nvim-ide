@@ -22,6 +22,15 @@ return {
 
   -- [[ JAVA ]] - LSP, DAP, TEST SETUP
   {
+    'nvim-treesitter/nvim-treesitter',
+    opts = function(_, opts)
+      opts.ensure_installed = opts.ensure_installed or {}
+      vim.list_extend(opts.ensure_installed, { 'java' })
+    end,
+  },
+
+  -- Ensure java debugger and test packages are installed.
+  {
     'mfussenegger/nvim-dap',
     dependencies = {
       {
@@ -38,31 +47,364 @@ return {
     },
   },
 
-  -- Configure nvim-lspconfig to install the server automatically via mason, but
-  -- defer actually starting it to our configuration of nvim-jtdls below.
+  -- Set up nvim-java
   {
-    'neovim/nvim-lspconfig',
-    opts = {
-      -- make sure mason installs the server
-      servers = {
-        jdtls = {},
+    'nvim-java/nvim-java',
+    ft = java_filetypes,
+    dependencies = {
+      { 'nvim-java/lua-async-await' },
+      { 'nvim-java/nvim-java-core' },
+      { 'nvim-java/nvim-java-test' },
+      { 'nvim-java/nvim-java-dap' },
+      { 'MunifTanjim/nui.nvim' },
+      { 'mfussenegger/nvim-dap' },
+      {
+        'neovim/nvim-lspconfig',
+        opts = {
+          -- make sure mason installs the server
+          servers = {
+            jdtls = {
+              keys = {
+                -- Workaround for the lack of a DAP strategy in neotest-java
+                {
+                  '<leader>td',
+                  function()
+                    require('java').dap.config_dap()
+                    require('java').test.debug_current_method()
+                  end,
+                  desc = 'Debug Nearest (Java)',
+                },
+              },
+            },
+          },
+        },
       },
-      setup = {
-        jdtls = function()
-          return true -- avoid duplicate servers
-        end,
+      {
+        'williamboman/mason-lspconfig.nvim',
+        opts = {
+          handlers = {
+            ['jdtls'] = function()
+              require('java').setup {
+                java_test = {
+                  enable = Util.has 'nvim-dap',
+                },
+                java_debug_adapter = {
+                  enable = Util.has 'nvim-dap',
+                },
+                jdk = {
+                  auto_install = false,
+                },
+              }
+              require('lspconfig').jdtls.setup {
+                settings = {
+                  redhat = {
+                    telemetry = {
+                      enabled = true,
+                    },
+                  },
+                  java = {
+                    home = '',
+                    autobuild = {
+                      enabled = true,
+                    },
+                    cleanup = {
+                      actionsOnSave = {
+                        -- "qualifyMembers",
+                        -- "qualifyStaticMembers",
+                        'addOverride',
+                        'addDeprecated',
+                        'stringConcatToTextBlock',
+                        'invertEquals',
+                        -- "addFinalModifier",
+                        'instanceofPatternMatch',
+                        'lambdaExpression',
+                        'switchExpression',
+                      },
+                    },
+                    codeGeneration = {
+                      insertionLocation = 'afterCursor',
+                      generateComments = false,
+                      hashCodeEquals = {
+                        useInstanceof = false,
+                        useJava7Objects = false,
+                      },
+                      toString = {
+                        codeStyle = 'STRING_FORMAT',
+                        limitElements = 0,
+                        listArrayContents = true,
+                        skipNullValues = false,
+                        template = '${object.className} [${member.name()}=${member.value}, ${otherMembers}]',
+                      },
+                      useBlocks = true,
+                    },
+                    codeAction = {
+                      sortMembers = {
+                        avoidVolatileChanges = true,
+                      },
+                    },
+                    completion = {
+                      enabled = true,
+                      lazyResolveTextEdit = {
+                        enabled = true,
+                      },
+                      favoriteStaticMembers = {
+                        'org.hamcrest.MatcherAssert.assertThat',
+                        'org.hamcrest.Matchers.*',
+                        'org.hamcrest.CoreMatchers.*',
+                        'org.junit.jupiter.api.Assertions.*',
+                        'java.util.Objects.requireNonNull',
+                        'java.util.Objects.requireNonNullElse',
+                        'org.mockito.Mockito.*',
+                      },
+                      filteredTypes = {},
+                      guessMethodArguments = 'auto',
+                      importOrder = { 'java', 'javax', 'org', 'com' },
+                      matchCase = 'firstLetter',
+                      maxResults = 50,
+                      overwrite = true,
+                      postfix = {
+                        enabled = true,
+                      },
+                    },
+                    configuration = {
+                      checkProjectSettingsExclusions = true,
+                      workspaceCacheLimit = 90,
+                      maven = {
+                        userSettings = '',
+                        globalSettings = '',
+                        notCoveredPluginExecutionSeverity = 'warning',
+                        defaultMojoExecutionAction = 'ignore',
+                      },
+                      runtimes = {
+                        {
+                          name = 'JavaSE-1.8',
+                          path = '~/.sdkman/candidates/java/8.0.392-tem/',
+                        },
+                        {
+                          name = 'JavaSE-11',
+                          path = '~/.sdkman/candidates/java/11.0.21-tem/',
+                        },
+                        {
+                          name = 'JavaSE-17',
+                          path = '~/.sdkman/candidates/java/17.0.9-tem/',
+                          default = true,
+                        },
+                      },
+                      updateBuildConfiguration = 'automatic',
+                    },
+                    contentProvider = { preferred = 'fernflower' },
+                    eclipse = {
+                      downloadSources = true,
+                    },
+                    errors = {
+                      incompleteClasspath = {
+                        severity = 'warning',
+                      },
+                    },
+                    executeCommand = {
+                      enabled = true,
+                    },
+                    foldingRange = {
+                      enabled = true,
+                    },
+                    format = {
+                      comments = {
+                        enabled = true,
+                      },
+                      enabled = true,
+                      insertSpaces = true,
+                      onType = {
+                        enabled = true,
+                      },
+                      settings = {
+                        profile = 'Default',
+                        url = '~/.config/nvim/java-formatter.xml',
+                      },
+                      tabSize = 4,
+                    },
+                    implementationsCodeLens = {
+                      enabled = true,
+                    },
+                    import = {
+                      generatesMetadataFilesAtProjectRoot = false,
+                      exclusions = {
+                        '**/node_modules/**',
+                        '**/.metadata/**',
+                        '**/archetype-resources/**',
+                        '**/META-INF/maven/**',
+                      },
+                      gradle = {
+                        home = '',
+                        java = {
+                          home = '',
+                        },
+                        user = {
+                          home = '',
+                        },
+                        version = '',
+                        wrapper = {
+                          enabled = true,
+                        },
+                        annotationProcessing = {
+                          enabled = true,
+                        },
+                        arguments = '',
+                        enabled = true,
+                        -- home = "",
+                        -- java = {},
+                        jvmArguments = '',
+                        offline = {
+                          enabled = false,
+                        },
+                        -- user = {},
+                        -- version = "",
+                        -- wrapper = {},
+                      },
+                      maven = {
+                        defaultMojoExecutionAction = 'ignore',
+                        globalSettings = '',
+                        notCoveredPluginExecutionSeverity = 'ignore',
+                        userSettings = '',
+                        enabled = true,
+                        offline = {
+                          enabled = false,
+                        },
+                      },
+                    },
+                    inlayHints = {
+                      parameterNames = {
+                        enabled = 'all', -- literals, all, none
+                        exclusions = {},
+                      },
+                    },
+                    jdt = {
+                      ls = {
+                        vmargs = '',
+                        java = {
+                          home = '',
+                        },
+                        protobufSupport = {
+                          enabled = true,
+                        },
+                        androidSupport = {
+                          enabled = 'auto',
+                        },
+                        lombokSupport = {
+                          enabled = true,
+                        },
+                      },
+                    },
+                    maven = {
+                      downloadSources = true,
+                      updateSnapshots = false,
+                    },
+                    maxConcurrentBuilds = 1,
+                    -- memberSortOrder = "SF,F,",
+                    project = {
+                      importHint = true,
+                      importOnFirstTimeStartup = 'automatic',
+                      encoding = 'setDefault',
+                      outputPath = '',
+                      referencedLibraries = {
+                        'lib/**',
+                      },
+                      resourceFilters = { 'node_modules', '\\.git' },
+                      sourcePaths = { '' },
+                    },
+                    quickfix = {
+                      showAt = 'line',
+                    },
+                    referencesCodeLens = {
+                      enabled = true,
+                    },
+                    references = {
+                      includeAccessors = true,
+                      includeDecompiledSources = true,
+                    },
+                    rename = {
+                      enabled = true,
+                    },
+                    saveActions = {
+                      organizeImports = true,
+                    },
+                    selectionRange = {
+                      enabled = true,
+                    },
+                    -- settings = {
+                    --   url = "",
+                    -- },
+                    signatureHelp = {
+                      enabled = true,
+                      description = {
+                        enabled = true,
+                      },
+                    },
+                    sources = {
+                      organizeImports = {
+                        starThreshold = 9999,
+                        staticStarThreshold = 9999,
+                      },
+                    },
+                    symbols = {
+                      includeSourceMethodDeclarations = true,
+                    },
+                    templates = {
+                      fileHeader = {},
+                      typeComment = {},
+                    },
+                    trace = {
+                      server = 'off',
+                    },
+                    edit = {
+                      validateAllOpenBuffersOnChanges = true,
+                    },
+                  },
+                },
+              }
+            end,
+          },
+        },
       },
     },
   },
   {
-    'nvim-treesitter/nvim-treesitter',
-    opts = function(_, opts)
-      opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, { 'java' })
-    end,
+    'nvim-neotest/neotest',
+    optional = true,
+    dependencies = {
+      'rcasia/neotest-java',
+    },
+    opts = {
+      adapters = {
+        ['neotest-java'] = {},
+      },
+    },
   },
   {
+    'folke/neodev.nvim',
+    opts = {
+      library = { plugins = { 'neotest' }, types = true },
+    },
+  },
+
+  -- Configure nvim-lspconfig to install the server automatically via mason, but
+  -- defer actually starting it to our configuration of nvim-jtdls below.
+  -- {
+  --   'neovim/nvim-lspconfig',
+  --   opts = {
+  --     -- make sure mason installs the server
+  --     servers = {
+  --       jdtls = {},
+  --     },
+  --     setup = {
+  --       jdtls = function()
+  --         return true -- avoid duplicate servers
+  --       end,
+  --     },
+  --   },
+  -- },
+  {
     'mfussenegger/nvim-jdtls',
+    enabled = false,
     ft = java_filetypes,
     opts = function()
       return {

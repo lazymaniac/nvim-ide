@@ -15,12 +15,9 @@ return {
       'nvim-lua/plenary.nvim',
       'antoinemadec/FixCursorHold.nvim',
       'nvim-treesitter/nvim-treesitter',
-      'rcasia/neotest-java',
     },
     opts = {
-      adapters = {
-        ['neotest-java'] = {},
-      },
+      adapters = {},
       benchmark = {
         enabled = true,
       },
@@ -285,12 +282,6 @@ return {
     -- stylua: ignore
     keys = {
       { "<leader>td", function() require("neotest").run.run({strategy = "dap"}) end, desc = "Debug Nearest" },
-    },
-  },
-  {
-    'folke/neodev.nvim',
-    opts = {
-      library = { plugins = { 'neotest' }, types = true },
     },
   },
 }
