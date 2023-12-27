@@ -51,6 +51,7 @@ return {
   {
     'nvim-java/nvim-java',
     ft = java_filetypes,
+    optional = true,
     dependencies = {
       { 'nvim-java/lua-async-await' },
       { 'nvim-java/nvim-java-core' },
@@ -85,6 +86,7 @@ return {
           handlers = {
             ['jdtls'] = function()
               require('java').setup {
+                root_markers = root_markers,
                 java_test = {
                   enable = Util.has 'nvim-dap',
                 },

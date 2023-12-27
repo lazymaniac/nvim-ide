@@ -69,7 +69,6 @@ vim.o.winminwidth = 5 -- Minimum window width
 vim.o.wrap = true -- Enable line wrap by default
 vim.o.writebackup = false -- If a file is being edited by another program, it is not allowed to be edited
 vim.o.fillchars = 'foldopen:,foldclose:,fold:⸱,foldsep: ,diff:/,eob: '
-vim.o.fileEncoding = 'utf-8'
 
 if vim.fn.has 'nvim-0.10' == 1 then
   vim.o.smoothscroll = true

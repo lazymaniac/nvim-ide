@@ -6,22 +6,34 @@ return {
     'neovim/nvim-lspconfig',
     event = 'VeryLazy',
     dependencies = {
-      { 'folke/neoconf.nvim', cmd = 'Neoconf', config = false, dependencies = { 'nvim-lspconfig' } },
-      { 'folke/neodev.nvim', opts = {
-        library = { plugins = { 'neotest' }, types = true },
-      } },
+      {
+        'folke/neoconf.nvim',
+        cmd = 'Neoconf',
+        config = false,
+        dependencies = { 'nvim-lspconfig' },
+      },
+      {
+        'folke/neodev.nvim',
+        opts = {
+          library = {
+            plugins = { 'neotest' },
+            types = true,
+          },
+        },
+      },
       'mason.nvim',
       'williamboman/mason-lspconfig.nvim',
-      -- Useful status updates for LSP
-      -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
+      {
+        'j-hui/fidget.nvim',
+        opts = {},
+      },
     },
     ---@class PluginLspOpts
     opts = {
       -- options for vim.diagnostic.config()
       diagnostics = {
         underline = true,
-        update_in_insert = false,
+        update_in_insert = true,
         virtual_text = {
           spacing = 4,
           source = 'if_many',
@@ -36,7 +48,7 @@ return {
       -- Be aware that you also will need to properly configure your LSP server to
       -- provide the inlay hints.
       inlay_hints = {
-        enabled = false,
+        enabled = true,
       },
       -- add any global capabilities here
       capabilities = {},
@@ -48,13 +60,11 @@ return {
         timeout_ms = nil,
       },
       -- LSP Server Settings
-      ---@type lspconfig.options
       servers = {
         lua_ls = {
           -- mason = false, -- set to false if you don't want this server to be installed with mason
           -- Use this to add any additional keymaps
           -- for specific lsp servers
-          ---@type LazyKeysSpec[]
           -- keys = {},
           settings = {
             Lua = {
@@ -70,7 +80,6 @@ return {
       },
       -- you can do any additional lsp server setup here
       -- return true if you don't want this server to be setup with lspconfig
-      ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
       setup = {
         -- example to setup with typescript.nvim
         -- tsserver = function(_, opts)
@@ -107,7 +116,6 @@ return {
       vim.lsp.handlers['client/registerCapability'] = function(err, res, ctx)
         local ret = register_capability(err, res, ctx)
         local client_id = ctx.client_id
-        ---@type lsp.Client
         local client = vim.lsp.get_client_by_id(client_id)
         local buffer = vim.api.nvim_get_current_buf()
         require('plugins.lsp.keymaps').on_attach(client, buffer)
@@ -292,7 +300,7 @@ return {
     dependencies = { 'mason.nvim' },
     init = function()
       Util.on_very_lazy(function()
-        -- register the formatter with LazyVim
+        -- register the formatter
         require('util').format.register {
           name = 'none-ls.nvim',
           priority = 200, -- set higher than conform, the builtin formatter

@@ -77,7 +77,7 @@ return {
       },
       {
         '<leader>ns',
-        '<cmd>Neorg sync-parsers',
+        '<cmd>Neorg sync-parsers<cr>',
         mode = { 'n', 'v' },
         desc = 'Neorg sync-parsers',
       },

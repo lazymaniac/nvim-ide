@@ -62,6 +62,7 @@ return {
 
   {
     'lukas-reineke/headlines.nvim',
+    optional = true,
     opts = function()
       local opts = {}
       for _, ft in ipairs { 'markdown', 'norg', 'rmd', 'org' } do

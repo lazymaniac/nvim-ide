@@ -14,7 +14,6 @@ return {
         },
       },
     },
-    ---@param opts cmp.ConfigSchema
     opts = function(_, opts)
       local cmp = require 'cmp'
       opts.sources = cmp.config.sources(vim.list_extend(opts.sources, {
@@ -45,6 +44,7 @@ return {
 
   {
     'simrat39/rust-tools.nvim',
+    ft = 'rs',
     opts = function()
       local ok, mason_registry = pcall(require, 'mason-registry')
       local adapter ---@type any
