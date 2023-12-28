@@ -35,7 +35,6 @@
   "hologram.nvim": { "branch": "main", "commit": "f5194f71ec1578d91b2e3119ff08e574e2eab542" },
   "hydra.nvim": { "branch": "master", "commit": "3ced42c0b6a6c85583ff0f221635a7f4c1ab0dd0" },
   "image.nvim": { "branch": "master", "commit": "9b6248bd8b58b505559e31eb581b7c4638369ec3" },
-  "iron.nvim": { "branch": "master", "commit": "3f6c27bcae54e82f146002f69eceaa65fcfb1b6f" },
   "jupytext.nvim": { "branch": "main", "commit": "61adad2a2455fad6d6ef3ebce6d0942cbeaffd33" },
   "lazy.nvim": { "branch": "main", "commit": "96584866b9c5e998cbae300594d0ccfd0c464627" },
   "leap.nvim": { "branch": "main", "commit": "47262a9beadd6945f51b0a4fc2d005aaa2095f04" },

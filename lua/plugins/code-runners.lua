@@ -109,8 +109,8 @@ return {
     event = 'VeryLazy',
     dependencies = {
       'echasnovski/mini.comment',
-      'hkupty/iron.nvim', -- repl provider
-      -- "akinsho/toggleterm.nvim", -- alternative repl provider
+      -- 'hkupty/iron.nvim', -- repl provider
+      'akinsho/toggleterm.nvim', -- alternative repl provider
       'anuvyklack/hydra.nvim',
     },
     opts = {
