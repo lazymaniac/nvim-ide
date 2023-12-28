@@ -18,6 +18,290 @@ local function extend_or_override(config, custom, ...)
   return config
 end
 
+local jdtls_settings = {
+  settings = {
+    redhat = {
+      telemetry = {
+        enabled = true,
+      },
+    },
+    java = {
+      settings = {
+        profile = 'default',
+        url = '',
+      },
+      server = {
+        launchMode = 'Standard',
+      },
+      compile = {
+        nullAnalysis = {
+          mode = 'automatic',
+          nonnull = { 'javax.annotation.Nonnull', 'org.eclipse.jdt.annotation.NonNull', 'org.springframework.lang.NonNull' },
+          nullable = { 'javax.annotation.Nullable', 'org.eclipse.jdt.annotation.Nullable', 'org.springframework.lang.Nullable' },
+        },
+      },
+      imports = {
+        gradle = {
+          annotationProcessing = {
+            enabled = true,
+          },
+          arguments = '',
+          enabled = true,
+          offline = {
+            enabled = false,
+          },
+          wrapper = {
+            enabled = true,
+          },
+        },
+      },
+      refactoring = {
+        extract = {
+          interface = {
+            replace = true,
+          },
+        },
+      },
+      sharedIndexes = {
+        enabled = 'auto',
+        location = '',
+      },
+      typeHierarchy = {
+        lazyLoad = false,
+      },
+      progressReports = {
+        enabled = true,
+      },
+      recommendations = {
+        dependency = {
+          analytics = {
+            show = true,
+          },
+        },
+      },
+      showBuildStatusOnStart = {
+        enabled = 'notification',
+      },
+      autobuild = {
+        enabled = true,
+      },
+      cleanup = {
+        actionsOnSave = {
+          -- "qualifyMembers",
+          -- "qualifyStaticMembers",
+          'addOverride',
+          'addDeprecated',
+          'stringConcatToTextBlock',
+          'invertEquals',
+          -- "addFinalModifier",
+          'instanceofPatternMatch',
+          'lambdaExpression',
+          'switchExpression',
+        },
+      },
+      codeGeneration = {
+        insertionLocation = 'afterCursor',
+        generateComments = false,
+        hashCodeEquals = {
+          useInstanceof = true,
+          useJava7Objects = true,
+        },
+        toString = {
+          codeStyle = 'STRING_BUILDER_CHAINED', -- "STRING_CONCATENATION" | "STRING_BUILDER" | "STRING_BUILDER_CHAINED" | "STRING_FORMAT"
+          limitElements = 0,
+          listArrayContents = true,
+          skipNullValues = false,
+          template = '${object.className} [${member.name()}=${member.value}, ${otherMembers}]',
+        },
+        useBlocks = true,
+      },
+      codeAction = {
+        sortMembers = {
+          avoidVolatileChanges = true,
+        },
+      },
+      completion = {
+        enabled = true,
+        lazyResolveTextEdit = {
+          enabled = true,
+        },
+        favoriteStaticMembers = {
+          'org.hamcrest.MatcherAssert.assertThat',
+          'org.hamcrest.Matchers.*',
+          'org.hamcrest.CoreMatchers.*',
+          'org.junit.jupiter.api.Assertions.*',
+          'java.util.Objects.requireNonNull',
+          'java.util.Objects.requireNonNullElse',
+          'org.mockito.Mockito.*',
+        },
+        filteredTypes = { 'java.awt.*', 'com.sun.*', 'sun.*', 'jdk.*', 'org.graalvm.*', 'io.micrometer.shaded.*' },
+        guessMethodArguments = 'auto',
+        importOrder = { '#', 'java', 'javax', 'org', 'com', '' },
+        matchCase = 'firstLetter',
+        maxResults = 50,
+        postfix = {
+          enabled = true,
+        },
+      },
+      configuration = {
+        checkProjectSettingsExclusions = true,
+        workspaceCacheLimit = 90,
+        maven = {
+          notCoveredPluginExecutionSeverity = 'warning',
+          defaultMojoExecutionAction = 'ignore',
+        },
+        runtimes = {
+          {
+            name = 'JavaSE-1.8',
+            path = '~/.sdkman/candidates/java/8.0.392-tem/',
+          },
+          {
+            name = 'JavaSE-11',
+            path = '~/.sdkman/candidates/java/11.0.21-tem/',
+          },
+          {
+            name = 'JavaSE-17',
+            path = '~/.sdkman/candidates/java/17.0.9-tem/',
+            default = true,
+          },
+        },
+        updateBuildConfiguration = 'automatic',
+      },
+      contentProvider = { preferred = 'fernflower' },
+      eclipse = {
+        downloadSources = true,
+      },
+      errors = {
+        incompleteClasspath = {
+          severity = 'warning',
+        },
+      },
+      foldingRange = {
+        enabled = true,
+      },
+      format = {
+        comments = {
+          enabled = true,
+        },
+        enabled = true,
+        onType = {
+          enabled = true,
+        },
+        settings = {
+          profile = 'Default',
+          url = '~/.config/nvim/java-formatter.xml',
+        },
+      },
+      implementationsCodeLens = {
+        enabled = true,
+      },
+      import = {
+        generatesMetadataFilesAtProjectRoot = false,
+        exclusions = {
+          '**/node_modules/**',
+          '**/.metadata/**',
+          '**/archetype-resources/**',
+          '**/META-INF/maven/**',
+        },
+        gradle = {
+          wrapper = {
+            enabled = true,
+          },
+          annotationProcessing = {
+            enabled = true,
+          },
+          enabled = true,
+          offline = {
+            enabled = false,
+          },
+        },
+        maven = {
+          defaultMojoExecutionAction = 'warn',
+          notCoveredPluginExecutionSeverity = 'warning',
+          enabled = true,
+          offline = {
+            enabled = false,
+          },
+        },
+      },
+      inlayHints = {
+        parameterNames = {
+          enabled = 'all', -- literals, all, none
+          exclusions = {},
+        },
+      },
+      jdt = {
+        ls = {
+          vmargs = '-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx3G -Xms100m -Xlog:disable',
+          protobufSupport = {
+            enabled = true,
+          },
+          androidSupport = {
+            enabled = 'auto',
+          },
+          lombokSupport = {
+            enabled = true,
+          },
+        },
+      },
+      maven = {
+        downloadSources = true,
+        updateSnapshots = false,
+      },
+      maxConcurrentBuilds = 1,
+      project = {
+        importHint = true,
+        importOnFirstTimeStartup = 'automatic',
+        encoding = 'setDefault',
+        referencedLibraries = { 'lib/**/*.jar' },
+        resourceFilters = { 'node_modules', '\\.git' },
+        sourcePaths = {},
+      },
+      quickfix = {
+        showAt = 'line',
+      },
+      referencesCodeLens = {
+        enabled = true,
+      },
+      references = {
+        includeAccessors = true,
+        includeDecompiledSources = true,
+      },
+      saveActions = {
+        organizeImports = false,
+      },
+      selectionRange = {
+        enabled = true,
+      },
+      signatureHelp = {
+        enabled = true,
+        description = {
+          enabled = true,
+        },
+      },
+      sources = {
+        organizeImports = {
+          starThreshold = 99,
+          staticStarThreshold = 99,
+        },
+      },
+      symbols = {
+        includeSourceMethodDeclarations = true,
+      },
+      templates = {
+        fileHeader = {},
+        typeComment = {},
+      },
+      trace = {
+        server = 'off',
+      },
+      edit = {
+        validateAllOpenBuffersOnChanges = false,
+      },
+    },
+  },
+}
+
 return {
 
   -- [[ JAVA ]] - LSP, DAP, TEST SETUP
@@ -72,7 +356,36 @@ return {
                     require('java').dap.config_dap()
                     require('java').test.debug_current_method()
                   end,
-                  desc = 'Debug Nearest (Java)',
+                  desc = 'Debug Current Method (Java)',
+                },
+                {
+                  '<leader>tD',
+                  function()
+                    require('java').dap.config_dap()
+                    require('java').test.debug_current_class()
+                  end,
+                  desc = 'Debug Current Class (Java)',
+                },
+                {
+                  '<leader>tr',
+                  function()
+                    require('java').test.run_current_method()
+                  end,
+                  desc = 'Run Current Method (Java)',
+                },
+                {
+                  '<leader>tt',
+                  function()
+                    require('java').test.run_current_class()
+                  end,
+                  desc = 'Run Current Class (Java)',
+                },
+                {
+                  '<leader>tv',
+                  function()
+                    require('java').test.view_last_report()
+                  end,
+                  desc = 'View Test Report (Java)',
                 },
               },
             },
@@ -96,289 +409,7 @@ return {
                   auto_install = false,
                 },
               }
-              require('lspconfig').jdtls.setup {
-                settings = {
-                  redhat = {
-                    telemetry = {
-                      enabled = true,
-                    },
-                  },
-                  java = {
-                    settings = {
-                      profile = 'default',
-                      url = '',
-                    },
-                    server = {
-                      launchMode = 'Standard',
-                    },
-                    compile = {
-                      nullAnalysis = {
-                        mode = 'automatic',
-                        nonnull = { 'javax.annotation.Nonnull', 'org.eclipse.jdt.annotation.NonNull', 'org.springframework.lang.NonNull' },
-                        nullable = { 'javax.annotation.Nullable', 'org.eclipse.jdt.annotation.Nullable', 'org.springframework.lang.Nullable' },
-                      },
-                    },
-                    imports = {
-                      gradle = {
-                        annotationProcessing = {
-                          enabled = true,
-                        },
-                        arguments = '',
-                        enabled = true,
-                        offline = {
-                          enabled = false,
-                        },
-                        wrapper = {
-                          enabled = true,
-                        },
-                      },
-                    },
-                    refactoring = {
-                      extract = {
-                        interface = {
-                          replace = true,
-                        },
-                      },
-                    },
-                    sharedIndexes = {
-                      enabled = 'auto',
-                      location = '',
-                    },
-                    typeHierarchy = {
-                      lazyLoad = false,
-                    },
-                    progressReports = {
-                      enabled = true,
-                    },
-                    recommendations = {
-                      dependency = {
-                        analytics = {
-                          show = true,
-                        },
-                      },
-                    },
-                    showBuildStatusOnStart = {
-                      enabled = 'notification',
-                    },
-                    autobuild = {
-                      enabled = true,
-                    },
-                    cleanup = {
-                      actionsOnSave = {
-                        -- "qualifyMembers",
-                        -- "qualifyStaticMembers",
-                        'addOverride',
-                        'addDeprecated',
-                        'stringConcatToTextBlock',
-                        'invertEquals',
-                        -- "addFinalModifier",
-                        'instanceofPatternMatch',
-                        'lambdaExpression',
-                        'switchExpression',
-                      },
-                    },
-                    codeGeneration = {
-                      insertionLocation = 'afterCursor',
-                      generateComments = false,
-                      hashCodeEquals = {
-                        useInstanceof = true,
-                        useJava7Objects = true,
-                      },
-                      toString = {
-                        codeStyle = 'STRING_BUILDER_CHAINED', -- "STRING_CONCATENATION" | "STRING_BUILDER" | "STRING_BUILDER_CHAINED" | "STRING_FORMAT"
-                        limitElements = 0,
-                        listArrayContents = true,
-                        skipNullValues = false,
-                        template = '${object.className} [${member.name()}=${member.value}, ${otherMembers}]',
-                      },
-                      useBlocks = true,
-                    },
-                    codeAction = {
-                      sortMembers = {
-                        avoidVolatileChanges = true,
-                      },
-                    },
-                    completion = {
-                      enabled = true,
-                      lazyResolveTextEdit = {
-                        enabled = true,
-                      },
-                      favoriteStaticMembers = {
-                        'org.hamcrest.MatcherAssert.assertThat',
-                        'org.hamcrest.Matchers.*',
-                        'org.hamcrest.CoreMatchers.*',
-                        'org.junit.jupiter.api.Assertions.*',
-                        'java.util.Objects.requireNonNull',
-                        'java.util.Objects.requireNonNullElse',
-                        'org.mockito.Mockito.*',
-                      },
-                      filteredTypes = { 'java.awt.*', 'com.sun.*', 'sun.*', 'jdk.*', 'org.graalvm.*', 'io.micrometer.shaded.*' },
-                      guessMethodArguments = 'auto',
-                      importOrder = { '#', 'java', 'javax', 'org', 'com', '' },
-                      matchCase = 'firstLetter',
-                      maxResults = 50,
-                      postfix = {
-                        enabled = true,
-                      },
-                    },
-                    configuration = {
-                      checkProjectSettingsExclusions = true,
-                      workspaceCacheLimit = 90,
-                      maven = {
-                        notCoveredPluginExecutionSeverity = 'warning',
-                        defaultMojoExecutionAction = 'ignore',
-                      },
-                      runtimes = {
-                        {
-                          name = 'JavaSE-1.8',
-                          path = '~/.sdkman/candidates/java/8.0.392-tem/',
-                        },
-                        {
-                          name = 'JavaSE-11',
-                          path = '~/.sdkman/candidates/java/11.0.21-tem/',
-                        },
-                        {
-                          name = 'JavaSE-17',
-                          path = '~/.sdkman/candidates/java/17.0.9-tem/',
-                          default = true,
-                        },
-                      },
-                      updateBuildConfiguration = 'automatic',
-                    },
-                    contentProvider = { preferred = 'fernflower' },
-                    eclipse = {
-                      downloadSources = true,
-                    },
-                    errors = {
-                      incompleteClasspath = {
-                        severity = 'warning',
-                      },
-                    },
-                    foldingRange = {
-                      enabled = true,
-                    },
-                    format = {
-                      comments = {
-                        enabled = true,
-                      },
-                      enabled = true,
-                      onType = {
-                        enabled = true,
-                      },
-                      settings = {
-                        profile = 'Default',
-                        url = '~/.config/nvim/java-formatter.xml',
-                      },
-                    },
-                    implementationsCodeLens = {
-                      enabled = true,
-                    },
-                    import = {
-                      generatesMetadataFilesAtProjectRoot = false,
-                      exclusions = {
-                        '**/node_modules/**',
-                        '**/.metadata/**',
-                        '**/archetype-resources/**',
-                        '**/META-INF/maven/**',
-                      },
-                      gradle = {
-                        wrapper = {
-                          enabled = true,
-                        },
-                        annotationProcessing = {
-                          enabled = true,
-                        },
-                        enabled = true,
-                        offline = {
-                          enabled = false,
-                        },
-                      },
-                      maven = {
-                        defaultMojoExecutionAction = 'warn',
-                        notCoveredPluginExecutionSeverity = 'warning',
-                        enabled = true,
-                        offline = {
-                          enabled = false,
-                        },
-                      },
-                    },
-                    inlayHints = {
-                      parameterNames = {
-                        enabled = 'all', -- literals, all, none
-                        exclusions = {},
-                      },
-                    },
-                    jdt = {
-                      ls = {
-                        vmargs = '-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx3G -Xms100m -Xlog:disable',
-                        protobufSupport = {
-                          enabled = true,
-                        },
-                        androidSupport = {
-                          enabled = 'auto',
-                        },
-                        lombokSupport = {
-                          enabled = true,
-                        },
-                      },
-                    },
-                    maven = {
-                      downloadSources = true,
-                      updateSnapshots = false,
-                    },
-                    maxConcurrentBuilds = 1,
-                    project = {
-                      importHint = true,
-                      importOnFirstTimeStartup = 'automatic',
-                      encoding = 'setDefault',
-                      referencedLibraries = { 'lib/**/*.jar' },
-                      resourceFilters = { 'node_modules', '\\.git' },
-                      sourcePaths = {},
-                    },
-                    quickfix = {
-                      showAt = 'line',
-                    },
-                    referencesCodeLens = {
-                      enabled = true,
-                    },
-                    references = {
-                      includeAccessors = true,
-                      includeDecompiledSources = true,
-                    },
-                    saveActions = {
-                      organizeImports = false,
-                    },
-                    selectionRange = {
-                      enabled = true,
-                    },
-                    signatureHelp = {
-                      enabled = true,
-                      description = {
-                        enabled = true,
-                      },
-                    },
-                    sources = {
-                      organizeImports = {
-                        starThreshold = 99,
-                        staticStarThreshold = 99,
-                      },
-                    },
-                    symbols = {
-                      includeSourceMethodDeclarations = true,
-                    },
-                    templates = {
-                      fileHeader = {},
-                      typeComment = {},
-                    },
-                    trace = {
-                      server = 'off',
-                    },
-                    edit = {
-                      validateAllOpenBuffersOnChanges = false,
-                    },
-                  },
-                },
-              }
+              require('lspconfig').jdtls.setup(jdtls_settings)
             end,
           },
         },
@@ -529,225 +560,7 @@ return {
           flags = {
             allow_incremental_sync = true,
           },
-          settings = {
-            java = {
-              autobuild = {
-                enabled = true,
-              },
-              cleanup = {
-                actionsOnSave = {
-                  -- "qualifyMembers",
-                  -- "qualifyStaticMembers",
-                  'addOverride',
-                  'addDeprecated',
-                  'stringConcatToTextBlock',
-                  'invertEquals',
-                  -- "addFinalModifier",
-                  'instanceofPatternMatch',
-                  'lambdaExpression',
-                  'switchExpression',
-                },
-              },
-              codeGeneration = {
-                generateComments = false,
-                hashCodeEquals = {
-                  useInstanceof = false,
-                  useJava7Objects = false,
-                },
-                toString = {
-                  codeStyle = 'STRING_FORMAT',
-                  limitElements = 0,
-                  listArrayContents = true,
-                  skipNullValues = false,
-                  template = '${object.className} [${member.name()}=${member.value}, ${otherMembers}]',
-                },
-                useBlocks = true,
-              },
-              codeAction = {
-                sortMembers = {
-                  avoidVolatileChanges = true,
-                },
-              },
-              completion = {
-                enabled = true,
-                favoriteStaticMembers = {
-                  'org.hamcrest.MatcherAssert.assertThat',
-                  'org.hamcrest.Matchers.*',
-                  'org.hamcrest.CoreMatchers.*',
-                  'org.junit.jupiter.api.Assertions.*',
-                  'java.util.Objects.requireNonNull',
-                  'java.util.Objects.requireNonNullElse',
-                  'org.mockito.Mockito.*',
-                },
-                filteredTypes = {},
-                guessMethodArguments = true,
-                importOrder = { 'java', 'javax', 'org', 'com' },
-                matchCase = 'firstletter',
-                maxResults = 50,
-                overwrite = true,
-                postfix = true,
-              },
-              configuration = {
-                maven = {
-                  -- userSettings = "",
-                  -- globalSettings = "",
-                  notCoveredPluginExecutionSeverity = 'warning',
-                },
-                runtimes = {
-                  {
-                    name = 'JavaSE-1.8',
-                    path = '~/.sdkman/candidates/java/8.0.392-tem/',
-                  },
-                  {
-                    name = 'JavaSE-11',
-                    path = '~/.sdkman/candidates/java/11.0.21-tem/',
-                  },
-                  {
-                    name = 'JavaSE-17',
-                    path = '~/.sdkman/candidates/java/17.0.9-tem/',
-                    default = true,
-                  },
-                },
-                updateBuildConfiguration = 'automatic',
-              },
-              contentProvider = { preferred = 'fernflower' },
-              eclipse = {
-                downloadSources = true,
-              },
-              errors = {
-                incompleteClasspath = {
-                  severity = 'warning',
-                },
-              },
-              executeCommand = {
-                enabled = true,
-              },
-              foldingRange = {
-                enabled = true,
-              },
-              format = {
-                comments = {
-                  enabled = true,
-                },
-                enabled = true,
-                insertSpaces = true,
-                onType = {
-                  enabled = true,
-                },
-                settings = {
-                  profile = 'Default',
-                  url = '~/.config/nvim/java-formatter.xml',
-                },
-                tabSize = 4,
-              },
-              implementationsCodeLens = {
-                enabled = true,
-              },
-              import = {
-                exclusions = {
-                  '**/node_modules/**',
-                  '**/.metadata/**',
-                  '**/archetype-resources/**',
-                  '**/META-INF/maven/**',
-                },
-                gradle = {
-                  annotationProcessing = {
-                    enabled = true,
-                  },
-                  arguments = {},
-                  enabled = true,
-                  -- home = "",
-                  -- java = {},
-                  jvmArguments = {},
-                  offline = {
-                    enabled = false,
-                  },
-                  -- user = {},
-                  -- version = "",
-                  -- wrapper = {},
-                },
-                maven = {
-                  enabled = true,
-                  offline = {
-                    enabled = false,
-                  },
-                },
-              },
-              inlayHints = {
-                parameterNames = {
-                  enabled = 'all', -- literals, all, none
-                  exclusions = {},
-                },
-              },
-              jdt = {
-                ls = {
-                  androidSupport = true,
-                  lombokSupport = true,
-                  protofBufSupport = true,
-                },
-              },
-              maven = {
-                downloadSources = true,
-                updateSnapshots = false,
-              },
-              maxConcurrentBuilds = 1,
-              -- memberSortOrder = "SF,F,",
-              project = {
-                encoding = 'IGNORE',
-                outputPath = '',
-                referencedLibraries = 'lib/**',
-                resourceFilters = { 'node_modules', '\\.git' },
-                sourcePaths = '',
-              },
-              quickfix = {
-                showAt = 'line',
-              },
-              referencesCodeLens = {
-                enabled = true,
-              },
-              references = {
-                includeAccessors = true,
-                includeDecompiledSources = true,
-              },
-              rename = {
-                enabled = true,
-              },
-              saveActions = {
-                organizeImports = true,
-              },
-              selectionRange = {
-                enabled = true,
-              },
-              -- settings = {
-              --   url = "",
-              -- },
-              signatureHelp = {
-                enabled = true,
-                description = true,
-              },
-              sources = {
-                organizeImports = {
-                  starThreshold = 9999,
-                  staticStarThreshold = 9999,
-                },
-              },
-              symbols = {
-                includeSourceMethodDeclarations = true,
-              },
-              templates = {
-                fileHeader = {},
-                typeComment = {},
-              },
-              trace = {
-                server = 'off',
-              },
-              edit = {
-                validateAllOpenBuffersOnChanges = true,
-              },
-            },
-            -- enable CMP capabilities
-            capabilities = capabilities,
-          },
+          settings = jdtls_settings,
         }, opts.jdtls)
 
         -- Existing server will be reused if the root_dir matches.

@@ -57,7 +57,8 @@ vim.o.tabstop = 2 -- Number of spaces tabs count for
 vim.o.softtabstop = 2
 vim.o.shiftwidth = 2
 vim.o.termguicolors = true -- Terminal true color support
-vim.o.timeoutlen = 1000 -- Time to wait for a mapped sequence to complete (in ms)
+vim.o.timeout = true -- required by which-key
+vim.o.timeoutlen = 250 -- Time to wait for a mapped sequence to complete (in ms)
 vim.o.title = true -- Set the title of window to the value of the titlestrinf
 vim.o.titlestring = '%<%F%=%l/%L - nvim'
 vim.o.undofile = true -- Enable persistent undo
