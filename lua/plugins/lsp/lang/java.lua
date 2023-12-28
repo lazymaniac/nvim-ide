@@ -51,7 +51,6 @@ return {
   {
     'nvim-java/nvim-java',
     ft = java_filetypes,
-    optional = true,
     dependencies = {
       { 'nvim-java/lua-async-await' },
       { 'nvim-java/nvim-java-core' },

@@ -7,12 +7,6 @@ return {
     event = 'VeryLazy',
     dependencies = {
       {
-        'folke/neoconf.nvim',
-        cmd = 'Neoconf',
-        config = false,
-        dependencies = { 'nvim-lspconfig' },
-      },
-      {
         'folke/neodev.nvim',
         opts = {
           library = {
@@ -92,11 +86,6 @@ return {
     },
     ---@param opts PluginLspOpts
     config = function(_, opts)
-      if Util.has 'neoconf.nvim' then
-        local plugin = require('lazy.core.config').spec.plugins['neoconf.nvim']
-        require('neoconf').setup(require('lazy.core.plugin').values(plugin, 'opts', false))
-      end
-
       -- setup autoformat
       Util.format.register(Util.lsp.formatter())
 
@@ -220,50 +209,8 @@ return {
     build = ':MasonUpdate',
     opts = {
       ensure_installed = {
-        'actionlint',
-        'alex',
-        'asm-lsp',
-        'clangd',
-        'cmakelang',
-        'cmakelint',
-        'codelldb',
-        'debugpy',
-        'delve',
-        'docker-compose-language-service',
-        'dockerfile-language-server',
-        'elixir-ls',
-        'eslint-lsp',
-        'gitui',
-        'gofumpt',
-        'goimports',
-        'gopls',
-        'gradle-language-server',
-        'hadolint',
-        'java-debug-adapter',
-        'java-test',
-        'jdtls',
-        'js-debug-adapter',
-        'kotlin-debug-adapter',
-        'kotlin-language-server',
-        'ktlint',
-        'lemminx',
         'lua-language-server',
-        'markdownlint',
-        'marksman',
-        'omnisharp',
-        'pyright',
-        'ruff-lsp',
-        'rust-analyzer',
         'stylua',
-        'shfmt',
-        'tailwindcss-language-server',
-        'taplo',
-        'terraform-ls',
-        'texlab',
-        'typescript-language-server',
-        'xmlformatter',
-        'yaml-language-server',
-        'flake8',
       },
     },
     ---@param opts MasonSettings | {ensure_installed: string[]}

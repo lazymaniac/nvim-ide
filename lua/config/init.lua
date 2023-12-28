@@ -16,7 +16,6 @@ local defaults = {
     -- if you want to disable loading options, add `package.loaded["config.options"] = true` to the top of your init.lua
   },
   news = {
-    -- Same but for Neovim's news.txt
     neovim = true,
   },
   -- icons used by other plugins
@@ -84,42 +83,6 @@ local defaults = {
       Variable = '󰀫 ',
     },
   },
-  ---@type table<string, string[]|boolean>?
-  kind_filter = {
-    default = {
-      'Class',
-      'Constructor',
-      'Enum',
-      'Field',
-      'Function',
-      'Interface',
-      'Method',
-      'Module',
-      'Namespace',
-      'Package',
-      'Property',
-      'Struct',
-      'Trait',
-    },
-    markdown = false,
-    help = false,
-    -- you can specify a different filter for each filetype
-    lua = {
-      'Class',
-      'Constructor',
-      'Enum',
-      'Field',
-      'Function',
-      'Interface',
-      'Method',
-      'Module',
-      'Namespace',
-      -- "Package", -- remove package since luals uses it for control flow structures
-      'Property',
-      'Struct',
-      'Trait',
-    },
-  },
 }
 
 ---@type LazyVimOptions
@@ -134,22 +97,9 @@ function M.setup(opts)
   if not lazy_autocmds then
     M.load 'autocmds'
   end
-
-  local group = vim.api.nvim_create_augroup('LazyVim', { clear = true })
-  vim.api.nvim_create_autocmd('User', {
-    group = group,
-    pattern = 'VeryLazy',
-    callback = function()
-      if lazy_autocmds then
-        M.load 'autocmds'
-      end
-      M.load 'keymaps'
-
-      Util.format.setup()
-      Util.root.setup()
-    end,
-  })
-
+  M.load 'keymaps'
+  Util.format.setup()
+  Util.root.setup()
   Util.track 'colorscheme'
   Util.try(function()
     if type(M.colorscheme) == 'function' then
@@ -165,21 +115,6 @@ function M.setup(opts)
     end,
   })
   Util.track()
-end
-
----@param buf? number
----@return string[]?
-function M.get_kind_filter(buf)
-  buf = (buf == nil or buf == 0) and vim.api.nvim_get_current_buf() or buf
-  local ft = vim.bo[buf].filetype
-  if M.kind_filter == false then
-    return
-  end
-  if M.kind_filter[ft] == false then
-    return
-  end
-  ---@diagnostic disable-next-line: return-type-mismatch
-  return type(M.kind_filter) == 'table' and type(M.kind_filter.default) == 'table' and M.kind_filter.default or nil
 end
 
 ---@param name "autocmds" | "options" | "keymaps"
@@ -210,15 +145,7 @@ function M.init()
     return
   end
   M.did_init = true
-  local plugin = require('lazy.core.config').spec.plugins.LazyVim
-  if plugin then
-    vim.opt.rtp:append(plugin.dir)
-  end
-
-  package.preload['plugins.lsp.format'] = function()
-    Util.deprecate([[require("plugins.lsp.format")]], [[require("util").format]])
-    return Util.format
-  end
+  require("util.format")
 
   -- delay notifications till vim.notify was replaced or after 500ms
   require('util').lazy_notify()

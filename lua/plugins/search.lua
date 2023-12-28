@@ -92,18 +92,14 @@ return {
       {
         '<leader>ss',
         function()
-          require('telescope.builtin').lsp_document_symbols {
-            symbols = require('config').get_kind_filter(),
-          }
+          require('telescope.builtin').lsp_document_symbols {}
         end,
         desc = 'Goto Symbol',
       },
       {
         '<leader>sS',
         function()
-          require('telescope.builtin').lsp_dynamic_workspace_symbols {
-            symbols = require('config').get_kind_filter(),
-          }
+          require('telescope.builtin').lsp_dynamic_workspace_symbols {}
         end,
         desc = 'Goto Symbol (Workspace)',
       },
@@ -144,8 +140,8 @@ return {
 
       return {
         defaults = {
-          layout_strategy = 'horizontal',
-          layout_config = { prompt_position = 'top' },
+          layout_strategy = 'vertical',
+          layout_config = { prompt_position = 'bottom' },
           sorting_strategy = 'ascending',
           winblend = 0,
           prompt_prefix = ' ',
