@@ -334,6 +334,7 @@ return {
   -- Set up nvim-java
   {
     'nvim-java/nvim-java',
+    enabled = false,
     ft = java_filetypes,
     dependencies = {
       { 'nvim-java/lua-async-await' },
@@ -437,23 +438,23 @@ return {
 
   -- Configure nvim-lspconfig to install the server automatically via mason, but
   -- defer actually starting it to our configuration of nvim-jtdls below.
-  -- {
-  --   'neovim/nvim-lspconfig',
-  --   opts = {
-  --     -- make sure mason installs the server
-  --     servers = {
-  --       jdtls = {},
-  --     },
-  --     setup = {
-  --       jdtls = function()
-  --         return true -- avoid duplicate servers
-  --       end,
-  --     },
-  --   },
-  -- },
+  {
+    'neovim/nvim-lspconfig',
+    opts = {
+      -- make sure mason installs the server
+      servers = {
+        jdtls = {},
+      },
+      setup = {
+        jdtls = function()
+          return true -- avoid duplicate servers
+        end,
+      },
+    },
+  },
   {
     'mfussenegger/nvim-jdtls',
-    enabled = false,
+    enabled = true,
     ft = java_filetypes,
     opts = function()
       return {
@@ -589,7 +590,7 @@ return {
               ['<leader>cxv'] = { require('jdtls').extract_variable_all, 'Extract Variable' },
               ['<leader>cxc'] = { require('jdtls').extract_constant, 'Extract Constant' },
               ['gs'] = { require('jdtls').super_implementation, 'Goto Super' },
-              ['gS'] = { require('jdtls.tests').goto_subjects, 'Goto Subjects' },
+              ['gS'] = { require('jdtls').goto_subjects, 'Goto Subjects' },
               ['<leader>co'] = { require('jdtls').organize_imports, 'Organize Imports' },
             }, { mode = 'n', buffer = args.buf })
             wk.register({
@@ -619,9 +620,9 @@ return {
                 -- custom keymaps for Java test runner (not yet compatible with neotest)
                 wk.register({
                   ['<leader>t'] = { name = '+test' },
-                  ['<leader>tt'] = { require('jdtls.dap').test_class, 'Run All Test' },
-                  ['<leader>tr'] = { require('jdtls.dap').test_nearest_method, 'Run Nearest Test' },
-                  ['<leader>tT'] = { require('jdtls.dap').pick_test, 'Run Test' },
+                  ['<leader>tt'] = { require('jdtls.dap').test_class, 'Test Class (Java)' },
+                  ['<leader>tr'] = { require('jdtls.dap').test_nearest_method, 'Test Nearest Method (Java)' },
+                  ['<leader>tT'] = { require('jdtls.dap').pick_test, 'Run Test (Java)' },
                 }, { mode = 'n', buffer = args.buf })
               end
             end
