@@ -19,285 +19,283 @@ local function extend_or_override(config, custom, ...)
 end
 
 local jdtls_settings = {
-  settings = {
-    redhat = {
-      telemetry = {
+  redhat = {
+    telemetry = {
+      enabled = true,
+    },
+  },
+  java = {
+    settings = {
+      profile = 'default',
+      url = '',
+    },
+    server = {
+      launchMode = 'Standard',
+    },
+    compile = {
+      nullAnalysis = {
+        mode = 'automatic',
+        nonnull = { 'javax.annotation.Nonnull', 'org.eclipse.jdt.annotation.NonNull', 'org.springframework.lang.NonNull' },
+        nullable = { 'javax.annotation.Nullable', 'org.eclipse.jdt.annotation.Nullable', 'org.springframework.lang.Nullable' },
+      },
+    },
+    imports = {
+      gradle = {
+        annotationProcessing = {
+          enabled = true,
+        },
+        arguments = '',
+        enabled = true,
+        offline = {
+          enabled = false,
+        },
+        wrapper = {
+          enabled = true,
+        },
+      },
+    },
+    refactoring = {
+      extract = {
+        interface = {
+          replace = true,
+        },
+      },
+    },
+    sharedIndexes = {
+      enabled = 'auto',
+      location = '',
+    },
+    typeHierarchy = {
+      lazyLoad = false,
+    },
+    progressReports = {
+      enabled = true,
+    },
+    recommendations = {
+      dependency = {
+        analytics = {
+          show = true,
+        },
+      },
+    },
+    showBuildStatusOnStart = {
+      enabled = 'notification',
+    },
+    autobuild = {
+      enabled = true,
+    },
+    cleanup = {
+      actionsOnSave = {
+        -- "qualifyMembers",
+        -- "qualifyStaticMembers",
+        'addOverride',
+        'addDeprecated',
+        'stringConcatToTextBlock',
+        'invertEquals',
+        -- "addFinalModifier",
+        'instanceofPatternMatch',
+        'lambdaExpression',
+        'switchExpression',
+      },
+    },
+    codeGeneration = {
+      insertionLocation = 'afterCursor',
+      generateComments = false,
+      hashCodeEquals = {
+        useInstanceof = true,
+        useJava7Objects = true,
+      },
+      toString = {
+        codeStyle = 'STRING_BUILDER_CHAINED', -- "STRING_CONCATENATION" | "STRING_BUILDER" | "STRING_BUILDER_CHAINED" | "STRING_FORMAT"
+        limitElements = 0,
+        listArrayContents = true,
+        skipNullValues = false,
+        template = '${object.className} [${member.name()}=${member.value}, ${otherMembers}]',
+      },
+      useBlocks = true,
+    },
+    codeAction = {
+      sortMembers = {
+        avoidVolatileChanges = true,
+      },
+    },
+    completion = {
+      enabled = true,
+      lazyResolveTextEdit = {
+        enabled = true,
+      },
+      favoriteStaticMembers = {
+        'org.hamcrest.MatcherAssert.assertThat',
+        'org.hamcrest.Matchers.*',
+        'org.hamcrest.CoreMatchers.*',
+        'org.junit.jupiter.api.Assertions.*',
+        'java.util.Objects.requireNonNull',
+        'java.util.Objects.requireNonNullElse',
+        'org.mockito.Mockito.*',
+      },
+      filteredTypes = { 'java.awt.*', 'com.sun.*', 'sun.*', 'jdk.*', 'org.graalvm.*', 'io.micrometer.shaded.*' },
+      guessMethodArguments = 'auto',
+      importOrder = { '#', 'java', 'javax', 'org', 'com', '' },
+      matchCase = 'firstLetter',
+      maxResults = 50,
+      postfix = {
         enabled = true,
       },
     },
-    java = {
+    configuration = {
+      checkProjectSettingsExclusions = true,
+      workspaceCacheLimit = 90,
+      maven = {
+        notCoveredPluginExecutionSeverity = 'warning',
+        defaultMojoExecutionAction = 'ignore',
+      },
+      runtimes = {
+        {
+          name = 'JavaSE-1.8',
+          path = '~/.sdkman/candidates/java/8.0.392-tem/',
+        },
+        {
+          name = 'JavaSE-11',
+          path = '~/.sdkman/candidates/java/11.0.21-tem/',
+        },
+        {
+          name = 'JavaSE-17',
+          path = '~/.sdkman/candidates/java/17.0.9-tem/',
+          default = true,
+        },
+      },
+      updateBuildConfiguration = 'automatic',
+    },
+    contentProvider = { preferred = 'fernflower' },
+    eclipse = {
+      downloadSources = true,
+    },
+    errors = {
+      incompleteClasspath = {
+        severity = 'warning',
+      },
+    },
+    foldingRange = {
+      enabled = true,
+    },
+    format = {
+      comments = {
+        enabled = true,
+      },
+      enabled = true,
+      onType = {
+        enabled = true,
+      },
       settings = {
-        profile = 'default',
-        url = '',
+        profile = 'Default',
+        url = '~/.config/nvim/java-formatter.xml',
       },
-      server = {
-        launchMode = 'Standard',
+    },
+    implementationsCodeLens = {
+      enabled = true,
+    },
+    import = {
+      generatesMetadataFilesAtProjectRoot = false,
+      exclusions = {
+        '**/node_modules/**',
+        '**/.metadata/**',
+        '**/archetype-resources/**',
+        '**/META-INF/maven/**',
       },
-      compile = {
-        nullAnalysis = {
-          mode = 'automatic',
-          nonnull = { 'javax.annotation.Nonnull', 'org.eclipse.jdt.annotation.NonNull', 'org.springframework.lang.NonNull' },
-          nullable = { 'javax.annotation.Nullable', 'org.eclipse.jdt.annotation.Nullable', 'org.springframework.lang.Nullable' },
-        },
-      },
-      imports = {
-        gradle = {
-          annotationProcessing = {
-            enabled = true,
-          },
-          arguments = '',
-          enabled = true,
-          offline = {
-            enabled = false,
-          },
-          wrapper = {
-            enabled = true,
-          },
-        },
-      },
-      refactoring = {
-        extract = {
-          interface = {
-            replace = true,
-          },
-        },
-      },
-      sharedIndexes = {
-        enabled = 'auto',
-        location = '',
-      },
-      typeHierarchy = {
-        lazyLoad = false,
-      },
-      progressReports = {
-        enabled = true,
-      },
-      recommendations = {
-        dependency = {
-          analytics = {
-            show = true,
-          },
-        },
-      },
-      showBuildStatusOnStart = {
-        enabled = 'notification',
-      },
-      autobuild = {
-        enabled = true,
-      },
-      cleanup = {
-        actionsOnSave = {
-          -- "qualifyMembers",
-          -- "qualifyStaticMembers",
-          'addOverride',
-          'addDeprecated',
-          'stringConcatToTextBlock',
-          'invertEquals',
-          -- "addFinalModifier",
-          'instanceofPatternMatch',
-          'lambdaExpression',
-          'switchExpression',
-        },
-      },
-      codeGeneration = {
-        insertionLocation = 'afterCursor',
-        generateComments = false,
-        hashCodeEquals = {
-          useInstanceof = true,
-          useJava7Objects = true,
-        },
-        toString = {
-          codeStyle = 'STRING_BUILDER_CHAINED', -- "STRING_CONCATENATION" | "STRING_BUILDER" | "STRING_BUILDER_CHAINED" | "STRING_FORMAT"
-          limitElements = 0,
-          listArrayContents = true,
-          skipNullValues = false,
-          template = '${object.className} [${member.name()}=${member.value}, ${otherMembers}]',
-        },
-        useBlocks = true,
-      },
-      codeAction = {
-        sortMembers = {
-          avoidVolatileChanges = true,
-        },
-      },
-      completion = {
-        enabled = true,
-        lazyResolveTextEdit = {
+      gradle = {
+        wrapper = {
           enabled = true,
         },
-        favoriteStaticMembers = {
-          'org.hamcrest.MatcherAssert.assertThat',
-          'org.hamcrest.Matchers.*',
-          'org.hamcrest.CoreMatchers.*',
-          'org.junit.jupiter.api.Assertions.*',
-          'java.util.Objects.requireNonNull',
-          'java.util.Objects.requireNonNullElse',
-          'org.mockito.Mockito.*',
-        },
-        filteredTypes = { 'java.awt.*', 'com.sun.*', 'sun.*', 'jdk.*', 'org.graalvm.*', 'io.micrometer.shaded.*' },
-        guessMethodArguments = 'auto',
-        importOrder = { '#', 'java', 'javax', 'org', 'com', '' },
-        matchCase = 'firstLetter',
-        maxResults = 50,
-        postfix = {
-          enabled = true,
-        },
-      },
-      configuration = {
-        checkProjectSettingsExclusions = true,
-        workspaceCacheLimit = 90,
-        maven = {
-          notCoveredPluginExecutionSeverity = 'warning',
-          defaultMojoExecutionAction = 'ignore',
-        },
-        runtimes = {
-          {
-            name = 'JavaSE-1.8',
-            path = '~/.sdkman/candidates/java/8.0.392-tem/',
-          },
-          {
-            name = 'JavaSE-11',
-            path = '~/.sdkman/candidates/java/11.0.21-tem/',
-          },
-          {
-            name = 'JavaSE-17',
-            path = '~/.sdkman/candidates/java/17.0.9-tem/',
-            default = true,
-          },
-        },
-        updateBuildConfiguration = 'automatic',
-      },
-      contentProvider = { preferred = 'fernflower' },
-      eclipse = {
-        downloadSources = true,
-      },
-      errors = {
-        incompleteClasspath = {
-          severity = 'warning',
-        },
-      },
-      foldingRange = {
-        enabled = true,
-      },
-      format = {
-        comments = {
+        annotationProcessing = {
           enabled = true,
         },
         enabled = true,
-        onType = {
-          enabled = true,
-        },
-        settings = {
-          profile = 'Default',
-          url = '~/.config/nvim/java-formatter.xml',
-        },
-      },
-      implementationsCodeLens = {
-        enabled = true,
-      },
-      import = {
-        generatesMetadataFilesAtProjectRoot = false,
-        exclusions = {
-          '**/node_modules/**',
-          '**/.metadata/**',
-          '**/archetype-resources/**',
-          '**/META-INF/maven/**',
-        },
-        gradle = {
-          wrapper = {
-            enabled = true,
-          },
-          annotationProcessing = {
-            enabled = true,
-          },
-          enabled = true,
-          offline = {
-            enabled = false,
-          },
-        },
-        maven = {
-          defaultMojoExecutionAction = 'warn',
-          notCoveredPluginExecutionSeverity = 'warning',
-          enabled = true,
-          offline = {
-            enabled = false,
-          },
-        },
-      },
-      inlayHints = {
-        parameterNames = {
-          enabled = 'all', -- literals, all, none
-          exclusions = {},
-        },
-      },
-      jdt = {
-        ls = {
-          vmargs = '-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx3G -Xms100m -Xlog:disable',
-          protobufSupport = {
-            enabled = true,
-          },
-          androidSupport = {
-            enabled = 'auto',
-          },
-          lombokSupport = {
-            enabled = true,
-          },
+        offline = {
+          enabled = false,
         },
       },
       maven = {
-        downloadSources = true,
-        updateSnapshots = false,
-      },
-      maxConcurrentBuilds = 1,
-      project = {
-        importHint = true,
-        importOnFirstTimeStartup = 'automatic',
-        encoding = 'setDefault',
-        referencedLibraries = { 'lib/**/*.jar' },
-        resourceFilters = { 'node_modules', '\\.git' },
-        sourcePaths = {},
-      },
-      quickfix = {
-        showAt = 'line',
-      },
-      referencesCodeLens = {
+        defaultMojoExecutionAction = 'warn',
+        notCoveredPluginExecutionSeverity = 'warning',
         enabled = true,
+        offline = {
+          enabled = false,
+        },
       },
-      references = {
-        includeAccessors = true,
-        includeDecompiledSources = true,
+    },
+    inlayHints = {
+      parameterNames = {
+        enabled = 'all', -- literals, all, none
+        exclusions = {},
       },
-      saveActions = {
-        organizeImports = false,
-      },
-      selectionRange = {
-        enabled = true,
-      },
-      signatureHelp = {
-        enabled = true,
-        description = {
+    },
+    jdt = {
+      ls = {
+        vmargs = '-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx3G -Xms100m -Xlog:disable',
+        protobufSupport = {
+          enabled = true,
+        },
+        androidSupport = {
+          enabled = 'auto',
+        },
+        lombokSupport = {
           enabled = true,
         },
       },
-      sources = {
-        organizeImports = {
-          starThreshold = 99,
-          staticStarThreshold = 99,
-        },
+    },
+    maven = {
+      downloadSources = true,
+      updateSnapshots = false,
+    },
+    maxConcurrentBuilds = 1,
+    project = {
+      importHint = true,
+      importOnFirstTimeStartup = 'automatic',
+      encoding = 'setDefault',
+      referencedLibraries = { 'lib/**/*.jar' },
+      resourceFilters = { 'node_modules', '\\.git' },
+      sourcePaths = {},
+    },
+    quickfix = {
+      showAt = 'line',
+    },
+    referencesCodeLens = {
+      enabled = true,
+    },
+    references = {
+      includeAccessors = true,
+      includeDecompiledSources = true,
+    },
+    saveActions = {
+      organizeImports = false,
+    },
+    selectionRange = {
+      enabled = true,
+    },
+    signatureHelp = {
+      enabled = true,
+      description = {
+        enabled = true,
       },
-      symbols = {
-        includeSourceMethodDeclarations = true,
+    },
+    sources = {
+      organizeImports = {
+        starThreshold = 99,
+        staticStarThreshold = 99,
       },
-      templates = {
-        fileHeader = {},
-        typeComment = {},
-      },
-      trace = {
-        server = 'off',
-      },
-      edit = {
-        validateAllOpenBuffersOnChanges = false,
-      },
+    },
+    symbols = {
+      includeSourceMethodDeclarations = true,
+    },
+    templates = {
+      fileHeader = {},
+      typeComment = {},
+    },
+    trace = {
+      server = 'off',
+    },
+    edit = {
+      validateAllOpenBuffersOnChanges = false,
     },
   },
 }
@@ -325,98 +323,12 @@ return {
             'github:mason-org/mason-registry',
           }
           opts.ensure_installed = opts.ensure_installed or {}
-          vim.list_extend(opts.ensure_installed, { 'java-test', 'java-debug-adapter' })
+          vim.list_extend(opts.ensure_installed, { 'java-test', 'java-debug-adapter', 'vscode-java-decompiler', 'checkstyle', 'sts4' })
         end,
       },
     },
   },
 
-  -- Set up nvim-java
-  {
-    'nvim-java/nvim-java',
-    enabled = false,
-    ft = java_filetypes,
-    dependencies = {
-      { 'nvim-java/lua-async-await' },
-      { 'nvim-java/nvim-java-core' },
-      { 'nvim-java/nvim-java-test' },
-      { 'nvim-java/nvim-java-dap' },
-      { 'MunifTanjim/nui.nvim' },
-      { 'mfussenegger/nvim-dap' },
-      {
-        'neovim/nvim-lspconfig',
-        opts = {
-          -- make sure mason installs the server
-          servers = {
-            jdtls = {
-              keys = {
-                -- Workaround for the lack of a DAP strategy in neotest-java
-                {
-                  '<leader>td',
-                  function()
-                    require('java').dap.config_dap()
-                    require('java').test.debug_current_method()
-                  end,
-                  desc = 'Debug Current Method (Java)',
-                },
-                {
-                  '<leader>tD',
-                  function()
-                    require('java').dap.config_dap()
-                    require('java').test.debug_current_class()
-                  end,
-                  desc = 'Debug Current Class (Java)',
-                },
-                {
-                  '<leader>tr',
-                  function()
-                    require('java').test.run_current_method()
-                  end,
-                  desc = 'Run Current Method (Java)',
-                },
-                {
-                  '<leader>tt',
-                  function()
-                    require('java').test.run_current_class()
-                  end,
-                  desc = 'Run Current Class (Java)',
-                },
-                {
-                  '<leader>tv',
-                  function()
-                    require('java').test.view_last_report()
-                  end,
-                  desc = 'View Test Report (Java)',
-                },
-              },
-            },
-          },
-        },
-      },
-      {
-        'williamboman/mason-lspconfig.nvim',
-        opts = {
-          handlers = {
-            ['jdtls'] = function()
-              require('java').setup {
-                root_markers = root_markers,
-                java_test = {
-                  enable = Util.has 'nvim-dap',
-                },
-                java_debug_adapter = {
-                  enable = Util.has 'nvim-dap',
-                },
-                jdk = {
-                  auto_install = false,
-                },
-              }
-              require('lspconfig').jdtls.setup(jdtls_settings)
-            end,
-          },
-        },
-      },
-    },
-  },
   {
     'nvim-neotest/neotest',
     optional = true,
@@ -455,7 +367,9 @@ return {
   {
     'mfussenegger/nvim-jdtls',
     enabled = true,
+    version = false,
     ft = java_filetypes,
+    dependencies = { 'folke/which-key.nvim' },
     opts = function()
       return {
         -- How to find the root dir for a given filename. The default comes from
@@ -587,26 +501,34 @@ return {
             local wk = require 'which-key'
             wk.register({
               ['<leader>cx'] = { name = '+extract' },
-              ['<leader>cxv'] = { require('jdtls').extract_variable_all, 'Extract Variable' },
-              ['<leader>cxc'] = { require('jdtls').extract_constant, 'Extract Constant' },
-              ['gs'] = { require('jdtls').super_implementation, 'Goto Super' },
-              ['gS'] = { require('jdtls').goto_subjects, 'Goto Subjects' },
-              ['<leader>co'] = { require('jdtls').organize_imports, 'Organize Imports' },
+              ['<leader>cxv'] = { require('jdtls').extract_variable_all, 'Extract Variable (Java)' },
+              ['<leader>cxc'] = { require('jdtls').extract_constant, 'Extract Constant (Java)' },
+              ['gs'] = { require('jdtls').super_implementation, 'Goto Super (Java)' },
+              ['gS'] = { require('jdtls.tests').goto_subjects, 'Goto Subjects (Java)' },
+              ['<leader>cg'] = { require('jdtls.tests').generate, 'Generate Test Class (Java)' },
+              ['<leader>ci'] = { require('jdtls').organize_imports, 'Organize Imports (Java)' },
+              ['<leader>cc'] = { require('jdtls').compile, 'Compile Code (Java)' },
+              ['<leader>cb'] = { require('jdtls').build_projects, 'Build Projects (Java)' },
+              ['<leader>cu'] = { require('jdtls').update_projects_config, 'Update Projects Config (Java)' },
+              ['<leader>cp'] = { require('jdtls').javap, 'Run javap (Java)' },
+              ['<leader>cj'] = { require('jdtls').jshell, 'Run jshell (Java)' },
+              ['<leader>cl'] = { require('jdtls').jol, 'Run jol (Java)' },
+              ['<leader>ct'] = { require('jdtls').set_runtime, 'Set Runtime (Java)' },
             }, { mode = 'n', buffer = args.buf })
             wk.register({
               ['<leader>c'] = { name = '+code' },
               ['<leader>cx'] = { name = '+extract' },
               ['<leader>cxm'] = {
                 [[<ESC><CMD>lua require('jdtls').extract_method(true)<CR>]],
-                'Extract Method',
+                'Extract Method (Java)',
               },
               ['<leader>cxv'] = {
                 [[<ESC><CMD>lua require('jdtls').extract_variable_all(true)<CR>]],
-                'Extract Variable',
+                'Extract Variable (Java)',
               },
               ['<leader>cxc'] = {
                 [[<ESC><CMD>lua require('jdtls').extract_constant(true)<CR>]],
-                'Extract Constant',
+                'Extract Constant (Java)',
               },
             }, { mode = 'v', buffer = args.buf })
 
@@ -622,7 +544,8 @@ return {
                   ['<leader>t'] = { name = '+test' },
                   ['<leader>tt'] = { require('jdtls.dap').test_class, 'Test Class (Java)' },
                   ['<leader>tr'] = { require('jdtls.dap').test_nearest_method, 'Test Nearest Method (Java)' },
-                  ['<leader>tT'] = { require('jdtls.dap').pick_test, 'Run Test (Java)' },
+                  ['<leader>tp'] = { require('jdtls.dap').pick_test, 'Pick Test (Java)' },
+                  ['<leader>dm'] = { require('jdtls.dap').fetch_main_configs, 'Fetch Main Class (Java)' },
                 }, { mode = 'n', buffer = args.buf })
               end
             end
@@ -636,5 +559,94 @@ return {
       -- Avoid race condition by calling attach the first time, since the autocmd won't fire.
       attach_jdtls()
     end,
+  },
+
+  -- Set up nvim-java
+  {
+    'nvim-java/nvim-java',
+    enabled = false,
+    ft = java_filetypes,
+    dependencies = {
+      { 'nvim-java/lua-async-await' },
+      { 'nvim-java/nvim-java-core' },
+      { 'nvim-java/nvim-java-test' },
+      { 'nvim-java/nvim-java-dap' },
+      { 'MunifTanjim/nui.nvim' },
+      { 'mfussenegger/nvim-dap' },
+      {
+        'neovim/nvim-lspconfig',
+        opts = {
+          -- make sure mason installs the server
+          servers = {
+            jdtls = {
+              keys = {
+                -- Workaround for the lack of a DAP strategy in neotest-java
+                {
+                  '<leader>td',
+                  function()
+                    require('java').dap.config_dap()
+                    require('java').test.debug_current_method()
+                  end,
+                  desc = 'Debug Current Method (Java)',
+                },
+                {
+                  '<leader>tD',
+                  function()
+                    require('java').dap.config_dap()
+                    require('java').test.debug_current_class()
+                  end,
+                  desc = 'Debug Current Class (Java)',
+                },
+                {
+                  '<leader>tr',
+                  function()
+                    require('java').test.run_current_method()
+                  end,
+                  desc = 'Run Current Method (Java)',
+                },
+                {
+                  '<leader>tt',
+                  function()
+                    require('java').test.run_current_class()
+                  end,
+                  desc = 'Run Current Class (Java)',
+                },
+                {
+                  '<leader>tv',
+                  function()
+                    require('java').test.view_last_report()
+                  end,
+                  desc = 'View Test Report (Java)',
+                },
+              },
+            },
+          },
+        },
+      },
+      {
+        'williamboman/mason-lspconfig.nvim',
+        opts = {
+          handlers = {
+            ['jdtls'] = function()
+              require('java').setup {
+                root_markers = root_markers,
+                java_test = {
+                  enable = Util.has 'nvim-dap',
+                },
+                java_debug_adapter = {
+                  enable = Util.has 'nvim-dap',
+                },
+                jdk = {
+                  auto_install = false,
+                },
+              }
+              require('lspconfig').jdtls.setup {
+                settings = jdtls_settings,
+              }
+            end,
+          },
+        },
+      },
+    },
   },
 }
