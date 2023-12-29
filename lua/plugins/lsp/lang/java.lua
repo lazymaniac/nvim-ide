@@ -368,6 +368,7 @@ return {
     'mfussenegger/nvim-jdtls',
     enabled = true,
     version = false,
+    branch = 'master',
     ft = java_filetypes,
     dependencies = { 'folke/which-key.nvim' },
     opts = function()

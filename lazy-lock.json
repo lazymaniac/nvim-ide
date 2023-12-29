@@ -60,7 +60,7 @@
   "neotest-java": { "branch": "main", "commit": "2234bfa8044dc39a8baf90470747c65e4623a222" },
   "neotest-python": { "branch": "master", "commit": "86ac2bbc8a4da3f203e56d9303d6ed1d7e50c1f6" },
   "neotest-rust": { "branch": "main", "commit": "48c1e146ed0eb775fef6aca75903baf3cedadc01" },
-  "netman.nvim": { "branch": "v1.15", "commit": "88ebc8fbae1427953d1595c73c0f38a2f07f7689" },
+  "netman.nvim": { "branch": "v1.15", "commit": "3c11907f3aaa9a1b016ba3279b8eaa0ecd9097e0" },
   "night-owl.nvim": { "branch": "main", "commit": "5106bb2d420bb4c6867cd577f9413de039052275" },
   "noice.nvim": { "branch": "main", "commit": "92433164e2f7118d4122c7674c3834d9511722ba" },
   "none-ls.nvim": { "branch": "main", "commit": "e7382de51b4cf629e56f1fa18192e716e5ba8145" },
