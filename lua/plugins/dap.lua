@@ -12,9 +12,7 @@ end
 
 return {
   'mfussenegger/nvim-dap',
-
   dependencies = {
-
     -- fancy UI for the debugger
     {
       'rcarriga/nvim-dap-ui',
@@ -32,14 +30,6 @@ return {
             require('dapui').eval()
           end,
           desc = 'Eval',
-          mode = { 'n', 'v' },
-        },
-        {
-          '<leader>dU',
-          function()
-            require('dapui').update_render()
-          end,
-          desc = 'Update render',
           mode = { 'n', 'v' },
         },
       },
@@ -131,12 +121,12 @@ return {
         dap.listeners.after.event_initialized['dapui_config'] = function()
           dapui.open {}
         end
-        dap.listeners.before.event_terminated['dapui_config'] = function()
-          dapui.close {}
-        end
-        dap.listeners.before.event_exited['dapui_config'] = function()
-          dapui.close {}
-        end
+        -- dap.listeners.before.event_terminated['dapui_config'] = function()
+        --   dapui.close {}
+        -- end
+        -- dap.listeners.before.event_exited['dapui_config'] = function()
+        --   dapui.close {}
+        -- end
       end,
     },
 
@@ -377,8 +367,17 @@ return {
       desc = 'Widgets',
     },
   },
-
   config = function()
+    local dap = require 'dap'
+    dap.configurations.java = {
+      {
+        type = 'java',
+        request = 'attach',
+        name = 'Debug (Attach) - Remote',
+        hostName = '127.0.0.1',
+        port = 5005,
+      },
+    }
     local Config = require 'config'
     vim.api.nvim_set_hl(0, 'DapStoppedLine', { default = true, link = 'Visual' })
 
