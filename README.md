@@ -15,7 +15,6 @@
 
 ### TODO
 
-- better LSP config for java
 - configuration for edgy.nvim
 - code cleanup
 - script installing all the required dependencies for OpenSUSE in WSL

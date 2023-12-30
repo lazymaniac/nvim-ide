@@ -160,15 +160,6 @@ map('n', '<leader>qq', '<cmd>qa<cr>', { desc = 'Quit all' })
 -- highlights under cursor
 map('n', '<leader>ui', vim.show_pos, { desc = 'Inspect Pos' })
 
--- floating terminal
-map('n', '<leader>Tn', '<cmd>lua _NODE_TOGGLE()<cr>', { desc = '[T]erminal [N]ode' })
-map('n', '<leader>Tu', '<cmd>lua _NCDU_TOGGLE()<cr>', { desc = '[T]erminal NCD[U]' })
-map('n', '<leader>Tb', '<cmd>lua _BTOP_TOGGLE()<cr>', { desc = '[T]erminal [B]top' })
-map('n', '<leader>Tp', '<cmd>lua _PYTHON_TOGGLE()<cr>', { desc = '[T]erminal [P]ython' })
-map('n', '<leader>Tf', '<cmd>ToggleTerm direction=float<cr>', { desc = '[T]erminal [F]loat' })
-map('n', '<leader>Th', '<cmd>ToggleTerm size=10 direction=horizontal<cr>', { desc = '[T]erminal [H]orizontal' })
-map('n', '<leader>Tv', '<cmd>ToggleTerm size=80 direction=vertical<cr>', { desc = '[T]erminal [V]ertical' })
-
 -- windows
 map('n', '<leader>ww', '<C-W>p', { desc = 'Other [W]indo[w]', remap = true })
 map('n', '<leader>wd', '<C-W>c', { desc = '[W]indow [D]elete', remap = true })

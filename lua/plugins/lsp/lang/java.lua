@@ -21,14 +21,10 @@ end
 local jdtls_settings = {
   redhat = {
     telemetry = {
-      enabled = true,
+      enabled = false,
     },
   },
   java = {
-    settings = {
-      profile = 'default',
-      url = '',
-    },
     server = {
       launchMode = 'Standard',
     },
@@ -44,10 +40,9 @@ local jdtls_settings = {
         annotationProcessing = {
           enabled = true,
         },
-        arguments = '',
         enabled = true,
         offline = {
-          enabled = false,
+          enabled = true,
         },
         wrapper = {
           enabled = true,
@@ -63,10 +58,9 @@ local jdtls_settings = {
     },
     sharedIndexes = {
       enabled = 'auto',
-      location = '',
     },
     typeHierarchy = {
-      lazyLoad = false,
+      lazyLoad = true,
     },
     progressReports = {
       enabled = true,
@@ -211,7 +205,7 @@ local jdtls_settings = {
         },
         enabled = true,
         offline = {
-          enabled = false,
+          enabled = true,
         },
       },
       maven = {
@@ -219,7 +213,7 @@ local jdtls_settings = {
         notCoveredPluginExecutionSeverity = 'warning',
         enabled = true,
         offline = {
-          enabled = false,
+          enabled = true,
         },
       },
     },

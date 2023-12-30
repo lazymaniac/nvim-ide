@@ -19,7 +19,7 @@ return {
       timeout = 2500, -- Time to show Notification in ms, set to false ti disable timeout.
       fps = 30, -- Frames per second for animnation stages, higher value means smoother animations but more CPU usage.
       level = 2, -- Minimum log level to display. See vim.log.levels.
-      minimum_width = 50, -- Minimum width for notification window.
+      minimum_width = 35, -- Minimum width for notification window.
       render = 'wrapped-compact', -- 'default' | 'minimal' | 'simple' | 'wrapped-compact'. Function to render a notification buffer or a build-in renderer name
       stages = 'fade', -- 'slide' | 'fade' | 'static' | 'fade_in_slide_out' Animation stages.
       top_down = true, -- Whether or not to position the notification at the top or not
@@ -371,6 +371,7 @@ return {
               'help',
               'Trouble',
               'qf',
+              'toggleterm',
             },
             winbar = {
               'dashboard',
@@ -388,6 +389,7 @@ return {
               'help',
               'Trouble',
               'qf',
+              'toggleterm',
             },
           },
           ignore_focus = {
@@ -406,6 +408,7 @@ return {
             'help',
             'Trouble',
             'qf',
+            'toggleterm',
           },
           always_divide_middle = true,
           globalstatus = true,
@@ -592,7 +595,6 @@ return {
           'mason',
           'notify',
           'toggleterm',
-          'lazyterm',
         },
         callback = function()
           vim.b.miniindentscope_disable = true
