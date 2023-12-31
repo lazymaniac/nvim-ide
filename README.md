@@ -46,6 +46,7 @@
 - python3-full
 - virtualenv
 - go
+- rustup
 - lazygit
 - sdk-man
 - bob
