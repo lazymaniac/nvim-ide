@@ -45,7 +45,7 @@
 - build-essential
 - python3-full
 - virtualenv
-- go
+- golang
 - rustup
 - lazygit
 - sdk-man
