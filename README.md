@@ -1,5 +1,21 @@
 # NV-IDE personalized mix of available NVIM distros
 
+<!--toc:start-->
+- [NV-IDE personalized mix of available NVIM distros](#nv-ide-personalized-mix-of-available-nvim-distros)
+  - [TODO](#todo)
+  - [Introduction](#introduction)
+  - [Installation](#installation)
+    - [Requirements](#requirements)
+      - [Packages](#packages)
+      - [Config paths](#config-paths)
+      - [Install script](#install-script)
+      - [Post Installation](#post-installation)
+  - [Recommended Steps](#recommended-steps)
+    - [Configuration And Extension](#configuration-and-extension)
+      - [Example: Adding an autopairs plugin](#example-adding-an-autopairs-plugin)
+      - [Example: Adding a file tree plugin](#example-adding-a-file-tree-plugin)
+<!--toc:end-->
+
 ## TODO
 
 - code cleanup
