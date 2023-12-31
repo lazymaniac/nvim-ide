@@ -59,6 +59,8 @@
 - oh-my-zsh
 - zip
 - unzip
+- jupytex
+- miniconda
 
 #### Config paths
 
