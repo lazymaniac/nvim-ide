@@ -301,10 +301,10 @@ return {
         -- `position` will not be considered if `split_command` is non-nil.
         -- This should be a valid vim command used for opening the split for the
         -- outline window. Eg, 'rightbelow vsplit'.
-        split_command = nil,
+        split_command = 'botright vs',
 
         -- Percentage or integer of columns
-        width = 20,
+        width = 25,
         -- Whether width is relative to the total width of nvim
         -- When relative_width = true, this means take 25% of the total
         -- screen width for outline window.
@@ -312,7 +312,7 @@ return {
 
         -- Auto close the outline window if goto_location is triggered and not for
         -- peek_location
-        auto_close = false,
+        auto_close = true,
         -- Automatically scroll to the location in code when navigating outline window.
         auto_jump = false,
         -- boolean or integer for milliseconds duration to apply a temporary highlight
@@ -416,7 +416,7 @@ return {
         -- hover_symbol).
         -- If you disable this you can still open hover_symbol using your keymap
         -- below.
-        open_hover_on_preview = false,
+        open_hover_on_preview = true,
         width = 50, -- Percentage or integer of columns
         min_width = 50, -- This is the number of columns
         -- Whether width is relative to the total width of nvim.
@@ -435,7 +435,7 @@ return {
         winblend = 0,
         -- Experimental feature that let's you edit the source content live
         -- in the preview window. Like VS Code's "peek editor".
-        live = false,
+        live = true,
       },
 
       -- These keymaps can be a string or a table for multiple keys.

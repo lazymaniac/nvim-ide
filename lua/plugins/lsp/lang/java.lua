@@ -42,7 +42,7 @@ local jdtls_settings = {
         },
         enabled = true,
         offline = {
-          enabled = true,
+          enabled = false,
         },
         wrapper = {
           enabled = true,
@@ -145,16 +145,16 @@ local jdtls_settings = {
       },
       runtimes = {
         {
-          name = 'JavaSE-1.8',
-          path = '~/.sdkman/candidates/java/8.0.392-tem/',
-        },
-        {
           name = 'JavaSE-11',
           path = '~/.sdkman/candidates/java/11.0.21-tem/',
         },
         {
           name = 'JavaSE-17',
           path = '~/.sdkman/candidates/java/17.0.9-tem/',
+        },
+        {
+          name = 'JavaSE-21',
+          path = '~/.sdkman/candidates/java/21.0.1-tem/',
           default = true,
         },
       },
@@ -205,7 +205,7 @@ local jdtls_settings = {
         },
         enabled = true,
         offline = {
-          enabled = true,
+          enabled = false,
         },
       },
       maven = {
@@ -213,7 +213,7 @@ local jdtls_settings = {
         notCoveredPluginExecutionSeverity = 'warning',
         enabled = true,
         offline = {
-          enabled = true,
+          enabled = false,
         },
       },
     },
@@ -225,7 +225,7 @@ local jdtls_settings = {
     },
     jdt = {
       ls = {
-        vmargs = '-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx3G -Xms100m -Xlog:disable',
+        vmargs = '-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx5G -Xms100m -Xlog:disable',
         protobufSupport = {
           enabled = true,
         },
@@ -317,7 +317,7 @@ return {
             'github:mason-org/mason-registry',
           }
           opts.ensure_installed = opts.ensure_installed or {}
-          vim.list_extend(opts.ensure_installed, { 'java-test', 'java-debug-adapter', 'vscode-java-decompiler', 'checkstyle', 'sts4' })
+          vim.list_extend(opts.ensure_installed, { 'jdtls', 'java-test', 'java-debug-adapter', 'vscode-java-decompiler', 'checkstyle' })
         end,
       },
     },
@@ -393,11 +393,13 @@ return {
           local jdtls_dir = mason_registry.get_package('jdtls'):get_install_path()
           local lombok_path = jdtls_dir .. '/lombok.jar'
           local lombok_agent_param = '--jvm-arg=-javaagent:' .. lombok_path
-          local xmx_param = '--jvm-arg=-Xmx6g'
+          local xmx_param = '--jvm-arg=-Xmx8g'
+          local gc_param = '--jvm-arg=-XX:+UseZGC'
           local project_name = opts.project_name(root_dir)
           local cmd = vim.deepcopy(opts.cmd)
           if project_name then
             vim.list_extend(cmd, {
+              gc_param,
               xmx_param,
               lombok_agent_param,
               '-configuration',
@@ -554,94 +556,5 @@ return {
       -- Avoid race condition by calling attach the first time, since the autocmd won't fire.
       attach_jdtls()
     end,
-  },
-
-  -- Set up nvim-java
-  {
-    'nvim-java/nvim-java',
-    enabled = false,
-    ft = java_filetypes,
-    dependencies = {
-      { 'nvim-java/lua-async-await' },
-      { 'nvim-java/nvim-java-core' },
-      { 'nvim-java/nvim-java-test' },
-      { 'nvim-java/nvim-java-dap' },
-      { 'MunifTanjim/nui.nvim' },
-      { 'mfussenegger/nvim-dap' },
-      {
-        'neovim/nvim-lspconfig',
-        opts = {
-          -- make sure mason installs the server
-          servers = {
-            jdtls = {
-              keys = {
-                -- Workaround for the lack of a DAP strategy in neotest-java
-                {
-                  '<leader>td',
-                  function()
-                    require('java').dap.config_dap()
-                    require('java').test.debug_current_method()
-                  end,
-                  desc = 'Debug Current Method (Java)',
-                },
-                {
-                  '<leader>tD',
-                  function()
-                    require('java').dap.config_dap()
-                    require('java').test.debug_current_class()
-                  end,
-                  desc = 'Debug Current Class (Java)',
-                },
-                {
-                  '<leader>tr',
-                  function()
-                    require('java').test.run_current_method()
-                  end,
-                  desc = 'Run Current Method (Java)',
-                },
-                {
-                  '<leader>tt',
-                  function()
-                    require('java').test.run_current_class()
-                  end,
-                  desc = 'Run Current Class (Java)',
-                },
-                {
-                  '<leader>tv',
-                  function()
-                    require('java').test.view_last_report()
-                  end,
-                  desc = 'View Test Report (Java)',
-                },
-              },
-            },
-          },
-        },
-      },
-      {
-        'williamboman/mason-lspconfig.nvim',
-        opts = {
-          handlers = {
-            ['jdtls'] = function()
-              require('java').setup {
-                root_markers = root_markers,
-                java_test = {
-                  enable = Util.has 'nvim-dap',
-                },
-                java_debug_adapter = {
-                  enable = Util.has 'nvim-dap',
-                },
-                jdk = {
-                  auto_install = false,
-                },
-              }
-              require('lspconfig').jdtls.setup {
-                settings = jdtls_settings,
-              }
-            end,
-          },
-        },
-      },
-    },
   },
 }
