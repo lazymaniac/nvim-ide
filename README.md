@@ -19,6 +19,26 @@
 - code cleanup
 - script installing all the required dependencies for OpenSUSE in WSL
 
+### Required packages
+- nvim
+- build-essential
+- python3-full
+- virtualenv
+- go
+- lazygit
+- sdk-man
+- bob
+- btop
+- ncdu
+- node
+- zoxide
+- bat
+- eza
+- zsh
+- oh-my-zsh
+- zip
+- unzip
+
 ### Introduction
 
 - NVIM distribution created to support my workflows. From java, rust to jupyter notebooks.
