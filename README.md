@@ -62,6 +62,8 @@
 - unzip
 - jupytext
 - miniconda
+- gradle
+- maven
 
 #### Config paths
 
