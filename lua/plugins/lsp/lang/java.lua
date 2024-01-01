@@ -225,7 +225,7 @@ local jdtls_settings = {
     },
     jdt = {
       ls = {
-        vmargs = '-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx5G -Xms100m -Xlog:disable',
+        vmargs = '-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx3G -Xms100m -Xlog:disable',
         protobufSupport = {
           enabled = true,
         },
@@ -394,12 +394,10 @@ return {
           local lombok_path = jdtls_dir .. '/lombok.jar'
           local lombok_agent_param = '--jvm-arg=-javaagent:' .. lombok_path
           local xmx_param = '--jvm-arg=-Xmx8g'
-          local gc_param = '--jvm-arg=-XX:+UseZGC'
           local project_name = opts.project_name(root_dir)
           local cmd = vim.deepcopy(opts.cmd)
           if project_name then
             vim.list_extend(cmd, {
-              gc_param,
               xmx_param,
               lombok_agent_param,
               '-configuration',
