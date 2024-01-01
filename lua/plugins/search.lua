@@ -1,7 +1,56 @@
 local Util = require 'util'
 
 return {
+  {
+    'fdschmidt93/telescope-egrepify.nvim',
+    dependencies = { 'nvim-telescope/telescope.nvim', 'nvim-lua/plenary.nvim' },
+    config = function()
+      local egrep_actions = require 'telescope._extensions.egrepify.actions'
 
+      require('telescope').setup {
+        extensions = {
+          egrepify = {
+            -- intersect tokens in prompt ala "str1.*str2" that ONLY matches
+            -- if str1 and str2 are consecutively in line with anything in between (wildcard)
+            AND = true, -- default
+            permutations = false, -- opt-in to imply AND & match all permutations of prompt tokens
+            lnum = true, -- default, not required
+            lnum_hl = 'EgrepifyLnum', -- default, not required, links to `Constant`
+            col = false, -- default, not required
+            col_hl = 'EgrepifyCol', -- default, not required, links to `Constant`
+            title = true, -- default, not required, show filename as title rather than inline
+            filename_hl = 'EgrepifyFile', -- default, not required, links to `Title`
+            -- suffix = long line, see screenshot
+            -- EXAMPLE ON HOW TO ADD PREFIX!
+            prefixes = {
+              -- ADDED ! to invert matches
+              -- example prompt: ! sorter
+              -- matches all lines that do not comprise sorter
+              -- rg --invert-match -- sorter
+              ['!'] = {
+                flag = 'invert-match',
+              },
+              -- HOW TO OPT OUT OF PREFIX
+              -- ^ is not a default prefix and safe example
+              ['^'] = false,
+            },
+            -- default mappings
+            mappings = {
+              i = {
+                -- toggle prefixes, prefixes is default
+                ['<C-z>'] = egrep_actions.toggle_prefixes,
+                -- toggle AND, AND is default, AND matches tokens and any chars in between
+                ['<C-a>'] = egrep_actions.toggle_and,
+                -- toggle permutations, permutations of tokens is opt-in
+                ['<C-r>'] = egrep_actions.toggle_permutations,
+              },
+            },
+          },
+        },
+      }
+      require('telescope').load_extension 'egrepify'
+    end,
+  },
   -- search/replace in multiple files
   {
     'nvim-pack/nvim-spectre',
@@ -208,6 +257,51 @@ return {
       vim.keymap.del({ 'x', 'o' }, 'x')
       vim.keymap.del({ 'x', 'o' }, 'X')
     end,
+  },
+
+  {
+    'xiaoshihou514/squirrel.nvim',
+    event = 'VeryLazy',
+    keys = {
+      {
+        'gaa',
+        function()
+          require('squirrel.hop').hop_linewise()
+        end,
+        mode = { 'n', 'x' },
+        desc = 'Jump to start of any current line node',
+      },
+      {
+        'ga',
+        function()
+          require('squirrel.hop').hop()
+        end,
+        mode = { 'n', 'x' },
+        desc = 'Jump to start of any visible node',
+      },
+      {
+        'gee',
+        function()
+          require('squirrel.hop').hop_linewise {
+            head = false,
+            tail = true,
+          }
+        end,
+        mode = { 'n', 'x' },
+        desc = 'Jump end of any current line node',
+      },
+      {
+        'ge',
+        function()
+          require('squirrel.hop').hop {
+            head = false,
+            tail = true,
+          }
+        end,
+        mode = { 'n', 'x' },
+        desc = 'Jump end of any current line node',
+      },
+    },
   },
 
   -- rename surround mappings from gs to gz to prevent conflict with leap

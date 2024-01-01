@@ -6,6 +6,8 @@ return {
     opts = { style = 'moon' },
   },
 
+  { 'calind/selenized.nvim' },
+
   -- catppuccin
   {
     'catppuccin/nvim',

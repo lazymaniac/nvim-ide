@@ -85,7 +85,7 @@ return {
     end,
     keys = {
       {
-        '<leader>rR',
+        '<leader>rs',
         '<cmd>SnipRun<cr>',
         mode = { 'n', 'v' },
         desc = 'SnipRun',
@@ -97,7 +97,8 @@ return {
     'folke/which-key.nvim',
     opts = {
       defaults = {
-        ['<leader>r'] = { name = '+run' },
+        ['<leader>r'] = { name = '+[run]' },
+        ['<leader>j'] = { name = '+[jupyter]' },
       },
     },
   },
@@ -110,7 +111,8 @@ return {
     dependencies = {
       'echasnovski/mini.comment',
       -- 'hkupty/iron.nvim', -- repl provider
-      'akinsho/toggleterm.nvim', -- alternative repl provider
+      -- "akinsho/toggleterm.nvim", -- alternative repl provider
+      'benlubas/molten-nvim', -- alternative repl provider
       'anuvyklack/hydra.nvim',
     },
     opts = {
@@ -119,11 +121,11 @@ return {
       -- By default, uses language-specific double percent comments like `# %%`.
       -- This can be overridden for each language with this setting.
       cell_markers = {
-        -- python = "# %%",
+        python = '# %%',
       },
       -- If not `nil` the keymap defined in the string will activate the hydra head.
       -- If you don't want to use hydra you don't need to install it either.
-      activate_hydra_keys = nil,
+      activate_hydra_keys = '<leader>h',
       -- If `true` a hint panel will be shown when the hydra head is active. If `false`
       -- you get a minimalistic hint on the command line.
       show_hydra_hint = true,
@@ -140,18 +142,15 @@ return {
       },
       -- The repl plugin with which to interface
       -- Current options: "iron" for iron.nvim, "toggleterm" for toggleterm.nvim,
-      -- or "auto" which checks which of the above are installed
-      repl_provider = 'auto',
+      -- "molten" for molten-nvim or "auto" which checks which of the above are
+      -- installed
+      repl_provider = 'molten',
       -- Syntax based highlighting. If you don't want to install mini.hipattners or
       -- enjoy a more minimalistic look
-      syntax_highlight = false,
+      syntax_highlight = true,
       -- (Optional) for use with `mini.hipatterns` to highlight cell markers
       cell_highlight_group = 'Folded',
     },
-    config = function()
-      local nn = require 'notebook-navigator'
-      nn.setup { activate_hydra_keys = '<leader>h' }
-    end,
     keys = {
       {
         ']j',
@@ -170,49 +169,49 @@ return {
         desc = 'Move jupyter cell up',
       },
       {
-        '<leader>rN',
+        '<leader>jr',
         "<cmd>lua require('notebook-navigator').run_cell()<cr>",
         mode = { 'n', 'v' },
         desc = 'Run jupyter cell',
       },
       {
-        '<leader>rn',
+        '<leader>jj',
         "<cmd>lua require('notebook-navigator').run_and_move()<cr>",
         mode = { 'n', 'v' },
         desc = 'Run jupyter cell and move',
       },
       {
-        '<leader>rA',
+        '<leader>ja',
         "<cmd>lua require('notebook-navigator').run_all_cells()<cr>",
         mode = { 'n', 'v' },
         desc = 'Run all jupyter cells',
       },
       {
-        '<leader>rB',
+        '<leader>jb',
         "<cmd>lua require('notebook-navigator').run_cells_below()<cr>",
         mode = { 'n', 'v' },
         desc = 'Run jupyter cells below',
       },
       {
-        '<leader>cC',
+        '<leader>jc',
         "<cmd>lua require('notebook-navigator').comment_cell()<cr>",
         mode = { 'n', 'v' },
         desc = 'Comment jupyter cell',
       },
       {
-        '<leader>cD',
+        '<leader>jd',
         "<cmd>lua require('notebook-navigator').add_cell_below()<cr>",
         mode = { 'n', 'v' },
         desc = 'Add jupyter cell below',
       },
       {
-        '<leader>cU',
+        '<leader>ju',
         "<cmd>lua require('notebook-navigator').add_cell_above()<cr>",
         mode = { 'n', 'v' },
         desc = 'Add jupyter cell above',
       },
       {
-        '<leader>cM',
+        '<leader>jm',
         "<cmd>lua require('notebook-navigator').merge_cell()<cr>",
         mode = { 'n', 'v' },
         desc = 'Merge jupyter cell',
@@ -222,8 +221,6 @@ return {
   {
     'GCBallesteros/jupytext.nvim',
     config = true,
-    -- Depending on your nvim distro or config you may need to make the loading not lazy
-    lazy = false,
   },
   {
     'echasnovski/mini.hipatterns',

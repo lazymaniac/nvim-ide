@@ -5,7 +5,7 @@ return {
     optional = true,
     opts = {
       defaults = {
-        ['<leader>t'] = { name = '+test' },
+        ['<leader>t'] = { name = '+[test]' },
       },
     },
   },
