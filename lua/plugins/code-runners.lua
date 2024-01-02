@@ -1,4 +1,17 @@
+package.path = package.path .. ';' .. vim.fn.expand '$HOME' .. '/.luarocks/share/lua/5.1/?/init.lua;'
+package.path = package.path .. ';' .. vim.fn.expand '$HOME' .. '/.luarocks/share/lua/5.1/?.lua;'
+
 return {
+
+  {
+    'folke/which-key.nvim',
+    opts = {
+      defaults = {
+        ['<leader>r'] = { name = '+[run]' },
+        ['<leader>j'] = { name = '+[jupyter]' },
+      },
+    },
+  },
 
   -- Run part of code
   {
@@ -93,16 +106,6 @@ return {
     },
   },
 
-  {
-    'folke/which-key.nvim',
-    opts = {
-      defaults = {
-        ['<leader>r'] = { name = '+[run]' },
-        ['<leader>j'] = { name = '+[jupyter]' },
-      },
-    },
-  },
-
   -- JUPYTER NOTEBOOK
   -- For below plugins to run, first install jupytext with conda: conda install jupytext -c conda-forge
   {
@@ -112,7 +115,53 @@ return {
       'echasnovski/mini.comment',
       -- 'hkupty/iron.nvim', -- repl provider
       -- "akinsho/toggleterm.nvim", -- alternative repl provider
-      'benlubas/molten-nvim', -- alternative repl provider
+      {
+        'benlubas/molten-nvim',
+        dependencies = { '3rd/image.nvim' },
+        build = ':UpdateRemotePlugins',
+        init = function()
+          vim.g.molten_image_provider = 'image.nvim'
+          vim.g.molten_use_border_highlights = true
+          -- add a few new things
+
+          -- don't change the mappings (unless it's related to your bug)
+          vim.keymap.set('n', '<localleader>mi', ':MoltenInit<CR>')
+          vim.keymap.set('n', '<localleader>e', ':MoltenEvaluateOperator<CR>')
+          vim.keymap.set('n', '<localleader>rr', ':MoltenReevaluateCell<CR>')
+          vim.keymap.set('v', '<localleader>r', ':<C-u>MoltenEvaluateVisual<CR>gv')
+          vim.keymap.set('n', '<localleader>os', ':noautocmd MoltenEnterOutput<CR>')
+          vim.keymap.set('n', '<localleader>oh', ':MoltenHideOutput<CR>')
+          vim.keymap.set('n', '<localleader>md', ':MoltenDelete<CR>')
+        end,
+      },
+      {
+        '3rd/image.nvim',
+        opts = {
+          backend = 'kitty',
+          integrations = {
+            markdown = {
+              enabled = true,
+              clear_in_insert_mode = false,
+              download_remote_images = true,
+              only_render_image_at_cursor = false,
+              filetypes = { 'markdown', 'vimwiki' }, -- markdown extensions (ie. quarto) can go here
+            },
+            neorg = {
+              enabled = true,
+              clear_in_insert_mode = false,
+              download_remote_images = true,
+              only_render_image_at_cursor = false,
+              filetypes = { 'norg' },
+            },
+          },
+          max_width = nil,
+          max_height = nil,
+          max_width_window_percentage = nil,
+          max_height_window_percentage = 50,
+          kitty_method = 'normal',
+        },
+        rocks = { 'magick' },
+      },
       'anuvyklack/hydra.nvim',
     },
     opts = {
