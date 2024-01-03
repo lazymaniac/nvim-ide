@@ -940,6 +940,13 @@ return {
 
       return opts
     end,
+    keys = {
+      {
+        '<leader>D',
+        '<cmd>Dashboard<cr>',
+        desc = '[D]ashboard',
+      },
+    },
   },
 
   -- Vim help shown in flaoting popup

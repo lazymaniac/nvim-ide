@@ -5,7 +5,7 @@
 --     return function() end
 --   end
 -- end
---
+
 if vim.g.neovide then
   vim.o.guifont = 'FiraCode Nerd Font Mono:h11'
   vim.g.neovide_confirm_quit = true
