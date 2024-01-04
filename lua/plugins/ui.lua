@@ -422,9 +422,10 @@ return {
           lualine_a = { 'mode' },
           lualine_b = { 'branch' },
           lualine_c = {
-            'hostname',
+            { 'hostname' },
           },
           lualine_x = {
+            { "require'weather'.text" },
             {
               function()
                 return require('noice').api.status.command.get()
