@@ -425,7 +425,7 @@ return {
             { 'hostname' },
           },
           lualine_x = {
-            { "require'weather'.text" },
+            { "require'wttr'.text" },
             {
               function()
                 return require('noice').api.status.command.get()

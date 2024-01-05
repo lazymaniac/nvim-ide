@@ -139,14 +139,18 @@ return {
     end,
   },
   {
-    'lazymaniac/weather.nvim',
+    'lazymaniac/wttr.nvim',
     event = 'VeryLazy',
     requires = {
       'nvim-lua/plenary.nvim',
     },
     config = function(_, opts)
-      require('weather').setup(opts)
+      require('wttr').setup(opts)
     end,
-    opts = {},
+    opts = {
+      location = '',
+      format = 4,
+      custom_format = '',
+    },
   },
 }
