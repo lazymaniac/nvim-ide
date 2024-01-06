@@ -3,7 +3,7 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = '\\'
 
-vim.g.autoformat = true
+vim.g.autoformat = false
 
 -- Each entry can be:
 -- * the name of a detector function like `lsp` or `cwd`
