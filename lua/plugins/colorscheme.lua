@@ -75,4 +75,33 @@ return {
       vim.api.nvim_set_hl(0, 'MoltenOutputBorderSuccess', { link = 'MoonflyBlue' })
     end,
   },
+  {
+    'scottmckendry/cyberdream.nvim',
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require('cyberdream').setup {
+        -- Recommended - see "Configuring" below for more config options
+        transparent = true,
+        italic_comments = true,
+        hide_fillchars = true,
+        borderless_telescope = true,
+      }
+    end,
+  },
+  {
+    'fynnfluegge/monet.nvim',
+    name = 'monet',
+    config = function()
+      require('monet').setup {
+        transparent_background = true,
+        semantic_tokens = true,
+        highlight_overrides = {},
+        color_overrides = {},
+        styles = {
+          strings = { 'italic' },
+        },
+      }
+    end,
+  },
 }

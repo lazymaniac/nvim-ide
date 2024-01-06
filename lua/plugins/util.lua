@@ -141,16 +141,25 @@ return {
   {
     'lazymaniac/wttr.nvim',
     event = 'VeryLazy',
-    requires = {
+    branch = 'dev',
+    dependencies = {
       'nvim-lua/plenary.nvim',
+      'MunifTanjim/nui.nvim',
     },
-    config = function(_, opts)
-      require('wttr').setup(opts)
-    end,
     opts = {
       location = '',
-      format = 4,
-      custom_format = '',
+      format = 1,
+      custom_format = '%C+%cP:%p+T:%t+F:%f+%w+%m+%P+UV:%u+Hum:%h',
+      lang = 'en',
+    },
+    keys = {
+      {
+        '<leader>W',
+        function()
+          require('wttr').get_forecast()
+        end,
+        desc = 'Weather Forecast',
+      },
     },
   },
 }
