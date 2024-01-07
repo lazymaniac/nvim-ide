@@ -896,7 +896,12 @@ return {
 
   -- ui components
   { 'MunifTanjim/nui.nvim' },
-
+  
+  -- Oogway sentences
+  {
+    '0x5a4/oogway.nvim',
+    cmd = { 'Oogway' }, -- for lazy loading
+  },
   -- Welcome dashboard
   -- see: ':h dashboard'
   {
@@ -904,6 +909,7 @@ return {
     event = 'VimEnter',
     dependencies = { { 'nvim-tree/nvim-web-devicons' } },
     opts = function()
+      local oogway = require("oogway")
       local opts = {
         theme = 'hyper',
         hide = {
@@ -913,8 +919,9 @@ return {
         },
         config = {
           week_header = {
-            enable = true,
+            enable = false,
           },
+          header = vim.fn.split(oogway.what_is_your_wisdom() .. "\n\n\n\n\n", "\n"),
           shortcut = {
             { icon = ' ', icon_hl = '@variable', desc = 'Find Files', group = 'Label', action = 'Telescope find_files', key = 'f' },
             { icon = ' ', icon_hl = '@variable', desc = 'Find Text', group = 'Label', action = 'Telescope live_grep', key = 'g' },
