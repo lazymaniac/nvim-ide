@@ -612,6 +612,7 @@ return {
   -- Displays a popup with possible key bindings of the command you started typing
   {
     'folke/which-key.nvim',
+    optional = true,
     opts = function(_, opts)
       if require('util').has 'noice.nvim' then
         opts.defaults['<leader>sn'] = { name = '+noice' }
