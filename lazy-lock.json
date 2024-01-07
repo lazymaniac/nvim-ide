@@ -99,6 +99,7 @@
   "nvim-web-devicons": { "branch": "master", "commit": "db0c864375c198cacc171ff373e76bfce2a85045" },
   "octo.nvim": { "branch": "master", "commit": "b5371003f209764c9d1cc43cf20b6dc52961f0e8" },
   "one-small-step-for-vimkind": { "branch": "main", "commit": "aaee281bdaa3141d9d0cdb3dec468532da61124f" },
+  "onedarkpro.nvim": { "branch": "main", "commit": "ec07364f3cfa9cc6467bf067a490cfd74011efcd" },
   "oogway.nvim": { "branch": "main", "commit": "bea8e1f355c72fc37c90f8132c7968253535a54f" },
   "outline.nvim": { "branch": "main", "commit": "8c6b11e4c27bca690bfde0c6ce35ba66a805dfa3" },
   "overseer.nvim": { "branch": "master", "commit": "8e701da79f3fd7c44c3e8ad1aed6512aedc50191" },
