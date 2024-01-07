@@ -18,13 +18,6 @@ return {
       { 'kristijanhusak/vim-dadbod-completion', ft = sql_ft },
       { 'jsborjesson/vim-uppercase-sql', ft = sql_ft },
     },
-    keys = {
-      {
-        '<leader>cD',
-        '<cmd>DBUI<CR>',
-        desc = 'Database UI',
-      },
-    },
     init = function()
       vim.g.db_ui_save_location = vim.fn.stdpath 'data' .. '/db_ui'
       vim.g.db_ui_use_nerd_fonts = true
@@ -39,5 +32,12 @@ return {
         end,
       })
     end,
+    keys = {
+      {
+        '<leader>cD',
+        '<cmd>DBUIToggle<CR>',
+        desc = 'Database UI',
+      },
+    },
   },
 }
