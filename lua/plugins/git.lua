@@ -442,4 +442,9 @@ return {
       picker = 'telescope',
     },
   },
+  {
+    'fredeeb/tardis.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = true,
+  },
 }

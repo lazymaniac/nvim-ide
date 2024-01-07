@@ -113,6 +113,7 @@
   "squirrel.nvim": { "branch": "main", "commit": "d3bfcc3ded04026e236fd178c38ac007a255dd11" },
   "sudoku.nvim": { "branch": "main", "commit": "c7dfd2f9fc7108ef3832a02f40a76ab1b2d940ce" },
   "surround-ui.nvim": { "branch": "main", "commit": "65c25088e8dbd1e098245de007498b93c694afb0" },
+  "tardis.nvim": { "branch": "main", "commit": "21a92fbc5b3a389ab09cea6beee8784b39c99099" },
   "telescope-egrepify.nvim": { "branch": "master", "commit": "acd69d06a774f930edac5bd75ebe8d4e2854f336" },
   "telescope-fzf-native.nvim": { "branch": "main", "commit": "6c921ca12321edaa773e324ef64ea301a1d0da62" },
   "telescope-terraform-doc.nvim": { "branch": "main", "commit": "537a897f412f633f1189c0575efd2e019bb5ac31" },
