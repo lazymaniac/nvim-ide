@@ -141,7 +141,7 @@ return {
   {
     'lazymaniac/wttr.nvim',
     event = 'VeryLazy',
-    branch = 'dev',
+    branch = 'main',
     dependencies = {
       'nvim-lua/plenary.nvim',
       'MunifTanjim/nui.nvim',
@@ -149,7 +149,7 @@ return {
     opts = {
       location = '',
       format = 1,
-      custom_format = '%C+%cP:%p+T:%t+F:%f+%w+%m+%P+UV:%u+Hum:%h',
+      custom_format = '%C+%c+T:%t+%w+UV:%u+Hum:%h',
       lang = 'en',
     },
     keys = {
