@@ -72,7 +72,9 @@ function M.foldtext()
   if not ret or type(ret) == 'string' then
     ret = { { vim.api.nvim_buf_get_lines(0, vim.v.lnum - 1, vim.v.lnum, false)[1], {} } }
   end
-  table.insert(ret, { ' ' .. require('config').icons.misc.dots })
+
+  local num_lines = " Folded [" .. vim.v.foldend - vim.v.foldstart .. " lines]"
+  table.insert(ret, { " " .. require("config").icons.misc.dots .. num_lines, { "CursorColumn" }})
 
   if not vim.treesitter.foldtext then
     return table.concat(
