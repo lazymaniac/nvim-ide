@@ -372,6 +372,7 @@ return {
               'Trouble',
               'qf',
               'toggleterm',
+              'dbui',
             },
             winbar = {
               'dashboard',
@@ -390,6 +391,7 @@ return {
               'Trouble',
               'qf',
               'toggleterm',
+              'dbui',
             },
           },
           ignore_focus = {
@@ -409,6 +411,7 @@ return {
             'Trouble',
             'qf',
             'toggleterm',
+            'dbui',
           },
           always_divide_middle = true,
           globalstatus = true,
