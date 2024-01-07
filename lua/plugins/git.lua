@@ -86,7 +86,7 @@ return {
         map('n', '<leader>ghS', gs.stage_buffer, 'Stage Buffer')
         map('n', '<leader>ghu', gs.undo_stage_hunk, 'Undo Stage Hunk')
         map('n', '<leader>ghR', gs.reset_buffer, 'Reset Buffer')
-        map('n', '<leader>ghp', gs.preview_hunk, 'Preview Hunk')
+        map('n', '<leader>ghp', gs.preview_hunk_inline, 'Preview Hunk')
         map('n', '<leader>ghb', function()
           gs.blame_line { full = true }
         end, 'Blame Line')
@@ -419,5 +419,27 @@ return {
       }
       require('gitlab').setup(opts)
     end,
+  },
+
+  -- Github support
+  -- Ensure GH tool is installed
+  {
+    'williamboman/mason.nvim',
+    opts = function(_, opts)
+      opts.ensure_installed = opts.ensure_installed or {}
+      vim.list_extend(opts.ensure_installed, { 'gh' })
+    end,
+  },
+  {
+    'pwntester/octo.nvim',
+    cmd = 'Octo',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-telescope/telescope.nvim',
+      'nvim-tree/nvim-web-devicons',
+    },
+    opts = { -- TODO: review config and adjust keymaps
+      picker = 'telescope',
+    },
   },
 }
