@@ -4,118 +4,7 @@ return {
   {
     'hrsh7th/nvim-cmp',
     dependencies = {
-      {
-        'Saecki/crates.nvim',
-        event = { 'BufRead Cargo.toml' },
-        opts = {
-          smart_insert = true,
-          insert_closing_quote = true,
-          avoid_prerelease = true,
-          autoload = true,
-          autoupdate = true,
-          autoupdate_throttle = 250,
-          loading_indicator = true,
-          date_format = '%Y-%m-%d',
-          thousands_separator = '.',
-          notification_title = 'Crates',
-          curl_args = { '-sL', '--retry', '1' },
-          max_parallel_requests = 80,
-          open_programs = { 'xdg-open', 'open' },
-          disable_invalid_feature_diagnostic = false,
-          text = {
-            loading = '   Loading',
-            version = '   %s',
-            prerelease = '   %s',
-            yanked = '   %s',
-            nomatch = '   No match',
-            upgrade = '   %s',
-            error = '   Error fetching crate',
-          },
-          highlight = {
-            loading = 'CratesNvimLoading',
-            version = 'CratesNvimVersion',
-            prerelease = 'CratesNvimPreRelease',
-            yanked = 'CratesNvimYanked',
-            nomatch = 'CratesNvimNoMatch',
-            upgrade = 'CratesNvimUpgrade',
-            error = 'CratesNvimError',
-          },
-          popup = {
-            autofocus = false,
-            hide_on_select = false,
-            copy_register = '"',
-            style = 'minimal',
-            border = 'none',
-            show_version_date = true,
-            show_dependency_version = true,
-            max_height = 30,
-            min_width = 20,
-            padding = 1,
-            text = {
-              title = ' %s',
-              pill_left = '',
-              pill_right = '',
-              description = '%s',
-              created_label = ' created        ',
-              created = '%s',
-              updated_label = ' updated        ',
-              updated = '%s',
-              downloads_label = ' downloads      ',
-              downloads = '%s',
-              homepage_label = ' homepage       ',
-              homepage = '%s',
-              repository_label = ' repository     ',
-              repository = '%s',
-              documentation_label = ' documentation  ',
-              documentation = '%s',
-              crates_io_label = ' crates.io      ',
-              crates_io = '%s',
-              categories_label = ' categories     ',
-              keywords_label = ' keywords       ',
-              version = '  %s',
-              prerelease = ' %s',
-              yanked = ' %s',
-              version_date = '  %s',
-              feature = '  %s',
-              enabled = ' %s',
-              transitive = ' %s',
-              normal_dependencies_title = ' Dependencies',
-              build_dependencies_title = ' Build dependencies',
-              dev_dependencies_title = ' Dev dependencies',
-              dependency = '  %s',
-              optional = ' %s',
-              dependency_version = '  %s',
-              loading = '  ',
-            },
-            keys = {
-              hide = { 'q', '<esc>' },
-              open_url = { '<cr>' },
-              select = { '<cr>' },
-              select_alt = { 's' },
-              toggle_feature = { '<cr>' },
-              copy_value = { 'yy' },
-              goto_item = { 'gd', 'K', '<C-LeftMouse>' },
-              jump_forward = { '<c-i>' },
-              jump_back = { '<c-o>', '<C-RightMouse>' },
-            },
-          },
-          src = {
-            insert_closing_quote = true,
-            text = {
-              prerelease = '  pre-release ',
-              yanked = '  yanked ',
-            },
-            coq = {
-              enabled = false,
-              name = 'Crates',
-            },
-          },
-          null_ls = {
-            enabled = true,
-            name = 'Crates',
-          },
-        },
-      },
+      'Saecki/crates.nvim',
     },
     opts = function(_, opts)
       local cmp = require 'cmp'
@@ -124,7 +13,118 @@ return {
       }))
     end,
   },
-
+  {
+    'Saecki/crates.nvim',
+    event = { 'BufRead Cargo.toml' },
+    opts = {
+      smart_insert = true,
+      insert_closing_quote = true,
+      avoid_prerelease = true,
+      autoload = true,
+      autoupdate = true,
+      autoupdate_throttle = 250,
+      loading_indicator = true,
+      date_format = '%Y-%m-%d',
+      thousands_separator = '.',
+      notification_title = 'Crates',
+      curl_args = { '-sL', '--retry', '1' },
+      max_parallel_requests = 80,
+      open_programs = { 'xdg-open', 'open' },
+      disable_invalid_feature_diagnostic = false,
+      text = {
+        loading = '   Loading',
+        version = '   %s',
+        prerelease = '   %s',
+        yanked = '   %s',
+        nomatch = '   No match',
+        upgrade = '   %s',
+        error = '   Error fetching crate',
+      },
+      highlight = {
+        loading = 'CratesNvimLoading',
+        version = 'CratesNvimVersion',
+        prerelease = 'CratesNvimPreRelease',
+        yanked = 'CratesNvimYanked',
+        nomatch = 'CratesNvimNoMatch',
+        upgrade = 'CratesNvimUpgrade',
+        error = 'CratesNvimError',
+      },
+      popup = {
+        autofocus = false,
+        hide_on_select = false,
+        copy_register = '"',
+        style = 'minimal',
+        border = 'none',
+        show_version_date = true,
+        show_dependency_version = true,
+        max_height = 30,
+        min_width = 20,
+        padding = 1,
+        text = {
+          title = ' %s',
+          pill_left = '',
+          pill_right = '',
+          description = '%s',
+          created_label = ' created        ',
+          created = '%s',
+          updated_label = ' updated        ',
+          updated = '%s',
+          downloads_label = ' downloads      ',
+          downloads = '%s',
+          homepage_label = ' homepage       ',
+          homepage = '%s',
+          repository_label = ' repository     ',
+          repository = '%s',
+          documentation_label = ' documentation  ',
+          documentation = '%s',
+          crates_io_label = ' crates.io      ',
+          crates_io = '%s',
+          categories_label = ' categories     ',
+          keywords_label = ' keywords       ',
+          version = '  %s',
+          prerelease = ' %s',
+          yanked = ' %s',
+          version_date = '  %s',
+          feature = '  %s',
+          enabled = ' %s',
+          transitive = ' %s',
+          normal_dependencies_title = ' Dependencies',
+          build_dependencies_title = ' Build dependencies',
+          dev_dependencies_title = ' Dev dependencies',
+          dependency = '  %s',
+          optional = ' %s',
+          dependency_version = '  %s',
+          loading = '  ',
+        },
+        keys = {
+          hide = { 'q', '<esc>' },
+          open_url = { '<cr>' },
+          select = { '<cr>' },
+          select_alt = { 's' },
+          toggle_feature = { '<cr>' },
+          copy_value = { 'yy' },
+          goto_item = { 'gd', 'K', '<C-LeftMouse>' },
+          jump_forward = { '<c-i>' },
+          jump_back = { '<c-o>', '<C-RightMouse>' },
+        },
+      },
+      src = {
+        insert_closing_quote = true,
+        text = {
+          prerelease = '  pre-release ',
+          yanked = '  yanked ',
+        },
+        coq = {
+          enabled = false,
+          name = 'Crates',
+        },
+      },
+      null_ls = {
+        enabled = true,
+        name = 'Crates',
+      },
+    },
+  },
   -- Add Rust & related to treesitter
   {
     'nvim-treesitter/nvim-treesitter',
@@ -166,13 +166,39 @@ return {
     'mrcjkb/rustaceanvim',
     version = '^3', -- Recommended
     ft = { 'rust' },
-    config = function ()
+    config = function()
       vim.g.rustaceanvim = {
         -- Plugin configuration
         -- tools = {},
         -- LSP configuration
         server = {
           on_attach = function(client, bufnr)
+            local wk = require 'which-key'
+            wk.register({
+              ['<leader>ca'] = { '<cmd>RustLsp codeAction<cr>', '[C]ode [A]ction [Rust]' },
+              ['<leader>ce'] = { '<cmd>RustLsp externalDocs<cr>', 'External [D]ocs [Rust]' },
+              ['<leader>cp'] = { '<cmd>RustLsp rebuildProcMacros<cr>', 'Rebuild [P]roc Macros [Rust]' },
+              ['<leader>cx'] = { '<cmd>RustLsp explainError<cr>', 'E[x]plain Error [Rust]' },
+              ['<leader>cM'] = { '<cmd>RustLsp expandMacro<cr>', 'Expand [M]acro [Rust]' },
+              ['<leader>cg'] = { '<cmd>RustLsp crateGraph<cr>', 'Crates [G]raph [Rust]' },
+              ['<leader>cS'] = { '<cmd>RustLsp ssr<cr>', '[S]SR [Rust]' },
+              ['<leader>cj'] = { '<cmd>RustLsp moveItem down<cr>', 'Move Item Down [Rust]' },
+              ['<leader>ck'] = { '<cmd>RustLsp moveItem up<cr>', 'Move Item Up [Rust]' },
+              ['<leader>cK'] = { '<cmd>RustLsp hover actions<cr>', 'Hover Actions [Rust]' },
+              ['<leader>co'] = { '<cmd>RustLsp openCargo<cr>', 'Open Cargo.toml [Rust]' },
+              ['<leader>cP'] = { '<cmd>RustLsp parentModule<cr>', 'Parent Module [Rust]' },
+              ['<leader>cJ'] = { '<cmd>RustLsp joinLines<cr>', 'Join Lines [Rust]' },
+              ['<leader>ct'] = { '<cmd>RustLsp syntaxTree<cr>', 'Syntax Tree [Rust]' },
+              ['<leader>dm'] = { '<cmd>RustLsp view mir<cr>', 'View MIR [Rust]' },
+              ['<leader>dh'] = { '<cmd>RustLsp view hir<cr>', 'View HIR [Rust]' },
+              ['<leader>dd'] = { '<cmd>RustLsp debuggables<cr>', 'Debuggables [Rust]' },
+              ['<leader>dl'] = { '<cmd>RustLsp debuggables last<cr>', 'Debuggables last [Rust]' },
+              ['<leader>ru'] = { '<cmd>RustLsp runnables<cr>', 'Runnables [Rust]' },
+              ['<leader>rl'] = { '<cmd>RustLsp runnables last<cr>', 'Runnables last [Rust]' },
+            }, { mode = 'n', buffer = bufnr })
+            wk.register({
+              ['<leader>cK'] = { '<cmd>RustLsp hover range<cr>', 'Hover Ranger [Rust]' },
+            }, { mode = 'v', buffer = bufnr })
             -- you can also put keymaps in here
             vim.lsp.inlay_hint.enable(bufnr, true)
           end,
@@ -186,48 +212,6 @@ return {
         },
       }
     end,
-    keys = {
-      {
-        '<leader>ca',
-        '<cmd>RustLsp codeAction<cr>',
-        desc = '[C]ode [A]ction [Rust]'
-      },
-      {
-        '<leader>ce',
-        '<cmd>RustLsp externalDocs<cr>',
-        desc = 'External [D]ocs [Rust]'
-      },
-      {
-        '<leader>cp',
-        '<cmd>RustLsp rebuildProcMacros<cr>',
-        desc = 'Rebuild [P]roc Macros [Rust]'
-      },
-      {
-        '<leader>cx',
-        '<cmd>RustLsp explainError<cr>',
-        desc = 'E[x]plain Error [Rust]'
-      },
-      {
-        '<leader>cM',
-        '<cmd>RustLsp expandMacro<cr>',
-        desc = 'Expand Macro [Rust]'
-      },
-      {
-        '<leader>dd',
-        '<cmd>RustLsp debuggables<cr>',
-        desc = 'Debuggables [Rust]'
-      },
-      {
-        '<leader>cg',
-        '<cmd>RustLsp crateGraph<cr>',
-        desc = 'Crates Graph [Rust]'
-      },
-      {
-        '<leader>cS',
-        '<cmd>RustLsp ssr<cr>',
-        desc = 'SSR [Rust]'
-      },
-    }
   },
   {
     'nvim-neotest/neotest',

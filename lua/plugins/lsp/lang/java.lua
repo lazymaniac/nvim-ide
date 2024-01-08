@@ -301,7 +301,7 @@ return {
     'nvim-treesitter/nvim-treesitter',
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, { 'java', 'xml', 'yaml', 'properties'})
+      vim.list_extend(opts.ensure_installed, { 'java', 'xml', 'yaml', 'properties' })
     end,
   },
 
@@ -323,6 +323,7 @@ return {
     },
   },
 
+  -- Setup neotest
   {
     'nvim-neotest/neotest',
     optional = true,
@@ -335,22 +336,7 @@ return {
       },
     },
   },
-  -- Configure nvim-lspconfig to install the server automatically via mason, but
-  -- defer actually starting it to our configuration of nvim-jtdls below.
-  {
-    'neovim/nvim-lspconfig',
-    opts = {
-      -- make sure mason installs the server
-      servers = {
-        jdtls = {},
-      },
-      setup = {
-        jdtls = function()
-          return true -- avoid duplicate servers
-        end,
-      },
-    },
-  },
+
   {
     'mfussenegger/nvim-jdtls',
     enabled = true,
