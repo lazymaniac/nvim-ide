@@ -335,13 +335,6 @@ return {
       },
     },
   },
-  {
-    'folke/neodev.nvim',
-    opts = {
-      library = { plugins = { 'neotest' }, types = true },
-    },
-  },
-
   -- Configure nvim-lspconfig to install the server automatically via mason, but
   -- defer actually starting it to our configuration of nvim-jtdls below.
   {
