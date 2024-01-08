@@ -166,7 +166,67 @@ return {
     'mrcjkb/rustaceanvim',
     version = '^3', -- Recommended
     ft = { 'rust' },
+    config = function ()
+      vim.g.rustaceanvim = {
+        -- Plugin configuration
+        -- tools = {},
+        -- LSP configuration
+        server = {
+          on_attach = function(client, bufnr)
+            -- you can also put keymaps in here
+            vim.lsp.inlay_hint.enable(bufnr, true)
+          end,
+          --     settings = {
+          --       -- rust-analyzer language server configuration
+          --       ["rust-analyzer"] = {},
+          --     },
+          --   },
+          --   -- DAP configuration
+          --   dap = {},
+        },
+      }
+    end,
     keys = {
+      {
+        '<leader>ca',
+        '<cmd>RustLsp codeAction<cr>',
+        desc = '[C]ode [A]ction [Rust]'
+      },
+      {
+        '<leader>ce',
+        '<cmd>RustLsp externalDocs<cr>',
+        desc = 'External [D]ocs [Rust]'
+      },
+      {
+        '<leader>cp',
+        '<cmd>RustLsp rebuildProcMacros<cr>',
+        desc = 'Rebuild [P]roc Macros [Rust]'
+      },
+      {
+        '<leader>cx',
+        '<cmd>RustLsp explainError<cr>',
+        desc = 'E[x]plain Error [Rust]'
+      },
+      {
+        '<leader>cM',
+        '<cmd>RustLsp expandMacro<cr>',
+        desc = 'Expand Macro [Rust]'
+      },
+      {
+        '<leader>dd',
+        '<cmd>RustLsp debuggables<cr>',
+        desc = 'Debuggables [Rust]'
+      },
+      {
+        '<leader>cg',
+        '<cmd>RustLsp crateGraph<cr>',
+        desc = 'Crates Graph [Rust]'
+      },
+      {
+        '<leader>cS',
+        '<cmd>RustLsp ssr<cr>',
+        desc = 'SSR [Rust]'
+      },
     }
   },
   {
