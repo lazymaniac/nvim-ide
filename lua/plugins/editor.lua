@@ -615,10 +615,4 @@ return {
       leader_key = "'", -- Recommended to be a single key
     },
   },
-  {
-    "anuvyklack/fold-preview.nvim",
-    event = "BufReadPost",
-    dependencies = "anuvyklack/keymap-amend.nvim",
-    config = true,
-  },
 }
