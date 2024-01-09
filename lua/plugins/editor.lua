@@ -615,4 +615,10 @@ return {
       leader_key = "'", -- Recommended to be a single key
     },
   },
+  {
+    'carbon-steel/detour.nvim',
+    config = function()
+      vim.keymap.set('n', '<c-w><enter>', ':Detour<cr>')
+    end,
+  },
 }

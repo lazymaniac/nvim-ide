@@ -65,3 +65,9 @@ local lazydocker = Terminal:new { cmd = 'lazydocker', hidden = true }
 function _LAZYDOCKER_TOGGLE()
   lazydocker:toggle()
 end
+
+local lazysql = Terminal:new { cmd = 'lazysql', hidden = true }
+
+function _LAZYSQL_TOGGLE()
+  lazysql:toggle()
+end
