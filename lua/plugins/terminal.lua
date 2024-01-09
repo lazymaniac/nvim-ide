@@ -64,6 +64,12 @@ return {
         desc = 'Termin[a]l [p]ython',
       },
       {
+        '<leader>ad',
+        '<cmd>lua _LAZYDOCKER_TOGGLE()<cr>',
+        mode = { 'n' },
+        desc = 'Termin[a]l [d]ocker',
+      },
+      {
         '<leader>af',
         '<cmd>ToggleTerm direction=float<cr>',
         mode = { 'n' },
@@ -84,6 +90,24 @@ return {
       {
         '<leader>at',
         '<cmd>ToggleTerm direction=tab<cr>',
+        mode = { 'n' },
+        desc = 'Termin[a]l [t]ab',
+      },
+      {
+        '<leader>a1',
+        '<cmd>ToggleTerm 1<cr>',
+        mode = { 'n' },
+        desc = 'Termin[a]l [t]ab',
+      },
+      {
+        '<leader>a2',
+        '<cmd>ToggleTerm 2<cr>',
+        mode = { 'n' },
+        desc = 'Termin[a]l [t]ab',
+      },
+      {
+        '<leader>a3',
+        '<cmd>ToggleTerm 3<cr>',
         mode = { 'n' },
         desc = 'Termin[a]l [t]ab',
       },

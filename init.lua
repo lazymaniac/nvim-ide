@@ -59,3 +59,9 @@ local python = Terminal:new { cmd = 'python', hidden = true }
 function _PYTHON_TOGGLE()
   python:toggle()
 end
+
+local lazydocker = Terminal:new { cmd = 'lazydocker', hidden = true }
+
+function _LAZYDOCKER_TOGGLE()
+  lazydocker:toggle()
+end
