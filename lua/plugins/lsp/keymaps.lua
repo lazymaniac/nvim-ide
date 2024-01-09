@@ -68,10 +68,10 @@ function M.get()
     },
 
     -- Workspace actions
-    { '<leader>cwa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder' },
-    { '<leader>cwr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder' },
+    { '<leader>cWa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder' },
+    { '<leader>cWr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder' },
     {
-      '<leader>cwl',
+      '<leader>cWl',
       function()
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
       end,
