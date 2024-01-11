@@ -1,0 +1,27 @@
+{
+  "fixme": {
+    "body": "-- FIXME: ${1:reason}",
+    "prefix": "fixme"
+  },
+  "keymapping": {
+    "body": [
+      "{",
+      "  '${1:<leader>}',",
+      "  '${2:cmd}',",
+      "  desc = '${3:desc}',",
+      "},"
+    ],
+    "prefix": "keymapping"
+  },
+  "plug_doc": {
+    "body": [
+      "-- [${1:plugin name}] - ${2:description}",
+      "-- see: `:h ${3:help-tag}`"
+    ],
+    "prefix": "plug_doc"
+  },
+  "todo": {
+    "body": "-- TODO: ${1: what to do}",
+    "prefix": "todo"
+  }
+}
