@@ -273,7 +273,7 @@ return {
       {
         '<leader>df',
         function()
-          require('dapui').float_element(nil, { width = 120, height = 30, enter = true, position = "center" })
+          require('dapui').float_element(nil, { width = 184, height = 44, enter = true, position = "center" })
         end,
         desc = 'Open floating DAP',
       },
