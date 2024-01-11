@@ -61,6 +61,7 @@ return {
   -- Log file is at ~/.cache/nvim/hardtime.nvim.log.
   {
     'm4xshen/hardtime.nvim',
+    event = 'VeryLazy',
     dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim' },
     opts = {
       max_time = 1000,
@@ -71,9 +72,6 @@ return {
       allow_different_key = false,
       enabled = true,
     },
-    config = function(_, opts)
-      require('hardtime').setup(opts)
-    end,
     keys = {
       {
         '<leader>uH',
@@ -132,7 +130,7 @@ return {
     init = function()
       -- Default config
       require('tip').setup {
-        seconds = 2,
+        seconds = 6,
         title = 'Tip!',
         url = 'https://vtip.43z.one',
       }
@@ -164,6 +162,7 @@ return {
   },
   {
     'adityastomar67/italicize',
+    event = 'VeryLazy',
     config = function()
       require('italicize').setup {
         transparency = false,

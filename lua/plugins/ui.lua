@@ -16,7 +16,7 @@ return {
       },
     },
     opts = {
-      timeout = 2500, -- Time to show Notification in ms, set to false ti disable timeout.
+      timeout = 3000, -- Time to show Notification in ms, set to false ti disable timeout.
       fps = 30, -- Frames per second for animnation stages, higher value means smoother animations but more CPU usage.
       level = 2, -- Minimum log level to display. See vim.log.levels.
       minimum_width = 35, -- Minimum width for notification window.
@@ -433,30 +433,20 @@ return {
             { "require'wttr'.text" },
             {
               function()
-                return require('noice').api.status.command.get()
-              end,
-              cond = function()
-                return package.loaded['noice'] and require('noice').api.status.command.has()
-              end,
-              color = Util.ui.fg 'Statement',
-            },
-            {
-              function()
-                return require('noice').api.status.mode.get()
-              end,
-              cond = function()
-                return package.loaded['noice'] and require('noice').api.status.mode.has()
-              end,
-              color = Util.ui.fg 'Constant',
-            },
-            {
-              function()
                 return '  ' .. require('dap').status()
               end,
               cond = function()
                 return package.loaded['dap'] and require('dap').status() ~= ''
               end,
               color = Util.ui.fg 'Debug',
+            },
+            {
+              'overseer',
+              label = '', -- Prefix for task counts
+              colored = true, -- Color the task icons and counts
+              unique = true, -- Unique-ify non-running task count by name
+              name_not = false, -- When true, invert the name search
+              status_not = false, -- When true, invert the status search
             },
             {
               require('lazy.status').updates,
@@ -678,7 +668,7 @@ return {
         commands = {
           history = {
             -- options for the message history that you get with `:Noice`
-            view = 'popup',
+            view = 'split',
             opts = { enter = true, format = 'details' },
             filter = {
               any = {
@@ -897,7 +887,7 @@ return {
 
   -- ui components
   { 'MunifTanjim/nui.nvim' },
-  
+
   -- Oogway sentences
   {
     '0x5a4/oogway.nvim',
@@ -910,7 +900,7 @@ return {
     event = 'VimEnter',
     dependencies = { { 'nvim-tree/nvim-web-devicons' } },
     opts = function()
-      local oogway = require("oogway")
+      local oogway = require 'oogway'
       local opts = {
         theme = 'hyper',
         hide = {
@@ -922,7 +912,7 @@ return {
           week_header = {
             enable = false,
           },
-          header = vim.fn.split(oogway.what_is_your_wisdom() .. "\n\n\n\n\n", "\n"),
+          header = vim.fn.split(oogway.what_is_your_wisdom() .. '\n\n\n\n\n', '\n'),
           shortcut = {
             { icon = ' ', icon_hl = '@variable', desc = 'Find Files', group = 'Label', action = 'Telescope find_files', key = 'f' },
             { icon = ' ', icon_hl = '@variable', desc = 'Find Text', group = 'Label', action = 'Telescope live_grep', key = 'g' },

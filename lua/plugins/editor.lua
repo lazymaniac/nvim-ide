@@ -38,9 +38,10 @@ return {
         -- Override the label used to display some keys. It doesn't effect
         -- WK in any other way
         -- For example:
-        -- ["<space>"] = "SPC",
+        ["<space>"] = "SPC",
         -- ["<CR>"] = "RET",
-        -- ["<TAB>"] = "TAB",
+        ["<TAB>"] = "TAB",
+        ["<tab>"] = "TAB",
       },
       icons = {
         breadcrumb = '»', -- symbol used in the command line area that shows your active key combo
@@ -312,7 +313,7 @@ return {
 
         -- Auto close the outline window if goto_location is triggered and not for
         -- peek_location
-        auto_close = true,
+        auto_close = false,
         -- Automatically scroll to the location in code when navigating outline window.
         auto_jump = false,
         -- boolean or integer for milliseconds duration to apply a temporary highlight

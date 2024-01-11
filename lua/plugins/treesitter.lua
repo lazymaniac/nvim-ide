@@ -112,10 +112,10 @@ return {
         swap = {
           enable = true,
           swap_next = {
-            ['<leader>a'] = '@parameter.inner',
+            ['<F2>'] = '@parameter.inner',
           },
           swap_previous = {
-            ['<leader>A'] = '@parameter.inner',
+            ['<F3>'] = '@parameter.inner',
           },
         },
       },
@@ -141,7 +141,6 @@ return {
   {
     'nvim-treesitter/nvim-treesitter-context',
     event = 'VeryLazy',
-    enabled = true,
     opts = { mode = 'cursor', max_lines = 3 },
     keys = {
       {

@@ -2,9 +2,6 @@ return {
   {
     'stevearc/overseer.nvim',
     event = 'VeryLazy',
-    config = function(_, opts)
-      require('overseer').setup(opts)
-    end,
     opts = {
       -- Default task strategy
       strategy = 'terminal',
