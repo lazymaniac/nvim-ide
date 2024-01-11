@@ -23,25 +23,11 @@ return {
         desc = 'Explorer NeoTree (root dir)',
       },
       {
-        '<leader>fE',
-        function()
-          require('neo-tree.command').execute { action = 'focus', position = 'left', dir = vim.loop.cwd() }
-        end,
-        desc = 'Explorer NeoTree (cwd)',
-      },
-      {
         '<leader>e',
         function()
           require('neo-tree.command').execute { action = 'focus', position = 'float', dir = Util.root() }
         end,
         desc = 'Explorer NeoTree (root dir)',
-      },
-      {
-        '<leader>E',
-        function()
-          require('neo-tree.command').execute { action = 'focus', position = 'float', dir = vim.loop.cwd() }
-        end,
-        desc = 'Explorer NeoTree (cwd)',
       },
       {
         '<leader>ge',
@@ -196,7 +182,7 @@ return {
       },
       window = {
         position = 'left',
-        width = 50,
+        width = 40,
         mapping_options = {
           noremap = true,
           nowait = true,
