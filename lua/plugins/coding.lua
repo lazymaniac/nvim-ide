@@ -14,7 +14,7 @@ return {
     end,
   },
 
-  -- [luasnip] - Snippets engine. Loads snippets from various sources like vscode styler
+  -- [luasnip] - Snippets engine. Loads snippets from various sources like vscode
   -- see: `h: luasnip`
   {
     'L3MON4D3/LuaSnip',
