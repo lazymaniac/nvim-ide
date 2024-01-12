@@ -38,10 +38,10 @@ return {
         -- Override the label used to display some keys. It doesn't effect
         -- WK in any other way
         -- For example:
-        ["<space>"] = "SPC",
+        ['<space>'] = 'SPC',
         -- ["<CR>"] = "RET",
-        ["<TAB>"] = "TAB",
-        ["<tab>"] = "TAB",
+        ['<TAB>'] = 'TAB',
+        ['<tab>'] = 'TAB',
       },
       icons = {
         breadcrumb = '»', -- symbol used in the command line area that shows your active key combo
@@ -272,12 +272,6 @@ return {
       { '<leader>st', '<cmd>TodoTelescope<cr>', desc = 'Todo' },
       { '<leader>sT', '<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>', desc = 'Todo/Fix/Fixme' },
     },
-  },
-
-  -- Show next key clue
-  {
-    'echasnovski/mini.clue',
-    version = false,
   },
 
   -- Show symbols outline for current buffer
