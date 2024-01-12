@@ -4,9 +4,9 @@ return {
     event = 'VeryLazy',
     opts = {
       -- Default task strategy
-      strategy = 'terminal',
+      strategy = 'toggleterm',
       -- Template modules to load
-      templates = { 'builtin' },
+      templates = { 'builtin', 'user' },
       -- When true, tries to detect a green color from your colorscheme to use for success highlight
       auto_detect_success_color = true,
       -- Patch nvim-dap to support preLaunchTask and postDebugTask
@@ -161,6 +161,13 @@ return {
           'on_result_diagnostics',
           'on_result_diagnostics_quickfix',
         },
+        default_neotest = {
+          { 'display_duration', detail_level = 2 },
+          'on_output_summarize',
+          'on_exit_set_status',
+          'on_complete_notify',
+          'on_complete_dispose',
+        },
       },
       bundles = {
         -- When saving a bundle with OverseerSaveBundle or save_task_bundle(), filter the tasks with
@@ -204,37 +211,37 @@ return {
         '<leader>rb',
         '<cmd>OverseerBuild<cr>',
         mode = { 'n', 'v' },
-        desc = 'Overseer Build',
+        desc = 'Create Task [Overseer]',
       },
       {
         '<leader>rv',
         '<cmd>OverseerToggle<cr>',
         mode = { 'n', 'v' },
-        desc = 'Overseer Togggle Results',
+        desc = 'Show Results [Overseer]',
       },
       {
         '<leader>rq',
         '<cmd>OverseerQuickAction<cr>',
         mode = { 'n', 'v' },
-        desc = 'Overseer Quick Action',
+        desc = 'Task Quick Action [Overseer]',
       },
       {
         '<leader>rr',
         '<cmd>OverseerRun<cr>',
         mode = { 'n', 'v' },
-        desc = 'Overseer Run',
+        desc = 'Run Task [Overseer]',
       },
       {
         '<leader>rc',
         '<cmd>OverseerRunCmd<cr>',
         mode = { 'n', 'v' },
-        desc = 'Overseer Run Cmd',
+        desc = 'Run Cmd [Overseer]',
       },
       {
         '<leader>rt',
         '<cmd>OverseerTaskAction<cr>',
         mode = { 'n', 'v' },
-        desc = 'Overseer Task Action',
+        desc = 'Task Action [Overseer]',
       },
     },
   },

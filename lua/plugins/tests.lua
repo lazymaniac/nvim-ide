@@ -16,121 +16,130 @@ return {
       'antoinemadec/FixCursorHold.nvim',
       'nvim-treesitter/nvim-treesitter',
     },
-    opts = {
-      adapters = {},
-      benchmark = {
-        enabled = true,
-      },
-      consumers = {},
-      default_strategy = 'integrated',
-      diagnostic = {
-        enabled = true,
-        severity = 1,
-      },
-      discovery = {
-        concurrent = 0,
-        enabled = true,
-      },
-      floating = {
-        border = 'rounded',
-        max_height = 0.6,
-        max_width = 0.6,
-        options = {},
-      },
-      icons = {
-        expanded = '',
-        child_prefix = '',
-        child_indent = '',
-        final_child_prefix = '',
-        non_collapsible = '',
-        collapsed = '',
+    config = function()
+      local opts = {
+        adapters = {
+          ['neotest-java'] = { ignore_wrapper = false },
+        },
+        benchmark = {
+          enabled = true,
+        },
+        consumers = {
+          -- overseer = require 'neotest.consumers.overseer',
+        },
+        -- overseer = {
+        --   enabled = true,
+        --   -- When this is true (the default), it will replace all neotest.run.* commands
+        --   force_default = true,
+        -- },
+        default_strategy = 'integrated',
+        diagnostic = {
+          enabled = true,
+          severity = 1,
+        },
+        discovery = {
+          concurrent = 0,
+          enabled = true,
+        },
+        floating = {
+          border = 'rounded',
+          max_height = 0.6,
+          max_width = 0.6,
+          options = {},
+        },
+        icons = {
+          expanded = '',
+          child_prefix = '',
+          child_indent = '',
+          final_child_prefix = '',
+          non_collapsible = '',
+          collapsed = '',
 
-        passed = '',
-        running = '',
-        failed = '',
-        unknown = '',
-      },
-      jump = {
-        enabled = true,
-      },
-      log_level = 3,
-      output = {
-        enabled = true,
-        open_on_run = 'short',
-      },
-      output_panel = {
-        enabled = true,
-        open = 'botright split | resize 15',
-      },
-      projects = {},
-      quickfix = {
-        enabled = true,
-        open = function()
-          if require('util').has 'trouble.nvim' then
-            require('trouble').open { mode = 'quickfix', focus = false }
-          else
-            vim.cmd 'copen'
-          end
-        end,
-      },
-      run = {
-        enabled = true,
-      },
-      running = {
-        concurrent = true,
-      },
-      state = {
-        enabled = true,
-      },
-      status = {
-        enabled = true,
-        signs = true,
-        virtual_text = true,
-      },
-      strategies = {
-        integrated = {
-          height = 40,
-          width = 120,
+          passed = '',
+          running = '',
+          failed = '',
+          unknown = '',
         },
-      },
-      summary = {
-        animated = true,
-        enabled = true,
-        expand_errors = true,
-        follow = true,
-        mappings = {
-          attach = 'a',
-          clear_marked = 'M',
-          clear_target = 'T',
-          debug = 'd',
-          debug_marked = 'D',
-          expand = { '<CR>', '<2-LeftMouse>' },
-          expand_all = 'e',
-          jumpto = 'i',
-          mark = 'm',
-          next_failed = 'J',
-          output = 'o',
-          prev_failed = 'K',
-          run = 'r',
-          run_marked = 'R',
-          short = 'O',
-          stop = 'u',
-          target = 't',
-          watch = 'w',
+        jump = {
+          enabled = true,
         },
-        open = 'botright vsplit | vertical resize 50',
-      },
-      watch = {
-        enabled = true,
-        symbol_queries = {
-          elixir = '<function 1>',
-          go = '        ;query\n        ;Captures imported types\n        (qualified_type name: (type_identifier) @symbol)\n        ;Captures package-local and built-in types\n        (type_identifier)@symbol\n        ;Captures imported function calls and variables/constants\n        (selector_expression field: (field_identifier) @symbol)\n        ;Captures package-local functions calls\n        (call_expression function: (identifier) @symbol)\n      ',
-          lua = '        ;query\n        ;Captures module names in require calls\n        (function_call\n          name: ((identifier) @function (#eq? @function "require"))\n          arguments: (arguments (string) @symbol))\n      ',
-          python = "        ;query\n        ;Captures imports and modules they're imported from\n        (import_from_statement (_ (identifier) @symbol))\n        (import_statement (_ (identifier) @symbol))\n      ",
+        log_level = 3,
+        output = {
+          enabled = true,
+          open_on_run = 'short',
         },
-      },
-    },
-    config = function(_, opts)
+        output_panel = {
+          enabled = true,
+          open = 'botright split | resize 15',
+        },
+        projects = {},
+        quickfix = {
+          enabled = true,
+          open = function()
+            if require('util').has 'trouble.nvim' then
+              require('trouble').open { mode = 'quickfix', focus = false }
+            else
+              vim.cmd 'copen'
+            end
+          end,
+        },
+        run = {
+          enabled = true,
+        },
+        running = {
+          concurrent = true,
+        },
+        state = {
+          enabled = true,
+        },
+        status = {
+          enabled = true,
+          signs = true,
+          virtual_text = true,
+        },
+        strategies = {
+          integrated = {
+            height = 40,
+            width = 120,
+          },
+        },
+        summary = {
+          animated = true,
+          enabled = true,
+          expand_errors = true,
+          follow = true,
+          mappings = {
+            attach = 'a',
+            clear_marked = 'M',
+            clear_target = 'T',
+            debug = 'd',
+            debug_marked = 'D',
+            expand = { '<CR>', '<2-LeftMouse>' },
+            expand_all = 'e',
+            jumpto = 'i',
+            mark = 'm',
+            next_failed = 'J',
+            output = 'o',
+            prev_failed = 'K',
+            run = 'r',
+            run_marked = 'R',
+            short = 'O',
+            stop = 'u',
+            target = 't',
+            watch = 'w',
+          },
+          open = 'botright vsplit | vertical resize 50',
+        },
+        watch = {
+          enabled = true,
+          symbol_queries = {
+            elixir = '<function 1>',
+            go = '        ;query\n        ;Captures imported types\n        (qualified_type name: (type_identifier) @symbol)\n        ;Captures package-local and built-in types\n        (type_identifier)@symbol\n        ;Captures imported function calls and variables/constants\n        (selector_expression field: (field_identifier) @symbol)\n        ;Captures package-local functions calls\n        (call_expression function: (identifier) @symbol)\n      ',
+            lua = '        ;query\n        ;Captures module names in require calls\n        (function_call\n          name: ((identifier) @function (#eq? @function "require"))\n          arguments: (arguments (string) @symbol))\n      ',
+            python = "        ;query\n        ;Captures imports and modules they're imported from\n        (import_from_statement (_ (identifier) @symbol))\n        (import_statement (_ (identifier) @symbol))\n      ",
+          },
+        },
+      }
       local neotest_ns = vim.api.nvim_create_namespace 'neotest'
       vim.diagnostic.config({
         virtual_text = {

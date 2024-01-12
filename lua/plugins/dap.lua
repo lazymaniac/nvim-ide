@@ -20,6 +20,8 @@ return {
       { 'theHamsta/nvim-dap-virtual-text' },
       -- mason.nvim integration
       { 'jay-babu/mason-nvim-dap.nvim' },
+      -- overseer task runner
+      { 'stevearc/overseer.nvim' },
     },
     keys = {
       {
@@ -273,7 +275,7 @@ return {
       {
         '<leader>df',
         function()
-          require('dapui').float_element(nil, { width = 184, height = 44, enter = true, position = "center" })
+          require('dapui').float_element(nil, { width = 184, height = 44, enter = true, position = 'center' })
         end,
         desc = 'Open floating DAP',
       },

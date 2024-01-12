@@ -345,13 +345,12 @@ return {
   -- Setup neotest
   {
     'nvim-neotest/neotest',
-    optional = true,
     dependencies = {
       'rcasia/neotest-java',
     },
     opts = {
       adapters = {
-        ['neotest-java'] = {},
+        ['neotest-java'] = { ignore_wrapper = false },
       },
     },
   },

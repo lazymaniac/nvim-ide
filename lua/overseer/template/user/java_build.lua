@@ -1,11 +1,10 @@
 return {
-  name = "mvn clean install",
+  name = 'Maven Clean Install',
   builder = function()
     -- Full path to current file (see :help expand())
     return {
-      cmd = { "mvn clean install" },
-      args = { },
-      components = { { "on_output_quickfix", open = true }, "default" },
+      cmd = { 'mvn' },
+      args = { 'clean', 'install' },
     }
   end,
   condition = {
