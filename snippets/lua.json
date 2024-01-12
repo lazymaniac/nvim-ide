@@ -14,6 +14,19 @@
     ],
     "prefix": "keymapping"
   },
+  "keymapping_fn": {
+    "body": [
+      "{",
+      "  '${1:Mapping}',",
+      "  function()",
+      "    ${2:Function}",
+      "  end,",
+      "  mode = { 'n', 'v' },",
+      "  desc = '${3:Descritpion}',",
+      "},"
+    ],
+    "prefix": "keymapping_fn"
+  },
   "plug_doc": {
     "body": [
       "-- [${1:plugin name}] - ${2:description}",
@@ -22,7 +35,7 @@
     "prefix": "plug_doc"
   },
   "todo": {
-    "body": "-- TODO: ${1: what to do}",
+    "body": "-- TODO: ${1:what to do}",
     "prefix": "todo"
   }
 }
