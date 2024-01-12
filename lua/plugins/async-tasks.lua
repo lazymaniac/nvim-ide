@@ -220,6 +220,18 @@ return {
         desc = 'Show Results [Overseer]',
       },
       {
+        '<leader>rC',
+        '<cmd>OverseerClearCache<cr>',
+        mode = { 'n', 'v' },
+        desc = 'Clear Cache [Overseer]',
+      },
+      {
+        '<leader>rl',
+        '<cmd>OverseerLoadBundle<cr>',
+        mode = { 'n', 'v' },
+        desc = 'Load Task Bundle [Overseer]',
+      },
+      {
         '<leader>rq',
         '<cmd>OverseerQuickAction<cr>',
         mode = { 'n', 'v' },
