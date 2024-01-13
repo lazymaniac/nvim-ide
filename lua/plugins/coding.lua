@@ -51,7 +51,7 @@ return {
             position = '50%',
             size = {
               width = '80%',
-              height = '80%',
+              height = '70%',
             },
             min_width = 40,
             min_height = 10,
