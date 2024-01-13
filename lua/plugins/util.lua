@@ -160,14 +160,4 @@ return {
       },
     },
   },
-  {
-    'adityastomar67/italicize',
-    event = 'VeryLazy',
-    config = function()
-      require('italicize').setup {
-        transparency = false,
-        italics = true,
-      }
-    end,
-  },
 }
