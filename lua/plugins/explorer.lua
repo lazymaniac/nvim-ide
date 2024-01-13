@@ -43,6 +43,7 @@ return {
             position = 'float', -- OPTIONAL, this is the default value
             reveal_file = reveal_file, -- path to file or folder to reveal
             reveal_force_cwd = true, -- change cwd without asking if needed
+            dir = Util.root(),
           }
         end,
         desc = 'Explorer NeoTree (root dir)',

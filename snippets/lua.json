@@ -34,6 +34,10 @@
     ],
     "prefix": "plug_doc"
   },
+  "plug_group": {
+    "body": "-- [[ ${1:group_name} ]] ---------------------------------------------------------------",
+    "prefix": "plug_group"
+  },
   "todo": {
     "body": "-- TODO: ${1:what to do}",
     "prefix": "todo"
