@@ -11,10 +11,7 @@ return {
         decrement = '<C-x>',
       },
       -- User defined loops
-      additions = {
-        { 'Foo', 'Bar' },
-        { 'tic', 'tac', 'toe' },
-      },
+      additions = {},
       allow_caps_additions = {
         { 'enable', 'disable' },
         -- enable → disable
@@ -180,18 +177,88 @@ return {
           end
         end,
       }
-    end,
-  },
-  {
-    'roobert/surround-ui.nvim',
-    dependencies = {
-      'kylechui/nvim-surround',
-      'folke/which-key.nvim',
-    },
-    config = function()
-      require('surround-ui').setup {
-        root_key = 'S',
+
+      local grammar_targets = {
+        ['['] = '',
+        [']'] = '',
+        ['('] = '',
+        [')'] = '',
+        ['{'] = '',
+        ['}'] = '',
+        ['<'] = '',
+        ['>'] = '',
+        ['`'] = '',
+        ["'"] = '',
+        ['"'] = '',
       }
+
+      local abbreviated_targets = {
+        ['b'] = ' [bracket]',
+      }
+
+      local keywords_targets = {
+        ['w'] = ' [word]',
+        ['W'] = ' [WORD]',
+        ['f'] = ' [function]',
+        ['q'] = ' [quote]',
+      }
+
+      local all_targets = {}
+      all_targets = vim.list_extend(all_targets, grammar_targets)
+      all_targets = vim.list_extend(all_targets, abbreviated_targets)
+      all_targets = vim.list_extend(all_targets, keywords_targets)
+
+      local abbreviated_and_grammar_targets = {}
+      abbreviated_and_grammar_targets = vim.list_extend(abbreviated_and_grammar_targets, grammar_targets)
+      abbreviated_and_grammar_targets = vim.list_extend(abbreviated_and_grammar_targets, abbreviated_targets)
+
+      local mappings = {
+        ['<leader>'] = {
+          ['S'] = { name = '+[surround]' },
+        },
+      }
+
+      -- around mappings
+      mappings['<leader>']['S']['a'] = { name = 'around' }
+      for char, desc in pairs(all_targets) do
+        mappings['<leader>']['S']['a'][char] = { name = desc }
+        for ichar, target in pairs(abbreviated_and_grammar_targets) do
+          mappings['<leader>']['S']['a'][char][ichar] = { "<CMD>call feedkeys('ysa" .. char .. ichar .. "')<CR>", 'ysa' .. char .. ichar .. target }
+        end
+      end
+
+      -- inner mappings
+      mappings['<leader>']['S']['i'] = { name = 'inner' }
+      for char, desc in pairs(all_targets) do
+        mappings['<leader>']['S']['i'][char] = { name = desc }
+        for ichar, target in pairs(all_targets) do
+          mappings['<leader>']['S']['i'][char][ichar] = { "<CMD>call feedkeys('ysi" .. char .. ichar .. "')<CR>", 'ysi' .. char .. ichar .. target }
+        end
+      end
+
+      -- change mappings
+      mappings['<leader>']['S']['c'] = { name = 'change' }
+      for char, desc in pairs(all_targets) do
+        mappings['<leader>']['S']['c'][char] = { name = desc }
+        for ichar, target in pairs(all_targets) do
+          -- FIXME: escape ''s
+          mappings['<leader>']['S']['c'][char][ichar] = { "<CMD>call feedkeys('cs" .. char .. ichar .. "')<CR>", 'cs' .. char .. ichar .. target }
+        end
+      end
+
+      -- delete mappings
+      mappings['<leader>']['S']['d'] = { name = 'delete' }
+      for char, target in pairs(all_targets) do
+        mappings['<leader>']['S']['d'][char] = { "<CMD>call feedkeys('ds" .. char .. "')<CR>", 'ds' .. char .. target }
+      end
+
+      -- line mappings
+      mappings['<leader>']['S']['s'] = { name = '[s] line' }
+      for char, target in pairs(all_targets) do
+        mappings['<leader>']['S']['s'][char] = { "<CMD>call feedkeys('yss" .. char .. "')<CR>", 'yss' .. char .. target }
+      end
+
+      require('which-key').register(mappings)
     end,
   },
 
