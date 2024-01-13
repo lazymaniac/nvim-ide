@@ -76,14 +76,9 @@ return {
         },
       }
     end,
+    -- stylua: ignore
     keys = {
-      {
-        '<leader>cq',
-        function()
-          require('actions-preview').code_actions()
-        end,
-        desc = 'Code Action - Preview',
-      },
+      { '<leader>cq', function() require('actions-preview').code_actions() end, desc = 'Code Action - Preview' },
     },
   },
 
@@ -93,27 +88,12 @@ return {
     config = function()
       require('glance').setup()
     end,
+    -- stylua: ignore
     keys = {
-      {
-        'gpd',
-        '<cmd>Glance definitions<CR>',
-        desc = 'Preview Definition',
-      },
-      {
-        'gpt',
-        '<cmd>Glance type_definitions<CR>',
-        desc = 'Preview Type Definition',
-      },
-      {
-        'gpi',
-        '<cmd>Glance implementations<CR>',
-        desc = 'Preview Implementation',
-      },
-      {
-        'gpr',
-        '<cmd>Glance references<CR>',
-        desc = 'Preview References',
-      },
+      { 'gpd', '<cmd>Glance definitions<CR>', desc = 'Preview Definition' },
+      { 'gpt', '<cmd>Glance type_definitions<CR>', desc = 'Preview Type Definition' },
+      { 'gpi', '<cmd>Glance implementations<CR>', desc = 'Preview Implementation' },
+      { 'gpr', '<cmd>Glance references<CR>', desc = 'Preview References' },
     },
   },
 
@@ -154,12 +134,9 @@ return {
         enable_cmdline = true,
       }
     end,
+    -- stylua: ignore
     keys = {
-      {
-        '<leader>cR',
-        '<cmd>Hypersonic<cr>',
-        desc = 'Regex explain',
-      },
+      { '<leader>cR', '<cmd>Hypersonic<cr>', desc = 'Regex explain' },
     },
   },
 
@@ -223,14 +200,9 @@ return {
     'ckolkey/ts-node-action',
     dependencies = { 'nvim-treesitter' },
     opts = {},
+    -- stylua: ignore
     keys = {
-      {
-        '<leader>cn',
-        function()
-          require('ts-node-action').node_action()
-        end,
-        desc = 'Trigger Node Action',
-      },
+      { '<leader>cn', function() require('ts-node-action').node_action() end, desc = 'Trigger Node Action' },
     },
   },
 }

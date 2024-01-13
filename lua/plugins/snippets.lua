@@ -81,22 +81,10 @@ return {
       -- you version control your snippets.
       jsonFormatter = 'jq', -- "yq"|"jq"|"none"
     },
+    -- stylua: ignore
     keys = {
-      {
-        '<leader>fs',
-        function()
-          require('scissors').addNewSnippet()
-        end,
-        mode = { 'n', 'v' },
-        desc = 'Add New Snippet',
-      },
-      {
-        '<leader>fS',
-        function()
-          require('scissors').editSnippet()
-        end,
-        desc = 'Edit Snippet',
-      },
+      { '<leader>fs', function() require('scissors').addNewSnippet() end, mode = { 'n', 'v' }, desc = 'Add New Snippet' },
+      { '<leader>fS', function() require('scissors').editSnippet() end, desc = 'Edit Snippet' },
     },
   },
 }

@@ -14,14 +14,8 @@ return {
       'MunifTanjim/nui.nvim',
       '3rd/image.nvim',
     },
+    -- stylua: ignore
     keys = {
-      {
-        '<leader>fe',
-        function()
-          require('neo-tree.command').execute { action = 'focus', position = 'left', dir = Util.root() }
-        end,
-        desc = 'Explorer NeoTree (root dir)',
-      },
       {
         '<leader>e',
         function()
@@ -46,22 +40,11 @@ return {
             dir = Util.root(),
           }
         end,
-        desc = 'Explorer NeoTree (root dir)',
+        desc = 'File Explorer',
       },
-      {
-        '<leader>ge',
-        function()
-          require('neo-tree.command').execute { source = 'git_status', action = 'focus', position = 'float' }
-        end,
-        desc = 'Git explorer',
-      },
-      {
-        '<leader>be',
-        function()
-          require('neo-tree.command').execute { source = 'buffers', action = 'focus', position = 'float' }
-        end,
-        desc = 'Buffer explorer',
-      },
+      { '<leader>fe', function() require('neo-tree.command').execute { action = 'focus', position = 'left', dir = Util.root() } end, desc = 'File Explorer (root dir)' },
+      { '<leader>ge', function() require('neo-tree.command').execute { source = 'git_status', action = 'focus', position = 'float' } end, desc = 'Git explorer' },
+      { '<leader>be', function() require('neo-tree.command').execute { source = 'buffers', action = 'focus', position = 'float' } end, desc = 'Buffer explorer' },
     },
     deactivate = function()
       vim.cmd [[Neotree close]]

@@ -21,28 +21,11 @@ return {
       pre_save = nil, -- a function to call before saving the session
       save_empty = false, -- don't save if there are no open file buffers
     },
+    -- stylua: ignore
     keys = {
-      {
-        '<leader>qs',
-        function()
-          require('persistence').load()
-        end,
-        desc = 'Restore Session',
-      },
-      {
-        '<leader>ql',
-        function()
-          require('persistence').load { last = true }
-        end,
-        desc = 'Restore Last Session',
-      },
-      {
-        '<leader>qd',
-        function()
-          require('persistence').stop()
-        end,
-        desc = "Don't Save Current Session",
-      },
+      { '<leader>qs', function() require('persistence').load() end, desc = 'Restore Session', },
+      { '<leader>ql', function() require('persistence').load { last = true } end, desc = 'Restore Last Session', },
+      { '<leader>qd', function() require('persistence').stop() end, desc = "Don't Save Current Session", },
     },
   },
 
@@ -72,13 +55,9 @@ return {
       allow_different_key = false,
       enabled = false,
     },
+    -- stylua: ignore
     keys = {
-      {
-        '<leader>uH',
-        '<cmd>Hardtime toggle<cr>',
-        mode = { 'n', 'v' },
-        desc = 'Toggle Hardtime',
-      },
+      { '<leader>uH', '<cmd>Hardtime toggle<cr>', mode = { 'n', 'v' }, desc = 'Toggle Hardtime', },
     },
   },
 
@@ -150,14 +129,9 @@ return {
       custom_format = '%C+%c+T:%t+%w+UV:%u+Hum:%h',
       lang = 'en',
     },
+    -- stylua: ignore
     keys = {
-      {
-        '<leader>W',
-        function()
-          require('wttr').get_forecast()
-        end,
-        desc = 'Weather Forecast',
-      },
+      { '<leader>W', function() require('wttr').get_forecast() end, desc = 'Weather Forecast', },
     },
   },
 }

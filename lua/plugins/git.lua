@@ -148,155 +148,36 @@ return {
       'nvim-tree/nvim-web-devicons', -- Recommended but not required. Icons in discussion tree.
       enabled = true,
     },
+    -- stylua: ignore
     keys = {
-      {
-        'glr',
-        function()
-          require('gitlab').review()
-        end,
-        mode = { 'n' },
-        desc = 'Gitlab review',
-      },
-      {
-        'gls',
-        function()
-          require('gitlab').summary()
-        end,
-        mode = { 'n' },
-        desc = 'Gitlab summary',
-      },
-      {
-        'glA',
-        function()
-          require('gitlab').approve()
-        end,
-        mode = { 'n' },
-        desc = 'Gitlab approve',
-      },
-      {
-        'glR',
-        function()
-          require('gitlab').revoke()
-        end,
-        mode = { 'n' },
-        desc = 'Gitlab revoke',
-      },
-      {
-        'glc',
-        function()
-          require('gitlab').create_comment()
-        end,
-        mode = { 'n' },
-        desc = 'Gitlab create comment',
-      },
-      {
-        'glc',
-        function()
-          require('gitlab').create_multiline_comment()
-        end,
-        mode = { 'v' },
-        desc = 'Gitlab create multiline comment',
-      },
-      {
-        'glC',
-        function()
-          require('gitlab').create_comment_suggestion()
-        end,
-        mode = { 'v' },
-        desc = 'Gitlab create comment suggestion',
-      },
-      {
-        'glm',
-        function()
-          require('gitlab').move_to_discussion_tree_from_diagnostic()
-        end,
-        mode = { 'n' },
-        desc = 'Gitlab move to discussion tree from diagnostics',
-      },
-      {
-        'gln',
-        function()
-          require('gitlab').create_note()
-        end,
-        mode = { 'n' },
-        desc = 'Gitlab create note',
-      },
-      {
-        'gld',
-        function()
-          require('gitlab').toggle_discussions()
-        end,
-        mode = { 'n' },
-        desc = 'Gitlab toggle discussion',
-      },
-      {
-        'glaa',
-        function()
-          require('gitlab').add_assignee()
-        end,
-        mode = { 'n' },
-        desc = 'Gitlab add assignee',
-      },
-      {
-        'glad',
-        function()
-          require('gitlab').delete_assignee()
-        end,
-        mode = { 'n' },
-        desc = 'Gitlab delete assignee',
-      },
-      {
-        'glara',
-        function()
-          require('gitlab').add_reviewer()
-        end,
-        mode = { 'n' },
-        desc = 'Gitlab add reviewer',
-      },
-      {
-        'glard',
-        function()
-          require('gitlab').delete_reviewer()
-        end,
-        mode = { 'n' },
-        desc = 'Gitlab delete reviewer',
-      },
-      {
-        'glp',
-        function()
-          require('gitlab').pipeline()
-        end,
-        mode = { 'n' },
-        desc = 'Gitlab pipeline',
-      },
-      {
-        'glo',
-        function()
-          require('gitlab').open_in_browser()
-        end,
-        mode = { 'n' },
-        desc = 'Gitlab open in browser',
-      },
-      {
-        'glB',
+      { '<leader>glr', function() require('gitlab').review() end, mode = { 'n' }, desc = 'Gitlab review' },
+      { '<leader>gls', function() require('gitlab').summary() end, mode = { 'n' }, desc = 'Gitlab summary' },
+      { '<leader>glA', function() require('gitlab').approve() end, mode = { 'n' }, desc = 'Gitlab approve' },
+      { '<leader>glR', function() require('gitlab').revoke() end, mode = { 'n' }, desc = 'Gitlab revoke' },
+      { '<leader>glc', function() require('gitlab').create_comment() end, mode = { 'n' }, desc = 'Gitlab create comment' },
+      { '<leader>glc', function() require('gitlab').create_multiline_comment() end, mode = { 'v' }, desc = 'Gitlab create multiline comment' },
+      { '<leader>glC', function() require('gitlab').create_comment_suggestion() end, mode = { 'v' }, desc = 'Gitlab create comment suggestion' },
+      { '<leader>glm', function() require('gitlab').move_to_discussion_tree_from_diagnostic() end, mode = { 'n' }, desc = 'Gitlab move to discussion tree from diagnostics' },
+      { '<leader>gln', function() require('gitlab').create_note() end, mode = { 'n' }, desc = 'Gitlab create note' },
+      { '<leader>gld', function() require('gitlab').toggle_discussions() end, mode = { 'n' }, desc = 'Gitlab toggle discussion' },
+      { '<leader>glaa', function() require('gitlab').add_assignee() end, mode = { 'n' }, desc = 'Gitlab add assignee' },
+      { '<leader>glad', function() require('gitlab').delete_assignee() end, mode = { 'n' }, desc = 'Gitlab delete assignee' },
+      { '<leader>glara', function() require('gitlab').add_reviewer() end, mode = { 'n' }, desc = 'Gitlab add reviewer' },
+      { '<leader>glard', function() require('gitlab').delete_reviewer() end, mode = { 'n' }, desc = 'Gitlab delete reviewer' },
+      { '<leader>glp', function() require('gitlab').pipeline() end, mode = { 'n' }, desc = 'Gitlab pipeline' },
+      { '<leader>glo', function() require('gitlab').open_in_browser() end, mode = { 'n' }, desc = 'Gitlab open in browser' },
+      { '<leader>glB',
         function()
           local gitlab = require 'gitlab'
           require('gitlab.server').restart(function()
             vim.cmd.tabclose()
-            gitlab.review() -- Reopen the reviewer after server restarts
+            gitlab.review()
           end)
         end,
         mode = { 'n' },
         desc = 'Gitlab refresh review',
       },
-      {
-        'glP',
-        function()
-          require('gitlab').print_settings()
-        end,
-        mode = { 'n' },
-        desc = 'Gitlab troubleshoot settings',
-      },
+      { '<leader>glP', function() require('gitlab').print_settings() end, mode = { 'n' }, desc = 'Gitlab troubleshoot settings', },
     },
     opts = {
       port = nil, -- The port of the Go server, which runs in the background, if omitted or `nil` the port will be chosen automatically
@@ -620,13 +501,10 @@ return {
         },
       },
     },
+    -- stylua: ignore
     keys = {
-      {
-        '<leader>go',
-        '<cmd>Octo<cr>',
-        desc = "Github [O]cto"
-      }
-    }
+      { '<leader>go', '<cmd>Octo<cr>', desc = 'Github [O]cto' },
+    },
   },
   {
     'fredeeb/tardis.nvim',

@@ -44,43 +44,14 @@ return {
         },
       }
     end,
+    -- stylua: ignore
     keys = {
-      {
-        '<leader>nn',
-        '<cmd>Neorg index<cr>',
-        mode = { 'n', 'v' },
-        desc = 'Notes index',
-      },
-      {
-        '<leader>nc',
-        '<cmd>Neorg journal custom<cr>',
-        mode = { 'n', 'v' },
-        desc = 'Jornal custom day',
-      },
-      {
-        '<leader>nt',
-        '<cmd>Neorg jornal today<cr>',
-        mode = { 'n', 'v' },
-        desc = 'Journal today',
-      },
-      {
-        '<leader>no',
-        '<cmd>Neorg jornal tomorrow<cr>',
-        mode = { 'n', 'v' },
-        desc = 'Journal tomorrow',
-      },
-      {
-        '<leader>ny',
-        '<cmd>Neorg jornal yesterday<cr>',
-        mode = { 'n', 'v' },
-        desc = 'Journal yesterday',
-      },
-      {
-        '<leader>ns',
-        '<cmd>Neorg sync-parsers<cr>',
-        mode = { 'n', 'v' },
-        desc = 'Neorg sync-parsers',
-      },
+      { '<leader>nn', '<cmd>Neorg index<cr>', mode = { 'n', 'v' }, desc = 'Notes index', },
+      { '<leader>nc', '<cmd>Neorg journal custom<cr>', mode = { 'n', 'v' }, desc = 'Jornal custom day', },
+      { '<leader>nt', '<cmd>Neorg jornal today<cr>', mode = { 'n', 'v' }, desc = 'Journal today', },
+      { '<leader>no', '<cmd>Neorg jornal tomorrow<cr>', mode = { 'n', 'v' }, desc = 'Journal tomorrow', },
+      { '<leader>ny', '<cmd>Neorg jornal yesterday<cr>', mode = { 'n', 'v' }, desc = 'Journal yesterday', },
+      { '<leader>ns', '<cmd>Neorg sync-parsers<cr>', mode = { 'n', 'v' }, desc = 'Neorg sync-parsers', },
     },
   },
 

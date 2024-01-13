@@ -86,11 +86,13 @@ return {
         ['<leader><tab>'] = { name = '+[tabs]' },
         ['<leader>b'] = { name = '+[buffer]' },
         ['<leader>c'] = { name = '+[code]' },
+        ['<leader>d'] = { name = '+[debug]' },
         ['<leader>f'] = { name = '+[file/find]' },
         ['<leader>g'] = { name = '+[git]' },
         ['<leader>gh'] = { name = '+[hunks]' },
         ['<leader>q'] = { name = '+[quit/session]' },
         ['<leader>s'] = { name = '+[search]' },
+        ['<leader>S'] = { name = '+[surround]' },
         ['<leader>a'] = { name = '+[terminal]' },
         ['<leader>u'] = { name = '+[ui]' },
         ['<leader>w'] = { name = '+[windows]' },
@@ -152,6 +154,7 @@ return {
   -- buffer remove
   {
     'echasnovski/mini.bufremove',
+    -- stylua: ignore
     keys = {
       {
         '<leader>bd',
@@ -171,13 +174,7 @@ return {
         end,
         desc = '[B]uffer [D]elete',
       },
-      {
-        '<leader>bD',
-        function()
-          require('mini.bufremove').delete(0, true)
-        end,
-        desc = '[B]uffer [D]elete (Force)',
-      },
+      { '<leader>bD', function() require('mini.bufremove').delete(0, true) end, desc = '[B]uffer [D]elete (Force)' },
     },
   },
 
@@ -234,14 +231,9 @@ return {
     config = function()
       require('textobj-diagnostic').setup()
     end,
+    -- stylua: ignore
     keys = {
-      {
-        '<leader>xn',
-        function()
-          require('textobj-diagnostic').nearest_diag()
-        end,
-        desc = 'Diagnostic [N]earest',
-      },
+      { '<leader>xn', function() require('textobj-diagnostic').nearest_diag() end, desc = 'Diagnostic [N]earest' },
     },
   },
 
@@ -252,21 +244,10 @@ return {
     cmd = { 'TodoTrouble', 'TodoTelescope' },
     event = 'VeryLazy',
     config = true,
+    -- stylua: ignore
     keys = {
-      {
-        ']t',
-        function()
-          require('todo-comments').jump_next()
-        end,
-        desc = 'Next [t]odo comment',
-      },
-      {
-        '[t',
-        function()
-          require('todo-comments').jump_prev()
-        end,
-        desc = 'Previous [t]odo comment',
-      },
+      { ']t', function() require('todo-comments').jump_next() end, desc = 'Next [t]odo comment' },
+      { '[t', function() require('todo-comments').jump_prev() end, desc = 'Previous [t]odo comment' },
       { '<leader>xt', '<cmd>TodoTrouble<cr>', desc = 'Todo (Trouble)' },
       { '<leader>xT', '<cmd>TodoTrouble keywords=TODO,FIX,FIXME<cr>', desc = 'Todo/Fix/Fixme (Trouble)' },
       { '<leader>st', '<cmd>TodoTelescope<cr>', desc = 'Todo' },
@@ -278,13 +259,9 @@ return {
   {
     'hedyhli/outline.nvim',
     event = 'VeryLazy',
+    -- stylua: ignore
     keys = {
-      {
-        '<leader>o',
-        '<cmd>Outline<cr>',
-        mode = { 'n' },
-        desc = 'Toggle [o]utline',
-      },
+      { '<leader>o', '<cmd>Outline<cr>', mode = { 'n' }, desc = 'Toggle [o]utline' },
     },
     opts = {
       outline_window = {

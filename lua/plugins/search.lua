@@ -57,14 +57,9 @@ return {
     build = false,
     cmd = 'Spectre',
     opts = { open_cmd = 'noswapfile vnew' },
+    -- stylua: ignore
     keys = {
-      {
-        '<leader>sr',
-        function()
-          require('spectre').open()
-        end,
-        desc = 'Replace in files (Spectre)',
-      },
+      { '<leader>sr', function() require('spectre').open() end, desc = 'Replace in files (Spectre)' },
     },
   },
 
@@ -97,12 +92,9 @@ return {
         end,
       },
     },
+    -- stylua: ignore
     keys = {
-      {
-        '<leader>,',
-        '<cmd>Telescope buffers sort_mru=true sort_lastused=true<cr>',
-        desc = 'Switch Buffer',
-      },
+      { '<leader>,', '<cmd>Telescope buffers sort_mru=true sort_lastused=true<cr>', desc = 'Switch Buffer' },
       { '<leader>/', Util.telescope 'live_grep', desc = 'Grep (root dir)' },
       { '<leader>:', '<cmd>Telescope command_history<cr>', desc = 'Command History' },
       { '<leader><space>', Util.telescope 'files', desc = 'Find Files (root dir)' },
@@ -138,34 +130,10 @@ return {
       { '<leader>sw', Util.telescope 'grep_string', mode = 'v', desc = 'Selection (root dir)' },
       { '<leader>sW', Util.telescope('grep_string', { cwd = false }), mode = 'v', desc = 'Selection (cwd)' },
       { '<leader>uC', Util.telescope('colorscheme', { enable_preview = true }), desc = 'Colorscheme with preview' },
-      {
-        '<leader>ss',
-        function()
-          require('telescope.builtin').lsp_document_symbols {}
-        end,
-        desc = 'Goto Symbol',
-      },
-      {
-        '<leader>sS',
-        function()
-          require('telescope.builtin').lsp_dynamic_workspace_symbols {}
-        end,
-        desc = 'Goto Symbol (Workspace)',
-      },
-      {
-        '<leader>sN',
-        function()
-          require('telescope').extensions.notify.notify()
-        end,
-        desc = 'Notifications',
-      },
-      {
-        '<leader>fp',
-        function()
-          require('telescope.builtin').find_files { cwd = require('lazy.core.config').options.root }
-        end,
-        desc = 'Find Plugin File',
-      },
+      { '<leader>ss', function() require('telescope.builtin').lsp_document_symbols {} end, desc = 'Goto Symbol' },
+      { '<leader>sS', function() require('telescope.builtin').lsp_dynamic_workspace_symbols {} end, desc = 'Goto Symbol (Workspace)' },
+      { '<leader>sN', function() require('telescope').extensions.notify.notify() end, desc = 'Notifications' },
+      { '<leader>fp', function() require('telescope.builtin').find_files { cwd = require('lazy.core.config').options.root } end, desc = 'Find Plugin File' },
     },
     opts = function()
       local actions = require 'telescope.actions'

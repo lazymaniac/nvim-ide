@@ -38,6 +38,10 @@
     "body": "-- [[ ${1:group_name} ]] ---------------------------------------------------------------",
     "prefix": "plug_group"
   },
+  "stylua_ignore": {
+    "body": "-- stylua: ignore",
+    "prefix": "stylua_ignore"
+  },
   "todo": {
     "body": "-- TODO: ${1:what to do}",
     "prefix": "todo"
