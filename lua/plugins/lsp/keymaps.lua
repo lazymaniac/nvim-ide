@@ -21,22 +21,6 @@ function M.get()
     { 'gK', vim.lsp.buf.signature_help, desc = 'Signature Documentation', has = 'signatureHelp' },
     { '<c-k>', vim.lsp.buf.signature_help, mode = 'i', desc = 'Signature Help', has = 'signatureHelp' },
     { '<leader>ca', vim.lsp.buf.code_action, desc = '[C]ode [A]ction', mode = { 'n', 'v' }, has = 'codeAction' },
-    {
-      '<leader>cA',
-      function()
-        vim.lsp.buf.code_action {
-          context = {
-            only = {
-              'source',
-            },
-            diagnostics = {},
-          },
-        }
-      end,
-      desc = 'Sour[c]e [A]ction',
-      has = 'codeAction',
-    },
-
     -- Workspace actions
     { '<leader>cWa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder' },
     { '<leader>cWr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder' },

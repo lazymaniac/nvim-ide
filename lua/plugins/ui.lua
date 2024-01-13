@@ -901,7 +901,7 @@ return {
     config = function()
       require('floating-help').setup {
         -- Defaults
-        width = 80, -- Whole numbers are columns/rows
+        width = 82, -- Whole numbers are columns/rows
         height = 0.80, -- Decimals are a percentage of the editor
         position = 'NE', -- NW,N,NW,W,C,E,SW,S,SE (C==center)
         borderchars = { '─', '│', '─', '│', '╭', '╮', '╯', '╰' },

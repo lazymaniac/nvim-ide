@@ -102,6 +102,16 @@ return {
       end,
     },
   },
+  {
+    'folke/which-key.nvim',
+    optional = true,
+    opts = {
+      defaults = {
+        ['<leader>gh'] = { name = '+[buffer]' },
+        ['<leader>ght'] = { name = '+[toggle]' },
+      },
+    },
+  },
 
   -- Git related plugins
   {
@@ -160,10 +170,10 @@ return {
       { '<leader>glm', function() require('gitlab').move_to_discussion_tree_from_diagnostic() end, mode = { 'n' }, desc = 'Gitlab move to discussion tree from diagnostics' },
       { '<leader>gln', function() require('gitlab').create_note() end, mode = { 'n' }, desc = 'Gitlab create note' },
       { '<leader>gld', function() require('gitlab').toggle_discussions() end, mode = { 'n' }, desc = 'Gitlab toggle discussion' },
-      { '<leader>glaa', function() require('gitlab').add_assignee() end, mode = { 'n' }, desc = 'Gitlab add assignee' },
-      { '<leader>glad', function() require('gitlab').delete_assignee() end, mode = { 'n' }, desc = 'Gitlab delete assignee' },
-      { '<leader>glara', function() require('gitlab').add_reviewer() end, mode = { 'n' }, desc = 'Gitlab add reviewer' },
-      { '<leader>glard', function() require('gitlab').delete_reviewer() end, mode = { 'n' }, desc = 'Gitlab delete reviewer' },
+      { '<leader>glPaa', function() require('gitlab').add_assignee() end, mode = { 'n' }, desc = 'Gitlab add assignee' },
+      { '<leader>glPad', function() require('gitlab').delete_assignee() end, mode = { 'n' }, desc = 'Gitlab delete assignee' },
+      { '<leader>glPra', function() require('gitlab').add_reviewer() end, mode = { 'n' }, desc = 'Gitlab add reviewer' },
+      { '<leader>glPrd', function() require('gitlab').delete_reviewer() end, mode = { 'n' }, desc = 'Gitlab delete reviewer' },
       { '<leader>glp', function() require('gitlab').pipeline() end, mode = { 'n' }, desc = 'Gitlab pipeline' },
       { '<leader>glo', function() require('gitlab').open_in_browser() end, mode = { 'n' }, desc = 'Gitlab open in browser' },
       { '<leader>glB',
@@ -177,7 +187,7 @@ return {
         mode = { 'n' },
         desc = 'Gitlab refresh review',
       },
-      { '<leader>glP', function() require('gitlab').print_settings() end, mode = { 'n' }, desc = 'Gitlab troubleshoot settings', },
+      { '<leader>glt', function() require('gitlab').print_settings() end, mode = { 'n' }, desc = 'Gitlab troubleshoot settings', },
     },
     opts = {
       port = nil, -- The port of the Go server, which runs in the background, if omitted or `nil` the port will be chosen automatically
@@ -302,6 +312,18 @@ return {
     end,
   },
 
+  {
+    'folke/which-key.nvim',
+    optional = true,
+    opts = {
+      defaults = {
+        ['<leader>gl'] = { name = '+[gitlab]' },
+        ['<leader>glP'] = { name = '+[people]' },
+        ['<leader>glPa'] = { name = '+[assignee]' },
+        ['<leader>glPr'] = { name = '+[reviewer]' },
+      },
+    },
+  },
   -- Github support
   -- Ensure GH tool is installed
   {
@@ -503,7 +525,7 @@ return {
     },
     -- stylua: ignore
     keys = {
-      { '<leader>go', '<cmd>Octo<cr>', desc = 'Github [O]cto' },
+      { '<leader>gi', '<cmd>Octo<cr>', desc = 'Github' },
     },
   },
   {
