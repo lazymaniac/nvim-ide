@@ -55,4 +55,13 @@ return {
       { '<leader>a3', '<cmd>ToggleTerm 3<cr>', mode = { 'n' }, desc = 'Termin[a]l 3', },
     },
   },
+  {
+    'willothy/flatten.nvim',
+    config = true,
+    -- or pass configuration with
+    -- opts = {  }
+    -- Ensure that it runs first to minimize delay when opening file from terminal
+    lazy = false,
+    priority = 1001,
+  },
 }
