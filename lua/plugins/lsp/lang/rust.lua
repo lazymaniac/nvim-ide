@@ -8,9 +8,12 @@ return {
     },
     opts = function(_, opts)
       local cmp = require 'cmp'
-      opts.sources = cmp.config.sources(vim.list_extend(opts.sources, {
-        { name = 'crates' },
-      }))
+      opts.sources = vim.list_extend(
+        opts.sources or {},
+        cmp.config.sources {
+          { name = 'crates' },
+        }
+      )
     end,
   },
   {
@@ -143,6 +146,21 @@ return {
       -- make sure mason installs the server
       servers = {
         rust_analyzer = {},
+        taplo = {
+          keys = {
+            {
+              'K',
+              function()
+                if vim.fn.expand '%:t' == 'Cargo.toml' and require('crates').popup_available() then
+                  require('crates').show_popup()
+                else
+                  vim.lsp.buf.hover()
+                end
+              end,
+              desc = 'Show Crate Documentation',
+            },
+          },
+        },
       },
       setup = {
         rust_analyzer = function()
@@ -202,13 +220,32 @@ return {
             -- you can also put keymaps in here
             vim.lsp.inlay_hint.enable(bufnr, true)
           end,
-          --     settings = {
-          --       -- rust-analyzer language server configuration
-          --       ["rust-analyzer"] = {},
-          --     },
-          --   },
-          --   -- DAP configuration
-          --   dap = {},
+          settings = {
+            -- rust-analyzer language server configuration
+            ['rust-analyzer'] = {
+              cargo = {
+                allFeatures = true,
+                loadOutDirsFromCheck = true,
+                runBuildScripts = true,
+              },
+              -- Add clippy lints for Rust.
+              checkOnSave = {
+                allFeatures = true,
+                command = 'clippy',
+                extraArgs = { '--no-deps' },
+              },
+              procMacro = {
+                enable = true,
+                ignored = {
+                  ['async-trait'] = { 'async_trait' },
+                  ['napi-derive'] = { 'napi' },
+                  ['async-recursion'] = { 'async_recursion' },
+                },
+              },
+            },
+          },
+          -- DAP configuration
+          dap = {},
         },
       }
     end,
@@ -217,11 +254,6 @@ return {
     'nvim-neotest/neotest',
     dependencies = {
       'rouge8/neotest-rust',
-    },
-    opts = {
-      adapters = {
-        ['neotest-rust'] = {},
-      },
     },
   },
 }

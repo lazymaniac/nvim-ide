@@ -141,7 +141,7 @@ return {
         toggle = 't',
       },
       render = {
-        indent = 0,
+        indent = 8,
         max_value_lines = 100,
       },
     },

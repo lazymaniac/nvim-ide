@@ -348,11 +348,6 @@ return {
     dependencies = {
       'rcasia/neotest-java',
     },
-    opts = {
-      adapters = {
-        ['neotest-java'] = { ignore_wrapper = false },
-      },
-    },
   },
 
   {

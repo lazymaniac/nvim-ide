@@ -20,12 +20,18 @@ return {
       local opts = {
         adapters = {
           ['neotest-java'] = { ignore_wrapper = false },
+          ['neotest-rust'] = {
+            args = { '--no-capture' },
+            dap_adapter = 'codelldb',
+          },
+          ['neotest-go'] = {},
+          ['neotest-python'] = {},
         },
         benchmark = {
           enabled = true,
         },
         consumers = {
-          -- overseer = require 'neotest.consumers.overseer',
+          overseer = require 'neotest.consumers.overseer',
         },
         -- overseer = {
         --   enabled = true,
