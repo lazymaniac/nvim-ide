@@ -35,6 +35,5 @@ return {
       max_height_window_percentage = 50,
       kitty_method = 'normal',
     },
-    rocks = { 'magick' },
   },
 }
