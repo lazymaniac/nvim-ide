@@ -35,6 +35,7 @@
   "flit.nvim": { "branch": "main", "commit": "39e3399ed2cbc328778258ac0d497ece9ed8fe32" },
   "floating-help.nvim": { "branch": "main", "commit": "798a1fc71f3b7d739a3fd381125ac9d7d5632b92" },
   "friendly-snippets": { "branch": "main", "commit": "69a2c1675b66e002799f5eef803b87a12f593049" },
+  "gen.nvim": { "branch": "main", "commit": "41ad952c8269fa7aa3a4b8a5abb44541cb628313" },
   "gitlab.nvim": { "branch": "main", "commit": "519791c81c63d72086dd2c1c49be9a73bc9ef263" },
   "gitsigns.nvim": { "branch": "main", "commit": "6ef8c54fb526bf3a0bc4efb0b2fe8e6d9a7daed2" },
   "glance.nvim": { "branch": "master", "commit": "8ed5cf3b3b1231ea696d88c9efd977027429d869" },
