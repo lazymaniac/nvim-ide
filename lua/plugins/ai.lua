@@ -138,7 +138,7 @@ return {
           model = 'gpt-4-1106-preview',
           frequency_penalty = 0,
           presence_penalty = 0,
-          max_tokens = 4096,
+          max_tokens = 2048,
           temperature = 0,
           top_p = 1,
           n = 1,
@@ -220,26 +220,41 @@ return {
   {
     'David-Kunz/gen.nvim',
     event = 'VeryLazy',
-    opts = {
-      model = 'deepseek-coder:6.7b-instruct', -- The default model to use.
-      display_mode = 'float', -- The display mode. Can be "float" or "split".
-      show_prompt = true, -- Shows the Prompt submitted to Ollama.
-      show_model = true, -- Displays which model you are using at the beginning of your chat session.
-      no_auto_close = false, -- Never closes the window automatically.
-      init = function(options)
-        pcall(io.popen, 'ollama serve > /dev/null 2>&1 &')
-      end,
-      -- Function to initialize Ollama
-      command = 'curl --silent --no-buffer -X POST http://localhost:11434/api/generate -d $body',
-      -- The command for the Ollama service. You can use placeholders $prompt, $model and $body (shellescaped).
-      -- This can also be a lua function returning a command string, with options as the input parameter.
-      -- The executed command must return a JSON object with { response, context }
-      -- (context property is optional).
-      debug = false, -- Prints errors and the command which is run.
-    },
+    config = function()
+      require('gen').setup {
+        model = 'deepseek-coder:6.7b-instruct', -- The default model to use.
+        display_mode = 'float', -- The display mode. Can be "float" or "split".
+        show_prompt = true, -- Shows the Prompt submitted to Ollama.
+        show_model = true, -- Displays which model you are using at the beginning of your chat session.
+        no_auto_close = false, -- Never closes the window automatically.
+        init = function(options)
+          pcall(io.popen, 'ollama serve > /dev/null 2>&1 &')
+        end,
+        -- Function to initialize Ollama
+        command = 'curl --silent --no-buffer -X POST http://localhost:11434/api/generate -d $body',
+        -- The command for the Ollama service. You can use placeholders $prompt, $model and $body (shellescaped).
+        -- This can also be a lua function returning a command string, with options as the input parameter.
+        -- The executed command must return a JSON object with { response, context }
+        -- (context property is optional).
+        debug = false, -- Prints errors and the command which is run.
+      }
+      require('gen').prompts['Elaborate_Text'] = {
+        prompt = 'Elaborate the following text:\n$text',
+        replace = true,
+      }
+      require('gen').prompts['Fix_Code'] = {
+        prompt = 'Fix the following code. Only ouput the result in format ```$filetype\n...\n```:\n```$filetype\n$text\n```',
+        replace = true,
+        extract = '```$filetype\n(.-)```',
+      }
+      require('gen').prompts['Generate_Tests'] = {
+        prompt = 'Write tests for the following code. Only ouput the result in format ```$filetype\n...\n```:\n```$filetype\n$text\n```',
+        replace = false,
+        extract = '```$filetype\n(.-)```',
+      }
+    end,
     keys = {
-      { '<leader>zG', '<cmd>Gen<CR>', desc = "LLM Gen", mode = { 'n' } },
-      { '<leader>zG', "'<,'><cmd>Gen<CR>", desc = "LLM Gen", mode = { 'v' } },
+      { '<leader>]', ':Gen<CR>', desc = 'Local LLM', mode = { 'n', 'v' } },
     },
   },
 }
