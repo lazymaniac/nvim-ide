@@ -183,46 +183,11 @@ return {
     end,
   },
   {
-    'zbirenbaum/copilot.lua',
-    cmd = 'Copilot',
-    event = 'InsertEnter',
-    dependencies = {
-      {
-        'zbirenbaum/copilot-cmp',
-        config = function()
-          require('copilot_cmp').setup()
-        end,
-      },
-      { 'AndreM222/copilot-lualine' },
-    },
-    config = function()
-      require('copilot').setup {
-        panel = {
-          enabled = true,
-        },
-        suggestion = {
-          enabled = false,
-        },
-        filetypes = {
-          yaml = false,
-          markdown = false,
-          help = false,
-          gitcommit = false,
-          gitrebase = false,
-          hgcommit = false,
-          svn = false,
-          cvs = false,
-          ['.'] = false,
-        },
-      }
-    end,
-  },
-  {
     'David-Kunz/gen.nvim',
     event = 'VeryLazy',
     config = function()
       require('gen').setup {
-        model = 'deepseek-coder:6.7b-instruct', -- The default model to use.
+        model = 'zephyr:latest', -- The default model to use.
         display_mode = 'float', -- The display mode. Can be "float" or "split".
         show_prompt = true, -- Shows the Prompt submitted to Ollama.
         show_model = true, -- Displays which model you are using at the beginning of your chat session.
