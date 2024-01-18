@@ -425,7 +425,6 @@ return {
             { 'require("arrow.statusline").text_for_statusline_with_icons()' },
           },
           lualine_x = {
-            { 'copilot' },
             { "require'wttr'.text" },
             {
               function()
