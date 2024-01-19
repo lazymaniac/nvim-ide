@@ -118,7 +118,6 @@ return {
   {
     'lazymaniac/wttr.nvim',
     event = 'VeryLazy',
-    branch = 'main',
     dependencies = {
       'nvim-lua/plenary.nvim',
       'MunifTanjim/nui.nvim',

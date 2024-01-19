@@ -154,11 +154,11 @@ return {
         use_openai_functions_for_edits = false,
         actions_paths = { vim.fn.expand '~/.config/nvim/actions.json' },
         show_quickfixes_cmd = 'Trouble quickfix',
-        predefined_chat_gpt_prompts = 'https://raw.githubusercontent.com/f/awesome-chatgpt-prompts/main/prompts.csv',
         highlights = {
           help_key = '@symbol',
           help_description = '@comment',
         },
+        predefined_chat_gpt_prompts = 'file:///' .. vim.fn.expand '~' .. '/.config/nvim/lua/plugins/chatgpt-prompts.csv',
       }
 
       require('which-key').register {
@@ -203,13 +203,9 @@ return {
         -- (context property is optional).
         debug = false, -- Prints errors and the command which is run.
       }
-      require('gen').prompts['Elaborate_Text'] = {
-        prompt = 'Elaborate the following text:\n$text',
-        replace = true,
-      }
       require('gen').prompts['Fix_Code'] = {
-        prompt = "You are a general AI assistant.\n\nThe user provided the additional info about how they would like you to respond:\n\n- If you're unsure don't guess and say you don't know instead.\n- Ask question if you need clarification to provide better answer.\n- Think deeply and carefully from first principles step by step.\n- Zoom out first to see the big picture and then zoom in to details.\n- Use Socratic method to improve your thinking and coding skills.\n- Don't elide any code from your output if the answer requires coding.\n- Take a deep breath; You've got this!\nYour task is to fix the following code. Only ouput the result in format ```$filetype\n...\n```:\n```$filetype\n$text\n```",
-        replace = true,
+        prompt = "Your task is to fix the following code. Only ouput the result in format ```$filetype\n...\n```:\n```$filetype\n$text\n```",
+        replace = false,
         extract = '```$filetype\n(.-)```',
       }
       require('gen').prompts['Generate_Tests'] = {
