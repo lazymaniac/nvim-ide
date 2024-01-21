@@ -24,7 +24,8 @@ return {
     end,
   },
 
-  -- Preview code actions before applying
+  -- [actions-preview.nvim] - Preview code actions before applying
+  -- see: `:h actions-preview.nvim`
   {
     'aznhe21/actions-preview.nvim',
     event = 'VeryLazy',
@@ -38,7 +39,6 @@ return {
         backend = {
           'nui',
         },
-
         -- options for nui.nvim components
         nui = {
           -- component direction. "col" or "row"
@@ -79,7 +79,8 @@ return {
     },
   },
 
-  -- VSCode like preview of code.
+  -- [glance.nvim] - Preview code like in VSCode
+  -- see: `:h glance.nvim`
   {
     'dnlhc/glance.nvim',
     config = function()
@@ -94,14 +95,16 @@ return {
     },
   },
 
-  -- Auto move cursor to match indentation
+  -- [auto-indent.nvim] - Auto move cursor to match indentation
+  -- see: `:h auto-indent.nvim`
   {
     'vidocqh/auto-indent.nvim',
     event = 'VeryLazy',
     opts = {},
   },
 
-  -- Highlight method arguments
+  -- [hlargs.nvim] - Highlight function arguments
+  -- see: `:h hlargs.nvim`
   {
     'm-demare/hlargs.nvim',
     event = 'VeryLazy',
@@ -110,7 +113,8 @@ return {
     end,
   },
 
-  -- Regex explainer
+  -- [Hypersonic.nvim] - Regex explainer
+  -- see: `:h Hypersonic.nvim`
   {
     'tomiis4/Hypersonic.nvim',
     event = 'CmdlineEnter',
@@ -137,7 +141,8 @@ return {
     },
   },
 
-  -- Surround text
+  -- [nvim-surround] - Superior text surroundings. Add, remove, replace.
+  -- see: `:h nvim-surround`
   {
     'kylechui/nvim-surround',
     version = '*', -- Use for stability; omit to use `main` branch for the latest features
@@ -177,7 +182,6 @@ return {
           end
         end,
       }
-
       local grammar_targets = {
         ['['] = '',
         [']'] = '',
@@ -191,33 +195,27 @@ return {
         ["'"] = '',
         ['"'] = '',
       }
-
       local abbreviated_targets = {
         ['b'] = ' [bracket]',
       }
-
       local keywords_targets = {
         ['w'] = ' [word]',
         ['W'] = ' [WORD]',
         ['f'] = ' [function]',
         ['q'] = ' [quote]',
       }
-
       local all_targets = {}
       all_targets = vim.list_extend(all_targets, grammar_targets)
       all_targets = vim.list_extend(all_targets, abbreviated_targets)
       all_targets = vim.list_extend(all_targets, keywords_targets)
-
       local abbreviated_and_grammar_targets = {}
       abbreviated_and_grammar_targets = vim.list_extend(abbreviated_and_grammar_targets, grammar_targets)
       abbreviated_and_grammar_targets = vim.list_extend(abbreviated_and_grammar_targets, abbreviated_targets)
-
       local mappings = {
         ['<leader>'] = {
           ['S'] = { name = '+[surround]' },
         },
       }
-
       -- around mappings
       mappings['<leader>']['S']['a'] = { name = 'around' }
       for char, desc in pairs(all_targets) do
@@ -226,7 +224,6 @@ return {
           mappings['<leader>']['S']['a'][char][ichar] = { "<CMD>call feedkeys('ysa" .. char .. ichar .. "')<CR>", 'ysa' .. char .. ichar .. target }
         end
       end
-
       -- inner mappings
       mappings['<leader>']['S']['i'] = { name = 'inner' }
       for char, desc in pairs(all_targets) do
@@ -235,7 +232,6 @@ return {
           mappings['<leader>']['S']['i'][char][ichar] = { "<CMD>call feedkeys('ysi" .. char .. ichar .. "')<CR>", 'ysi' .. char .. ichar .. target }
         end
       end
-
       -- change mappings
       mappings['<leader>']['S']['c'] = { name = 'change' }
       for char, desc in pairs(all_targets) do
@@ -245,24 +241,22 @@ return {
           mappings['<leader>']['S']['c'][char][ichar] = { "<CMD>call feedkeys('cs" .. char .. ichar .. "')<CR>", 'cs' .. char .. ichar .. target }
         end
       end
-
       -- delete mappings
       mappings['<leader>']['S']['d'] = { name = 'delete' }
       for char, target in pairs(all_targets) do
         mappings['<leader>']['S']['d'][char] = { "<CMD>call feedkeys('ds" .. char .. "')<CR>", 'ds' .. char .. target }
       end
-
       -- line mappings
       mappings['<leader>']['S']['s'] = { name = '[s] line' }
       for char, target in pairs(all_targets) do
         mappings['<leader>']['S']['s'][char] = { "<CMD>call feedkeys('yss" .. char .. "')<CR>", 'yss' .. char .. target }
       end
-
       require('which-key').register(mappings)
     end,
   },
 
-  -- Additional actions for treesitter nodes
+  -- [ts-node-action] - Additional actions for treesitter nodes.
+  -- see: `:h ts-node-action`
   {
     'ckolkey/ts-node-action',
     dependencies = { 'nvim-treesitter' },
@@ -284,14 +278,12 @@ return {
           require('scrollbar.handlers.search').handler.show(plist.start_pos)
         end,
       }
-
       vim.cmd [[
         augroup scrollbar_search_hide
             autocmd!
             autocmd CmdlineLeave : lua require('scrollbar.handlers.search').handler.hide()
         augroup END
     ]]
-
       -- require('hlslens').setup() is not required
       require('scrollbar.handlers.search').setup {
         -- hlslens config overrides
@@ -310,38 +302,31 @@ return {
       draw = {
         -- Delay (in ms) between event and start of drawing scope indicator
         delay = 50,
-
         -- Animation rule for scope's first drawing. A function which, given
         -- next and total step numbers, returns wait time (in ms). See
         -- |MiniIndentscope.gen_animation| for builtin options. To disable
         -- animation, use `require('mini.indentscope').gen_animation.none()`.
         -- animation = --<function: implements constant 20ms between steps>,
-
         -- Symbol priority. Increase to display on top of more symbols.
         priority = 2,
       },
-
       -- Module mappings. Use `''` (empty string) to disable one.
       mappings = {
         -- Textobjects
         object_scope = 'ii',
         object_scope_with_border = 'ai',
-
         -- Motions (jump to respective border line; if not present - body line)
         goto_top = '[i',
         goto_bottom = ']i',
       },
-
       -- Options which control scope computation
       options = {
         -- Type of scope's border: which line(s) with smaller indent to
         -- categorize as border. Can be one of: 'both', 'top', 'bottom', 'none'.
         border = 'both',
-
         -- Whether to use cursor column when computing reference indent.
         -- Useful to see incremental scopes with horizontal cursor movements.
         indent_at_cursor = true,
-
         -- Whether to first check input line to be a border of adjacent scope.
         -- Use it if you want to place cursor on function header to get scope of
         -- its body.

@@ -1,5 +1,9 @@
 return {
   {
+
+    -- [[ TASK RUNNERS ]] ---------------------------------------------------------------
+    -- [overseer.nvim] - Async task runner.
+    -- see: `:h overseer.nvim`
     'stevearc/overseer.nvim',
     event = 'VeryLazy',
     opts = {

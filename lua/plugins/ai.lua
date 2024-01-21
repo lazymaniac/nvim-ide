@@ -1,4 +1,9 @@
 return {
+
+  -- [[ AI ]] ---------------------------------------------------------------
+
+  -- [ChatGPT.nvim] - Integration with ChatGPT.
+  -- see: `:h ChatGPT.nvim`
   {
     'jackMort/ChatGPT.nvim',
     event = 'VeryLazy',
@@ -160,7 +165,6 @@ return {
         },
         predefined_chat_gpt_prompts = 'file:///' .. vim.fn.expand '~' .. '/.config/nvim/lua/plugins/chatgpt-prompts.csv',
       }
-
       require('which-key').register {
         ['<leader>z'] = {
           name = 'ChatGPT',
@@ -182,6 +186,9 @@ return {
       }
     end,
   },
+
+  -- [gen.nvim] - Integration with local LLMs
+  -- see: `:h gen.nvim`
   {
     'David-Kunz/gen.nvim',
     event = 'VeryLazy',

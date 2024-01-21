@@ -50,6 +50,7 @@ return {
       },
     },
   },
+
   {
     'sainnhe/everforest',
     init = function()
@@ -62,19 +63,19 @@ return {
     lazy = false, -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
   },
+
   {
     'bluz71/vim-moonfly-colors',
     lazy = false,
     priority = 1000,
     config = function()
       vim.cmd.syntax 'enable'
-      vim.cmd.colorscheme 'moonfly'
-
       vim.api.nvim_set_hl(0, 'MoltenOutputBorder', { link = 'Normal' })
       vim.api.nvim_set_hl(0, 'MoltenOutputBorderFail', { link = 'MoonflyCrimson' })
       vim.api.nvim_set_hl(0, 'MoltenOutputBorderSuccess', { link = 'MoonflyBlue' })
     end,
   },
+
   {
     'fynnfluegge/monet.nvim',
     name = 'monet',
@@ -90,9 +91,11 @@ return {
       }
     end,
   },
+
   {
     'olimorris/onedarkpro.nvim',
     priority = 1000, -- Ensure it loads first
   },
+
   { 'EdenEast/nightfox.nvim' },
 }

@@ -61,7 +61,6 @@ return {
       }
       local Config = require 'config'
       vim.api.nvim_set_hl(0, 'DapStoppedLine', { default = true, link = 'Visual' })
-
       for name, sign in pairs(Config.icons.dap) do
         sign = type(sign) == 'table' and sign or { sign }
         vim.fn.sign_define('Dap' .. name, { text = sign[1], texthl = sign[2] or 'DiagnosticInfo', linehl = sign[3], numhl = sign[3] })
@@ -69,6 +68,8 @@ return {
     end,
   },
 
+  -- [nvim-dap-ui] - Windows setup for debug sessions
+  -- see: `:h nvim-dap-ui`
   {
     'rcarriga/nvim-dap-ui',
     opts = {
@@ -167,6 +168,9 @@ return {
       { '<leader>df', function() require('dapui').float_element(nil, { width = 184, height = 44, enter = true, position = 'center' }) end, desc = 'Open floating DAP' },
     },
   },
+
+  -- [nvim-dap-virtual-text] - Virtual text for debbug session
+  -- see: `:h nvim-dap-virtual-text`
   {
     'theHamsta/nvim-dap-virtual-text',
     opts = {
@@ -207,6 +211,9 @@ return {
       { '<leader>dv', '<cmd>DapVirtualTextToggle<cr>', desc = 'Toggle DAP Virtual Text', mode = { 'n', 'v' } },
     },
   },
+
+  -- [mason-nvim-dap] - Couple Mason with nvim dap for autimatic installation of debug servers
+  -- see: `:h mason-nvim-dap`
   {
     'jay-babu/mason-nvim-dap.nvim',
     dependencies = 'mason.nvim',
@@ -226,44 +233,5 @@ return {
         -- Update this to ensure that you have the debuggers for the langs you want
       },
     },
-  },
-
-  -- lua debug
-  {
-    'jbyuki/one-small-step-for-vimkind',
-    config = function()
-      local dap = require 'dap'
-      dap.adapters.nlua = function(callback, conf)
-        local adapter = {
-          type = 'server',
-          host = conf.host or '127.0.0.1',
-          port = conf.port or 8086,
-        }
-        if conf.start_neovim then
-          local dap_run = dap.run
-          dap.run = function(c)
-            adapter.port = c.port
-            adapter.host = c.host
-          end
-          require('osv').run_this()
-          dap.run = dap_run
-        end
-        callback(adapter)
-      end
-      dap.configurations.lua = {
-        {
-          type = 'nlua',
-          request = 'attach',
-          name = 'Run this file',
-          start_neovim = {},
-        },
-        {
-          type = 'nlua',
-          request = 'attach',
-          name = 'Attach to running Neovim instance (port = 8086)',
-          port = 8086,
-        },
-      }
-    end,
   },
 }
