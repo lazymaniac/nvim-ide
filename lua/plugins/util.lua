@@ -1,5 +1,6 @@
 return {
 
+  -- [[ PERFORMANCE ]] --------------------------------------------------------------
   -- [vim-startuptime] - Measure startup time. Displayed on dashboard
   {
     'dstein64/vim-startuptime',
@@ -9,6 +10,7 @@ return {
     end,
   },
 
+  -- [[ SESSION MANAGEMENT ]] ---------------------------------------------------------------
   -- [persistence.nvim] - Session management. This saves your session in the background,
   -- keeping track of open buffers, window arrangement, and more.
   -- You can restore sessions when returning through the dashboard.
@@ -29,10 +31,12 @@ return {
     },
   },
 
+  -- [[ UTIL LIB ]] ---------------------------------------------------------------
   -- [plenary.nvim] - Utility lib used by other plugins
   -- see: `:h help-tag`
   { 'nvim-lua/plenary.nvim' },
 
+  -- [[ LEARNING VIM MOTIONS ]] ---------------------------------------------------------------
   -- [hardtime.nvim] - Plugin that helps learn vim motions and keybindings by providing hints
   -- see: `:h hardtime`
   {
@@ -54,6 +58,7 @@ return {
     },
   },
 
+  -- [[ CHEATSHEET ]] ---------------------------------------------------------------
   -- [cheatsheet.nvim] - Cheats for editor, vim plugins, nerd-fonts, etc.
   -- see: `:h cheatsHeet.nvim`
   {
@@ -66,7 +71,6 @@ return {
     config = function()
       require('cheatsheet').setup {
         -- Whether to show bundled cheatsheets
-
         -- For generic cheatsheets like default, unicode, nerd-fonts, etc
         -- bundled_cheatsheets = {
         --     enabled = {},
@@ -75,19 +79,16 @@ return {
         bundled_cheatsheets = {
           disabled = { 'nerd-fonts' },
         },
-
         -- For plugin specific cheatsheets
         -- bundled_plugin_cheatsheets = {
         --     enabled = {},
         --     disabled = {},
         -- }
         bundled_plugin_cheatsheets = true,
-
         -- For bundled plugin cheatsheets, do not show a sheet if you
         -- don't have the plugin installed (searches runtimepath for
         -- same directory name)
         include_only_installed_plugins = true,
-
         -- Key mappings bound inside the telescope window
         telescope_mappings = {
           ['<CR>'] = require('cheatsheet.telescope.actions').select_or_fill_commandline,
@@ -99,6 +100,7 @@ return {
     end,
   },
 
+  -- [[ TOYS ]] ---------------------------------------------------------------
   -- [Tip.nvim] - Show useful tip on nvim startup
   {
     'TobinPalmer/Tip.nvim',
@@ -132,5 +134,12 @@ return {
     keys = {
       { '<leader>W', function() require('wttr').get_forecast() end, desc = 'Weather Forecast', },
     },
+  },
+
+  -- [oogway.nvim] - Provides list of Oogway sentences and ascii prictures
+  -- see: `:h oogway`
+  {
+    '0x5a4/oogway.nvim',
+    cmd = { 'Oogway' }, -- for lazy loading
   },
 }

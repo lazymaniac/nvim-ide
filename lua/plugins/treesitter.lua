@@ -1,4 +1,6 @@
 return {
+
+  -- [[ SYNTAX HIGHLIGHTING ]] ---------------------------------------------------------------
   -- [nvim-treesitter] - Syntax highlighting.
   -- see: `:h nvim-treesitter`
   {

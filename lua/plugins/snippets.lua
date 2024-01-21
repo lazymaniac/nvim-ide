@@ -1,7 +1,6 @@
 return {
 
   -- [[ CODE SNIPPETS ]] ---------------------------------------------------------------
-
   -- [friendly-snippets] - Set of useful snippets in vscode format
   -- see: `:h friendly-snippets`
   {

@@ -1,7 +1,6 @@
 return {
 
   -- [[ TEXT OBJECTS ]] ---------------------------------------------------------------
-
   -- [mini.ai] - Better text object_scope
   -- see: `:h mini.ai`
   {
@@ -14,7 +13,6 @@ return {
     opts = function()
       local ai = require 'mini.ai'
       local nn = require 'notebook-navigator'
-
       return {
         n_lines = 500,
         custom_textobjects = {
@@ -61,7 +59,6 @@ return {
         for k, v in pairs(a) do
           a[k] = v:gsub(' including.*', '')
         end
-
         local ic = vim.deepcopy(i)
         local ac = vim.deepcopy(a)
         for key, name in pairs { n = 'Next', l = 'Last' } do
@@ -89,127 +86,127 @@ return {
   -- indentation              surrounding lines with  see overview from      -                  ii, ai,  all
   --                          same or higher          vim-indent-object                        aI, (iI)
   --                          indentation
-
+  --
   -- restOfIndentation        lines down with same or -                      -                     R     all
   --                          higher indentation
-
+  --
   -- greedyOuterIndentation   outer indentation,      outer includes a       -                   ag/ig   all
   --                          expanded to blank       blank, like ap/ip
   --                          lines; useful to get
   --                          functions with
   --                          annotations
-
+  --
   -- subword                  like iw, but treating   outer includes         -                   iS/aS   all
   --                          -, _, and . as word     trailing _,-, or space
   --                          delimiters and only
   --                          part of camelCase
-
+  --
   -- toNextClosingBracket     from cursor to next     -                      small                 C     all
   --                          closing ], ), or }
-
+  --
   -- toNextQuotationMark      from cursor to next     -                      small                 Q     all
   --                          unescaped[1] ", ', or `
-
+  --
   -- anyQuote                 between any             outer includes the     small               iq/aq   all
   --                          unescaped[2] ", ', or ` quotation marks
   --                          in a line
-
+  --
   -- anyBracket               between any (), [], or  outer includes the     small               io/ao   all
   --                          {} in a line            brackets
-
+  --
   -- restOfParagraph          like }, but linewise    -                      -                     r     all
-
+  --
   -- multiCommentedLines      consecutive, fully      -                      big                  gc     all
   --                          commented lines
-
+  --
   -- entireBuffer             entire buffer as one    -                      -                    gG     all
   --                          text object
-
+  --
   -- nearEoL                  from cursor position to -                      -                     n     all
   --                          end of line, minus one
   --                          character
-
+  --
   -- lineCharacterwise        current line, but       outer includes         -                   i_/a_   all
   --                          characterwise           indentation and
   --                                                  trailing spaces
-
+  --
   -- column                   column down until       -                      -                    \|     all
   --                          indent or shorter line.
   --                          Accepts {count} for
   --                          multiple columns.
-
+  --
   -- value                    value of key-value      outer includes         small               iv/av   all
   --                          pair, or right side of  trailing commas or
   --                          a assignment, excl.     semicolons
   --                          trailing comment (in a
   --                          line)
-
+  --
   -- key                      key of key-value pair,  outer includes the =   small               ik/ak   all
   --                          or left side of a       or :
   --                          assignment
-
+  --
   -- url                      works with http[s] or   -                      big                   L     all
   --                          any other protocol
-
+  --
   -- number                   numbers, similar to     inner: only pure       small               in/an   all
   --                          <C-a>                   digits, outer: number
   --                                                  including minus sign
   --                                                  and decimal point
-
+  --
   -- diagnostic               LSP diagnostic          -                      big                   !     all
   --                          (requires built-in LSP)
-
+  --
   -- closedFold               closed fold             outer includes one     big                 iz/az   all
   --                                                  line after the last
   --                                                  folded line
-
+  --
   -- chainMember              field with the full     outer includes the     small               im/am   all
   --                          call, like              leading . (or :)
   --                          .encode(param)
-
+  --
   -- visibleInWindow          all lines visible in    -                      -                    gw     all
   --                          the current window
-
+  --
   -- restOfWindow             from the cursorline to  -                      -                    gW     all
   --                          the last line in the
   --                          window
-
+  --
   -- lastChange               Last                    -                      -                    g;     all
   --                          non-deletion-change,
   --                          yank, or paste.[3]
-
+  --
   -- mdlink                   markdown link like      inner is only the link small               il/al   markdown,
   --                          [title](url)            title (between the [])                             toml
-
+  --
   -- mdEmphasis               markdown text enclosed  inner is only the      small               ie/ae   markdown
   --                          by *, **, _, __, ~~, or emphasis content
   --                          ==
-
+  --
   -- mdFencedCodeBlock        markdown fenced code    outer includes the     big                 iC/aC   markdown
   --                          (enclosed by three      enclosing backticks
   --                          backticks)
-
+  --
   -- cssSelector              class in CSS like       outer includes         small               ic/ac   css, scss
   --                          .my-class               trailing comma and
   --                                                  space
-
+  --
   -- htmlAttribute            attribute in html/xml   inner is only the      small               ix/ax   html, xml,
   --                          like href="foobar.com"  value inside the                                   css, scss,
   --                                                  quotes trailing comma                              vue
   --                                                  and space
-
+  --
   -- doubleSquareBrackets     text enclosed by [[]]   outer includes the     small               iD/aD   lua, shell,
   --                                                  four square brackets                               neorg,
   --                                                                                                     markdown
-
+  --
   -- shellPipe                segment until a pipe    outer includes the     small               iP/aP   bash, zsh,
   --                          character (\|)          pipe to the right                                  fish, sh
-
+  --
   -- pyTripleQuotes           python strings          inner excludes the """ -                   iy/ay   python
   --                          surrounded by three     or '''
   --                          quotes (regular or
   --                          f-string)
-
+  --
   -- notebookCell             cell delimited by       outer includes the     -                   iN/aN   all
   --                          double percent comment, bottom cell border
   --                          such as # %%

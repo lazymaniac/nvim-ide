@@ -1,5 +1,6 @@
 return {
 
+  -- [[ TERMINAL ]] ---------------------------------------------------------------
   -- [toggleterm.nvim] - Terminal integration in nvim
   -- see: `:h toggleterm`
   {

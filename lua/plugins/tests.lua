@@ -1,6 +1,6 @@
--- Neotest genreal configuration
 return {
 
+  -- [[ TEST RUNNERS ]] ---------------------------------------------------------------
   -- Default test tree for which-key
   {
     'folke/which-key.nvim',
@@ -65,7 +65,6 @@ return {
           final_child_prefix = '',
           non_collapsible = '',
           collapsed = '',
-
           passed = '',
           running = '',
           failed = '',
@@ -161,7 +160,6 @@ return {
           end,
         },
       }, neotest_ns)
-
       if require('util').has 'trouble.nvim' then
         opts.consumers = opts.consumers or {}
         -- Refresh and auto close trouble after running tests
@@ -172,7 +170,6 @@ return {
               return
             end
             local tree = assert(client:get_position(nil, { adapter = adapter_id }))
-
             local failed = 0
             for pos_id, result in pairs(results) do
               if result.status == 'failed' and tree:get_key(pos_id) then
@@ -192,7 +189,6 @@ return {
           end
         end
       end
-
       if opts.adapters then
         local adapters = {}
         for name, config in pairs(opts.adapters or {}) do
@@ -218,7 +214,6 @@ return {
         end
         opts.adapters = adapters
       end
-
       require('neotest').setup(opts)
     end,
     -- stylua: ignore

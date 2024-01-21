@@ -1,6 +1,8 @@
 local Util = require 'util'
 
 return {
+
+  -- [[ UI ENHANCEMENTS ]] ---------------------------------------------------------------
   -- [nvim-notify] - Better 'vim.notify()'
   -- see: `:h nvim-notify`
   {
@@ -90,25 +92,21 @@ return {
             ['<Down>'] = 'HistoryNext',
           },
         },
-
         override = function(conf)
           -- This is the config that will be passed to nvim_open_win.
           -- Change values here to customize the layout
           return conf
         end,
-
         get_config = nil, -- see :help dressing_get_config
       },
       select = {
         enabled = true, -- Set to false to disable the vim.ui.select implementation
         backend = { 'telescope', 'fzf_lua', 'fzf', 'builtin', 'nui' }, -- Priority list of preferred vim.select implementations
         trim_prompt = true, -- Trim trailing `:` from prompt
-
         -- Options for telescope selector
         -- These are passed into the telescope picker directly. Can be used like:
         -- telescope = require('telescope.themes').get_ivy({...})
         telescope = nil,
-
         -- Options for fzf selector
         fzf = {
           window = {
@@ -116,7 +114,6 @@ return {
             height = 0.4,
           },
         },
-
         -- Options for fzf-lua
         fzf_lua = {
           -- winopts = {
@@ -124,7 +121,6 @@ return {
           --   width = 0.5,
           -- },
         },
-
         -- Options for nui Menu
         nui = {
           position = '50%',
@@ -145,19 +141,16 @@ return {
           min_width = 40,
           min_height = 10,
         },
-
         -- Options for built-in selector
         builtin = {
           show_numbers = true, -- Display numbers for options and set up keymaps
           border = 'rounded', -- These are passed to nvim_open_win
           relative = 'editor', -- 'editor' and 'win' will default to being centered
-
           buf_options = {},
           win_options = {
             cursorline = true,
             cursorlineopt = 'both',
           },
-
           -- These can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
           -- the min_ and max_ options can be a list of mixed types.
           -- max_width = {140, 0.8} means "the lesser of 140 columns or 80% of total"
@@ -172,7 +165,6 @@ return {
             ['<C-c>'] = 'Close',
             ['<CR>'] = 'Confirm',
           },
-
           override = function(conf)
             -- This is the config that will be passed to nvim_open_win.
             -- Change values here to customize the layout
@@ -585,77 +577,6 @@ return {
     end,
   },
 
-  -- [mini.indentscope] - Active indent guide and indent text objects. When browsing
-  -- code, this highlights the current level of indentation, and animates the highlighting.
-  -- see: `:h mini.indentscope`
-  {
-    'echasnovski/mini.indentscope',
-    version = false, -- wait till new 0.7.0 release to put it back on semver
-    event = 'VeryLazy',
-    opts = {
-      draw = {
-        -- Delay (in ms) between event and start of drawing scope indicator
-        delay = 50,
-
-        -- Animation rule for scope's first drawing. A function which, given
-        -- next and total step numbers, returns wait time (in ms). See
-        -- |MiniIndentscope.gen_animation| for builtin options. To disable
-        -- animation, use `require('mini.indentscope').gen_animation.none()`.
-        -- animation = --<function: implements constant 20ms between steps>,
-
-        -- Symbol priority. Increase to display on top of more symbols.
-        priority = 2,
-      },
-
-      -- Module mappings. Use `''` (empty string) to disable one.
-      mappings = {
-        -- Textobjects
-        object_scope = 'ii',
-        object_scope_with_border = 'ai',
-
-        -- Motions (jump to respective border line; if not present - body line)
-        goto_top = '[i',
-        goto_bottom = ']i',
-      },
-
-      -- Options which control scope computation
-      options = {
-        -- Type of scope's border: which line(s) with smaller indent to
-        -- categorize as border. Can be one of: 'both', 'top', 'bottom', 'none'.
-        border = 'both',
-
-        -- Whether to use cursor column when computing reference indent.
-        -- Useful to see incremental scopes with horizontal cursor movements.
-        indent_at_cursor = true,
-
-        -- Whether to first check input line to be a border of adjacent scope.
-        -- Use it if you want to place cursor on function header to get scope of
-        -- its body.
-        try_as_border = true,
-      },
-      symbol = '│', -- Which character to use for drawing scope indicator
-    },
-    init = function()
-      vim.api.nvim_create_autocmd('FileType', {
-        pattern = {
-          'help',
-          'alpha',
-          'dashboard',
-          'neo-tree',
-          'Trouble',
-          'trouble',
-          'lazy',
-          'mason',
-          'notify',
-          'toggleterm',
-        },
-        callback = function()
-          vim.b.miniindentscope_disable = true
-        end,
-      })
-    end,
-  },
-
   -- [which-key.nvim] -  Displays a popup with possible key bindings of the command you started typing
   -- see: `:h which-key`
   {
@@ -860,7 +781,6 @@ return {
         views = {}, ---@see section on views
         status = {}, --- @see section on statusline components
         format = {}, --- @see section on formatting
-
         routes = {
           {
             filter = {
@@ -894,13 +814,6 @@ return {
   -- [nui.nvim] - UI components like popups.
   -- see: `:h nui`
   { 'MunifTanjim/nui.nvim' },
-
-  -- [oogway.nvim] - Provides list of Oogway sentences and ascii prictures
-  -- see: `:h oogway`
-  {
-    '0x5a4/oogway.nvim',
-    cmd = { 'Oogway' }, -- for lazy loading
-  },
 
   -- [dashboard-nvim] - Welcome dashboard like in other IDE
   -- see: `:h dashboard-nvim`
@@ -939,7 +852,6 @@ return {
           end,
         },
       }
-
       -- close Lazy and re-open when the dashboard is ready
       if vim.o.filetype == 'lazy' then
         vim.cmd.close()
@@ -950,7 +862,6 @@ return {
           end,
         })
       end
-
       return opts
     end,
     -- stylua: ignore
@@ -977,7 +888,6 @@ return {
         local cmd = 'cabbr ' .. abbrev .. ' <c-r>=(getcmdpos() == 1 && getcmdtype() == ":" ? "' .. expansion .. '" : "' .. abbrev .. '")<CR>'
         vim.cmd(cmd)
       end
-
       -- Redirect `:h` to `:FloatingHelp`
       cmd_abbrev('h', 'FloatingHelp')
       cmd_abbrev('help', 'FloatingHelp')
@@ -988,18 +898,6 @@ return {
     keys = {
       { '<F1>', '<cmd>FloatingHelpToggle<cr>', mode = { 'n' }, desc = 'Toggle Floating Help' },
     },
-  },
-
-  -- [nvim-lightbulb] - Show lightbulb where code action is available
-  -- see: `:h lightbulb`
-  {
-    'kosayoda/nvim-lightbulb',
-    enabled = true,
-    config = function()
-      require('nvim-lightbulb').setup {
-        autocmd = { enabled = true },
-      }
-    end,
   },
 
   -- [numb.nvim] - Show preview of location when jumping to line with `:{number}`
@@ -1016,35 +914,6 @@ return {
     },
     config = function(_, opts)
       require('numb').setup(opts)
-    end,
-  },
-
-  -- [rainbow_delimiters.nvim] - Rainbow colored delimiters
-  -- see: `:h rainbow-delimiters`
-  {
-    'HiPhish/rainbow-delimiters.nvim',
-    enabled = true,
-    config = function()
-      local rainbow_delimiters = require 'rainbow-delimiters'
-      require('rainbow-delimiters.setup').setup {
-        strategy = {
-          [''] = rainbow_delimiters.strategy['global'],
-          vim = rainbow_delimiters.strategy['local'],
-        },
-        query = {
-          [''] = 'rainbow-delimiters',
-          lua = 'rainbow-blocks',
-        },
-        highlight = {
-          'RainbowDelimiterRed',
-          'RainbowDelimiterYellow',
-          'RainbowDelimiterBlue',
-          'RainbowDelimiterOrange',
-          'RainbowDelimiterGreen',
-          'RainbowDelimiterViolet',
-          'RainbowDelimiterCyan',
-        },
-      }
     end,
   },
 
@@ -1110,32 +979,6 @@ return {
     end,
   },
 
-  -- [nvim-hlslens] - Helps better glance at matched information, jump between matched instances.
-  -- see: `:h nvim-hlslens`
-  {
-    'kevinhwang91/nvim-hlslens',
-    enabled = true,
-    config = function()
-      require('hlslens').setup {
-        build_position_cb = function(plist, _, _, _)
-          require('scrollbar.handlers.search').handler.show(plist.start_pos)
-        end,
-      }
-
-      vim.cmd [[
-        augroup scrollbar_search_hide
-            autocmd!
-            autocmd CmdlineLeave : lua require('scrollbar.handlers.search').handler.hide()
-        augroup END
-    ]]
-
-      -- require('hlslens').setup() is not required
-      require('scrollbar.handlers.search').setup {
-        -- hlslens config overrides
-      }
-    end,
-  },
-
   -- [nvim-window-picker] - Allows to decide where to split a window from neo-tree
   -- see: `:h window-picker`
   {
@@ -1151,11 +994,9 @@ return {
       -- 'floating-big-letter' draw big letter on a floating window
       -- used
       hint = 'floating-big-letter',
-
       -- when you go to window selection mode, status bar will show one of
       -- following letters on them so you can use that letter to select the window
       selection_chars = 'FJDKSLA;CMRUEIWOQP',
-
       -- This section contains picker specific configurations
       picker_config = {
         statusline_winbar_picker = {
@@ -1165,30 +1006,24 @@ return {
           selection_display = function(char, windowid)
             return '%=' .. char .. '%='
           end,
-
           -- whether you want to use winbar instead of the statusline
           -- "always" means to always use winbar,
           -- "never" means to never use winbar
           -- "smart" means to use winbar if cmdheight=0 and statusline if cmdheight > 0
           use_winbar = 'never', -- "always" | "never" | "smart"
         },
-
         floating_big_letter = {
           -- window picker plugin provides bunch of big letter fonts
           -- fonts will be lazy loaded as they are being requested
           -- additionally, user can pass in a table of fonts in to font
           -- property to use instead
-
           font = 'ansi-shadow', -- ansi-shadow |
         },
       },
-
       -- whether to show 'Pick window:' prompt
       show_prompt = true,
-
       -- prompt message to show to get the user input
       prompt_message = 'Pick window: ',
-
       -- if you want to manually filter out the windows, pass in a function that
       -- takes two parameters. You should return window ids that should be
       -- included in the selection
@@ -1199,7 +1034,6 @@ return {
       --    return {1000, 1001}
       -- end
       filter_func = nil,
-
       -- following filters are only applied when you are using the default filter
       -- defined by this plugin. If you pass in a function to "filter_func"
       -- property, you are on your own
@@ -1207,27 +1041,21 @@ return {
         -- when there is only one window available to pick from, use that window
         -- without prompting the user to select
         autoselect_one = true,
-
         -- whether you want to include the window you are currently on to window
         -- selection or not
         include_current_win = false,
-
         -- filter using buffer options
         bo = {
           -- if the file type is one of following, the window will be ignored
           filetype = { 'NvimTree', 'neo-tree', 'notify' },
-
           -- if the file type is one of following, the window will be ignored
           buftype = { 'terminal' },
         },
-
         -- filter using window options
         wo = {},
-
         -- if the file path contains one of following names, the window
         -- will be ignored
         file_path_contains = {},
-
         -- if the file name contains one of following names, the window will be
         -- ignored
         file_name_contains = {},
@@ -1307,10 +1135,6 @@ return {
           font = '+4', -- (10% increase per step)
         },
       },
-      -- callback where you can add custom code when the Zen window opens
-      on_open = function(win) end,
-      -- callback where you can add custom code when the Zen window closes
-      on_close = function() end,
     },
   },
 
@@ -1330,7 +1154,6 @@ return {
           return key
         end, { expr = true })
       end
-
       local animate = require 'mini.animate'
       return {
         resize = {

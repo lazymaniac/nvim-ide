@@ -1,12 +1,19 @@
 local Util = require 'util'
 
 return {
+
+  -- [[ SEARCHING AND REPLACING ]] ---------------------------------------------------------------
+  -- [telescope-egrepify] - Enhanced grepping in Telescope
+  -- see: `:h telescope-egrepify`
   {
     'fdschmidt93/telescope-egrepify.nvim',
     dependencies = { 'nvim-telescope/telescope.nvim', 'nvim-lua/plenary.nvim' },
+    -- stylua: ignore
+    keys = {
+      { '<leader><space>', '<cmd>Telescope egrepify<cr>', mode = { 'n', 'v' }, desc = 'Enhanced Grep', },
+    },
     config = function()
       local egrep_actions = require 'telescope._extensions.egrepify.actions'
-
       require('telescope').setup {
         extensions = {
           egrepify = {
@@ -51,7 +58,9 @@ return {
       require('telescope').load_extension 'egrepify'
     end,
   },
-  -- search/replace in multiple files
+
+  -- [nvim-spectre] - Search files with replace option
+  -- see: `:h nvim-spectre`
   {
     'nvim-pack/nvim-spectre',
     build = false,
@@ -63,10 +72,7 @@ return {
     },
   },
 
-  -- Fuzzy finder.
-  -- The default key bindings to find files will use Telescope's
-  -- `find_files` or `git_files` depending on whether the
-  -- directory is a git repo.
+  -- [telescope.nvim] - Fuzzy finder for project files
   -- see: `:h telescope`
   {
     'nvim-telescope/telescope.nvim',
@@ -97,7 +103,6 @@ return {
       { '<leader>,', '<cmd>Telescope buffers sort_mru=true sort_lastused=true<cr>', desc = 'Switch Buffer' },
       { '<leader>/', Util.telescope 'live_grep', desc = 'Grep (root dir)' },
       { '<leader>:', '<cmd>Telescope command_history<cr>', desc = 'Command History' },
-      { '<leader><space>', Util.telescope 'files', desc = 'Find Files (root dir)' },
       -- find
       { '<leader>fb', '<cmd>Telescope buffers sort_mru=true sort_lastused=true<cr>', desc = 'Buffers' },
       { '<leader>fc', Util.telescope.config_files(), desc = 'Find Config File' },
@@ -137,7 +142,6 @@ return {
     },
     opts = function()
       local actions = require 'telescope.actions'
-
       local open_with_trouble = function(...)
         return require('trouble.providers.telescope').open_with_trouble(...)
       end
@@ -154,7 +158,6 @@ return {
         local line = action_state.get_current_line()
         Util.telescope('find_files', { hidden = true, default_text = line })()
       end
-
       return {
         defaults = {
           layout_strategy = 'vertical',
@@ -196,19 +199,8 @@ return {
     end,
   },
 
-  -- easily jump to any location and enhanced f/t motions for Leap
-  {
-    'ggandor/flit.nvim',
-    keys = function()
-      ---@type LazyKeys[]
-      local ret = {}
-      for _, key in ipairs { 'f', 'F', 't', 'T' } do
-        ret[#ret + 1] = { key, mode = { 'n', 'x', 'o' }, desc = key }
-      end
-      return ret
-    end,
-    opts = { labeled_modes = 'nx' },
-  },
+  -- [leap.nvim] - Jump in code with s and S keys
+  -- see: `:h leap.nvim`
   {
     'ggandor/leap.nvim',
     keys = {
@@ -227,88 +219,21 @@ return {
     end,
   },
 
-  {
-    'xiaoshihou514/squirrel.nvim',
-    event = 'VeryLazy',
-    keys = {
-      {
-        'gaa',
-        function()
-          require('squirrel.hop').hop_linewise()
-        end,
-        mode = { 'n', 'x' },
-        desc = 'Jump to start of any current line node',
-      },
-      {
-        'ga',
-        function()
-          require('squirrel.hop').hop()
-        end,
-        mode = { 'n', 'x' },
-        desc = 'Jump to start of any visible node',
-      },
-      {
-        'gee',
-        function()
-          require('squirrel.hop').hop_linewise {
-            head = false,
-            tail = true,
-          }
-        end,
-        mode = { 'n', 'x' },
-        desc = 'Jump end of any current line node',
-      },
-      {
-        'ge',
-        function()
-          require('squirrel.hop').hop {
-            head = false,
-            tail = true,
-          }
-        end,
-        mode = { 'n', 'x' },
-        desc = 'Jump end of any current line node',
-      },
-    },
-  },
-
-  -- rename surround mappings from gs to gz to prevent conflict with leap
-  {
-    'echasnovski/mini.surround',
-    opts = {
-      mappings = {
-        add = 'gza', -- Add surrounding in Normal and Visual modes
-        delete = 'gzd', -- Delete surrounding
-        find = 'gzf', -- Find surrounding (to the right)
-        find_left = 'gzF', -- Find surrounding (to the left)
-        highlight = 'gzh', -- Highlight surrounding
-        replace = 'gzr', -- Replace surrounding
-        update_n_lines = 'gzn', -- Update `n_lines`
-      },
-    },
-  },
-
-  -- makes some plugins dot-repeatable like leap
-  { 'tpope/vim-repeat', event = 'VeryLazy' },
-
-  -- improved search
+  -- [improved-search] - Enhance searching with n and N keys
+  -- see: `:h improved-search`
   {
     'backdround/improved-search.nvim',
     config = function()
       local search = require 'improved-search'
-
       -- Search next / previous.
       vim.keymap.set({ 'n', 'x', 'o' }, 'n', search.stable_next)
       vim.keymap.set({ 'n', 'x', 'o' }, 'N', search.stable_previous)
-
       -- Search current word without moving.
       vim.keymap.set('n', '!', search.current_word)
-
       -- Search selected text in visual mode
       vim.keymap.set('x', '!', search.in_place) -- search selection without moving
       vim.keymap.set('x', '*', search.forward) -- search selection forward
       vim.keymap.set('x', '#', search.backward) -- search selection backward
-
       -- Search by motion in place
       vim.keymap.set('n', '|', search.in_place)
       -- You can also use search.forward / search.backward for motion selection.
