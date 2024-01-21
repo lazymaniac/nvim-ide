@@ -1,7 +1,8 @@
 return {
 
-  -- which-key helps you remember key bindings by showing a popup
-  -- with the active keybindings of the command you started typing.
+  -- [[ KEYMAPS ]] ---------------------------------------------------------------
+  -- [which-key.nvim] - Autocompletion for keymaps
+  -- see: `:h which-key`
   {
     'folke/which-key.nvim',
     event = 'VeryLazy',
@@ -14,7 +15,6 @@ return {
         marks = true, -- Show a list of marks on ' and `
         registers = true, -- Shows registers on " in NORMAL or <C-r> in INSERT mode
       },
-
       -- The presets plugin, adds help for bunch of default keybindings in Neovim
       -- No actual keybindings are created
       presets = {
@@ -26,12 +26,10 @@ return {
         z = true, -- Bindings for folds, spelling and other prefixed with z
         g = true, -- Bindings for prefixed with g
       },
-
       -- Add operators that will trigger motion and text objects completion.
       -- To enable all native operators, set the preset / operators plugin
       -- above
       operators = { gc = 'Comments' },
-
       key_labels = {
         -- Override the label used to display some keys. It doesn't effect
         -- WK in any other way
@@ -104,14 +102,10 @@ return {
     end,
   },
 
-  -- Detect tabstop and shiftwidth automatically
-  {
-    'tpope/vim-sleuth',
-  },
-
-  -- Automatically highlights other instances of the word under your cursor.
-  -- This works with LSP, Treesitter, and regexp matching to find the other
-  -- instances.
+  -- [[ TEXT HIGHLIGHT ]] ---------------------------------------------------------------
+  -- [vim-illuminate] - Automatically highlights other instances of the word under your cursor.
+  -- This works with LSP, Treesitter, and regexp matching to find the other instances.
+  -- see: `:h vim-illuminate`
   {
     'RRethy/vim-illuminate',
     event = 'VeryLazy',
@@ -124,16 +118,13 @@ return {
     },
     config = function(_, opts)
       require('illuminate').configure(opts)
-
       local function map(key, dir, buffer)
         vim.keymap.set('n', key, function()
           require('illuminate')['goto_' .. dir .. '_reference'](false)
         end, { desc = dir:sub(1, 1):upper() .. dir:sub(2) .. ' Reference', buffer = buffer })
       end
-
       map(']]', 'next')
       map('[[', 'prev')
-
       -- also set it after loading ftplugins, since a lot overwrite [[ and ]]
       vim.api.nvim_create_autocmd('FileType', {
         callback = function()
@@ -149,7 +140,8 @@ return {
     },
   },
 
-  -- buffer remove
+  -- [mini.bufremove] - Batter buffer remove
+  -- see: `:h mini.bufremove`
   {
     'echasnovski/mini.bufremove',
     -- stylua: ignore
@@ -176,7 +168,10 @@ return {
     },
   },
 
-  -- better diagnostics list and others
+  -- [[ DIAGNOSTICS ]] ---------------------------------------------------------------
+
+  -- [trouble.nvim] - Better diagnostics, loclist, quickfix etc.
+  -- see: `:h trouble.nvim`
   {
     'folke/trouble.nvim',
     cmd = { 'TroubleToggle', 'Trouble' },
@@ -271,13 +266,14 @@ return {
     },
   },
 
-  -- Diagnostics text objects
+  -- [textobj-diagnostic.nvim] - Diagnostics text objects
+  -- see: `:h textobj-diagnostic`
   --
-  -- keymapping | function | purpose
-  -- ig | require('textobj-diagnostic').next_diag_inclusive() | finds the diagnostic under or after the cursor (including any diagnostic the cursor is sitting on)
-  -- ]g | require('textobj-diagnostic').next_diag() | finds the diagnostic after the cursor (excluding any diagnostic the cursor is sitting on)
-  -- [g | require('textobj-diagnostic').prev_diag() | finds the diagnostic before the cursor (excluding any diagnostic the cursor is sitting on)
-  -- No mapping by default | require('textobj-diagnostic').nearest_diag() | find the diagnostic nearest to the cursor, under, before, or after, taking into account both vertical and horizontal distance
+  -- keymapping | function                                            | purpose
+  -- ig         | require('textobj-diagnostic').next_diag_inclusive() | finds the diagnostic under or after the cursor (including any diagnostic the cursor is sitting on)
+  -- ]g         | require('textobj-diagnostic').next_diag()           | finds the diagnostic after the cursor (excluding any diagnostic the cursor is sitting on)
+  -- [g         | require('textobj-diagnostic').prev_diag()           | finds the diagnostic before the cursor (excluding any diagnostic the cursor is sitting on)
+  --
   {
     'andrewferrier/textobj-diagnostic.nvim',
     config = function()
@@ -289,8 +285,9 @@ return {
     },
   },
 
-  -- Finds and lists all of the TODO, HACK, BUG, etc comment
+  -- [todo-comments.nvim] - Finds and lists all of the TODO, HACK, BUG, etc comment
   -- in your project and loads them into a browsable list.
+  -- see: `:h todo-comments`
   {
     'folke/todo-comments.nvim',
     cmd = { 'TodoTrouble', 'TodoTelescope' },
@@ -307,7 +304,10 @@ return {
     },
   },
 
-  -- Show symbols outline for current buffer
+  -- [[ BUFFER OUTLINE ]] ---------------------------------------------------------------
+
+  -- [outline.nvim] - Show symbols outline for current buffer
+  -- see: `:h outline.nvim`
   {
     'hedyhli/outline.nvim',
     event = 'VeryLazy',
@@ -326,14 +326,12 @@ return {
         -- This should be a valid vim command used for opening the split for the
         -- outline window. Eg, 'rightbelow vsplit'.
         split_command = 'botright vs',
-
         -- Percentage or integer of columns
         width = 20,
         -- Whether width is relative to the total width of nvim
         -- When relative_width = true, this means take 25% of the total
         -- screen width for outline window.
         relative_width = true,
-
         -- Auto close the outline window if goto_location is triggered and not for
         -- peek_location
         auto_close = false,
@@ -345,12 +343,10 @@ return {
         -- Whether to center the cursor line vertically in the screen when
         -- jumping/focusing. Executes zz.
         center_on_jump = true,
-
         -- Vim options for the outline window
         show_numbers = false,
         show_relative_numbers = false,
         wrap = false,
-
         -- true/false/'focus_in_outline'/'focus_in_code'.
         -- The last two means only show cursorline when the focus is in outline/code.
         -- 'focus_in_outline' can be used if the outline_items.auto_set_cursor
@@ -363,7 +359,6 @@ return {
         -- wasn't focused on the outline window.
         -- This feature is experimental.
         hide_cursor = false,
-
         -- Whether to auto-focus on the outline window when it is opened.
         -- Set to false to *always* retain focus on your previous buffer when opening
         -- outline.
@@ -377,7 +372,6 @@ return {
         -- To change background color to "CustomHl" for example, use "Normal:CustomHl".
         winhl = '',
       },
-
       outline_items = {
         -- Show extra details with the symbols (lsp dependent) as virtual next
         show_symbol_details = true,
@@ -406,7 +400,6 @@ return {
           items = { 'InsertLeave', 'WinEnter', 'BufEnter', 'BufWinEnter', 'TabEnter', 'BufWritePost' },
         },
       },
-
       -- Options for outline guides which help show tree hierarchy of symbols
       guides = {
         enabled = true,
@@ -418,7 +411,6 @@ return {
           vertical = '│',
         },
       },
-
       symbol_folding = {
         -- Depth past which nodes will be folded by default. Set to false to unfold all on open.
         autofold_depth = 1,
@@ -432,7 +424,6 @@ return {
         },
         markers = { '', '' },
       },
-
       preview_window = {
         -- Automatically open preview of code location when navigating outline window
         auto_preview = true,
@@ -461,7 +452,6 @@ return {
         -- in the preview window. Like VS Code's "peek editor".
         live = true,
       },
-
       -- These keymaps can be a string or a table for multiple keys.
       -- Set to `{}` to disable. (Using 'nil' will fallback to default keys)
       keymaps = {
@@ -501,7 +491,6 @@ return {
         down_and_jump = '<C-j>',
         up_and_jump = '<C-k>',
       },
-
       providers = {
         priority = { 'lsp', 'coc', 'markdown', 'norg' },
         lsp = {
@@ -509,7 +498,6 @@ return {
           blacklist_clients = {},
         },
       },
-
       symbols = {
         -- Filter by kinds (string) for symbols in the outline.
         -- Possible kinds are the Keys in the icons table below.
@@ -524,7 +512,6 @@ return {
         --   filter = { 'Package', 'Module', 'Function' }
         -- See more examples below.
         filter = nil,
-
         -- You can use a custom function that returns the icon for each symbol kind.
         -- This function takes a kind (string) as parameter and should return an
         -- icon as string.
@@ -572,7 +559,10 @@ return {
       },
     },
   },
-  -- better yank/paste
+
+  -- [[ YANK/PASTE ]] ---------------------------------------------------------------
+
+  -- [yanky.nvim] - Better yank/paste
   -- see: `h: yanky`
   {
     'gbprod/yanky.nvim',
@@ -632,6 +622,11 @@ return {
       { '=P', '<Plug>(YankyPutBeforeFilter)', desc = 'Put before applying a filter' },
     },
   },
+
+  -- [[ BUFFER UTILS ]] ---------------------------------------------------------------
+
+  -- [arrow.nvim] - Pin buffers for quick access
+  -- see: `:h arrow.nvim`
   {
     'otavioschwanck/arrow.nvim',
     opts = {
@@ -639,15 +634,9 @@ return {
       leader_key = ';', -- Recommended to be a single key
     },
   },
-  {
-    'folke/which-key.nvim',
-    optional = true,
-    opts = {
-      defaults = {
-        ['<leader>;'] = { name = 'Arrow' },
-      },
-    },
-  },
+
+  -- [detour.nvim] - Open current buffer in popup
+  -- see: `:h detour.nvim`
   {
     'carbon-steel/detour.nvim',
     config = function()

@@ -1,7 +1,10 @@
 return {
-  -- git signs highlights text that has changed since the list
+
+  -- [[ GIT ]] ---------------------------------------------------------------
+  -- [gitsigns.nvim] - git signs highlights text that has changed since the list
   -- git commit, and also lets you interactively stage & unstage
   -- hunks in a commit.
+  -- see: `:h gitsigns`
   {
     'lewis6991/gitsigns.nvim',
     event = 'VeryLazy',
@@ -19,15 +22,15 @@ return {
         untracked = { text = '▎' },
       },
       signcolumn = true, -- Toggle with `:Gitsigns toggle_signs`
-      numhl = false, -- Toggle with `:Gitsigns toggle_numhl`
-      linehl = false, -- Toggle with `:Gitsigns toggle_linehl`
-      word_diff = false, -- Toggle with `:Gitsigns toggle_word_diff`
+      numhl = true, -- Toggle with `:Gitsigns toggle_numhl`
+      linehl = true, -- Toggle with `:Gitsigns toggle_linehl`
+      word_diff = true, -- Toggle with `:Gitsigns toggle_word_diff`
       watch_gitdir = {
         interval = 1000,
         follow_files = true,
       },
       attach_to_untracked = true,
-      current_line_blame = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
+      current_line_blame = true, -- Toggle with `:Gitsigns toggle_current_line_blame`
       current_line_blame_opts = {
         virt_text = true,
         virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
@@ -35,7 +38,7 @@ return {
         ignore_whitespace = false,
       },
       current_line_blame_formatter_opts = {
-        relative_time = false,
+        relative_time = true,
       },
       sign_priority = 6,
       update_debounce = 100,
@@ -54,11 +57,9 @@ return {
       },
       on_attach = function(buffer)
         local gs = package.loaded.gitsigns
-
         local function map(mode, l, r, desc)
           vim.keymap.set(mode, l, r, { buffer = buffer, desc = desc })
         end
-
         -- Navigation
         map({ 'n', 'v' }, ']h', function()
           if vim.wo.diff then
@@ -69,7 +70,6 @@ return {
           end)
           return '<Ignore>'
         end, 'Jump to next hunk')
-
         map({ 'n', 'v' }, '[h', function()
           if vim.wo.diff then
             return '[h'
@@ -79,49 +79,42 @@ return {
           end)
           return '<Ignore>'
         end, 'Jump to prev hunk')
-
         -- Actions
         map({ 'n', 'v' }, '<leader>ghs', ':Gitsigns stage_hunk<CR>', 'Stage Hunk')
         map({ 'n', 'v' }, '<leader>ghr', ':Gitsigns reset_hunk<CR>', 'Reset Hunk')
-        map('n', '<leader>ghS', gs.stage_buffer, 'Stage Buffer')
-        map('n', '<leader>ghu', gs.undo_stage_hunk, 'Undo Stage Hunk')
-        map('n', '<leader>ghR', gs.reset_buffer, 'Reset Buffer')
-        map('n', '<leader>ghp', gs.preview_hunk_inline, 'Preview Hunk')
-        map('n', '<leader>ghb', function()
+        map('n', '<leader>gbS', gs.stage_buffer, 'Stage Buffer')
+        map('n', '<leader>gbu', gs.undo_stage_hunk, 'Undo Stage Hunk')
+        map('n', '<leader>gbR', gs.reset_buffer, 'Reset Buffer')
+        map('n', '<leader>gbp', gs.preview_hunk_inline, 'Preview Hunk')
+        map('n', '<leader>gbb', function()
           gs.blame_line { full = true }
         end, 'Blame Line')
-        map('n', '<leader>ghd', gs.diffthis, 'Diff This')
-        map('n', '<leader>ghD', function()
+        map('n', '<leader>gbd', gs.diffthis, 'Diff This')
+        map('n', '<leader>gbD', function()
           gs.diffthis '~'
         end, 'Diff This ~')
         map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', 'GitSigns Select Hunk')
-
         -- Toggles
-        map('n', '<leader>ghtb', gs.toggle_current_line_blame, 'Toggle line blame')
-        map('n', '<leader>ghtd', gs.toggle_deleted, 'Toggle git show deleted')
+        map('n', '<leader>gbtb', gs.toggle_current_line_blame, 'Toggle line blame')
+        map('n', '<leader>gbtd', gs.toggle_deleted, 'Toggle git show deleted')
       end,
     },
   },
+
+  -- Add gitsigns group to which-key
   {
     'folke/which-key.nvim',
     optional = true,
     opts = {
       defaults = {
-        ['<leader>gh'] = { name = '+[buffer]' },
-        ['<leader>ght'] = { name = '+[toggle]' },
+        ['<leader>gb'] = { name = '+[buffer]' },
+        ['<leader>gbt'] = { name = '+[toggle]' },
       },
     },
   },
 
-  -- Git related plugins
-  {
-    'tpope/vim-fugitive',
-  },
-  {
-    'tpope/vim-rhubarb',
-  },
   --
-  -- [[Gitlab plugin]] Gitlab integration
+  -- [gitlab.nvim] Gitlab integration
   --
   -- ## Usage
   -- First, check out the branch that you want to review locally.
@@ -312,6 +305,7 @@ return {
     end,
   },
 
+  -- add which_key groups for gitlab
   {
     'folke/which-key.nvim',
     optional = true,
@@ -324,7 +318,7 @@ return {
       },
     },
   },
-  -- Github support
+
   -- Ensure GH tool is installed
   {
     'williamboman/mason.nvim',
@@ -333,6 +327,9 @@ return {
       vim.list_extend(opts.ensure_installed, { 'gh' })
     end,
   },
+
+  -- [octo.nvim] - GitHub integration
+  -- see: `:h octo.nvim`
   {
     'pwntester/octo.nvim',
     cmd = 'Octo',
@@ -528,9 +525,20 @@ return {
       { '<leader>gi', '<cmd>Octo<cr>', desc = 'Github' },
     },
   },
+
+  -- [tardis.nvim] - Compare previos versions of file with current
+  -- see: `:h tardis`
   {
     'fredeeb/tardis.nvim',
     dependencies = { 'nvim-lua/plenary.nvim' },
     config = true,
+    keys = {
+      {
+        '<leader>gt',
+        '<cmd>Tardis<cr>',
+        mode = { 'n', 'v' },
+        desc = 'Compare with previous versions',
+      },
+    },
   },
 }

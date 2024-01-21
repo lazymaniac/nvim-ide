@@ -1,4 +1,8 @@
 return {
+
+  -- [[ IMAGES ]] ---------------------------------------------------------------
+  -- [hologram.nvim] - Image support in MD files. Requires Kitty
+  -- see: `:h hologram.nvim`
   {
     'edluffy/hologram.nvim',
     opts = {
@@ -8,6 +12,9 @@ return {
       require('hologram').setup(opts)
     end,
   },
+
+  -- [image.nvim] - Image loader. Integrate into neo-tree, jupyter notebooks etc. Requires Kitty
+  -- see: `:h image.nvim`
   {
     '3rd/image.nvim',
     event = 'VeryLazy',

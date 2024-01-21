@@ -10,7 +10,7 @@ return {
     dependencies = { 'nvim-telescope/telescope.nvim', 'nvim-lua/plenary.nvim' },
     -- stylua: ignore
     keys = {
-      { '<leader><space>', '<cmd>Telescope egrepify<cr>', mode = { 'n', 'v' }, desc = 'Enhanced Grep', },
+      { '<leader>/', '<cmd>Telescope egrepify<cr>', mode = { 'n', 'v' }, desc = 'Enhanced Grep', },
     },
     config = function()
       local egrep_actions = require 'telescope._extensions.egrepify.actions'
@@ -101,8 +101,8 @@ return {
     -- stylua: ignore
     keys = {
       { '<leader>,', '<cmd>Telescope buffers sort_mru=true sort_lastused=true<cr>', desc = 'Switch Buffer' },
-      { '<leader>/', Util.telescope 'live_grep', desc = 'Grep (root dir)' },
       { '<leader>:', '<cmd>Telescope command_history<cr>', desc = 'Command History' },
+      { '<leader><space>', Util.telescope 'files', desc = 'Find Files (root dir)' },
       -- find
       { '<leader>fb', '<cmd>Telescope buffers sort_mru=true sort_lastused=true<cr>', desc = 'Buffers' },
       { '<leader>fc', Util.telescope.config_files(), desc = 'Find Config File' },

@@ -1,6 +1,8 @@
 return {
 
-  -- Should be able to connect to external hosts via SSH
+  -- [[ EDIT REMOTE AND IN DOCKER ]] ---------------------------------------------------------------
+  -- [netman.nvim] - Edit files via SSH or in docker
+  -- see: `:h netman`
   {
     'miversen33/netman.nvim',
     lazy = false,

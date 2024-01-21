@@ -3,6 +3,8 @@ local M = {}
 ---@type table<string,true>
 M.hl = {}
 
+-- [mini.hipatterns] - Highlight hex colors, todo, fixme etc.
+-- see: `:h mini.hipatterns`
 M.plugin = {
   'echasnovski/mini.hipatterns',
   event = 'VeryLazy',

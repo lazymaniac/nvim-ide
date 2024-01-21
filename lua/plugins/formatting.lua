@@ -27,6 +27,9 @@ end
 
 return {
   {
+    -- [[ AUTOCOMPLETION ]] ---------------------------------------------------------------
+    -- [conform.nvim] - Code autocompletion.
+    -- see: `:h conform`
     'stevearc/conform.nvim',
     dependencies = { 'mason.nvim' },
     cmd = 'ConformInfo',

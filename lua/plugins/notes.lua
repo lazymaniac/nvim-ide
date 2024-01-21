@@ -1,6 +1,8 @@
 return {
 
-  -- Create notebook in nvim with markup language
+  -- [[ NOTE TAKING ]] ---------------------------------------------------------------
+  -- [neorg] - Note taking, calendar, presentations, journal
+  -- see: `:h neorg`
   {
     'nvim-neorg/neorg',
     build = ':Neorg sync-parsers',
@@ -55,6 +57,7 @@ return {
     },
   },
 
+  -- Add which-key group for notes
   {
     'folke/which-key.nvim',
     optional = true,

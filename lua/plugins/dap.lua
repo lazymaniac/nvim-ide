@@ -11,6 +11,11 @@ local function get_args(config)
 end
 
 return {
+
+  -- [[ DEBUG ]] ---------------------------------------------------------------
+
+  -- [nvim-dap] - Debbuger integration with nvim.
+  -- see: `:h nvim-dap`
   {
     'mfussenegger/nvim-dap',
     dependencies = {

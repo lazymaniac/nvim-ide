@@ -260,10 +260,10 @@ return {
           delay = 200,
           reveal = { 'close' },
         },
-        sort_by = 'relative_directory', -- 'id' | 'extension' | 'relative_directory' | 'directory' | 'tabs' | function(buffer_a, buffer_b)
+        sort_by = nil, -- 'id' | 'extension' | 'relative_directory' | 'directory' | 'tabs' | function(buffer_a, buffer_b)
         --   -- add custom logic
-        --   return buffer_a.modified > buffer_b.modified
-        -- end
+        -- return buffer_a.modified > buffer_b.modified
+        -- end,
         offsets = {
           {
             filetype = 'neo-tree',

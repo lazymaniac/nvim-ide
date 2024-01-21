@@ -1,5 +1,8 @@
--- Sudoku game
 return {
+
+  -- [[ GAMES ]] ---------------------------------------------------------------
+  -- [sudoku.nvim] - Sudoku game inside nvim
+  -- see: `:h sudoku.nvim`
   {
     'jim-fx/sudoku.nvim',
     cmd = 'Sudoku',

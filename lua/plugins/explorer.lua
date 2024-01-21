@@ -2,8 +2,9 @@ local Util = require 'util'
 
 return {
 
-  -- [[Neotree]] file explorer
-  -- see: `:h neotree`
+  -- [[ EXPLORERS ]] ---------------------------------------------------------------
+  -- [neo-tree.nvim] - Explorer for files, buffer, git changes, symbols, remote
+  -- see: `:h help-tag`
   {
     'nvim-neo-tree/neo-tree.nvim',
     branch = 'v3.x',
@@ -321,7 +322,6 @@ return {
             ['<C-p>'] = 'move_cursor_up',
           },
         },
-
         commands = {}, -- Add a custom command or override a global one using the same function name
       },
       buffers = {
@@ -429,7 +429,6 @@ return {
       local function on_move(data)
         Util.lsp.on_rename(data.source, data.destination)
       end
-
       local events = require 'neo-tree.events'
       opts.event_handlers = opts.event_handlers or {}
       vim.list_extend(opts.event_handlers, {
