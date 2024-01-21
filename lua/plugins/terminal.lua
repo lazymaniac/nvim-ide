@@ -1,4 +1,7 @@
 return {
+
+  -- [toggleterm.nvim] - Terminal integration in nvim
+  -- see: `:h toggleterm`
   {
     'akinsho/toggleterm.nvim',
     version = false,
@@ -54,14 +57,5 @@ return {
       { '<leader>a2', '<cmd>ToggleTerm 2<cr>', mode = { 'n' }, desc = 'Termin[a]l 2', },
       { '<leader>a3', '<cmd>ToggleTerm 3<cr>', mode = { 'n' }, desc = 'Termin[a]l 3', },
     },
-  },
-  {
-    'willothy/flatten.nvim',
-    config = true,
-    -- or pass configuration with
-    -- opts = {  }
-    -- Ensure that it runs first to minimize delay when opening file from terminal
-    lazy = false,
-    priority = 1001,
   },
 }

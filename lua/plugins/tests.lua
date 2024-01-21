@@ -1,5 +1,7 @@
 -- Neotest genreal configuration
 return {
+
+  -- Default test tree for which-key
   {
     'folke/which-key.nvim',
     optional = true,
@@ -9,6 +11,9 @@ return {
       },
     },
   },
+
+  -- [neotest] - Test runner. List tests available in project
+  -- see: `:h neotest`
   {
     'nvim-neotest/neotest',
     dependencies = {
@@ -227,6 +232,8 @@ return {
       { '<leader>tS', function() require('neotest').run.stop() end, desc = 'Stop', },
     },
   },
+
+  -- DAP integration
   {
     'mfussenegger/nvim-dap',
     optional = true,
