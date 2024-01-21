@@ -1,6 +1,6 @@
 return {
 
-  -- measure startuptime
+  -- [vim-startuptime] - Measure startup time. Displayed on dashboard
   {
     'dstein64/vim-startuptime',
     cmd = 'StartupTime',
@@ -9,16 +9,16 @@ return {
     end,
   },
 
-  -- Session management. This saves your session in the background,
+  -- [persistence.nvim] - Session management. This saves your session in the background,
   -- keeping track of open buffers, window arrangement, and more.
   -- You can restore sessions when returning through the dashboard.
+  -- see: `:h persistence`
   {
     'folke/persistence.nvim',
     event = 'BufReadPre',
     opts = {
       dir = vim.fn.expand(vim.fn.stdpath 'state' .. '/sessions/'), -- directory where session files are saved
       options = vim.opt.sessionoptions:get(),
-      pre_save = nil, -- a function to call before saving the session
       save_empty = false, -- don't save if there are no open file buffers
     },
     -- stylua: ignore
@@ -29,31 +29,24 @@ return {
     },
   },
 
-  -- library used by other plugins
+  -- [plenary.nvim] - Utility lib used by other plugins
+  -- see: `:h help-tag`
   { 'nvim-lua/plenary.nvim' },
 
-  -- Plugin that helps learn vim motions and keybindings
-  --
-  -- hardtime.nvim is enabled by default. You can change its state with the following commands:
-  --
-  -- :Hardtime enable enable hardtime.nvim
-  -- :Hardtime disable disable hardtime.nvim
-  -- :Hardtime toggle toggle hardtime.nvim
-  -- View the most frequently seen hints with :Hardtime report.
-
-  -- Log file is at ~/.cache/nvim/hardtime.nvim.log.
+  -- [hardtime.nvim] - Plugin that helps learn vim motions and keybindings by providing hints
+  -- see: `:h hardtime`
   {
     'm4xshen/hardtime.nvim',
     event = 'VeryLazy',
     dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim' },
     opts = {
       max_time = 1000,
-      max_count = 2,
+      max_count = 3,
       disable_mouse = false,
       hint = true,
       notification = true,
       allow_different_key = false,
-      enabled = false,
+      enabled = true,
     },
     -- stylua: ignore
     keys = {
@@ -61,8 +54,8 @@ return {
     },
   },
 
-  -- Coding cheatsheet
-  -- see: `h: cheatsheet`
+  -- [cheatsheet.nvim] - Cheats for editor, vim plugins, nerd-fonts, etc.
+  -- see: `:h cheatsHeet.nvim`
   {
     'sudormrfbin/cheatsheet.nvim',
     dependencies = {
@@ -79,7 +72,9 @@ return {
         --     enabled = {},
         --     disabled = {},
         -- },
-        bundled_cheatsheets = true,
+        bundled_cheatsheets = {
+          disabled = { 'nerd-fonts' },
+        },
 
         -- For plugin specific cheatsheets
         -- bundled_plugin_cheatsheets = {
@@ -103,6 +98,8 @@ return {
       }
     end,
   },
+
+  -- [Tip.nvim] - Show useful tip on nvim startup
   {
     'TobinPalmer/Tip.nvim',
     event = 'VimEnter',
@@ -115,6 +112,9 @@ return {
       }
     end,
   },
+
+  -- [wttr.nvim] - Show current weather in lualine or forecast in popup
+  -- see: `:h wttr.nvim`
   {
     'lazymaniac/wttr.nvim',
     event = 'VeryLazy',

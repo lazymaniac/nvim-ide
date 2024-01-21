@@ -253,34 +253,7 @@ return {
         tab_size = 18,
         diagnostics = false, -- | "nvim_lsp" | "coc" | false
         diagnostics_update_in_insert = false,
-        -- NOTE: this will be called a lot so don't do any heavy processing here
-        -- custom_filter = function(buf_number)
-        --   -- filter out filetypes you don't want to see
-        --   if vim.bo[buf_number].filetype ~= "<i-dont-want-to-see-this>" then
-        --     return true
-        --   end
-        --   -- filter out by buffer name
-        --   if vim.fn.bufname(buf_number) ~= "<buffer-name-I-dont-want>" then
-        --     return true
-        --   end
-        --   -- filter out based on arbitrary rules
-        --   -- e.g. filter out vim wiki buffer from tabline in your work repo
-        --   if vim.fn.getcwd() == "<work-repo>" and vim.bo[buf_number].filetype ~= "wiki" then
-        --     return true
-        --   end
-        -- end,
         color_icons = true, -- Whether or not to add the filetype icon to highlights
-        -- get_element_icon = function(element)
-        --   -- element consists of {filetype: string, path: string, extension: string, directory: string}
-        --   -- This can be used to change how bufferline fetches the icon
-        --   -- for an element e.g. a buffer or a tab.
-        --   -- e.g.
-        --   local icon, hl = require('nvim-web-devicons').get_icon_by_filetype(element.filetype, { default = false })
-        --   return icon, hl
-        --   -- or
-        --   local custom_map = {my_thing_ft: {icon = "my_thing_icon", hl}}
-        --   return custom_map[element.filetype]
-        -- end,
         show_buffer_icons = true, -- Disable filetype icons for buffers
         show_buffer_close_icons = true,
         show_close_icon = true,
@@ -298,15 +271,10 @@ return {
           delay = 200,
           reveal = { 'close' },
         },
-        -- sort_by = 'id' | 'extension' | 'relative_directory' | 'directory' | 'tabs' | function(buffer_a, buffer_b)
+        sort_by = 'relative_directory', -- 'id' | 'extension' | 'relative_directory' | 'directory' | 'tabs' | function(buffer_a, buffer_b)
         --   -- add custom logic
         --   return buffer_a.modified > buffer_b.modified
         -- end
-        diagnostics_indicator = function(_, _, diag)
-          local icons = require('config').icons.diagnostics
-          local ret = (diag.error and icons.Error .. diag.error .. ' ' or '') .. (diag.warning and icons.Warn .. diag.warning or '')
-          return vim.trim(ret)
-        end,
         offsets = {
           {
             filetype = 'neo-tree',
@@ -354,59 +322,17 @@ return {
               'dashboard',
               'alpha',
               'starter',
-              'dapui_scopes',
-              'dapui_breakpoints',
-              'dapui_stacks',
-              'dapui_watches',
-              'dap-repl',
-              'dapui_console',
-              'Outline',
-              'neo-tree',
-              'OverseerList',
-              'help',
-              'Trouble',
-              'qf',
-              'toggleterm',
-              'dbui',
             },
             winbar = {
               'dashboard',
               'alpha',
               'starter',
-              'dapui_scopes',
-              'dapui_breakpoints',
-              'dapui_stacks',
-              'dapui_watches',
-              'dap-repl',
-              'dapui_console',
-              'Outline',
-              'neo-tree',
-              'OverseerList',
-              'help',
-              'Trouble',
-              'qf',
-              'toggleterm',
-              'dbui',
             },
           },
           ignore_focus = {
             'dashboard',
             'alpha',
             'starter',
-            'dapui_scopes',
-            'dapui_breakpoints',
-            'dapui_stacks',
-            'dapui_watches',
-            'dap-repl',
-            'dapui_console',
-            'Outline',
-            'neo-tree',
-            'OverseerList',
-            'help',
-            'Trouble',
-            'qf',
-            'toggleterm',
-            'dbui',
           },
           always_divide_middle = true,
           globalstatus = true,
@@ -443,11 +369,13 @@ return {
               name_not = false, -- When true, invert the name search
               status_not = false, -- When true, invert the status search
             },
-            {
-              require('lazy.status').updates,
-              cond = require('lazy.status').has_updates,
-              color = Util.ui.fg 'Special',
-            },
+            { 'lazy' },
+            { 'fzf' },
+            { 'mason' },
+            { 'nvim-dap-ui' },
+            { 'quickfix' },
+            { 'toggleterm' },
+            { 'trouble' },
             { 'searchcount' },
             { 'selectioncount' },
           },
@@ -459,7 +387,51 @@ return {
             'datetime',
           },
         },
-        inactive_sections = {},
+        inactive_sections = {
+          lualine_a = { 'mode' },
+          lualine_b = { 'branch' },
+          lualine_c = {
+            { 'hostname' },
+            { 'require("arrow.statusline").is_on_arrow_file()' },
+            { 'require("arrow.statusline").text_for_statusline_with_icons()' },
+          },
+          lualine_x = {
+            { "require'wttr'.text" },
+            {
+              function()
+                return '  ' .. require('dap').status()
+              end,
+              cond = function()
+                return package.loaded['dap'] and require('dap').status() ~= ''
+              end,
+              color = Util.ui.fg 'Debug',
+            },
+            {
+              'overseer',
+              label = '', -- Prefix for task counts
+              colored = true, -- Color the task icons and counts
+              unique = true, -- Unique-ify non-running task count by name
+              name_not = false, -- When true, invert the name search
+              status_not = false, -- When true, invert the status search
+            },
+            { 'lazy' },
+            { 'fzf' },
+            { 'mason' },
+            { 'nvim-dap-ui' },
+            { 'quickfix' },
+            { 'toggleterm' },
+            { 'trouble' },
+            { 'searchcount' },
+            { 'selectioncount' },
+          },
+          lualine_y = {
+            { 'progress', separator = ' ', padding = { left = 1, right = 0 } },
+            { 'location', padding = { left = 0, right = 1 } },
+          },
+          lualine_z = {
+            'datetime',
+          },
+        },
         tabline = {},
         winbar = {
           lualine_a = {
@@ -515,8 +487,61 @@ return {
           lualine_y = {},
           lualine_z = {},
         },
-        inactive_winbar = {},
-        extensions = { 'neo-tree', 'lazy' },
+        inactive_winbar = {
+          lualine_a = {
+            Util.lualine.root_dir(),
+          },
+          lualine_b = {
+            { Util.lualine.pretty_path() },
+          },
+          lualine_c = {
+            {
+              'diff',
+              symbols = {
+                added = icons.git.added,
+                modified = icons.git.modified,
+                removed = icons.git.removed,
+              },
+              source = function()
+                local gitsigns = vim.b.gitsigns_status_dict
+                if gitsigns then
+                  return {
+                    added = gitsigns.added,
+                    modified = gitsigns.changed,
+                    removed = gitsigns.removed,
+                  }
+                end
+              end,
+            },
+            {
+              'diagnostics',
+              symbols = {
+                error = icons.diagnostics.Error,
+                warn = icons.diagnostics.Warn,
+                info = icons.diagnostics.Info,
+                hint = icons.diagnostics.Hint,
+              },
+            },
+          },
+          lualine_x = {
+            {
+              'filetype',
+              icon_only = false,
+              colored = true,
+              separator = '',
+              padding = { left = 1, right = 1 },
+              icon = {
+                align = 'right',
+              },
+            },
+            { 'encoding' },
+            { 'fileformat' },
+            { 'filesize' },
+          },
+          lualine_y = {},
+          lualine_z = {},
+        },
+        extensions = { 'neo-tree', 'lazy', 'fern', 'fzf', 'mason', 'nvim-dap-ui', 'overseer', 'quickfix', 'toggleterm', 'trouble' },
       }
     end,
   },
