@@ -85,7 +85,6 @@ return {
         ['<leader>d'] = { name = '+[debug]' },
         ['<leader>f'] = { name = '+[file/find]' },
         ['<leader>g'] = { name = '+[git]' },
-        ['<leader>gh'] = { name = '+[hunks]' },
         ['<leader>q'] = { name = '+[quit/session]' },
         ['<leader>s'] = { name = '+[search]' },
         ['<leader>S'] = { name = '+[surround]' },
