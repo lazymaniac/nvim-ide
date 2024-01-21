@@ -1,18 +1,17 @@
 local Util = require 'util'
 
 return {
-  -- Better `vim.notify()`
-  -- see: `:h notify`
+  -- [nvim-notify] - Better 'vim.notify()'
+  -- see: `:h nvim-notify`
   {
     'rcarriga/nvim-notify',
-    enabled = true,
     -- stylua: ignore
     keys = {
       { '<leader>un', function() require('notify').dismiss { silent = true, pending = true } end, desc = 'Dismiss all Notifications', },
     },
     opts = {
       timeout = 3000, -- Time to show Notification in ms, set to false ti disable timeout.
-      fps = 30, -- Frames per second for animnation stages, higher value means smoother animations but more CPU usage.
+      fps = 60, -- Frames per second for animnation stages, higher value means smoother animations but more CPU usage.
       level = 2, -- Minimum log level to display. See vim.log.levels.
       minimum_width = 35, -- Minimum width for notification window.
       render = 'wrapped-compact', -- 'default' | 'minimal' | 'simple' | 'wrapped-compact'. Function to render a notification buffer or a build-in renderer name
@@ -52,16 +51,15 @@ return {
     end,
   },
 
-  -- better vim.ui
-  -- see `:h dressing`
+  -- [dressing.nvim] - Better vim.ui for input boxes, selects etc.
+  -- see: `:h dressing.nvim`
   {
     'stevearc/dressing.nvim',
-    enabled = true,
     opts = {
       input = {
         enabled = true, -- Set to false to disable the vim.ui.input implementation
         default_prompt = 'Input:', -- Default prompt string
-        title_pos = 'center', -- Can be 'left', 'right', or 'center'
+        title_pos = 'right', -- Can be 'left', 'right', or 'center'
         insert_only = true, -- When true, <Esc> will close the modal
         start_in_insert = true, -- When true, input will start in insert mode.
         border = 'rounded', -- These are passed to nvim_open_win
@@ -74,7 +72,7 @@ return {
         min_width = { 20, 0.2 },
         buf_options = {},
         win_options = {
-          wrap = false, -- Disable line wrapping
+          wrap = true, -- Disable line wrapping
           list = true, -- Indicator for when text exceeds window
           listchars = 'precedes:…,extends:…',
           sidescrolloff = 4, -- Increase this for more context when text scrolls off the window
@@ -200,11 +198,10 @@ return {
     end,
   },
 
-  -- This is what powers fancy-looking tabs, which include filetype icons and close buttons.
+  -- [bufferline.nvim] - This is what powers fancy-looking tabs, which include filetype icons and close buttons.
   -- see: `:h bufferline`
   {
     'akinsho/bufferline.nvim',
-    enabled = true,
     event = 'VeryLazy',
     keys = {
       { '<leader>bp', '<Cmd>BufferLineTogglePin<CR>', desc = 'Toggle pin' },
@@ -298,7 +295,7 @@ return {
     end,
   },
 
-  -- [[lualine] statusline configuration
+  -- [lualine.nvim] Shows statusline and winbar
   -- see: `h: lualine`
   {
     'nvim-lualine/lualine.nvim',
@@ -541,18 +538,16 @@ return {
           lualine_y = {},
           lualine_z = {},
         },
-        extensions = { 'neo-tree', 'lazy', 'fern', 'fzf', 'mason', 'nvim-dap-ui', 'overseer', 'quickfix', 'toggleterm', 'trouble' },
+        extensions = { 'neo-tree', 'lazy', 'fern', 'fzf', 'mason', 'nvim-dap-ui', 'overseer', 'quickfix', 'toggleterm', 'trouble', 'symbols-outline' },
       }
     end,
   },
 
-  -- Active indent guide and indent text objects. When you're browsing
-  -- code, this highlights the current level of indentation, and animates
-  -- the highlighting.
+  -- [mini.indentscope] - Active indent guide and indent text objects. When browsing
+  -- code, this highlights the current level of indentation, and animates the highlighting.
   -- see: `:h mini.indentscope`
   {
     'echasnovski/mini.indentscope',
-    enabled = true,
     version = false, -- wait till new 0.7.0 release to put it back on semver
     event = 'VeryLazy',
     opts = {
@@ -619,7 +614,8 @@ return {
     end,
   },
 
-  -- Displays a popup with possible key bindings of the command you started typing
+  -- [which-key.nvim] -  Displays a popup with possible key bindings of the command you started typing
+  -- see: `:h which-key`
   {
     'folke/which-key.nvim',
     optional = true,
@@ -630,7 +626,7 @@ return {
     end,
   },
 
-  -- Highly experimental plugin that completely replaces the UI for messages, cmdline and the popupmenu.
+  -- [noice.nvim] - Highly experimental plugin that completely replaces the UI for messages, cmdline and the popupmenu.
   -- see: `:h noice`
   {
     'folke/noice.nvim',
@@ -850,19 +846,22 @@ return {
     },
   },
 
-  -- icons
+  -- [nvim-web-devicons] - Package of dev icons
   { 'nvim-tree/nvim-web-devicons' },
 
-  -- ui components
+  -- [nui.nvim] - UI components like popups.
+  -- see: `:h nui`
   { 'MunifTanjim/nui.nvim' },
 
-  -- Oogway sentences
+  -- [oogway.nvim] - Provides list of Oogway sentences and ascii prictures
+  -- see: `:h oogway`
   {
     '0x5a4/oogway.nvim',
     cmd = { 'Oogway' }, -- for lazy loading
   },
-  -- Welcome dashboard
-  -- see: ':h dashboard'
+
+  -- [dashboard-nvim] - Welcome dashboard like in other IDE
+  -- see: `:h dashboard-nvim`
   {
     'nvimdev/dashboard-nvim',
     event = 'VimEnter',
@@ -918,7 +917,7 @@ return {
     },
   },
 
-  -- Vim help shown in flaoting popup
+  -- [floating-help.nvim] - Vim help shown in flaoting popup
   -- see: 'h: floating-help'
   {
     'Tyler-Barham/floating-help.nvim',
@@ -949,7 +948,7 @@ return {
     },
   },
 
-  -- Show lightbulb where code action is available
+  -- [nvim-lightbulb] - Show lightbulb where code action is available
   -- see: `:h lightbulb`
   {
     'kosayoda/nvim-lightbulb',
@@ -961,7 +960,8 @@ return {
     end,
   },
 
-  -- Show preview when jumping to line with `:{number}`
+  -- [numb.nvim] - Show preview of location when jumping to line with `:{number}`
+  -- see: `:h numb`
   {
     'nacro90/numb.nvim',
     enabled = true,
@@ -977,7 +977,7 @@ return {
     end,
   },
 
-  -- Rainbow colored delimiters
+  -- [rainbow_delimiters.nvim] - Rainbow colored delimiters
   -- see: `:h rainbow-delimiters`
   {
     'HiPhish/rainbow-delimiters.nvim',
@@ -1006,7 +1006,8 @@ return {
     end,
   },
 
-  -- Scroll bar for nvim
+  -- [nvim-scrollbar] - Show scrollbar for buffers with info like code changes and errors
+  -- see: `:h nvim-scrollbar'
   {
     'petertriho/nvim-scrollbar',
     enabled = true,
@@ -1067,7 +1068,8 @@ return {
     end,
   },
 
-  -- helps better glance at matched information, jump between matched instances.
+  -- [nvim-hlslens] - Helps better glance at matched information, jump between matched instances.
+  -- see: `:h nvim-hlslens`
   {
     'kevinhwang91/nvim-hlslens',
     enabled = true,
@@ -1092,11 +1094,11 @@ return {
     end,
   },
 
-  -- Allows to decide where to split a window
+  -- [nvim-window-picker] - Allows to decide where to split a window from neo-tree
+  -- see: `:h window-picker`
   {
     's1n7ax/nvim-window-picker',
     name = 'window-picker',
-    enabled = true,
     event = 'VeryLazy',
     version = '2.*',
     opts = {
@@ -1194,7 +1196,8 @@ return {
     end,
   },
 
-  -- Creates distraction free view for smooth coding
+  -- [zen-mode.nvim] - Creates distraction free view for smooth coding
+  -- see: `:h zen-mode`
   {
     'folke/zen-mode.nvim',
     enabled = true,
@@ -1268,7 +1271,9 @@ return {
       on_close = function() end,
     },
   },
-  -- animations
+
+  -- [mini.animate] - Nice animations for UI
+  -- see: `:h mini.animate`
   {
     'echasnovski/mini.animate',
     event = 'VeryLazy',
