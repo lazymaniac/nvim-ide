@@ -239,4 +239,14 @@ return {
       },
     },
   },
+  {
+    'LiadOz/nvim-dap-repl-highlights',
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter',
+    },
+    event = 'VeryLazy',
+    config = function()
+      require('nvim-dap-repl-highlights').setup()
+    end,
+  },
 }

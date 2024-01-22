@@ -53,6 +53,7 @@ return {
         'vim',
         'vimdoc',
         'yaml',
+        'dap_repl',
       },
       auto_install = true,
       incremental_selection = {
