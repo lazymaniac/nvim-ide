@@ -14,7 +14,7 @@ return {
 
   -- [[ DEBUG ]] ---------------------------------------------------------------
 
-  -- [nvim-dap] - Debbuger integration with nvim.
+  -- [nvim-dap] - Debug in neovim
   -- see: `:h nvim-dap`
   {
     'mfussenegger/nvim-dap',
@@ -47,6 +47,11 @@ return {
       { '<leader>ds', function() require('dap').session() end, desc = 'Session' },
       { '<leader>dt', function() require('dap').terminate() end, desc = 'Terminate' },
       { '<leader>dw', function() require('dap.ui.widgets').hover() end, desc = 'Widgets' },
+      { '<leader>dm', '<cmd>Telescope dap commands<cr>', desc = 'DAP Commands' },
+      { '<leader>dn', '<cmd>Telescope dap configurations<cr>', desc = 'DAP Configurations' },
+      { '<leader>dF', '<cmd>Telescope dap frames<cr>', desc = 'DAP Frames' },
+      { '<leader>dB', '<cmd>Telescope dap list_breakpoints<cr>', desc = 'DAP List Breakpoints' },
+      { '<leader>dV', '<cmd>Telescope dap variables<cr>', desc = 'DAP Variables' },
     },
     config = function()
       local dap = require 'dap'

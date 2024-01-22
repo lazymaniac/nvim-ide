@@ -193,4 +193,24 @@ return {
       cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
     end,
   },
+
+  -- [cmp-dap] - Autocompletion for DAP Repl and watchers.
+  -- see: `:h cmp-dap`
+  {
+    'rcarriga/cmp-dap',
+    event = 'VeryLazy',
+    config = function()
+      require('cmp').setup {
+        enabled = function()
+          return vim.api.nvim_buf_get_option(0, 'buftype') ~= 'prompt' or require('cmp_dap').is_dap_buffer()
+        end,
+      }
+
+      require('cmp').setup.filetype({ 'dap-repl', 'dapui_watches', 'dapui_hover' }, {
+        sources = {
+          { name = 'dap' },
+        },
+      })
+    end,
+  },
 }

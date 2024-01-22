@@ -480,6 +480,7 @@ return {
                 removed = icons.git.removed,
               },
               source = function()
+                ---@diagnostic disable-next-line: undefined-field
                 local gitsigns = vim.b.gitsigns_status_dict
                 if gitsigns then
                   return {
@@ -534,6 +535,7 @@ return {
                 removed = icons.git.removed,
               },
               source = function()
+                ---@diagnostic disable-next-line: undefined-field
                 local gitsigns = vim.b.gitsigns_status_dict
                 if gitsigns then
                   return {
@@ -1003,7 +1005,7 @@ return {
           -- You can change the display string in status bar.
           -- It supports '%' printf style. Such as `return char .. ': %f'` to display
           -- buffer file path. See :h 'stl' for details.
-          selection_display = function(char, windowid)
+          selection_display = function(char)
             return '%=' .. char .. '%='
           end,
           -- whether you want to use winbar instead of the statusline

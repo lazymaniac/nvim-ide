@@ -140,6 +140,6 @@ return {
   -- see: `:h oogway`
   {
     '0x5a4/oogway.nvim',
-    cmd = { 'Oogway' }, -- for lazy loading
+    cmd = { 'Oogway' },
   },
 }

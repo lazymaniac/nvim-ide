@@ -97,6 +97,14 @@ return {
           end)
         end,
       },
+      {
+        'nvim-telescope/telescope-dap.nvim',
+        config = function()
+          Util.on_load('telescope.nvim', function()
+            require('telescope').load_extension 'dap'
+          end)
+        end,
+      },
     },
     -- stylua: ignore
     keys = {
