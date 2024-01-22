@@ -533,7 +533,6 @@ return {
     'sindrets/diffview.nvim',
     config = function()
       local actions = require 'diffview.actions'
-
       require('diffview').setup {
         diff_binaries = false, -- Show diffs for binaries
         enhanced_diff_hl = false, -- See ':h diffview-config-enhanced_diff_hl'
@@ -758,19 +757,22 @@ return {
     }
 ,
   },
+
+  -- [neogit] - Git integration in nvim
+  -- see: `:h neogit`
   {
     'NeogitOrg/neogit',
     dependencies = {
       'nvim-lua/plenary.nvim', -- required
       'sindrets/diffview.nvim', -- optional - Diff integration
-
-      -- Only one of these is needed, not both.
       'nvim-telescope/telescope.nvim', -- optional
-      'ibhagwan/fzf-lua', -- optional
+    },
+    -- stylua: ignore
+    keys = {
+      { '<leader>gn', '<cmd>Neogit<cr>', mode = { 'n', 'v' }, desc = 'Open Neogit' },
     },
     config = function()
       local neogit = require 'neogit'
-
       neogit.setup {
         -- Hides the hints at the top of the status buffer
         disable_hint = false,
@@ -888,7 +890,6 @@ return {
           --
           -- Requires you to have `sindrets/diffview.nvim` installed.
           diffview = nil,
-
           -- If enabled, uses fzf-lua for menu selection. If the telescope integration
           -- is also selected then telescope is used instead
           -- Requires you to have `ibhagwan/fzf-lua` installed.
