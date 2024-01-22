@@ -769,7 +769,7 @@ return {
     },
     -- stylua: ignore
     keys = {
-      { '<leader>gn', '<cmd>Neogit<cr>', mode = { 'n', 'v' }, desc = 'Open Neogit' },
+      { '<leader>gg', '<cmd>Neogit<cr>', mode = { 'n', 'v' }, desc = 'Open Neogit' },
     },
     config = function()
       local neogit = require 'neogit'

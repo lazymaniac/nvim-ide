@@ -151,9 +151,6 @@ map('n', '<leader>uT', function()
   end
 end, { desc = 'Toggle Treesitter Highlight' })
 
--- lazygit
-map('n', '<leader>gg', '<cmd>lua _LAZYGIT_TOGGLE()<cr>', { desc = 'Lazygit' })
-
 -- quit
 map('n', '<leader>qq', '<cmd>qa<cr>', { desc = 'Quit all' })
 

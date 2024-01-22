@@ -50,6 +50,7 @@ return {
       { '<leader>ap', '<cmd>lua _PYTHON_TOGGLE()<cr>', mode = { 'n' }, desc = 'Termin[a]l [p]ython', },
       { '<leader>ad', '<cmd>lua _LAZYDOCKER_TOGGLE()<cr>', mode = { 'n' }, desc = 'Termin[a]l [d]ocker', },
       { '<leader>as', '<cmd>lua _LAZYSQL_TOGGLE()<cr>', mode = { 'n' }, desc = 'Termin[a]l [s]ql', },
+      { '<leader>ag', '<cmd>lua _LAZYGIT_TOGGLE()<cr>', mode = { 'n' }, desc = 'Termin[a]l [g]it', },
       { '<leader>af', '<cmd>ToggleTerm direction=float<cr>', mode = { 'n' }, desc = 'Termin[a]l [f]floating', },
       { '<leader>av', '<cmd>ToggleTerm direction=vertical<cr>', mode = { 'n' }, desc = 'Termin[a]l [v]ertical', },
       { '<leader>ah', '<cmd>ToggleTerm direction=horizontal<cr>', mode = { 'n' }, desc = 'Termin[a]l [h]orizontal', },
