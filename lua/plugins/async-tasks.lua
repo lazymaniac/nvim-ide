@@ -14,11 +14,11 @@ return {
       -- When true, tries to detect a green color from your colorscheme to use for success highlight
       auto_detect_success_color = true,
       -- Patch nvim-dap to support preLaunchTask and postDebugTask
-      dap = true,
+      dap = false,
       -- Configure the task list
       task_list = {
         -- Default detail level for tasks. Can be 1-3.
-        default_detail = 1,
+        default_detail = 2,
         -- Width dimensions can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
         -- min_width and max_width can be a single value or a list of mixed integer/float types.
         -- max_width = {100, 0.2} means "the lesser of 100 columns or 20% of total"
@@ -28,12 +28,12 @@ return {
         -- optionally define an integer/float for the exact width of the task list
         width = nil,
         max_height = { 20, 0.1 },
-        min_height = 8,
+        min_height = 10,
         height = nil,
         -- String that separates tasks
         separator = '────────────────────────────────────────',
         -- Default direction. Can be "left", "right", or "bottom"
-        direction = 'left',
+        direction = 'bottom',
         -- Set keymap to false to remove default behavior
         -- You can add custom keymaps here as well (anything vim.keymap.set accepts)
         bindings = {

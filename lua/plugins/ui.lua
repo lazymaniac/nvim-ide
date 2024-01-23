@@ -194,6 +194,13 @@ return {
   -- see: `:h bufferline`
   {
     'akinsho/bufferline.nvim',
+    after = 'catppuccin',
+    dependencies = {
+      {
+        'catppuccin/nvim',
+        name = 'catppuccin',
+      },
+    },
     event = 'VeryLazy',
     keys = {
       { '<leader>bp', '<Cmd>BufferLineTogglePin<CR>', desc = 'Toggle pin' },
@@ -252,7 +259,7 @@ return {
         move_wraps_at_ends = false, -- whether or not the move command "wraps" at the first or last position
         -- can also be a table containing 2 custom separators
         -- [focused and unfocused]. eg: { '|', '|' }
-        separator_style = 'slant', -- 'slant' | 'slope' | 'thick' | 'thin' | { 'any', 'any' },
+        separator_style = 'thin', -- 'slant' | 'slope' | 'thick' | 'thin' | { 'any', 'any' },
         enforce_regular_tabs = true,
         always_show_bufferline = false,
         hover = {
@@ -275,6 +282,7 @@ return {
       },
     },
     config = function(_, opts)
+      opts.highlights = require('catppuccin.groups.integrations.bufferline').get()
       require('bufferline').setup(opts)
       -- Fix bufferline when restoring a session
       vim.api.nvim_create_autocmd('BufAdd', {
