@@ -56,10 +56,7 @@ return {
           fidget = true,
           gitsigns = true,
           headlines = true,
-          illuminate = {
-            enabled = true,
-            lsp = false,
-          },
+          illuminate = true,
           indent_blankline = { enabled = true },
           leap = true,
           lsp_trouble = true,
