@@ -20,6 +20,7 @@ return {
   -- see: `:h sniprun`
   {
     'michaelb/sniprun',
+    event = 'VeryLazy',
     branch = 'master',
     build = 'sh install.sh',
     -- do 'sh install.sh 1' if you want to force compile locally
@@ -155,6 +156,7 @@ return {
   -- see: `:h jupytext.nvim`
   {
     'GCBallesteros/jupytext.nvim',
+    event = 'VeryLazy',
     config = true,
   },
 
@@ -165,7 +167,6 @@ return {
     dependencies = { 'GCBallesteros/NotebookNavigator.nvim' },
     opts = function()
       local nn = require 'notebook-navigator'
-
       local opts = { highlighters = { cells = nn.minihipatterns_spec } }
       return opts
     end,
@@ -175,13 +176,13 @@ return {
   -- see: `:h molten-nvim`
   {
     'benlubas/molten-nvim',
+    event = 'VeryLazy',
     dependencies = { '3rd/image.nvim' },
     build = ':UpdateRemotePlugins',
     init = function()
       vim.g.molten_image_provider = 'image.nvim'
       vim.g.molten_use_border_highlights = true
       -- add a few new things
-
       -- don't change the mappings (unless it's related to your bug)
       vim.keymap.set('n', '<localleader>mi', ':MoltenInit<CR>')
       vim.keymap.set('n', '<localleader>e', ':MoltenEvaluateOperator<CR>')

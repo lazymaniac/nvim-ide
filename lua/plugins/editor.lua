@@ -143,6 +143,7 @@ return {
   -- see: `:h mini.bufremove`
   {
     'echasnovski/mini.bufremove',
+    event = 'VeryLazy',
     -- stylua: ignore
     keys = {
       {
@@ -173,6 +174,7 @@ return {
   -- see: `:h trouble.nvim`
   {
     'folke/trouble.nvim',
+    event = 'VeryLazy',
     cmd = { 'TroubleToggle', 'Trouble' },
     opts = {
       position = 'bottom', -- position of the list can be: bottom, top, left, right
@@ -275,6 +277,7 @@ return {
   --
   {
     'andrewferrier/textobj-diagnostic.nvim',
+    event = 'VeryLazy',
     config = function()
       require('textobj-diagnostic').setup()
     end,
@@ -565,6 +568,7 @@ return {
   -- see: `h: yanky`
   {
     'gbprod/yanky.nvim',
+    event = 'VeryLazy',
     opts = {
       ring = {
         history_length = 100,
@@ -628,6 +632,7 @@ return {
   -- see: `:h arrow.nvim`
   {
     'otavioschwanck/arrow.nvim',
+    event = 'VeryLazy',
     opts = {
       show_icons = true,
       leader_key = ';', -- Recommended to be a single key
@@ -638,6 +643,7 @@ return {
   -- see: `:h detour.nvim`
   {
     'carbon-steel/detour.nvim',
+    event = 'VeryLazy',
     config = function()
       vim.keymap.set('n', '<c-w><enter>', ':Detour<cr>')
     end,

@@ -5,6 +5,7 @@ return {
   -- see: `:h neorg`
   {
     'nvim-neorg/neorg',
+    event = 'VeryLazy',
     build = ':Neorg sync-parsers',
     dependencies = { 'nvim-lua/plenary.nvim' },
     config = function()

@@ -17,7 +17,6 @@ return {
   -- see: `:h image.nvim`
   {
     '3rd/image.nvim',
-    event = 'VeryLazy',
     opts = {
       backend = 'kitty',
       integrations = {

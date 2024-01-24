@@ -167,7 +167,7 @@ return {
       }
       require('which-key').register {
         ['<leader>z'] = {
-          name = 'ChatGPT',
+          name = '+[AI]',
           c = { '<cmd>ChatGPT<CR>', 'Chat' },
           e = { '<cmd>ChatGPTEditWithInstruction<CR>', 'Edit with instruction', mode = { 'n', 'v' } },
           z = { '<cmd>ChatGPTCompleteCode<CR>', 'Complete Code' },
@@ -222,7 +222,7 @@ return {
       }
     end,
     keys = {
-      { '<leader>]', ':Gen<CR>', desc = 'Local LLM', mode = { 'n', 'v' } },
+      { '<leader>zz', ':Gen<CR>', desc = 'Local LLM', mode = { 'n', 'v' } },
     },
   },
 }

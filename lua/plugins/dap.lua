@@ -18,6 +18,7 @@ return {
   -- see: `:h nvim-dap`
   {
     'mfussenegger/nvim-dap',
+    event = 'VeryLazy',
     dependencies = {
       { 'rcarriga/nvim-dap-ui' },
       { 'theHamsta/nvim-dap-virtual-text' },
@@ -74,6 +75,7 @@ return {
   -- see: `:h nvim-dap-ui`
   {
     'rcarriga/nvim-dap-ui',
+    event = 'VeryLazy',
     opts = {
       controls = {
         element = 'repl',
@@ -175,6 +177,7 @@ return {
   -- see: `:h nvim-dap-virtual-text`
   {
     'theHamsta/nvim-dap-virtual-text',
+    event = 'VeryLazy',
     opts = {
       enabled = true, -- enable this plugin (the default)
       enabled_commands = true, -- create commands DapVirtualTextEnable, DapVirtualTextDisable, DapVirtualTextToggle, (DapVirtualTextForceRefresh for refreshing when debug adapter did not notify its termination)
@@ -201,7 +204,6 @@ return {
       end,
       -- position of virtual text, see `:h nvim_buf_set_extmark()`, default tries to inline the virtual text. Use 'eol' to set to end of line
       virt_text_pos = vim.fn.has 'nvim-0.10' == 1 and 'inline' or 'eol',
-
       -- experimental features:
       all_frames = false, -- show virtual text for all stack frames not only current. Only works for debugpy on my machine.
       virt_lines = false, -- show virtual lines instead of virtual text (will flicker!)
@@ -218,17 +220,16 @@ return {
   -- see: `:h mason-nvim-dap`
   {
     'jay-babu/mason-nvim-dap.nvim',
+    event = 'VeryLazy',
     dependencies = 'mason.nvim',
     cmd = { 'DapInstall', 'DapUninstall' },
     opts = {
       -- Makes a best effort to setup the various debuggers with
       -- reasonable debug configurations
       automatic_installation = true,
-
       -- You can provide additional configuration to the handlers,
       -- see mason-nvim-dap README for more information
       handlers = {},
-
       -- You'll need to check that you have the required things installed
       -- online, please don't ask me how to install them :)
       ensure_installed = {
@@ -236,12 +237,15 @@ return {
       },
     },
   },
+
+  -- [nvim-dap-repl-highlights] - Highlights for repl window
+  -- see: `:h nvim-dap-repl-highlights`
   {
     'LiadOz/nvim-dap-repl-highlights',
+    event = 'VeryLazy',
     dependencies = {
       'nvim-treesitter/nvim-treesitter',
     },
-    event = 'VeryLazy',
     config = function()
       require('nvim-dap-repl-highlights').setup()
     end,

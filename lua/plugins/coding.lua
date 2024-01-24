@@ -5,6 +5,7 @@ return {
   -- [boole.nvim] - Allows to increment numbers and flip common text to oposite value like true -> false
   {
     'nat-418/boole.nvim',
+    event = 'VeryLazy',
     opts = {
       mappings = {
         increment = '<C-a>',
@@ -83,6 +84,7 @@ return {
   -- see: `:h glance.nvim`
   {
     'dnlhc/glance.nvim',
+    event = 'VeryLazy',
     config = function()
       require('glance').setup()
     end,
@@ -259,6 +261,7 @@ return {
   -- see: `:h ts-node-action`
   {
     'ckolkey/ts-node-action',
+    event = 'VeryLazy',
     dependencies = { 'nvim-treesitter' },
     opts = {},
     -- stylua: ignore
@@ -271,7 +274,7 @@ return {
   -- see: `:h nvim-hlslens`
   {
     'kevinhwang91/nvim-hlslens',
-    enabled = true,
+    event = 'VeryLazy',
     config = function()
       require('hlslens').setup {
         build_position_cb = function(plist, _, _, _)
@@ -359,7 +362,7 @@ return {
   -- see: `:h lightbulb`
   {
     'kosayoda/nvim-lightbulb',
-    enabled = true,
+    event = 'VeryLazy',
     config = function()
       require('nvim-lightbulb').setup {
         autocmd = { enabled = true },
@@ -371,7 +374,7 @@ return {
   -- see: `:h rainbow-delimiters`
   {
     'HiPhish/rainbow-delimiters.nvim',
-    enabled = true,
+    event = 'VeryLazy',
     config = function()
       local rainbow_delimiters = require 'rainbow-delimiters'
       require('rainbow-delimiters.setup').setup {

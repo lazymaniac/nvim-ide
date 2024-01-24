@@ -7,6 +7,7 @@ return {
   -- see: `:h telescope-egrepify`
   {
     'fdschmidt93/telescope-egrepify.nvim',
+    event = 'VeryLazy',
     dependencies = { 'nvim-telescope/telescope.nvim', 'nvim-lua/plenary.nvim' },
     -- stylua: ignore
     keys = {
@@ -63,6 +64,7 @@ return {
   -- see: `:h nvim-spectre`
   {
     'nvim-pack/nvim-spectre',
+    event = 'VeryLazy',
     build = false,
     cmd = 'Spectre',
     opts = { open_cmd = 'noswapfile vnew' },
@@ -76,6 +78,7 @@ return {
   -- see: `:h telescope`
   {
     'nvim-telescope/telescope.nvim',
+    event = 'VeryLazy',
     cmd = 'Telescope',
     version = false, -- telescope did only one release, so use HEAD for now
     dependencies = {
@@ -211,6 +214,7 @@ return {
   -- see: `:h leap.nvim`
   {
     'ggandor/leap.nvim',
+    event = 'VeryLazy',
     keys = {
       { 's', mode = { 'n', 'x', 'o' }, desc = 'Leap forward to' },
       { 'S', mode = { 'n', 'x', 'o' }, desc = 'Leap backward to' },
@@ -231,6 +235,7 @@ return {
   -- see: `:h improved-search`
   {
     'backdround/improved-search.nvim',
+    event = 'VeryLazy',
     config = function()
       local search = require 'improved-search'
       -- Search next / previous.

@@ -144,13 +144,13 @@ return {
   -- must be an absolute path to the directory that holds your .gitlab.nvim file.
   {
     'harrisoncramer/gitlab.nvim',
+    event = 'VeryLazy',
     dependencies = {
       'MunifTanjim/nui.nvim',
       'nvim-lua/plenary.nvim',
       'sindrets/diffview.nvim',
       'stevearc/dressing.nvim', -- Recommended but not required. Better UI for pickers.
       'nvim-tree/nvim-web-devicons', -- Recommended but not required. Icons in discussion tree.
-      enabled = true,
     },
     -- stylua: ignore
     keys = {
@@ -531,6 +531,7 @@ return {
   -- see: `:h diffview.nvim`
   {
     'sindrets/diffview.nvim',
+    event = 'VeryLazy',
     config = function()
       local actions = require 'diffview.actions'
       require('diffview').setup {
@@ -762,6 +763,7 @@ return {
   -- see: `:h neogit`
   {
     'NeogitOrg/neogit',
+    event = 'VeryLazy',
     dependencies = {
       'nvim-lua/plenary.nvim', -- required
       'sindrets/diffview.nvim', -- optional - Diff integration

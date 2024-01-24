@@ -5,6 +5,7 @@ return {
   -- see: `:h toggleterm`
   {
     'akinsho/toggleterm.nvim',
+    event = 'VeryLazy',
     version = false,
     opts = {
       size = function(term)

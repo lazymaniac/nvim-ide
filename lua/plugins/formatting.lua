@@ -31,6 +31,7 @@ return {
     -- [conform.nvim] - Code autocompletion.
     -- see: `:h conform`
     'stevearc/conform.nvim',
+    event = 'VeryLazy',
     dependencies = { 'mason.nvim' },
     cmd = 'ConformInfo',
     -- stylua: ignore

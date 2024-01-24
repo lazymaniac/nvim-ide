@@ -90,6 +90,7 @@ return {
   -- see: `:h help-tag`
   {
     'neovim/nvim-lspconfig',
+    event = 'VeryLazy',
     -- other settings removed for brevity
     opts = {
       ---@type lspconfig.options

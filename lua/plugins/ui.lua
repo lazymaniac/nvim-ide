@@ -7,6 +7,7 @@ return {
   -- see: `:h nvim-notify`
   {
     'rcarriga/nvim-notify',
+    event = 'VeryLazy',
     -- stylua: ignore
     keys = {
       { '<leader>un', function() require('notify').dismiss { silent = true, pending = true } end, desc = 'Dismiss all Notifications', },
@@ -57,6 +58,7 @@ return {
   -- see: `:h dressing.nvim`
   {
     'stevearc/dressing.nvim',
+    event = 'VeryLazy',
     opts = {
       input = {
         enabled = true, -- Set to false to disable the vim.ui.input implementation
@@ -194,7 +196,6 @@ return {
   -- see: `:h bufferline`
   {
     'akinsho/bufferline.nvim',
-    after = 'catppuccin',
     dependencies = {
       {
         'catppuccin/nvim',
@@ -299,7 +300,6 @@ return {
   -- see: `h: lualine`
   {
     'nvim-lualine/lualine.nvim',
-    enabled = true,
     event = 'VeryLazy',
     config = function(_, opts)
       require('lualine').setup(opts)
@@ -604,7 +604,6 @@ return {
   {
     'folke/noice.nvim',
     event = 'VeryLazy',
-    enabled = true,
     dependencies = {
       'MunifTanjim/nui.nvim',
       'rcarriga/nvim-notify',
@@ -884,7 +883,7 @@ return {
   -- see: 'h: floating-help'
   {
     'Tyler-Barham/floating-help.nvim',
-    enabled = true,
+    event = 'VeryLazy',
     config = function()
       require('floating-help').setup {
         -- Defaults
@@ -914,7 +913,7 @@ return {
   -- see: `:h numb`
   {
     'nacro90/numb.nvim',
-    enabled = true,
+    event = 'VeryLazy',
     opts = {
       show_numbers = true, -- Enable 'number' for the window while peeking
       show_cursorline = true, -- Enable 'cursorline' for the window while peeking
@@ -931,7 +930,7 @@ return {
   -- see: `:h nvim-scrollbar'
   {
     'petertriho/nvim-scrollbar',
-    enabled = true,
+    event = 'VeryLazy',
     config = function()
       require('scrollbar').setup {
         show = true,
@@ -1080,7 +1079,7 @@ return {
   -- see: `:h zen-mode`
   {
     'folke/zen-mode.nvim',
-    enabled = true,
+    event = 'VeryLazy',
     keys = {
       { '<leader>Z', '<cmd>ZenMode<cr>', mode = { 'n' }, desc = 'Zen Mode' },
     },
@@ -1153,7 +1152,6 @@ return {
   {
     'echasnovski/mini.animate',
     event = 'VeryLazy',
-    enabled = true,
     opts = function()
       -- don't use animate when scrolling with the mouse
       local mouse_scrolled = false

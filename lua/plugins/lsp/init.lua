@@ -8,6 +8,7 @@ return {
     dependencies = {
       {
         'folke/neodev.nvim',
+        event = 'VeryLazy',
         opts = {
           library = {
             enabled = true, -- when not enabled, neodev will not change any settings to the LSP server
@@ -32,6 +33,7 @@ return {
       'williamboman/mason-lspconfig.nvim',
       {
         'j-hui/fidget.nvim',
+        event = 'VeryLazy',
         opts = {
           -- Options related to LSP progress subsystem
           progress = {
@@ -49,7 +51,6 @@ return {
               return msg.lsp_client.name
             end,
             ignore = {}, -- List of LSP servers to ignore
-
             -- Options related to how LSP progress messages are displayed as notifications
             display = {
               render_limit = 5, -- How many LSP messages to show at once
@@ -76,19 +77,16 @@ return {
                 rust_analyzer = { name = 'rust-analyzer' },
               },
             },
-
             -- Options related to Neovim's built-in LSP client
             lsp = {
               progress_ringbuf_size = 0, -- Configure the nvim's LSP progress ring buffer size
             },
           },
-
           -- Options related to notification subsystem
           notification = {
             poll_rate = 10, -- How frequently to update and render notifications
             filter = vim.log.levels.INFO, -- Minimum notifications level
             override_vim_notify = false, -- Automatically override vim.notify() with Fidget
-
             -- Options related to how notifications are rendered as text
             view = {
               stack_upwards = true, -- Display notification items from bottom to top
@@ -97,7 +95,6 @@ return {
               -- Highlight group used for group separator
               group_separator_hl = 'Comment',
             },
-
             -- Options related to the notification window and buffer
             window = {
               normal_hl = 'Comment', -- Base highlight group in the notification window
@@ -112,7 +109,6 @@ return {
               relative = 'editor', -- What the notification window position is relative to
             },
           },
-
           -- Options related to logging
           logger = {
             level = vim.log.levels.WARN, -- Minimum logging level
@@ -189,20 +185,16 @@ return {
     config = function(_, opts)
       -- setup autoformat
       Util.format.register(Util.lsp.formatter())
-
       -- deprectaed options
       if opts.autoformat ~= nil then
         vim.g.autoformat = opts.autoformat
         Util.deprecate('nvim-lspconfig.opts.autoformat', 'vim.g.autoformat')
       end
-
       -- setup keymaps
       Util.lsp.on_attach(function(client, buffer)
         require('plugins.lsp.keymaps').on_attach(client, buffer)
       end)
-
       local register_capability = vim.lsp.handlers['client/registerCapability']
-
       vim.lsp.handlers['client/registerCapability'] = function(err, res, ctx)
         local ret = register_capability(err, res, ctx)
         local client_id = ctx.client_id
@@ -211,13 +203,11 @@ return {
         require('plugins.lsp.keymaps').on_attach(client, buffer)
         return ret
       end
-
       -- diagnostics
       for name, icon in pairs(require('config').icons.diagnostics) do
         name = 'DiagnosticSign' .. name
         vim.fn.sign_define(name, { text = icon, texthl = name, numhl = '' })
       end
-
       if opts.inlay_hints.enabled then
         Util.lsp.on_attach(function(client, buffer)
           if client.supports_method 'textDocument/inlayHint' then
@@ -225,7 +215,6 @@ return {
           end
         end)
       end
-
       if type(opts.diagnostics.virtual_text) == 'table' and opts.diagnostics.virtual_text.prefix == 'icons' then
         opts.diagnostics.virtual_text.prefix = vim.fn.has 'nvim-0.10.0' == 0 and '●'
           or function(diagnostic)
@@ -237,9 +226,7 @@ return {
             end
           end
       end
-
       vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
-
       local servers = opts.servers
       local has_cmp, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
       local capabilities = vim.tbl_deep_extend(
@@ -249,12 +236,10 @@ return {
         has_cmp and cmp_nvim_lsp.default_capabilities() or {},
         opts.capabilities or {}
       )
-
       local function setup(server)
         local server_opts = vim.tbl_deep_extend('force', {
           capabilities = vim.deepcopy(capabilities),
         }, servers[server] or {})
-
         if opts.setup[server] then
           if opts.setup[server](server, server_opts) then
             return
@@ -266,14 +251,12 @@ return {
         end
         require('lspconfig')[server].setup(server_opts)
       end
-
       -- get all the servers that are available through mason-lspconfig
       local have_mason, mlsp = pcall(require, 'mason-lspconfig')
       local all_mslp_servers = {}
       if have_mason then
         all_mslp_servers = vim.tbl_keys(require('mason-lspconfig.mappings.server').lspconfig_to_package)
       end
-
       local ensure_installed = {} ---@type string[]
       for server, server_opts in pairs(servers) do
         if server_opts then
@@ -286,11 +269,9 @@ return {
           end
         end
       end
-
       if have_mason then
         mlsp.setup { ensure_installed = ensure_installed, handlers = { setup } }
       end
-
       if Util.lsp.get_config 'denols' and Util.lsp.get_config 'tsserver' then
         local is_deno = require('util').root_pattern('deno.json', 'deno.jsonc')
         Util.lsp.disable('tsserver', is_deno)
@@ -304,6 +285,7 @@ return {
   -- cmdline tools and lsp servers
   {
     'williamboman/mason.nvim',
+    event = 'VeryLazy',
     cmd = 'Mason',
     build = ':MasonUpdate',
     opts = {

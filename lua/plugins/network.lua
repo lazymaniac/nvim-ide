@@ -5,7 +5,6 @@ return {
   -- see: `:h netman`
   {
     'miversen33/netman.nvim',
-    lazy = false,
     event = 'VeryLazy',
     branch = 'v1.15',
     -- Note, you do not need this if you plan on using Netman with any of the

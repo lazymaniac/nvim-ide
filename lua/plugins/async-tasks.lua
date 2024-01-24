@@ -5,10 +5,10 @@ return {
     -- [overseer.nvim] - Async task runner.
     -- see: `:h overseer.nvim`
     'stevearc/overseer.nvim',
+    event = 'VeryLazy',
     dependencies = {
       { 'akinsho/toggleterm.nvim' },
     },
-    event = 'VeryLazy',
     opts = {
       -- Default task strategy
       strategy = {

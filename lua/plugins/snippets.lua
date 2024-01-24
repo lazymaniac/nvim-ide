@@ -5,6 +5,7 @@ return {
   -- see: `:h friendly-snippets`
   {
     'rafamadriz/friendly-snippets',
+    event = 'VeryLazy',
     dependencies = {
       'L3MON4D3/LuaSnip',
     },
@@ -47,6 +48,7 @@ return {
   -- [luasnip_snippets] - Library of snippets ported from vim-snippets
   {
     'mireq/luasnip-snippets',
+    event = 'VeryLazy',
     dependencies = { 'L3MON4D3/LuaSnip' },
     init = function()
       -- Mandatory setup function

@@ -4,6 +4,7 @@ return {
   -- [vim-startuptime] - Measure startup time. Displayed on dashboard
   {
     'dstein64/vim-startuptime',
+    event = 'VeryLazy',
     cmd = 'StartupTime',
     config = function()
       vim.g.startuptime_tries = 10
@@ -63,6 +64,7 @@ return {
   -- see: `:h cheatsHeet.nvim`
   {
     'sudormrfbin/cheatsheet.nvim',
+    event = 'VeryLazy',
     dependencies = {
       { 'nvim-telescope/telescope.nvim' },
       { 'nvim-lua/popup.nvim' },
@@ -140,6 +142,7 @@ return {
   -- see: `:h oogway`
   {
     '0x5a4/oogway.nvim',
+    event = 'VeryLazy',
     cmd = { 'Oogway' },
   },
 }
