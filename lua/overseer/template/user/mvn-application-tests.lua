@@ -7,7 +7,4 @@ return {
     }
   end,
   desc = 'mvn verify -P application-tests',
-  condition = {
-    filetype = { 'java', 'xml' },
-  },
 }

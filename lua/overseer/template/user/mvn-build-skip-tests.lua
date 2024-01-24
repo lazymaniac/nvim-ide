@@ -7,7 +7,4 @@ return {
     }
   end,
   desc = 'clean install -Ddisable.tests=true -Dskip.tests',
-  condition = {
-    filetype = { 'java', 'xml' },
-  },
 }

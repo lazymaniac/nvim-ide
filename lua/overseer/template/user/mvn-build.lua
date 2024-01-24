@@ -7,7 +7,4 @@ return {
     }
   end,
   desc = 'mvn clean install',
-  condition = {
-    filetype = { 'java', 'xml' },
-  },
 }

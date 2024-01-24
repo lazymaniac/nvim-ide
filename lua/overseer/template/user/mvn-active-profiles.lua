@@ -7,7 +7,4 @@ return {
     }
   end,
   desc = 'mvn help:active-profiles',
-  condition = {
-    filetype = { 'java', 'xml' },
-  },
 }

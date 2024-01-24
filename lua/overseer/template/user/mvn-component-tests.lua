@@ -7,7 +7,4 @@ return {
     }
   end,
   desc = 'mvn verify -P component-tests',
-  condition = {
-    filetype = { 'java', 'xml' },
-  },
 }
