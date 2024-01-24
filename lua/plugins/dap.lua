@@ -19,14 +19,11 @@ return {
   {
     'mfussenegger/nvim-dap',
     dependencies = {
-      -- fancy UI for the debugger
       { 'rcarriga/nvim-dap-ui' },
-      -- virtual text for the debugger
       { 'theHamsta/nvim-dap-virtual-text' },
-      -- mason.nvim integration
       { 'jay-babu/mason-nvim-dap.nvim' },
-      -- overseer task runner
       { 'stevearc/overseer.nvim' },
+      { 'LiadOz/nvim-dap-repl-highlights' },
     },
     -- stylua: ignore
     keys = {

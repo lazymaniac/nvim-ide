@@ -1,4 +1,16 @@
 return {
-  'user.java_build',
-  'user.java_build_skip_tests'
+  'user.mvn-build',
+  'user.mvn-build-skip-tests',
+  'user.mvn-application-tests',
+  'user.mvn-docker-tests',
+  'user.mvn-component-tests',
+  'user.mvn-api-tests',
+  'user.mvn-active-profiles',
+  'user.docker-compose-up',
+  'user.docker-compose-kill',
+  'user.docker-compose-stop',
+  'user.gradle-build',
+  'user.gradle-test',
+  'user.gradle-tasks',
+  'user.gradle-run',
 }

@@ -20,6 +20,7 @@ return {
       'nvim-lua/plenary.nvim',
       'antoinemadec/FixCursorHold.nvim',
       'nvim-treesitter/nvim-treesitter',
+      'stevearc/overseer.nvim',
     },
     config = function()
       local opts = {
