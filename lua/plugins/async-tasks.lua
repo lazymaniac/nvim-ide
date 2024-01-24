@@ -5,6 +5,9 @@ return {
     -- [overseer.nvim] - Async task runner.
     -- see: `:h overseer.nvim`
     'stevearc/overseer.nvim',
+    dependencies = {
+      { 'akinsho/toggleterm.nvim' },
+    },
     event = 'VeryLazy',
     opts = {
       -- Default task strategy
@@ -13,7 +16,7 @@ return {
         -- load your default shell before starting the task
         use_shell = true,
         -- overwrite the default toggleterm "direction" parameter
-        wirection = 'horizontal',
+        direction = 'horizontal',
         -- have the toggleterm window close and delete the terminal buffer
         -- automatically after the task exits
         close_on_exit = false,
@@ -47,7 +50,7 @@ return {
         -- optionally define an integer/float for the exact width of the task list
         width = nil,
         max_height = { 20, 0.1 },
-        min_height = 10,
+        min_height = 14,
         height = nil,
         -- String that separates tasks
         separator = '────────────────────────────────────────',
