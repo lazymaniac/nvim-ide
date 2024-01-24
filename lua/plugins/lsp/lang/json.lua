@@ -10,15 +10,16 @@ return {
     end,
   },
 
-  -- yaml schema support
-  {
-    'b0o/SchemaStore.nvim',
-    version = false, -- last release is way too old
-  },
-
   -- correctly setup lspconfig
   {
     'neovim/nvim-lspconfig',
+    dependencies = {
+      -- yaml schema support
+      {
+        'b0o/SchemaStore.nvim',
+        version = false, -- last release is way too old
+      },
+    },
     opts = {
       -- make sure mason installs the server
       servers = {
