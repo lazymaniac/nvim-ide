@@ -293,6 +293,9 @@ return {
         'lua-language-server',
         'stylua',
       },
+      ui = {
+        border = 'rounded',
+      },
     },
     ---@param opts MasonSettings | {ensure_installed: string[]}
     config = function(_, opts)

@@ -145,7 +145,7 @@ function M.init()
     return
   end
   M.did_init = true
-  require("util.format")
+  require 'util.format'
 
   -- delay notifications till vim.notify was replaced or after 500ms
   require('util').lazy_notify()

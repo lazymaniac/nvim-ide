@@ -145,17 +145,21 @@ local jdtls_settings = {
       },
       runtimes = {
         {
+          name = 'JavaSE-1.8',
+          path = '~/.sdkman/candidates/java/8.0.402-tem/',
+        },
+        {
           name = 'JavaSE-11',
           path = '~/.sdkman/candidates/java/11.0.21-tem/',
         },
         {
           name = 'JavaSE-17',
           path = '~/.sdkman/candidates/java/17.0.9-tem/',
+          default = true,
         },
         {
           name = 'JavaSE-21',
           path = '~/.sdkman/candidates/java/21.0.1-tem/',
-          default = true,
         },
       },
       updateBuildConfiguration = 'automatic',
@@ -487,12 +491,13 @@ return {
           if client and client.name == 'jdtls' then
             local wk = require 'which-key'
             wk.register({
-              ['<leader>cx'] = { name = '+extract' },
+              ['<leader>cx'] = { name = '+[extract]' },
               ['<leader>cxv'] = { require('jdtls').extract_variable_all, 'Extract Variable (Java)' },
               ['<leader>cxc'] = { require('jdtls').extract_constant, 'Extract Constant (Java)' },
+              ['<leader>cg'] = { name = '+[goto]' },
               ['<leader>cgs'] = { require('jdtls').super_implementation, 'Goto Super (Java)' },
               ['<leader>cgS'] = { require('jdtls.tests').goto_subjects, 'Goto Subjects (Java)' },
-              ['<leader>cg'] = { require('jdtls.tests').generate, 'Generate Test Class (Java)' },
+              ['<leader>ct'] = { require('jdtls.tests').generate, 'Generate Test Class (Java)' },
               ['<leader>ci'] = { require('jdtls').organize_imports, 'Organize Imports (Java)' },
               ['<leader>cc'] = { require('jdtls').compile, 'Compile Code (Java)' },
               ['<leader>cb'] = { require('jdtls').build_projects, 'Build Projects (Java)' },
@@ -500,11 +505,11 @@ return {
               ['<leader>cp'] = { require('jdtls').javap, 'Run javap (Java)' },
               ['<leader>cj'] = { require('jdtls').jshell, 'Run jshell (Java)' },
               ['<leader>cl'] = { require('jdtls').jol, 'Run jol (Java)' },
-              ['<leader>ct'] = { require('jdtls').set_runtime, 'Set Runtime (Java)' },
+              ['<leader>ce'] = { require('jdtls').set_runtime, 'Set Runtime (Java)' },
             }, { mode = 'n', buffer = args.buf })
             wk.register({
-              ['<leader>c'] = { name = '+code' },
-              ['<leader>cx'] = { name = '+extract' },
+              ['<leader>c'] = { name = '+[code]' },
+              ['<leader>cx'] = { name = '+[extract]' },
               ['<leader>cxm'] = {
                 [[<ESC><CMD>lua require('jdtls').extract_method(true)<CR>]],
                 'Extract Method (Java)',
@@ -528,7 +533,7 @@ return {
               if opts.test and mason_registry.is_installed 'java-test' then
                 -- custom keymaps for Java test runner (not yet compatible with neotest)
                 wk.register({
-                  ['<leader>t'] = { name = '+test' },
+                  ['<leader>t'] = { name = '+[test]' },
                   ['<leader>tt'] = { require('jdtls.dap').test_class, 'Test Class (Java)' },
                   ['<leader>tr'] = { require('jdtls.dap').test_nearest_method, 'Test Nearest Method (Java)' },
                   ['<leader>tp'] = { require('jdtls.dap').pick_test, 'Pick Test (Java)' },
