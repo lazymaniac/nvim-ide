@@ -5,6 +5,7 @@ return {
   -- see: `:h hologram.nvim`
   {
     'edluffy/hologram.nvim',
+    enabled = false,
     opts = {
       auto_display = false,
     },
@@ -17,6 +18,7 @@ return {
   -- see: `:h image.nvim`
   {
     '3rd/image.nvim',
+    enabled = false,
     opts = {
       backend = 'kitty',
       integrations = {

@@ -98,7 +98,7 @@ return {
       -- 'hkupty/iron.nvim', -- repl provider
       -- "akinsho/toggleterm.nvim", -- alternative repl provider
       'benlubas/molten-nvim',
-      '3rd/image.nvim',
+      -- '3rd/image.nvim',
       'anuvyklack/hydra.nvim',
     },
     opts = {
@@ -177,7 +177,7 @@ return {
   {
     'benlubas/molten-nvim',
     event = 'VeryLazy',
-    dependencies = { '3rd/image.nvim' },
+    -- dependencies = { '3rd/image.nvim' },
     build = ':UpdateRemotePlugins',
     init = function()
       vim.g.molten_image_provider = 'image.nvim'

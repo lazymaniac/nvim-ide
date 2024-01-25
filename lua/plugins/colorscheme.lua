@@ -18,7 +18,7 @@ return {
           light = 'latte',
           dark = 'mocha',
         },
-        aransparent_background = false, -- disables setting the background color.
+        transparent_background = true, -- disables setting the background color.
         show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
         term_colors = false, -- sets terminal colors (e.g. `g:terminal_color_0`)
         dim_inactive = {
@@ -30,22 +30,22 @@ return {
         no_bold = false, -- Force no bold
         no_underline = false, -- Force no underline
         styles = { -- Handles the styles of general hi groups (see `:h highlight-args`):
-          comments = { 'italic', 'bold' }, -- Change the style of comments
-          conditionals = { 'italic' },
-          loops = { 'italic' },
+          comments = { 'italic' }, -- Change the style of comments
+          conditionals = { 'bold' },
+          loops = { 'bold' },
           functions = { 'italic' },
-          keywords = { 'italic', 'bold' },
+          keywords = { 'bold' },
           strings = { 'italic' },
           variables = { 'bold' },
-          numbers = {},
-          booleans = { 'italic', 'bold' },
-          properties = {},
-          types = { 'italic', 'bold' },
+          numbers = { 'bold' },
+          booleans = { 'bold' },
+          properties = { 'italic' },
+          types = { 'bold' },
           operators = { 'bold' },
         },
         color_overrides = {
           latte = {
-            rosewater = '#c14a4a',
+            --[[   rosewater = '#c14a4a',
             flamingo = '#c14a4a',
             red = '#c14a4a',
             maroon = '#c14a4a',
@@ -70,7 +70,7 @@ return {
             surface0 = '#e3dec3',
             base = '#f9f5d7',
             mantle = '#f0ebce',
-            crust = '#e8e3c8',
+            crust = '#e8e3c8', ]]
           },
         },
         integrations = {
