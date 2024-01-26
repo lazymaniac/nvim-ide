@@ -78,12 +78,25 @@ return {
           async = false, -- not recommended to change
           quiet = false, -- not recommended to change
         },
-        ---@type table<string, conform.FormatterUnit[]>
         formatters_by_ft = {
           lua = { 'stylua' },
           fish = { 'fish_indent' },
           sh = { 'shfmt' },
           java = { 'google-java-format' },
+          angular = { 'prettierd', 'prettier' },
+          javascript = { 'prettierd', 'prettier' },
+          css = { 'prettierd', 'prettier' },
+          flow = { 'prettierd', 'prettier' },
+          graphql = { 'prettierd', 'prettier' },
+          html = { 'prettierd', 'prettier' },
+          json = { 'jq' },
+          markdown = { 'prettierd', 'prettier' },
+          typescript = { 'prettierd', 'prettier' },
+          vue = { 'prettierd', 'prettier' },
+          yaml = { 'prettierd', 'prettier' },
+          go = { 'gofumpt', 'goimports', 'gomodifytags' },
+          kotlin = { 'ktlint' },
+          xml = { 'xmlformatter' },
         },
         -- The options you set here will be merged with the builtin formatters.
         -- You can also define any custom formatters here.
