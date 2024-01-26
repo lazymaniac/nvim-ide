@@ -328,7 +328,7 @@ return {
   {
     'nvimtools/none-ls.nvim',
     event = 'VeryLazy',
-    dependencies = { 'mason.nvim' },
+    dependencies = { 'williamboman/mason.nvim' },
     init = function()
       Util.on_very_lazy(function()
         -- register the formatter

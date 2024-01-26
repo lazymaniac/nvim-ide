@@ -32,7 +32,7 @@ return {
     -- see: `:h conform`
     'stevearc/conform.nvim',
     event = 'VeryLazy',
-    dependencies = { 'mason.nvim' },
+    dependencies = { 'williamboman/mason.nvim' },
     cmd = 'ConformInfo',
     -- stylua: ignore
     keys = {

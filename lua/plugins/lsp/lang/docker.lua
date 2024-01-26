@@ -1,4 +1,5 @@
 return {
+
   {
     'nvim-treesitter/nvim-treesitter',
     opts = function(_, opts)
@@ -7,13 +8,15 @@ return {
       end
     end,
   },
+
   {
-    'mason.nvim',
+    'williamboman/mason.nvim',
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
       vim.list_extend(opts.ensure_installed, { 'hadolint' })
     end,
   },
+
   {
     'nvimtools/none-ls.nvim',
     opts = function(_, opts)
@@ -23,6 +26,7 @@ return {
       })
     end,
   },
+
   {
     'mfussenegger/nvim-lint',
     opts = {
@@ -31,6 +35,7 @@ return {
       },
     },
   },
+
   {
     'neovim/nvim-lspconfig',
     opts = {
@@ -40,6 +45,7 @@ return {
       },
     },
   },
+
   {
     'telescope.nvim',
     dependencies = {
