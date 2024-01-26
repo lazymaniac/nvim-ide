@@ -6,11 +6,11 @@ if ok then
   end
 end
 
-
 if vim.g.neovide then
   vim.o.guifont = 'CaskaydiaCove Nerd Font:h11'
   vim.g.neovide_confirm_quit = true
   vim.g.neovide_remember_window_size = true
+  vim.g.neovide_transparency = 0.8
 end
 
 require 'config.lazy'

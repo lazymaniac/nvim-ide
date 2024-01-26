@@ -83,6 +83,7 @@ return {
           lua = { 'stylua' },
           fish = { 'fish_indent' },
           sh = { 'shfmt' },
+          java = { 'google-java-format' },
         },
         -- The options you set here will be merged with the builtin formatters.
         -- You can also define any custom formatters here.

@@ -262,7 +262,7 @@ return {
         -- [focused and unfocused]. eg: { '|', '|' }
         separator_style = 'thin', -- 'slant' | 'slope' | 'thick' | 'thin' | { 'any', 'any' },
         enforce_regular_tabs = true,
-        always_show_bufferline = false,
+        always_show_bufferline = true,
         hover = {
           enabled = true,
           delay = 200,
@@ -306,7 +306,7 @@ return {
     end,
     opts = function()
       local icons = require('config').icons
-      return {
+      local opts = {
         options = {
           icons_enabled = true,
           theme = 'auto',
@@ -460,7 +460,6 @@ return {
             { 'quickfix' },
             { 'toggleterm' },
             { 'trouble' },
-            { 'searchcount' },
             { 'selectioncount' },
           },
           lualine_y = {
@@ -584,6 +583,12 @@ return {
         },
         extensions = { 'neo-tree', 'lazy', 'fern', 'fzf', 'mason', 'nvim-dap-ui', 'overseer', 'quickfix', 'toggleterm', 'trouble', 'symbols-outline' },
       }
+
+      if vim.g.neovide then
+         opts.winbar = {}
+         opts.inactive_winbar = {}
+      end
+      return opts
     end,
   },
 
