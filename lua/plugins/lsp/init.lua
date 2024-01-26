@@ -29,7 +29,7 @@ return {
           pathStrict = true,
         },
       },
-      'mason.nvim',
+      'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
       {
         'j-hui/fidget.nvim',

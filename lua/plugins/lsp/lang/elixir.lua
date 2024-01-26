@@ -21,6 +21,39 @@ return {
   },
 
   {
+    'elixir-tools/elixir-tools.nvim',
+    version = '*',
+    event = { 'BufReadPre', 'BufNewFile' },
+    config = function()
+      local elixir = require 'elixir'
+      local elixirls = require 'elixir.elixirls'
+
+      elixir.setup {
+        nextls = { enable = true },
+        credo = {},
+        elixirls = {
+          enable = true,
+          settings = elixirls.settings {
+            dialyzerEnabled = false,
+            enableTestLenses = false,
+          },
+          on_attach = function(client, bufnr)
+            local wk = require 'which-key'
+            wk.register({
+              ['<leader>cm'] = { ':ElixirFromPipe<cr>', 'From Pipe (Elixir)' },
+              ['<leader>co'] = { ':ElixirToPipe<cr>', 'To Pipe (Elixir)' },
+              ['<leader>ce'] = { ':<cr>ElixirExpandMacro<cr>', 'Expand Macro (Elixir)' },
+            }, { mode = 'n', buffer = bufnr })
+          end,
+        },
+      }
+    end,
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+    },
+  },
+
+  {
     'nvim-neotest/neotest',
     optional = true,
     dependencies = {
