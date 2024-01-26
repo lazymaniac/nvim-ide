@@ -211,7 +211,7 @@ return {
         debug = false, -- Prints errors and the command which is run.
       }
       require('gen').prompts['Fix_Code'] = {
-        prompt = "Your task is to fix the following code. Only ouput the result in format ```$filetype\n...\n```:\n```$filetype\n$text\n```",
+        prompt = 'Your task is to fix the following code. Only ouput the result in format ```$filetype\n...\n```:\n```$filetype\n$text\n```',
         replace = false,
         extract = '```$filetype\n(.-)```',
       }
