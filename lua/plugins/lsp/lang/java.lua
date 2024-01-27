@@ -300,7 +300,14 @@ local jdtls_settings = {
 
 return {
 
-  -- [[ JAVA ]] - LSP, DAP, TEST SETUP
+  {
+    'williamboman/mason.nvim',
+    opts = function(_, opts)
+      opts.ensure_installed = opts.ensure_installed or {}
+      vim.list_extend(opts.ensure_installed, { 'clang-format', 'google-java-format', 'checkstyle', 'trivy' })
+    end,
+  },
+
   {
     'nvim-treesitter/nvim-treesitter',
     opts = function(_, opts)
@@ -309,27 +316,23 @@ return {
     end,
   },
 
-  -- Ensure java debugger and test packages are installed.
   {
-    'mfussenegger/nvim-dap',
-    dependencies = {
-      {
-        'williamboman/mason.nvim',
-        opts = function(_, opts)
-          opts.registries = {
-            'github:nvim-java/mason-registry',
-            'github:mason-org/mason-registry',
-          }
-          opts.ensure_installed = opts.ensure_installed or {}
-          vim.list_extend(
-            opts.ensure_installed,
-            { 'jdtls', 'java-test', 'java-debug-adapter', 'vscode-java-decompiler', 'checkstyle', 'lemminx', 'sonarlint-language-server', 'xmlformatter' }
-          )
-        end,
+    'mfussenegger/nvim-lint',
+    opts = {
+      linters_by_ft = {
+        java = { 'checkstyle', 'trivy' },
       },
     },
   },
 
+  {
+    'stevearc/conform.nvim',
+    opts = {
+      formatters_by_ft = {
+        java = { 'clang-format', 'google-java-format' },
+      },
+    },
+  },
   -- Configure nvim-lspconfig to install the server automatically via mason, but
   -- defer actually starting it to our configuration of nvim-jtdls below.
   {
@@ -346,13 +349,6 @@ return {
       },
     },
   },
-  -- Setup neotest
-  {
-    'nvim-neotest/neotest',
-    dependencies = {
-      'rcasia/neotest-java',
-    },
-  },
 
   {
     'mfussenegger/nvim-jdtls',
@@ -366,12 +362,10 @@ return {
         -- How to find the root dir for a given filename. The default comes from
         -- lspconfig which provides a function specifically for java projects.
         root_dir = require('jdtls.setup').find_root,
-
         -- How to find the project name for a given root dir.
         project_name = function(root_dir)
           return root_dir and vim.fs.basename(root_dir)
         end,
-
         -- Where are the config and workspace dirs for a project?
         jdtls_config_dir = function(project_name)
           return vim.fn.stdpath 'cache' .. '/jdtls/' .. project_name .. '/config'
@@ -379,7 +373,6 @@ return {
         jdtls_workspace_dir = function(project_name)
           return vim.fn.stdpath 'cache' .. '/jdtls/' .. project_name .. '/workspace'
         end,
-
         -- How to run jdtls. This can be overridden to a full java command-line
         -- if the Python wrapper script doesn't suffice.
         cmd = { 'jdtls' },
@@ -404,7 +397,6 @@ return {
           end
           return cmd
         end,
-
         -- These depend on nvim-dap, but can additionally be disabled by setting false here.
         dap = { hotcodereplace = 'auto', config_overrides = {} },
         test = true,
@@ -412,7 +404,6 @@ return {
     end,
     config = function()
       local opts = Util.opts 'nvim-jdtls' or {}
-
       -- Find the extra bundles that should be passed on the jdtls command-line
       -- if nvim-dap is enabled with java debug/test.
       local mason_registry = require 'mason-registry'
@@ -423,7 +414,6 @@ return {
         local jar_patterns = {
           java_dbg_path .. '/extension/server/com.microsoft.java.debug.plugin-*.jar',
         }
-
         if mason_registry.is_installed 'vscode-java-decompiler' then
           local java_decompiler_pkg = mason_registry.get_package 'vscode-java-decompiler'
           local java_decompiler_path = java_decompiler_pkg:get_install_path()
@@ -431,7 +421,6 @@ return {
             java_decompiler_path .. '/server/*.jar',
           })
         end
-
         -- java-test also depends on java-debug-adapter.
         if opts.test and mason_registry.is_installed 'java-test' then
           local java_test_pkg = mason_registry.get_package 'java-test'
@@ -446,7 +435,6 @@ return {
           end
         end
       end
-
       local function attach_jdtls()
         local extendedClientCapabilities = require('jdtls').extendedClientCapabilities
         extendedClientCapabilities.resolveAdditionalTextEditsSupport = true
@@ -454,7 +442,6 @@ return {
         capabilities.workspace = {
           configuration = true,
         }
-
         -- Configuration can be augmented and overridden by opts.jdtls
         local config = extend_or_override({
           cmd = opts.full_cmd(opts),
@@ -468,12 +455,10 @@ return {
           },
           settings = jdtls_settings,
         }, opts.jdtls)
-
         -- Existing server will be reused if the root_dir matches.
         require('jdtls').start_or_attach(config)
         -- not need to require("jdtls.setup").add_commands(), start automatically adds commands
       end
-
       -- Attach the jdtls for each java buffer. HOWEVER, this plugin loads
       -- depending on filetype, so this autocmd doesn't run for the first file.
       -- For that, we call directly below.
@@ -481,7 +466,6 @@ return {
         pattern = java_filetypes,
         callback = attach_jdtls,
       })
-
       -- Setup keymap and dap after the lsp is fully attached.
       -- https://github.com/mfussenegger/nvim-jdtls#nvim-dap-configuration
       -- https://neovim.io/doc/user/lsp.html#LspAttach
@@ -523,12 +507,10 @@ return {
                 'Extract Constant (Java)',
               },
             }, { mode = 'v', buffer = args.buf })
-
             if opts.dap and Util.has 'nvim-dap' and mason_registry.is_installed 'java-debug-adapter' then
               -- custom init for Java debugger
               require('jdtls').setup_dap(opts.dap)
               require('jdtls.dap').setup_dap_main_class_configs()
-
               -- Java Test require Java debugger to work
               if opts.test and mason_registry.is_installed 'java-test' then
                 -- custom keymaps for Java test runner (not yet compatible with neotest)
@@ -551,5 +533,31 @@ return {
       -- Avoid race condition by calling attach the first time, since the autocmd won't fire.
       attach_jdtls()
     end,
+  },
+
+  -- Ensure java debugger and test packages are installed.
+  {
+    'mfussenegger/nvim-dap',
+    dependencies = {
+      {
+        'williamboman/mason.nvim',
+        opts = function(_, opts)
+          opts.registries = {
+            'github:nvim-java/mason-registry',
+            'github:mason-org/mason-registry',
+          }
+          opts.ensure_installed = opts.ensure_installed or {}
+          vim.list_extend(opts.ensure_installed, { 'jdtls', 'java-test', 'java-debug-adapter' })
+        end,
+      },
+    },
+  },
+
+  -- Setup neotest
+  {
+    'nvim-neotest/neotest',
+    dependencies = {
+      'rcasia/neotest-java',
+    },
   },
 }

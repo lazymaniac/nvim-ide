@@ -5,14 +5,15 @@ return {
       vim.list_extend(opts.ensure_installed, { "scala" })
     end,
   },
+
   {
     "hrsh7th/nvim-cmp",
     dependencies = {
-      { "hrsh7th/cmp-nvim-lsp" },
       { "hrsh7th/cmp-vsnip" },
       { "hrsh7th/vim-vsnip" },
     },
   },
+
   {
     "scalameta/nvim-metals",
     dependencies = {

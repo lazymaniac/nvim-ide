@@ -1,16 +1,41 @@
 return {
-  {
-    'nvim-treesitter/nvim-treesitter',
-    opts = function(_, opts)
-      vim.list_extend(opts.ensure_installed, { 'html', 'css' })
-    end,
-  },
 
   {
     'williamboman/mason.nvim',
     opts = function(_, opts)
-      vim.list_extend(opts.ensure_installed, { 'prettierd' })
+      vim.list_extend(opts.ensure_installed, { 'prettierd', 'htmlhint', 'stylelint' })
     end,
+  },
+
+  {
+    'nvim-treesitter/nvim-treesitter',
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, { 'html', 'css', 'scss', 'javascript', 'typescript' })
+    end,
+  },
+
+  {
+    'stevearc/conform.nvim',
+    opts = {
+      formatters_by_ft = {
+        html = { 'prettierd' },
+        javascript = { 'prettierd' },
+        css = { 'prettierd' },
+        typescript = { 'prettierd' },
+        less = { 'prettierd' },
+        scss = { 'prettierd' },
+        jsx = { 'prettierd' },
+      },
+    },
+  },
+
+  {
+    'mfussenegger/nvim-lint',
+    opts = {
+      linters_by_ft = {
+        html = { 'htmlhint', 'stylelint' },
+      },
+    },
   },
 
   {
@@ -35,15 +60,6 @@ return {
         },
         -- CSS
         cssls = {},
-      },
-    },
-  },
-
-  {
-    'stevearc/conform.nvim',
-    opts = {
-      formatters_by_ft = {
-        html = { 'prettierd' },
       },
     },
   },

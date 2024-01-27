@@ -1,4 +1,13 @@
 return {
+
+  {
+    'williamboman/mason.nvim',
+    opts = function(_, opts)
+      opts.ensure_installed = opts.ensure_installed or {}
+      vim.list_extend(opts.ensure_installed, { 'black', 'ruff', 'snyk', 'pydocstyle', 'pylama', 'pylint' })
+    end,
+  },
+
   {
     'nvim-treesitter/nvim-treesitter',
     opts = function(_, opts)
@@ -7,6 +16,25 @@ return {
       end
     end,
   },
+
+  {
+    'stevearc/conform.nvim',
+    opts = {
+      formatters_by_ft = {
+        python = { 'black' },
+      },
+    },
+  },
+
+  {
+    'mfussenegger/nvim-lint',
+    opts = {
+      linters_by_ft = {
+        markdown = { 'ruff', 'snyk', 'pydocstyle', 'pylama', 'pylint' },
+      },
+    },
+  },
+
   {
     'neovim/nvim-lspconfig',
     opts = {
@@ -42,12 +70,14 @@ return {
       },
     },
   },
+
   {
     'nvim-neotest/neotest',
     dependencies = {
       'nvim-neotest/neotest-python',
     },
   },
+
   {
     'mfussenegger/nvim-dap',
     dependencies = {
@@ -63,6 +93,7 @@ return {
       end,
     },
   },
+
   {
     'linux-cultist/venv-selector.nvim',
     cmd = 'VenvSelect',

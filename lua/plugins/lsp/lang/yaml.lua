@@ -1,6 +1,12 @@
 return {
+  {
+    'williamboman/mason.nvim',
+    opts = function(_, opts)
+      opts.ensure_installed = opts.ensure_installed or {}
+      vim.list_extend(opts.ensure_installed, { 'yamllint', 'prettierd' })
+    end,
+  },
 
-  -- add yaml specific modules to treesitter
   {
     'nvim-treesitter/nvim-treesitter',
     opts = function(_, opts)
@@ -10,13 +16,29 @@ return {
     end,
   },
 
-  -- yaml schema support
+  {
+    'stevearc/conform.nvim',
+    opts = {
+      formatters_by_ft = {
+        yaml = { 'prettierd' },
+      },
+    },
+  },
+
+  {
+    'mfussenegger/nvim-lint',
+    opts = {
+      linters_by_ft = {
+        yaml = { 'yamllint' },
+      },
+    },
+  },
+
   {
     'b0o/SchemaStore.nvim',
     version = false, -- last release is way too old
   },
 
-  -- correctly setup lspconfig
   {
     'neovim/nvim-lspconfig',
     opts = {

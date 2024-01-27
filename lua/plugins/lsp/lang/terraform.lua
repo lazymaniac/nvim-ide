@@ -9,6 +9,14 @@ vim.api.nvim_create_autocmd('FileType', {
 return {
 
   {
+    'williamboman/mason.nvim',
+    opts = function(_, opts)
+      opts.ensure_installed = opts.ensure_installed or {}
+      vim.list_extend(opts.ensure_installed, { 'tfsec', 'snyk', 'trivy' })
+    end,
+  },
+
+  {
     'nvim-treesitter/nvim-treesitter',
     opts = function(_, opts)
       if type(opts.ensure_installed) == 'table' then
@@ -33,19 +41,8 @@ return {
     'mfussenegger/nvim-lint',
     opts = {
       linters_by_ft = {
-        terraform = { 'terraform_validate' },
-        tf = { 'terraform_validate' },
-      },
-    },
-  },
-
-  {
-    'stevearc/conform.nvim',
-    opts = {
-      formatters_by_ft = {
-        terraform = { 'terraform_fmt' },
-        tf = { 'terraform_fmt' },
-        ['terraform-vars'] = { 'terraform_fmt' },
+        terraform = { 'tfsec', 'snyk', 'trivy' },
+        tf = { 'tfsec', 'snyk', 'trivy' },
       },
     },
   },

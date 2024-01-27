@@ -6,6 +6,20 @@ return {
   {
     'mfussenegger/nvim-lint',
     event = 'VeryLazy',
+    keys = {
+      {
+        '<leader>Ul',
+        function()
+          local linters = require('lint').get_running()
+          if #linters == 0 then
+            return '󰦕'
+          end
+          print('󱉶 ' .. table.concat(linters, ', '))
+        end,
+        mode = { 'n' },
+        desc = 'Get active linters for buffer',
+      },
+    },
     opts = {
       -- Event to trigger linters
       events = { 'BufWritePost', 'BufReadPost', 'InsertLeave' },
