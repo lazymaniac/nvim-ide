@@ -11,6 +11,7 @@ if vim.g.neovide then
   vim.g.neovide_remember_window_size = true
 end
 
+---@diagnostic disable-next-line: different-requires
 require 'config.lazy'
 require('config').setup {}
 

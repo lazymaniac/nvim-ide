@@ -165,7 +165,6 @@ return {
       if require('util').has 'trouble.nvim' then
         opts.consumers = opts.consumers or {}
         -- Refresh and auto close trouble after running tests
-        ---@type neotest.Consumer
         opts.consumers.trouble = function(client)
           client.listeners.results = function(adapter_id, results, partial)
             if partial then

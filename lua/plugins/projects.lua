@@ -4,7 +4,6 @@ return {
   -- see: `:h project.nvim`
   {
     'ahmedkhalf/project.nvim',
-    event = 'VeryLazy',
     opts = {
       manual_mode = false,
     },
@@ -12,6 +11,7 @@ return {
     config = function(_, opts)
       require('project_nvim').setup(opts)
       require('util').on_load('telescope.nvim', function()
+        ---@diagnostic disable-next-line: undefined-field
         require('telescope').load_extension 'projects'
       end)
     end,

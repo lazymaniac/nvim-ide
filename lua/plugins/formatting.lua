@@ -8,8 +8,6 @@ function M.setup(_, opts)
     if type(formatter) == 'table' then
       ---@diagnostic disable-next-line: undefined-field
       if formatter.extra_args then
-        ---@diagnostic disable-next-line: undefined-field
-        formatter.prepend_args = formatter.extra_args
         Util.deprecate(('opts.formatters.%s.extra_args'):format(name), ('opts.formatters.%s.prepend_args'):format(name))
       end
     end
@@ -53,7 +51,6 @@ return {
           end,
           sources = function(buf)
             local ret = require('conform').list_formatters(buf)
-            ---@param v conform.FormatterInfo
             return vim.tbl_map(function(v)
               return v.name
             end, ret)
@@ -99,7 +96,6 @@ return {
         },
         -- The options you set here will be merged with the builtin formatters.
         -- You can also define any custom formatters here.
-        ---@type table<string, conform.FormatterConfigOverride|fun(bufnr: integer): nil|conform.FormatterConfigOverride>
         formatters = {
           injected = { options = { ignore_errors = true } },
           -- # Example of using dprint only when a dprint.json file is present

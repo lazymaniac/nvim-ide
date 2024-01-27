@@ -7,7 +7,7 @@ local M = {}
 local defaults = {
   -- colorscheme can be a string like `catppuccin` or a function that will load the colorscheme
   ---@type string|fun()
-  colorscheme = 'catppuccin-mocha',
+  colorscheme = 'catppuccin-latte',
   -- load the default settings
   defaults = {
     autocmds = true, -- config.autocmds

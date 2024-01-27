@@ -179,12 +179,10 @@ return {
       },
     },
     init = function()
-      ---@diagnostic disable-next-line: duplicate-set-field
       vim.ui.select = function(...)
         require('lazy').load { plugins = { 'dressing.nvim' } }
         return vim.ui.select(...)
       end
-      ---@diagnostic disable-next-line: duplicate-set-field
       vim.ui.input = function(...)
         require('lazy').load { plugins = { 'dressing.nvim' } }
         return vim.ui.input(...)
@@ -289,6 +287,7 @@ return {
       vim.api.nvim_create_autocmd('BufAdd', {
         callback = function()
           vim.schedule(function()
+            ---@diagnostic disable-next-line: undefined-global
             pcall(nvim_bufferline)
           end)
         end,
@@ -302,6 +301,7 @@ return {
     'nvim-lualine/lualine.nvim',
     event = 'VeryLazy',
     config = function(_, opts)
+      ---@diagnostic disable-next-line: undefined-field
       require('lualine').setup(opts)
     end,
     opts = function()
@@ -310,52 +310,26 @@ return {
         options = {
           icons_enabled = true,
           theme = 'auto',
-          -- section_separators = { left = '', right = '' },
-          -- component_separators = { left = '', right = '' },
           component_separators = { left = '', right = '' },
           section_separators = { left = '', right = '' },
           disabled_filetypes = {
             statusline = {
               'dashboard',
-              'alpha',
-              'starter',
               'dap-repl',
-              'Outline',
               'neo-tree',
-              'OverseerList',
-              'help',
-              'Trouble',
-              'qf',
-              'toggleterm',
               'dbui',
             },
             winbar = {
               'dashboard',
-              'alpha',
-              'starter',
               'dap-repl',
-              'Outline',
               'neo-tree',
-              'OverseerList',
-              'help',
-              'Trouble',
-              'qf',
-              'toggleterm',
               'dbui',
             },
           },
           ignore_focus = {
             'dashboard',
-            'alpha',
-            'starter',
             'dap-repl',
-            'Outline',
             'neo-tree',
-            'OverseerList',
-            'help',
-            'Trouble',
-            'qf',
-            'toggleterm',
             'dbui',
           },
           always_divide_middle = true,
@@ -513,65 +487,20 @@ return {
         },
         inactive_winbar = {
           lualine_a = {
-            Util.lualine.root_dir(),
-          },
-          lualine_b = {
             { Util.lualine.pretty_path() },
           },
-          lualine_c = {
-            {
-              'diff',
-              symbols = {
-                added = icons.git.added,
-                modified = icons.git.modified,
-                removed = icons.git.removed,
-              },
-              source = function()
-                ---@diagnostic disable-next-line: undefined-field
-                local gitsigns = vim.b.gitsigns_status_dict
-                if gitsigns then
-                  return {
-                    added = gitsigns.added,
-                    modified = gitsigns.changed,
-                    removed = gitsigns.removed,
-                  }
-                end
-              end,
-            },
-            {
-              'diagnostics',
-              symbols = {
-                error = icons.diagnostics.Error,
-                warn = icons.diagnostics.Warn,
-                info = icons.diagnostics.Info,
-                hint = icons.diagnostics.Hint,
-              },
-            },
-          },
-          lualine_x = {
-            {
-              'filetype',
-              icon_only = false,
-              colored = true,
-              separator = '',
-              padding = { left = 1, right = 1 },
-              icon = {
-                align = 'right',
-              },
-            },
-            { 'encoding' },
-            { 'fileformat' },
-            { 'filesize' },
-          },
+          lualine_b = {},
+          lualine_c = {},
+          lualine_x = {},
           lualine_y = {},
           lualine_z = {},
         },
-        extensions = { 'neo-tree', 'lazy', 'fern', 'fzf', 'mason', 'nvim-dap-ui', 'overseer', 'quickfix', 'toggleterm', 'trouble', 'symbols-outline' },
+        extensions = { 'neo-tree', 'lazy', 'fzf', 'mason', 'nvim-dap-ui', 'overseer', 'quickfix', 'toggleterm', 'trouble', 'symbols-outline' },
       }
 
       if vim.g.neovide then
-         opts.winbar = {}
-         opts.inactive_winbar = {}
+        opts.winbar = {}
+        opts.inactive_winbar = {}
       end
       return opts
     end,
@@ -874,6 +803,9 @@ return {
   {
     'Tyler-Barham/floating-help.nvim',
     event = 'VeryLazy',
+    keys = {
+      { '<F1>', '<cmd>FloatingHelpToggle<cr>', mode = { 'n' }, desc = 'Toggle Floating Help' },
+    },
     config = function()
       require('floating-help').setup {
         -- Defaults
@@ -893,10 +825,6 @@ return {
       cmd_abbrev('helpc', 'FloatingHelpClose')
       cmd_abbrev('helpclose', 'FloatingHelpClose')
     end,
-    event = { 'VeryLazy' },
-    keys = {
-      { '<F1>', '<cmd>FloatingHelpToggle<cr>', mode = { 'n' }, desc = 'Toggle Floating Help' },
-    },
   },
 
   -- [numb.nvim] - Show preview of location when jumping to line with `:{number}`

@@ -181,12 +181,12 @@ return {
       height = 10, -- height of the trouble list when position is top or bottom
       width = 50, -- width of the list when position is left or right
       icons = true, -- use devicons for filenames
-      mode = 'workspace_diagnostics', -- "workspace_diagnostics", "document_diagnostics", "quickfix", "lsp_references", "loclist"
+      mode = 'document_diagnostics', -- "workspace_diagnostics", "document_diagnostics", "quickfix", "lsp_references", "loclist"
       severity = nil, -- nil (ALL) or vim.diagnostic.severity.ERROR | WARN | INFO | HINT
       fold_open = '', -- icon used for open folds
       fold_closed = '', -- icon used for closed folds
       group = true, -- group results by file
-      padding = true, -- add an extra new line on top of the list
+      padding = false, -- add an extra new line on top of the list
       cycle_results = true, -- cycle item list when reaching beginning or end of list
       action_keys = { -- key mappings for actions in the trouble list
         -- map to {} to remove a mapping, for example:
@@ -214,7 +214,7 @@ return {
       },
       multiline = true, -- render multi-line messages
       indent_lines = true, -- add an indent guide below the fold icons
-      win_config = { border = 'single' }, -- window configuration for floating windows. See |nvim_open_win()|.
+      win_config = { border = 'rounded' }, -- window configuration for floating windows. See |nvim_open_win()|.
       auto_open = false, -- automatically open the list when you have diagnostics
       auto_close = true, -- automatically close the list when you have no diagnostics
       auto_preview = true, -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
@@ -415,7 +415,7 @@ return {
       },
       symbol_folding = {
         -- Depth past which nodes will be folded by default. Set to false to unfold all on open.
-        autofold_depth = 1,
+        autofold_depth = 2,
         -- When to auto unfold nodes
         auto_unfold = {
           -- Auto unfold currently hovered symbol
@@ -445,7 +445,7 @@ return {
         -- Options include: single/double/rounded/solid/shadow or an array of border
         -- characters.
         -- See :help nvim_open_win() and search for "border" option.
-        border = 'single',
+        border = 'rounded',
         -- winhl options for the preview window, see ':h winhl'
         winhl = 'NormalFloat:',
         -- Pseudo-transparency of the preview window, see ':h winblend'
@@ -494,7 +494,7 @@ return {
         up_and_jump = '<C-k>',
       },
       providers = {
-        priority = { 'lsp', 'coc', 'markdown', 'norg' },
+        priority = { 'lsp', 'markdown', 'norg' },
         lsp = {
           -- Lsp client names to ignore
           blacklist_clients = {},
@@ -605,6 +605,7 @@ return {
     },
     keys = {
         -- stylua: ignore
+        ---@diagnostic disable-next-line: undefined-field
       { "<leader>p", function() require("telescope").extensions.yank_history.yank_history({ }) end, desc = "Open Yank History" },
       { 'y', '<Plug>(YankyYank)', mode = { 'n', 'x' }, desc = 'Yank text' },
       { 'p', '<Plug>(YankyPutAfter)', mode = { 'n', 'x' }, desc = 'Put yanked text after cursor' },

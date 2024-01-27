@@ -1,17 +1,7 @@
 local LazyUtil = require 'lazy.core.util'
 
----@class util: LazyUtilCore
----@field ui util.ui
----@field lsp util.lsp
----@field root util.root
----@field telescope util.telescope
----@field toggle util.toggle
----@field format util.format
----@field inject util.inject
----@field lualine util.lualine
 local M = {}
 
----@type table<string, string|string[]>
 local deprecated = {
   get_clients = 'lsp',
   on_attach = 'lsp',
@@ -143,7 +133,6 @@ end
 -- It will also set `silent` to true by default.
 function M.safe_keymap_set(mode, lhs, rhs, opts)
   local keys = require('lazy.core.handler').handlers.keys
-  ---@cast keys LazyKeysHandler
   local modes = type(mode) == 'string' and { mode } or mode
 
   ---@param m string

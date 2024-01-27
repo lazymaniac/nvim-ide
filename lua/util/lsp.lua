@@ -1,20 +1,15 @@
 local Util = require 'util'
 
----@class util.lsp
 local M = {}
 
----@alias lsp.Client.filter {id?: number, bufnr?: number, name?: string, method?: string, filter?:fun(client: lsp.Client):boolean}
-
----@param opts? lsp.Client.filter
 function M.get_clients(opts)
-  local ret = {} ---@type lsp.Client[]
+  local ret
   if vim.lsp.get_clients then
     ret = vim.lsp.get_clients(opts)
   else
     ---@diagnostic disable-next-line: deprecated
     ret = vim.lsp.get_active_clients(opts)
     if opts and opts.method then
-      ---@param client lsp.Client
       ret = vim.tbl_filter(function(client)
         return client.supports_method(opts.method, { bufnr = opts.bufnr })
       end, ret)
@@ -56,7 +51,6 @@ function M.on_rename(from, to)
   end
 end
 
----@return _.lspconfig.options
 function M.get_config(server)
   local configs = require 'lspconfig.configs'
   return rawget(configs, server)
@@ -75,13 +69,10 @@ function M.disable(server, cond)
   end)
 end
 
----@param opts? LazyFormatter| {filter?: (string|lsp.Client.filter)}
 function M.formatter(opts)
   opts = opts or {}
   local filter = opts.filter or {}
   filter = type(filter) == 'string' and { name = filter } or filter
-  ---@cast filter lsp.Client.filter
-  ---@type LazyFormatter
   local ret = {
     name = 'LSP',
     primary = true,
@@ -91,11 +82,9 @@ function M.formatter(opts)
     end,
     sources = function(buf)
       local clients = M.get_clients(Util.merge(filter, { bufnr = buf }))
-      ---@param client lsp.Client
       local ret = vim.tbl_filter(function(client)
         return client.supports_method 'textDocument/formatting' or client.supports_method 'textDocument/rangeFormatting'
       end, clients)
-      ---@param client lsp.Client
       return vim.tbl_map(function(client)
         return client.name
       end, ret)
@@ -104,9 +93,6 @@ function M.formatter(opts)
   return Util.merge(ret, opts) --[[@as LazyFormatter]]
 end
 
----@alias lsp.Client.format {timeout_ms?: number, format_options?: table} | lsp.Client.filter
-
----@param opts? lsp.Client.format
 function M.format(opts)
   opts = vim.tbl_deep_extend('force', {}, opts or {}, require('util').opts('nvim-lspconfig').format or {})
   local ok, conform = pcall(require, 'conform')

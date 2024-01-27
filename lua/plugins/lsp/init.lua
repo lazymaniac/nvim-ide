@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-field
 local Util = require 'util'
 
 return {
@@ -186,6 +187,7 @@ return {
       -- setup autoformat
       Util.format.register(Util.lsp.formatter())
       -- deprectaed options
+      ---@diagnostic disable-next-line: undefined-field
       if opts.autoformat ~= nil then
         vim.g.autoformat = opts.autoformat
         Util.deprecate('nvim-lspconfig.opts.autoformat', 'vim.g.autoformat')
@@ -297,7 +299,6 @@ return {
         border = 'rounded',
       },
     },
-    ---@param opts MasonSettings | {ensure_installed: string[]}
     config = function(_, opts)
       require('mason').setup(opts)
       local mr = require 'mason-registry'

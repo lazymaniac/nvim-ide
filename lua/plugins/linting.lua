@@ -93,7 +93,6 @@ return {
     event = 'VeryLazy',
     -- other settings removed for brevity
     opts = {
-      ---@type lspconfig.options
       servers = {
         eslint = {
           settings = {
