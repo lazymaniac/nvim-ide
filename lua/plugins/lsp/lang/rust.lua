@@ -122,10 +122,6 @@ return {
           name = 'Crates',
         },
       },
-      null_ls = {
-        enabled = true,
-        name = 'Crates',
-      },
     },
   },
   -- Add Rust & related to treesitter

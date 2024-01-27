@@ -127,14 +127,13 @@ end
 
 function M.health()
   local Config = require 'lazy.core.config'
-  local has_plugin = Config.spec.plugins['none-ls.nvim']
-  local has_extra = vim.tbl_contains(Config.spec.modules, 'plugins.extras.lsp.none-ls')
-  if not has_plugin and not has_extra then
-    Util.warn {
-      '`conform.nvim` and `nvim-lint` are now the default formatters and linters in LazyVim.',
-      '',
-      'In case you no longer want to use `none-ls.nvim`, just remove the spec from your config.',
-    }
+  local has_conform = Config.spec.plugins['conform.nvim']
+  local has_nvim_lint = Config.spec.plugins['nvim-lint']
+  if not has_conform then
+    Util.warn '`conform.nvim` is missing. No code formatting'
+  end
+  if not has_nvim_lint then
+    Util.warn '`nvim-lint` is missing. No code linting'
   end
 end
 

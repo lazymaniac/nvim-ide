@@ -77,6 +77,12 @@ return {
             ['if'] = '@function.inner',
             ['ac'] = '@class.outer',
             ['ic'] = '@class.inner',
+            ["il"] = "@loop.inner",
+            ["al"] = "@loop.outer",
+            ["ii"] = "@conditional.inner",
+            ["ai"] = "@conditional.outer",
+            ["am"] = "@comment.outer",
+            ["im"] = "@comment.inner",
           },
         },
         move = {

@@ -7,6 +7,7 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 return {
+
   {
     'nvim-treesitter/nvim-treesitter',
     opts = function(_, opts)
@@ -18,6 +19,7 @@ return {
       end
     end,
   },
+
   {
     'neovim/nvim-lspconfig',
     opts = {
@@ -26,16 +28,7 @@ return {
       },
     },
   },
-  {
-    'nvimtools/none-ls.nvim',
-    opts = function(_, opts)
-      local null_ls = require 'null-ls'
-      opts.sources = vim.list_extend(opts.sources or {}, {
-        null_ls.builtins.formatting.terraform_fmt,
-        null_ls.builtins.diagnostics.terraform_validate,
-      })
-    end,
-  },
+
   {
     'mfussenegger/nvim-lint',
     opts = {
@@ -45,6 +38,7 @@ return {
       },
     },
   },
+
   {
     'stevearc/conform.nvim',
     opts = {
@@ -55,6 +49,7 @@ return {
       },
     },
   },
+
   {
     'nvim-telescope/telescope.nvim',
     dependencies = {
