@@ -67,10 +67,12 @@ return {
         -- tools = {},
         -- LSP configuration
         server = {
+          ---@diagnostic disable-next-line: unused-local
           on_attach = function(client, bufnr)
             local wk = require 'which-key'
             wk.register({
-              ['<leader>ca'] = { '<cmd>RustLsp codeAction<cr>', '[C]ode [A]ction [Rust]' },
+              -- stylua: ignore
+              ['<leader>ca'] = { function() require('actions-preview').code_actions() end, '[C]ode [A]ction [Rust]' },
               ['<leader>ce'] = { '<cmd>RustLsp externalDocs<cr>', 'External [D]ocs [Rust]' },
               ['<leader>cp'] = { '<cmd>RustLsp rebuildProcMacros<cr>', 'Rebuild [P]roc Macros [Rust]' },
               ['<leader>cx'] = { '<cmd>RustLsp explainError<cr>', 'E[x]plain Error [Rust]' },

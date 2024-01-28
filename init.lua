@@ -7,7 +7,7 @@ if ok then
 end
 
 if vim.g.neovide then
-  vim.o.guifont = 'CaskaydiaCove Nerd Font:h11'
+  vim.o.guifont = 'VictorMono Nerd Font:h10'
   vim.g.neovide_remember_window_size = true
 end
 
