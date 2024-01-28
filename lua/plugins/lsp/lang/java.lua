@@ -185,7 +185,6 @@ local jdtls_settings = {
         enabled = true,
       },
       settings = {
-        profile = 'Default',
         url = '~/.config/nvim/java-formatter.xml',
       },
     },
@@ -304,7 +303,7 @@ return {
     'williamboman/mason.nvim',
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, { 'clang-format', 'google-java-format', 'checkstyle', 'trivy' })
+      vim.list_extend(opts.ensure_installed, { 'clang-format', 'checkstyle', 'trivy' })
     end,
   },
 
@@ -325,14 +324,6 @@ return {
     },
   },
 
-  {
-    'stevearc/conform.nvim',
-    opts = {
-      formatters_by_ft = {
-        java = { 'clang-format', 'google-java-format' },
-      },
-    },
-  },
   -- Configure nvim-lspconfig to install the server automatically via mason, but
   -- defer actually starting it to our configuration of nvim-jtdls below.
   {

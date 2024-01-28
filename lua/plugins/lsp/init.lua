@@ -172,7 +172,8 @@ return {
     end,
   },
 
-  -- cmdline tools and lsp servers
+  -- [mason.nvim] - LSP, formatter, dap, test tools installer
+  -- see: `:h mason.nvim`
   {
     'williamboman/mason.nvim',
     event = 'VeryLazy',
@@ -182,6 +183,9 @@ return {
       ensure_installed = {
         'lua-language-server',
         'stylua',
+        'codespell',
+        'commitlint',
+        'gitui'
       },
       ui = {
         border = 'rounded',

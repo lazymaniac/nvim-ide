@@ -9,6 +9,7 @@ end
 if vim.g.neovide then
   vim.o.guifont = 'VictorMono Nerd Font:h10'
   vim.g.neovide_remember_window_size = true
+  vim.api.nvim_set_keymap('n', '<F11>', ':let g:neovide_fullscreen = !g:neovide_fullscreen<CR>', {})
 end
 
 ---@diagnostic disable-next-line: different-requires
