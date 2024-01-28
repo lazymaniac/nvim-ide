@@ -17,9 +17,7 @@ return {
       require('lazy.core.loader').add_to_rtp(plugin)
       require 'nvim-treesitter.query_predicates'
     end,
-    dependencies = {
-      { 'nvim-treesitter/nvim-treesitter-textobjects' },
-    },
+    dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
     cmd = { 'TSUpdateSync', 'TSUpdate', 'TSInstall' },
     keys = {
       { '<c-space>', desc = 'Increment selection' },
@@ -76,12 +74,12 @@ return {
             ['if'] = '@function.inner',
             ['ac'] = '@class.outer',
             ['ic'] = '@class.inner',
-            ["il"] = "@loop.inner",
-            ["al"] = "@loop.outer",
-            ["ii"] = "@conditional.inner",
-            ["ai"] = "@conditional.outer",
-            ["am"] = "@comment.outer",
-            ["im"] = "@comment.inner",
+            ['il'] = '@loop.inner',
+            ['al'] = '@loop.outer',
+            ['ii'] = '@conditional.inner',
+            ['ai'] = '@conditional.outer',
+            ['am'] = '@comment.outer',
+            ['im'] = '@comment.inner',
           },
         },
         move = {

@@ -6,9 +6,7 @@ return {
     -- see: `:h overseer.nvim`
     'stevearc/overseer.nvim',
     event = 'VeryLazy',
-    dependencies = {
-      { 'akinsho/toggleterm.nvim' },
-    },
+    dependencies = { 'akinsho/toggleterm.nvim' },
     opts = {
       -- Default task strategy
       strategy = {

@@ -132,16 +132,12 @@ return {
 
   {
     'nvim-neotest/neotest',
-    dependencies = {
-      'rouge8/neotest-rust',
-    },
+    dependencies = { 'rouge8/neotest-rust' },
   },
 
   {
     'hrsh7th/nvim-cmp',
-    dependencies = {
-      'Saecki/crates.nvim',
-    },
+    dependencies = { 'Saecki/crates.nvim' },
     opts = function(_, opts)
       local cmp = require 'cmp'
       opts.sources = vim.list_extend(

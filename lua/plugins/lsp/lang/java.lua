@@ -556,8 +556,6 @@ return {
   -- Setup neotest
   {
     'nvim-neotest/neotest',
-    dependencies = {
-      'rcasia/neotest-java',
-    },
+    dependencies = { 'rcasia/neotest-java' },
   },
 }

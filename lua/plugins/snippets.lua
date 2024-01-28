@@ -6,9 +6,7 @@ return {
   {
     'rafamadriz/friendly-snippets',
     event = 'VeryLazy',
-    dependencies = {
-      'L3MON4D3/LuaSnip',
-    },
+    dependencies = { 'L3MON4D3/LuaSnip' },
     config = function()
       require('luasnip.loaders.from_vscode').lazy_load { paths = './snippets' }
     end,
@@ -20,9 +18,7 @@ return {
     'L3MON4D3/LuaSnip',
     event = 'VimEnter',
     build = (not jit.os:find 'Windows') and "echo 'NOTE: jsregexp is optional, so not a big deal if it fails to build'; make install_jsregexp" or nil,
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter',
-    },
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
     init = function()
       local ls = require 'luasnip'
       ls.setup {

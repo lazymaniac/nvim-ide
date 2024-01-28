@@ -29,11 +29,11 @@ return {
       },
       -- Max number of lines for message.
       max_height = function()
-        return math.floor(vim.o.lines * 0.75)
+        return math.floor(vim.o.lines * 0.80)
       end,
       -- Max number of columns for message.
       max_width = function()
-        return math.floor(vim.o.columns * 0.75)
+        return math.floor(vim.o.columns * 0.80)
       end,
       -- Function called when a new window is openend, use for changing win settings/config
       on_open = function(win)
@@ -71,7 +71,6 @@ return {
         prefer_width = 40, -- These can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
         width = nil,
         -- min_width and max_width can be a list of mixed types.
-        -- min_width = {20, 0.2} means "the greater of 20 columns or 20% of total"
         max_width = { 140, 0.9 },
         min_width = { 20, 0.2 },
         buf_options = {},
@@ -194,13 +193,13 @@ return {
   -- see: `:h bufferline`
   {
     'akinsho/bufferline.nvim',
+    event = 'VeryLazy',
     dependencies = {
       {
         'catppuccin/nvim',
         name = 'catppuccin',
       },
     },
-    event = 'VeryLazy',
     keys = {
       { '<leader>bp', '<Cmd>BufferLineTogglePin<CR>', desc = 'Toggle pin' },
       { '<leader>bP', '<Cmd>BufferLineGroupClose ungrouped<CR>', desc = 'Delete non-pinned buffers' },
@@ -523,11 +522,7 @@ return {
   {
     'folke/noice.nvim',
     event = 'VeryLazy',
-    dependencies = {
-      'MunifTanjim/nui.nvim',
-      'hrsh7th/nvim-cmp',
-      'rcarriga/nvim-notify',
-    },
+    dependencies = { 'MunifTanjim/nui.nvim', 'hrsh7th/nvim-cmp', 'rcarriga/nvim-notify' },
     config = function()
       require('noice').setup {
         cmdline = {
@@ -749,7 +744,7 @@ return {
   {
     'nvimdev/dashboard-nvim',
     event = 'VimEnter',
-    dependencies = { { 'nvim-tree/nvim-web-devicons' } },
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
     opts = function()
       local oogway = require 'oogway'
       local opts = {

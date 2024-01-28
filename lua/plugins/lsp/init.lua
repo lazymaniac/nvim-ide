@@ -5,12 +5,7 @@ return {
   {
     'neovim/nvim-lspconfig',
     event = 'VeryLazy',
-    dependencies = {
-      'folke/neodev.nvim',
-      'williamboman/mason.nvim',
-      'williamboman/mason-lspconfig.nvim',
-      'j-hui/fidget.nvim',
-    },
+    dependencies = { 'folke/neodev.nvim', 'williamboman/mason.nvim', 'williamboman/mason-lspconfig.nvim', 'j-hui/fidget.nvim' },
     ---@class PluginLspOpts
     opts = {
       -- options for vim.diagnostic.config()

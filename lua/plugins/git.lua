@@ -145,13 +145,7 @@ return {
   {
     'harrisoncramer/gitlab.nvim',
     event = 'VeryLazy',
-    dependencies = {
-      'MunifTanjim/nui.nvim',
-      'nvim-lua/plenary.nvim',
-      'sindrets/diffview.nvim',
-      'stevearc/dressing.nvim', -- Recommended but not required. Better UI for pickers.
-      'nvim-tree/nvim-web-devicons', -- Recommended but not required. Icons in discussion tree.
-    },
+    dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim', 'sindrets/diffview.nvim', 'stevearc/dressing.nvim', 'nvim-tree/nvim-web-devicons' },
     -- stylua: ignore
     keys = {
       { '<leader>glr', function() require('gitlab').review() end, mode = { 'n' }, desc = 'Gitlab review' },
@@ -334,11 +328,7 @@ return {
   {
     'pwntester/octo.nvim',
     cmd = 'Octo',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      'nvim-telescope/telescope.nvim',
-      'nvim-tree/nvim-web-devicons',
-    },
+    dependencies = { 'nvim-lua/plenary.nvim', 'nvim-telescope/telescope.nvim', 'nvim-tree/nvim-web-devicons' },
     opts = {
       use_local_fs = false, -- use local files on right side of reviews
       enable_builtin = true, -- shows a list of builtin actions when no action is provided
@@ -764,11 +754,7 @@ return {
   {
     'NeogitOrg/neogit',
     event = 'VeryLazy',
-    dependencies = {
-      'nvim-lua/plenary.nvim', -- required
-      'sindrets/diffview.nvim', -- optional - Diff integration
-      'nvim-telescope/telescope.nvim', -- optional
-    },
+    dependencies = { 'nvim-lua/plenary.nvim', 'sindrets/diffview.nvim', 'nvim-telescope/telescope.nvim' },
     -- stylua: ignore
     keys = {
       { '<leader>gg', '<cmd>Neogit<cr>', mode = { 'n', 'v' }, desc = 'Open Neogit' },

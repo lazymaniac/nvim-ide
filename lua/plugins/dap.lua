@@ -20,11 +20,11 @@ return {
     'mfussenegger/nvim-dap',
     event = 'VeryLazy',
     dependencies = {
-      { 'rcarriga/nvim-dap-ui' },
-      { 'theHamsta/nvim-dap-virtual-text' },
-      { 'jay-babu/mason-nvim-dap.nvim' },
-      { 'stevearc/overseer.nvim' },
-      { 'LiadOz/nvim-dap-repl-highlights' },
+      'rcarriga/nvim-dap-ui',
+      'theHamsta/nvim-dap-virtual-text',
+      'jay-babu/mason-nvim-dap.nvim',
+      'stevearc/overseer.nvim',
+      'LiadOz/nvim-dap-repl-highlights',
     },
     -- stylua: ignore
     keys = {
@@ -199,7 +199,7 @@ return {
   {
     'jay-babu/mason-nvim-dap.nvim',
     event = 'VeryLazy',
-    dependencies = 'williamboman/mason.nvim',
+    dependencies = { 'williamboman/mason.nvim' },
     cmd = { 'DapInstall', 'DapUninstall' },
     opts = {
       -- Makes a best effort to setup the various debuggers with
@@ -221,9 +221,7 @@ return {
   {
     'LiadOz/nvim-dap-repl-highlights',
     event = 'VeryLazy',
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter',
-    },
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
     config = function()
       require('nvim-dap-repl-highlights').setup()
     end,

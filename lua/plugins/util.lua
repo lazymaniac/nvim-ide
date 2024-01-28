@@ -65,27 +65,15 @@ return {
   {
     'sudormrfbin/cheatsheet.nvim',
     event = 'VeryLazy',
-    dependencies = {
-      { 'nvim-telescope/telescope.nvim' },
-      { 'nvim-lua/popup.nvim' },
-      { 'nvim-lua/plenary.nvim' },
-    },
+    dependencies = { 'nvim-telescope/telescope.nvim', 'nvim-lua/popup.nvim', 'nvim-lua/plenary.nvim' },
     config = function()
       require('cheatsheet').setup {
         -- Whether to show bundled cheatsheets
         -- For generic cheatsheets like default, unicode, nerd-fonts, etc
-        -- bundled_cheatsheets = {
-        --     enabled = {},
-        --     disabled = {},
-        -- },
         bundled_cheatsheets = {
+          --     enabled = {},
           disabled = { 'nerd-fonts' },
         },
-        -- For plugin specific cheatsheets
-        -- bundled_plugin_cheatsheets = {
-        --     enabled = {},
-        --     disabled = {},
-        -- }
         bundled_plugin_cheatsheets = true,
         -- For bundled plugin cheatsheets, do not show a sheet if you
         -- don't have the plugin installed (searches runtimepath for
@@ -122,10 +110,7 @@ return {
   {
     'lazymaniac/wttr.nvim',
     event = 'VeryLazy',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      'MunifTanjim/nui.nvim',
-    },
+    dependencies = { 'nvim-lua/plenary.nvim', 'MunifTanjim/nui.nvim' },
     opts = {
       location = '',
       format = 1,

@@ -406,20 +406,14 @@ return {
   {
     'Bekaboo/dropbar.nvim',
     -- optional, but required for fuzzy finder support
-    dependencies = {
-      'nvim-telescope/telescope-fzf-native.nvim',
-    },
+    dependencies = { 'nvim-telescope/telescope-fzf-native.nvim' },
   },
   -- [nvim-devdocs] - Dev docs
   -- see: `:h nvim-devdocs`
   -- TODO: Tweak config
   {
     'luckasRanarison/nvim-devdocs',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      'nvim-telescope/telescope.nvim',
-      'nvim-treesitter/nvim-treesitter',
-    },
+    dependencies = { 'nvim-lua/plenary.nvim', 'nvim-telescope/telescope.nvim', 'nvim-treesitter/nvim-treesitter' },
     opts = {},
   },
 }
