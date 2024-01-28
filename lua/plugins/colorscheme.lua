@@ -30,49 +30,20 @@ return {
         no_bold = false, -- Force no bold
         no_underline = false, -- Force no underline
         styles = { -- Handles the styles of general hi groups (see `:h highlight-args`):
-          comments = { 'italic' }, -- Change the style of comments
-          conditionals = { 'bold' },
-          loops = { 'bold' },
-          functions = { 'italic' },
-          keywords = { 'bold' },
-          strings = { 'italic' },
-          variables = {},
-          numbers = { 'bold' },
-          booleans = { 'bold' },
-          properties = { 'italic' },
-          types = { 'bold' },
-          operators = { 'bold' },
+          comments = {}, -- Change the style of comments
+          conditionals = { 'italic' },
+          loops = { 'italic' },
+          functions = {},
+          keywords = { 'italic' },
+          strings = {},
+          variables = { 'bold' },
+          numbers = {},
+          booleans = { 'italic' },
+          properties = { 'bold' },
+          types = {},
+          operators = { 'italic' },
         },
-        color_overrides = {
-          latte = {
-            --[[   rosewater = '#c14a4a',
-            flamingo = '#c14a4a',
-            red = '#c14a4a',
-            maroon = '#c14a4a',
-            pink = '#945e80',
-            mauve = '#945e80',
-            peach = '#c35e0a',
-            yellow = '#b47109',
-            green = '#6c782e',
-            teal = '#4c7a5d',
-            sky = '#4c7a5d',
-            sapphire = '#4c7a5d',
-            blue = '#45707a',
-            lavender = '#45707a',
-            text = '#654735',
-            subtext1 = '#73503c',
-            subtext0 = '#805942',
-            overlay2 = '#8c6249',
-            overlay1 = '#8c856d',
-            overlay0 = '#a69d81',
-            surface2 = '#bfb695',
-            surface1 = '#d1c7a3',
-            surface0 = '#e3dec3',
-            base = '#f9f5d7',
-            mantle = '#f0ebce',
-            crust = '#e8e3c8', ]]
-          },
-        },
+        color_overrides = {},
         integrations = {
           aerial = true,
           bufferline = true,
@@ -138,5 +109,52 @@ return {
     end,
   },
 
-  { 'EdenEast/nightfox.nvim' },
+  {
+    'EdenEast/nightfox.nvim',
+    config = function()
+      require('nightfox').setup {
+        options = {
+          -- Compiled file's destination location
+          compile_path = vim.fn.stdpath 'cache' .. '/nightfox',
+          compile_file_suffix = '_compiled', -- Compiled file suffix
+          transparent = false, -- Disable setting background
+          terminal_colors = true, -- Set terminal colors (vim.g.terminal_color_*) used in `:terminal`
+          dim_inactive = true, -- Non focused panes set to alternative background
+          module_default = true, -- Default enable value for modules
+          colorblind = {
+            enable = false, -- Enable colorblind support
+            simulate_only = false, -- Only show simulated colorblind colors and not diff shifted
+            severity = {
+              protan = 0, -- Severity [0,1] for protan (red)
+              deutan = 0, -- Severity [0,1] for deutan (green)
+              tritan = 0, -- Severity [0,1] for tritan (blue)
+            },
+          },
+          styles = { -- Style to be applied to different syntax groups
+            comments = 'italic', -- Value is any valid attr-list value `:help attr-list`
+            conditionals = 'italic',
+            constants = 'bold',
+            functions = 'NONE',
+            keywords = 'italic',
+            numbers = 'NONE',
+            operators = 'italic',
+            strings = 'NONE',
+            types = 'NONE',
+            variables = 'bold',
+          },
+          inverse = { -- Inverse highlight for different types
+            match_paren = false,
+            visual = false,
+            search = false,
+          },
+          modules = { -- List of various plugins and additional options
+            -- ...
+          },
+        },
+        palettes = {},
+        specs = {},
+        groups = {},
+      }
+    end,
+  },
 }

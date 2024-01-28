@@ -1,5 +1,15 @@
 local Util = require 'util'
 
+local popup = {
+  position = { col = '100%', row = 2 },
+  size = function()
+    return {
+      width = 45,
+      height = vim.o.lines - 4,
+    }
+  end,
+}
+
 return {
 
   -- [[ EXPLORERS ]] ---------------------------------------------------------------
@@ -285,15 +295,7 @@ return {
         use_libuv_file_watcher = true, -- This will use the OS level file watchers to detect changes
         -- instead of relying on nvim autocmd events.
         window = {
-          popup = {
-            position = { col = '100%', row = 2 },
-            size = function()
-              return {
-                width = 60,
-                height = vim.o.lines - 6,
-              }
-            end,
-          },
+          popup = popup,
           mappings = {
             ['<space>'] = 'none',
             ['<bs>'] = 'navigate_up',
@@ -334,15 +336,7 @@ return {
         group_empty_dirs = true, -- when true, empty folders will be grouped together
         show_unloaded = true,
         window = {
-          popup = {
-            position = { col = '100%', row = 2 },
-            size = function()
-              return {
-                width = 60,
-                height = vim.o.lines - 6,
-              }
-            end,
-          },
+          popup = popup,
           mappings = {
             ['bd'] = 'buffer_delete',
             ['<bs>'] = 'navigate_up',
@@ -359,15 +353,7 @@ return {
       },
       git_status = {
         window = {
-          popup = {
-            position = { col = '100%', row = 2 },
-            size = function()
-              return {
-                width = 60,
-                height = vim.o.lines - 6,
-              }
-            end,
-          },
+          popup = popup,
           position = 'float',
           mappings = {
             ['A'] = 'git_add_all',
@@ -389,15 +375,7 @@ return {
       },
       document_symbols = {
         window = {
-          popup = {
-            position = { col = '100%', row = 2 },
-            size = function()
-              return {
-                width = 60,
-                height = vim.o.lines - 6,
-              }
-            end,
-          },
+          popup = popup,
           mappings = {
             ['<CR>'] = 'open',
             ['x'] = 'none',
@@ -414,15 +392,7 @@ return {
       },
       remote = {
         window = {
-          popup = {
-            position = { col = '100%', row = 2 },
-            size = function()
-              return {
-                width = 60,
-                height = vim.o.lines - 6,
-              }
-            end,
-          },
+          popup = popup,
         },
       },
     },
