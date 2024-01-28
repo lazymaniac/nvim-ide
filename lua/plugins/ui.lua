@@ -525,6 +525,7 @@ return {
     event = 'VeryLazy',
     dependencies = {
       'MunifTanjim/nui.nvim',
+      'hrsh7th/nvim-cmp',
       'rcarriga/nvim-notify',
     },
     config = function()
