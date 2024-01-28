@@ -4,7 +4,7 @@ return {
     'williamboman/mason.nvim',
     opts = function(_, opts)
       if type(opts.ensure_installed) == 'table' then
-        vim.list_extend(opts.ensure_installed, { 'codelldb', 'snyk', 'trivy' })
+        vim.list_extend(opts.ensure_installed, { 'codelldb', 'trivy' })
       end
     end,
   },
@@ -22,7 +22,7 @@ return {
     'mfussenegger/nvim-lint',
     opts = {
       linters_by_ft = {
-        rust = { 'snyk', 'trivy' },
+        rust = { 'trivy' },
       },
     },
   },

@@ -12,7 +12,7 @@ return {
     'williamboman/mason.nvim',
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, { 'tfsec', 'snyk', 'trivy' })
+      vim.list_extend(opts.ensure_installed, { 'tfsec', 'trivy' })
     end,
   },
 
@@ -41,8 +41,8 @@ return {
     'mfussenegger/nvim-lint',
     opts = {
       linters_by_ft = {
-        terraform = { 'tfsec', 'snyk', 'trivy' },
-        tf = { 'tfsec', 'snyk', 'trivy' },
+        terraform = { 'tfsec', 'trivy' },
+        tf = { 'tfsec', 'trivy' },
       },
     },
   },

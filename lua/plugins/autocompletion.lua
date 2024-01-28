@@ -9,17 +9,29 @@ return {
     version = false, -- last release is way too old
     event = 'InsertEnter',
     dependencies = {
-      -- Snippet Engine & its associated nvim-cmp source
-      'L3MON4D3/LuaSnip',
-      'saadparwaiz1/cmp_luasnip',
       -- Adds LSP completion capabilities
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-path',
+      'hrsh7th/cmp-calc',
+      'f3fora/cmp-spell',
+      'hrsh7th/cmp-cmdline',
+      'dmitmel/cmp-cmdline-history',
+      -- Snippet Engine & its associated nvim-cmp source
+      'L3MON4D3/LuaSnip',
+      'saadparwaiz1/cmp_luasnip',
       -- Adds a number of user-friendly snippets
       'rafamadriz/friendly-snippets',
       -- Emoji support
       'hrsh7th/cmp-emoji',
+      {
+        'David-Kunz/cmp-npm',
+        dependencies = { 'nvim-lua/plenary.nvim' },
+        ft = 'json',
+        config = function()
+          require('cmp-npm').setup {}
+        end,
+      },
     },
     opts = function()
       vim.api.nvim_set_hl(0, 'CmpGhostText', { link = 'Comment', default = true })
@@ -62,6 +74,7 @@ return {
       -- find more here: https://www.nerdfonts.com/cheat-sheet
       return {
         completion = {
+          keyword_length = 2,
           completeopt = 'menu,menuone,noinsert',
         },
         snippet = {
@@ -113,21 +126,34 @@ return {
           end, { 'i', 's' }),
         },
         sources = cmp.config.sources({
-          { name = 'copilot' },
-          { name = 'nvim_lsp' },
-          { name = 'luasnip' },
-          { name = 'path' },
-          { name = 'friendly-snippets' },
-          { name = 'emoji' },
+          { name = 'nvim_lsp', keyword_length = 2, group_index = 1 },
+          { name = 'luasnip', keyword_length = 2, group_index = 2 },
+          { name = 'friendly-snippets', keyword_length = 2, group_index = 2 },
+          { name = 'path', keyword_length = 2, group_index = 3 },
+          { name = 'emoji', keyword_length = 1, group_index = 6 },
+          { name = 'calc', keyword_length = 2, group_index = 6 },
+          { name = 'npm', keyword_length = 4, group_index = 6 },
+          {
+            name = 'spell',
+            keyword_length = 2,
+            group_index = 1,
+            option = {
+              keep_all_entries = false,
+              enable_in_context = function()
+                return false
+              end,
+            },
+          },
         }, {
           { name = 'buffer' },
         }),
         formatting = {
           fields = { 'kind', 'abbr', 'menu' },
+          expandable_indicator = true,
           format = function(entry, vim_item)
             -- Kind icons
-            -- vim_item.kind = string.format('%s', kind_icons[vim_item.kind])
-            vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind) -- This concatonates the icons with the name of the item kind
+            vim_item.kind = string.format('%s', kind_icons[vim_item.kind])
+            -- vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind) -- This concatonates the icons with the name of the item kind
             vim_item.menu = ({
               nvim_lsp = '[LSP]',
               luasnip = '[Snippet]',
@@ -143,23 +169,37 @@ return {
           select = false,
         },
         window = {
-          documentation = {
-            border = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },
-          },
+          completion = cmp.config.window.bordered(),
+          documentation = cmp.config.window.bordered(),
         },
         experimental = {
-          ghost_text = {
+          --[[ ghost_text = {
             hl_group = 'CmpGhostText',
-          },
+          }, ]]
         },
         sorting = defaults.sorting,
       }
     end,
     config = function(_, opts)
+      local cmp = require 'cmp'
       for _, source in ipairs(opts.sources) do
         source.group_index = source.group_index or 1
       end
-      require('cmp').setup(opts)
+      cmp.setup(opts)
+      cmp.setup.cmdline('/', {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = {
+          { name = 'buffer' },
+          { name = 'cmp-cmdline-history' },
+        },
+      })
+      cmp.setup.cmdline('?', {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = {
+          { name = 'buffer' },
+          { name = 'cmp-cmdline-history' },
+        },
+      })
     end,
   },
 
