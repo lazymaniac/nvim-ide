@@ -21,7 +21,8 @@ return {
     'stevearc/conform.nvim',
     opts = {
       formatters_by_ft = {
-        angular = { 'beautysh' },
+        bash = { 'beautysh' },
+        zsh = { 'beautysh' },
       },
     },
   },
@@ -30,7 +31,8 @@ return {
     'mfussenegger/nvim-lint',
     opts = {
       linters_by_ft = {
-        angular = { 'shellcheck', 'shellharden' },
+        bash = { 'shellcheck', 'shellharden' },
+        zsh = { 'shellcheck', 'shellharden' },
       },
     },
   },
