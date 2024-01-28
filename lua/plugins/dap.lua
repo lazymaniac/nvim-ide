@@ -71,7 +71,7 @@ return {
     end,
   },
 
-  -- [nvim-dap-ui] - Windows setup for debug sessions
+  -- [nvim-dap-ui] - Creates UI setup for debug sessions
   -- see: `:h nvim-dap-ui`
   {
     'rcarriga/nvim-dap-ui',
@@ -109,36 +109,18 @@ return {
       layouts = {
         {
           elements = {
-            {
-              id = 'console',
-              size = 0.65,
-            },
-            {
-              id = 'repl',
-              size = 0.35,
-            },
+            { id = 'console', size = 0.65 },
+            { id = 'repl', size = 0.35 },
           },
           position = 'bottom',
           size = 12,
         },
         {
           elements = {
-            {
-              id = 'scopes',
-              size = 0.4,
-            },
-            {
-              id = 'breakpoints',
-              size = 0.2,
-            },
-            {
-              id = 'stacks',
-              size = 0.2,
-            },
-            {
-              id = 'watches',
-              size = 0.2,
-            },
+            { id = 'scopes', size = 0.4 },
+            { id = 'breakpoints', size = 0.2 },
+            { id = 'stacks', size = 0.2 },
+            { id = 'watches', size = 0.2 },
           },
           position = 'right',
           size = 40,

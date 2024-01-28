@@ -14,7 +14,7 @@ return {
 
   -- [[ EXPLORERS ]] ---------------------------------------------------------------
   -- [neo-tree.nvim] - Explorer for files, buffer, git changes, symbols, remote
-  -- see: `:h help-tag`
+  -- see: `:h neo-tree.txt`
   {
     'nvim-neo-tree/neo-tree.nvim',
     event = 'VeryLazy',
@@ -31,7 +31,6 @@ return {
       {
         '<leader>e',
         function()
-          -- require('neo-tree.command').execute { action = 'focus', position = 'float', dir = Util.root() }
           local reveal_file = vim.fn.expand '%:p'
           if reveal_file == '' then
             reveal_file = vim.fn.getcwd()
@@ -172,26 +171,11 @@ return {
         winbar = true,
         statusline = false,
         sources = {
-          {
-            source = 'filesystem',
-            display_name = ' Files ',
-          },
-          {
-            source = 'buffers',
-            display_name = ' Buffers ',
-          },
-          {
-            source = 'git_status',
-            display_name = ' Git ',
-          },
-          {
-            source = 'document_symbols',
-            display_name = ' Symbols ',
-          },
-          {
-            source = 'remote',
-            display_name = ' Network ',
-          },
+          { source = 'filesystem', display_name = ' Files ' },
+          { source = 'buffers', display_name = ' Buffers ' },
+          { source = 'git_status', display_name = ' Git ' },
+          { source = 'document_symbols', display_name = ' Symbols ' },
+          { source = 'remote', display_name = ' Network ' },
         },
       },
       window = {

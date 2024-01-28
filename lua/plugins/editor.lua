@@ -650,11 +650,13 @@ return {
     end,
   },
 
+  -- [highlight-undo.nvim] - Highlights result of undo operation
+  -- see: `:h highlight-undo.nvim`
   {
     'tzachar/highlight-undo.nvim',
     config = function()
       require('highlight-undo').setup {
-        duration = 300,
+        duration = 500,
         undo = {
           hlgroup = 'HighlightUndo',
           mode = 'n',

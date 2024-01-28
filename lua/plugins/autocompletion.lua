@@ -11,10 +11,15 @@ return {
     dependencies = {
       -- Adds LSP completion capabilities
       'hrsh7th/cmp-nvim-lsp',
+      -- Adds buffer text completion capabilities
       'hrsh7th/cmp-buffer',
+      -- Adds file path completion capabilities
       'hrsh7th/cmp-path',
+      -- Adds calculation result to completion capabilities
       'hrsh7th/cmp-calc',
+      -- Adds correct spelling completion capabilities
       'f3fora/cmp-spell',
+      -- Adds buffer and history complation to commands
       'hrsh7th/cmp-cmdline',
       'dmitmel/cmp-cmdline-history',
       -- Snippet Engine & its associated nvim-cmp source

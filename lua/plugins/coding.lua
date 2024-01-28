@@ -184,6 +184,7 @@ return {
           end
         end,
       }
+      -- FIX: below mapping is not working
       local grammar_targets = {
         ['['] = '',
         [']'] = '',
@@ -397,18 +398,21 @@ return {
         },
       }
     end,
-
-    {
-      'Bekaboo/dropbar.nvim',
-      -- optional, but required for fuzzy finder support
-      dependencies = {
-        'nvim-telescope/telescope-fzf-native.nvim',
-      },
-    },
   },
 
+  -- [dropbar.nvim] - Interactive breadcrumbs bar
+  -- see: `:h dropbar.nvim`
+  -- TODO: Tweak config
+  {
+    'Bekaboo/dropbar.nvim',
+    -- optional, but required for fuzzy finder support
+    dependencies = {
+      'nvim-telescope/telescope-fzf-native.nvim',
+    },
+  },
   -- [nvim-devdocs] - Dev docs
   -- see: `:h nvim-devdocs`
+  -- TODO: Tweak config
   {
     'luckasRanarison/nvim-devdocs',
     dependencies = {
