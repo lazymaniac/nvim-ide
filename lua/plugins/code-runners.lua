@@ -111,7 +111,7 @@ return {
       },
       -- If not `nil` the keymap defined in the string will activate the hydra head.
       -- If you don't want to use hydra you don't need to install it either.
-      activate_hydra_keys = '<leader>h',
+      activate_hydra_keys = '<leader>ch',
       -- If `true` a hint panel will be shown when the hydra head is active. If `false`
       -- you get a minimalistic hint on the command line.
       show_hydra_hint = true,

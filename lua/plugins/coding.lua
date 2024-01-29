@@ -387,15 +387,6 @@ return {
           [''] = 'rainbow-delimiters',
           lua = 'rainbow-blocks',
         },
-        highlight = {
-          'RainbowDelimiterRed',
-          'RainbowDelimiterYellow',
-          'RainbowDelimiterBlue',
-          'RainbowDelimiterOrange',
-          'RainbowDelimiterGreen',
-          'RainbowDelimiterViolet',
-          'RainbowDelimiterCyan',
-        },
       }
     end,
   },
@@ -405,6 +396,7 @@ return {
   -- TODO: Tweak config
   {
     'Bekaboo/dropbar.nvim',
+    enabled = not vim.g.neovide,
     -- optional, but required for fuzzy finder support
     dependencies = { 'nvim-telescope/telescope-fzf-native.nvim' },
   },

@@ -157,4 +157,18 @@ return {
       end)
     end,
   },
+
+  {
+    'ellisonleao/glow.nvim',
+    config = true,
+    cmd = 'Glow',
+    keys = {
+      {
+        '<leader>cP',
+        ft = 'markdown',
+        '<cmd>GlowToggle<cr>',
+        desc = 'Glow Preview',
+      },
+    },
+  },
 }
