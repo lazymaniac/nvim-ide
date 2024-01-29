@@ -329,11 +329,11 @@ return {
         -- outline window. Eg, 'rightbelow vsplit'.
         split_command = 'botright vs',
         -- Percentage or integer of columns
-        width = 20,
+        width = 45,
         -- Whether width is relative to the total width of nvim
         -- When relative_width = true, this means take 25% of the total
         -- screen width for outline window.
-        relative_width = true,
+        relative_width = false,
         -- Auto close the outline window if goto_location is triggered and not for
         -- peek_location
         auto_close = false,
@@ -673,6 +673,15 @@ return {
         },
         highlight_for_count = true,
       }
+    end,
+  },
+
+  -- [guess-indent.nvim] - Plugin to set proper indentation
+  -- see: `:h guess-indent.nvim`
+  {
+    'nmac427/guess-indent.nvim',
+    config = function()
+      require('guess-indent').setup {}
     end,
   },
 }

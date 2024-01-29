@@ -230,6 +230,7 @@ return {
     optional = true,
     -- stylua: ignore
     keys = {
+      ---@diagnostic disable-next-line: missing-fields
       { '<leader>td', function() require('neotest').run.run { strategy = 'dap' } end, desc = 'Debug Nearest', },
     },
   },

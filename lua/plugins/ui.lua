@@ -505,10 +505,6 @@ return {
         extensions = { 'neo-tree', 'lazy', 'fzf', 'mason', 'nvim-dap-ui', 'overseer', 'quickfix', 'toggleterm', 'trouble', 'symbols-outline' },
       }
 
-      if vim.g.neovide then
-        opts.winbar = {}
-        opts.inactive_winbar = {}
-      end
       return opts
     end,
   },
