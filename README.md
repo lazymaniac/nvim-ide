@@ -1,6 +1,7 @@
 # NV-IDE personalized mix of available NVIM distros
 
 <!--toc:start-->
+
 - [NV-IDE personalized mix of available NVIM distros](#nv-ide-personalized-mix-of-available-nvim-distros)
   - [TODO](#todo)
   - [Introduction](#introduction)
@@ -35,8 +36,8 @@
 
 - Make sure to review the readmes of the plugins if you are experiencing errors.
   In particular:
-  - [ripgrep](https://github.com/BurntSushi/ripgrep#installation) is required for
-    multiple [telescope](https://github.com/nvim-telescope/telescope.nvim#suggested-dependencies)
+  - [ripgrep](https://github.com/BurntSushi/ripgrep#installation) is necessary for
+    [telescope](https://github.com/nvim-telescope/telescope.nvim#suggested-dependencies)
     pickers.
 
 #### Packages
@@ -70,8 +71,8 @@
 Neovim's configurations are located under the following paths, depending on your
 OS:
 
-| OS | PATH |
-| :- | :--- |
+| OS    | PATH                                      |
+| :---- | :---------------------------------------- |
 | Linux | `$XDG_CONFIG_HOME/nvim`, `~/.config/nvim` |
 | MacOS | `$XDG_CONFIG_HOME/nvim`, `~/.config/nvim` |
 
@@ -163,7 +164,11 @@ In the file: `lua/plugins/filetree.lua`, add:
 return {
   "nvim-neo-tree/neo-tree.nvim",
   version = "*",
-  dependencies = { "nvim-lua/plenary.nvim", "nvim-tree/nvim-web-devicons", "MunifTanjim/nui.nvim", },
+  dependencies = {
+    "nvim-lua/plenary.nvim",
+    "nvim-tree/nvim-web-devicons",
+    "MunifTanjim/nui.nvim",
+  },
   config = function ()
     require('neo-tree').setup {}
   end,

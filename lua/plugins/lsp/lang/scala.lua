@@ -21,7 +21,6 @@ return {
       metals_config.on_attach = function(client, bufnr)
         require('metals').setup_dap()
       end
-
       local nvim_metals_group = vim.api.nvim_create_augroup('nvim-metals', { clear = true })
       vim.api.nvim_create_autocmd('FileType', {
         -- NOTE: You may or may not want java included here. You will need it if you
@@ -33,7 +32,6 @@ return {
         end,
         group = nvim_metals_group,
       })
-
       -- Debug settings
       local dap = require 'dap'
       dap.configurations.scala = {

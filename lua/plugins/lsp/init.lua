@@ -55,7 +55,7 @@ return {
             },
           },
         },
-        diagnosticls = {},
+        typos_lsp = {},
       },
       -- you can do any additional lsp server setup here
       -- return true if you don't want this server to be setup with lspconfig
@@ -73,7 +73,7 @@ return {
     config = function(_, opts)
       -- setup autoformat
       Util.format.register(Util.lsp.formatter())
-      -- deprectaed options
+      -- deprecated options
       ---@diagnostic disable-next-line: undefined-field
       if opts.autoformat ~= nil then
         ---@diagnostic disable-next-line: undefined-field
@@ -183,9 +183,8 @@ return {
       ensure_installed = {
         'lua-language-server',
         'stylua',
-        'codespell',
+        'typos',
         'commitlint',
-        'gitui'
       },
       ui = {
         border = 'rounded',

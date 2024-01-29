@@ -4,7 +4,7 @@ return {
     'williamboman/mason.nvim',
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, { 'prettierd', 'markdown-toc', 'markdownlint', 'grammarly-languageserver', 'write-good', 'alex', 'textlint' })
+      vim.list_extend(opts.ensure_installed, { 'prettierd', 'markdown-toc', 'markdownlint', 'write-good', 'alex' })
     end,
   },
 
@@ -30,7 +30,7 @@ return {
     'mfussenegger/nvim-lint',
     opts = {
       linters_by_ft = {
-        markdown = { 'markdownlint', 'grammarly', 'write-good', 'alex', 'textlint' },
+        markdown = { 'markdownlint', 'write_good', 'alex' },
       },
     },
   },
@@ -40,7 +40,6 @@ return {
     opts = {
       servers = {
         marksman = {},
-        grammarly = {},
       },
     },
   },
@@ -57,7 +56,7 @@ return {
         '<leader>cp',
         ft = 'markdown',
         '<cmd>MarkdownPreviewToggle<cr>',
-        desc = 'Markdown Preview',
+        desc = 'Markdown Preview (Browser)',
       },
     },
     config = function()
@@ -158,16 +157,26 @@ return {
     end,
   },
 
+  -- [glow.nvim] - Markdown preview in terminal
+  -- see: `:h glow.nvim`
   {
     'ellisonleao/glow.nvim',
-    config = true,
+    config = function()
+      require('glow').setup {
+        border = 'rounded', -- floating window border config
+        width = 150,
+        height = 100,
+        width_ratio = 0.8, -- maximum width of the Glow window compared to the nvim window size (overrides `width`)
+        height_ratio = 0.8,
+      }
+    end,
     cmd = 'Glow',
     keys = {
       {
         '<leader>cP',
         ft = 'markdown',
-        '<cmd>GlowToggle<cr>',
-        desc = 'Glow Preview',
+        '<cmd>Glow<cr>',
+        desc = 'Markdown Preview (TUI)',
       },
     },
   },

@@ -35,7 +35,7 @@ return {
       max_width = function()
         return math.floor(vim.o.columns * 0.80)
       end,
-      -- Function called when a new window is openend, use for changing win settings/config
+      -- Function called when a new window is opened, use for changing win settings/config
       on_open = function(win)
         vim.api.nvim_win_set_config(win, { zindex = 100 })
       end,
@@ -215,7 +215,7 @@ return {
       options = {
         mode = 'buffers', -- Set to "tabs" to only show tabpages instead
         -- style_preset = require('bufferline').style_preset.minimal, -- or style_preset.minimal
-        themable = true, --Allows highlight groups to be overriden i.e. sets highlights as default
+        themable = true, --Allows highlight groups to be overridden i.e. sets highlights as default
         numbers = 'ordinal', -- "none" | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
         close_command = function(n)
           require('mini.bufremove').delete(n, false)
@@ -243,7 +243,7 @@ return {
         -- end,
         max_name_length = 30,
         max_prefix_length = 30, -- prefix used when a buffer is de-duplicated
-        truncate_names = true, -- Whether ot not tab names should be truncated
+        truncate_names = true, -- Whether or not tab names should be truncated
         tab_size = 18,
         diagnostics = false, -- | "nvim_lsp" | "coc" | false
         diagnostics_update_in_insert = false,
@@ -794,7 +794,7 @@ return {
     },
   },
 
-  -- [floating-help.nvim] - Vim help shown in flaoting popup
+  -- [floating-help.nvim] - Vim help shown in floating popup
   -- see: 'h: floating-help'
   {
     'Tyler-Barham/floating-help.nvim',
@@ -1051,7 +1051,7 @@ return {
           font = '14', -- font size
         },
         -- this will change the font size on wezterm when in zen mode
-        -- See alse also the Plugins/Wezterm section in this projects README
+        -- See also the Plugins/Wezterm section in this projects README
         wezterm = {
           enabled = false,
           -- can be either an absolute font size or the number of incremental steps
