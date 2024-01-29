@@ -165,7 +165,7 @@ return {
         'netman.ui.neo-tree',
       },
       source_selector = {
-        winbar = true,
+        winbar = false,
         statusline = false,
         sources = {
           { source = 'filesystem', display_name = ' Files ' },
@@ -330,6 +330,19 @@ return {
           end
         end,
       })
+    end,
+  },
+
+  -- [nvim-lsp-file-operations] - File operations supported by LSP
+  -- see: `:h nvim-lsp-file-operations`
+  {
+    'antosha417/nvim-lsp-file-operations',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-neo-tree/neo-tree.nvim',
+    },
+    config = function()
+      require('lsp-file-operations').setup()
     end,
   },
 }
