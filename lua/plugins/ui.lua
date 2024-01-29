@@ -477,10 +477,6 @@ return {
             { 'filesize' },
           },
           lualine_y = {
-            { 'encoding' },
-            { 'fileformat' },
-          },
-          lualine_z = {
             {
               'filetype',
               icon_only = false,
@@ -491,7 +487,10 @@ return {
                 align = 'right',
               },
             },
+            { 'encoding' },
+            { 'fileformat' },
           },
+          lualine_z = {},
         },
         inactive_winbar = {
           lualine_a = {
