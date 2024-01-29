@@ -343,11 +343,11 @@ return {
           lualine_a = { 'mode' },
           lualine_b = { 'branch' },
           lualine_c = {
-            { 'require("arrow.statusline").is_on_arrow_file()' },
-            { 'require("arrow.statusline").text_for_statusline_with_icons()' },
+            { "require'wttr'.text" },
           },
           lualine_x = {
-            { "require'wttr'.text" },
+            { 'require("arrow.statusline").is_on_arrow_file()' },
+            { 'require("arrow.statusline").text_for_statusline_with_icons()' },
             {
               function()
                 return '  ' .. require('dap').status()
@@ -430,12 +430,22 @@ return {
         tabline = {},
         winbar = {
           lualine_a = {
-            Util.lualine.root_dir(),
+            Util.lualine.root_dir { cwd = true },
           },
           lualine_b = {
             { Util.lualine.pretty_path() },
           },
           lualine_c = {
+            {
+              function()
+                return require('nvim-navic').get_location()
+              end,
+              cond = function()
+                return package.loaded['nvim-navic'] and require('nvim-navic').is_available()
+              end,
+            },
+          },
+          lualine_x = {
             {
               'diff',
               symbols = {
@@ -464,24 +474,24 @@ return {
                 hint = icons.diagnostics.Hint,
               },
             },
+            { 'filesize' },
           },
-          lualine_x = {
+          lualine_y = {
+            { 'encoding' },
+            { 'fileformat' },
+          },
+          lualine_z = {
             {
               'filetype',
               icon_only = false,
-              colored = true,
+              colored = false,
               separator = '',
               padding = { left = 1, right = 1 },
               icon = {
                 align = 'right',
               },
             },
-            { 'encoding' },
-            { 'fileformat' },
-            { 'filesize' },
           },
-          lualine_y = {},
-          lualine_z = {},
         },
         inactive_winbar = {
           lualine_a = {

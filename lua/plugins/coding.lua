@@ -391,15 +391,30 @@ return {
     end,
   },
 
-  -- [dropbar.nvim] - Interactive breadcrumbs bar
-  -- see: `:h dropbar.nvim`
-  -- TODO: Tweak config
+  -- [nvim-navic] - Code context in lualine winbar
+  -- see: `:h nvim-navic`
   {
-    'Bekaboo/dropbar.nvim',
-    enabled = not vim.g.neovide,
-    -- optional, but required for fuzzy finder support
-    dependencies = { 'nvim-telescope/telescope-fzf-native.nvim' },
+    'SmiteshP/nvim-navic',
+    event = 'VeryLazy',
+    init = function()
+      vim.g.navic_silence = true
+      require('util').lsp.on_attach(function(client, buffer)
+        if client.supports_method 'textDocument/documentSymbol' then
+          require('nvim-navic').attach(client, buffer)
+        end
+      end)
+    end,
+    opts = function()
+      return {
+        separator = ' ',
+        highlight = true,
+        depth_limit = 5,
+        icons = require('config').icons.kinds,
+        lazy_update_context = true,
+      }
+    end,
   },
+
   -- [nvim-devdocs] - Dev docs
   -- see: `:h nvim-devdocs`
   -- TODO: Tweak config
