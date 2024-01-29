@@ -3,7 +3,7 @@ return {
   {
     'williamboman/mason.nvim',
     opts = function(_, opts)
-      vim.list_extend(opts.ensure_installed, { 'prettierd', 'htmlhint', 'stylelint' })
+      vim.list_extend(opts.ensure_installed, { 'prettierd', 'htmlhint', 'stylelint', 'eslint_d' })
     end,
   },
 
@@ -21,7 +21,6 @@ return {
         html = { 'prettierd' },
         javascript = { 'prettierd' },
         css = { 'prettierd' },
-        typescript = { 'prettierd' },
         less = { 'prettierd' },
         scss = { 'prettierd' },
         jsx = { 'prettierd' },
@@ -34,6 +33,10 @@ return {
     opts = {
       linters_by_ft = {
         html = { 'htmlhint', 'stylelint' },
+        javascript = { 'eslint_d' },
+        css = { 'stylelint' },
+        scss = { 'stylelint' },
+        less = { 'stylelint' },
       },
     },
   },

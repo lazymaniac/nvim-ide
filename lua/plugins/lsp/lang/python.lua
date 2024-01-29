@@ -30,7 +30,7 @@ return {
     'mfussenegger/nvim-lint',
     opts = {
       linters_by_ft = {
-        markdown = { 'ruff', 'pydocstyle', 'pylama', 'pylint' },
+        python = { 'ruff', 'pydocstyle', 'pylama', 'pylint' },
       },
     },
   },
