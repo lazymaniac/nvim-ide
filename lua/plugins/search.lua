@@ -252,6 +252,9 @@ return {
       -- You can also use search.forward / search.backward for motion selection.
     end,
   },
+
+  -- [ssr.nvim] - Search and replace
+  -- see: `:h ssr.nvim`
   {
     'cshuaimin/ssr.nvim',
     module = 'ssr',
@@ -277,5 +280,16 @@ return {
     keys = {
       { '<leader>se', function() require('ssr').open() end, mode = { 'n', 'v' }, desc = 'desc' },
     },
+  },
+
+  {
+    'piersolenski/telescope-import.nvim',
+    dependencies = 'nvim-telescope/telescope.nvim',
+    config = function()
+      Util.on_load('telescope.nvim', function()
+        ---@diagnostic disable-next-line: undefined-field
+        require('telescope').load_extension 'import'
+      end)
+    end,
   },
 }
