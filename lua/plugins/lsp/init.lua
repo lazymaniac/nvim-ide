@@ -73,13 +73,6 @@ return {
     config = function(_, opts)
       -- setup autoformat
       Util.format.register(Util.lsp.formatter())
-      -- deprecated options
-      ---@diagnostic disable-next-line: undefined-field
-      if opts.autoformat ~= nil then
-        ---@diagnostic disable-next-line: undefined-field
-        vim.g.autoformat = opts.autoformat
-        Util.deprecate('nvim-lspconfig.opts.autoformat', 'vim.g.autoformat')
-      end
       -- setup keymaps
       Util.lsp.on_attach(function(client, buffer)
         require('plugins.lsp.keymaps').on_attach(client, buffer)

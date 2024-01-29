@@ -343,7 +343,6 @@ return {
           lualine_a = { 'mode' },
           lualine_b = { 'branch' },
           lualine_c = {
-            { 'hostname' },
             { 'require("arrow.statusline").is_on_arrow_file()' },
             { 'require("arrow.statusline").text_for_statusline_with_icons()' },
           },
