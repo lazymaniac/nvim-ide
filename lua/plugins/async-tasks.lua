@@ -24,7 +24,7 @@ return {
         -- only if the exit code is 0.
         quit_on_exit = 'success',
         -- open the toggleterm window when a task starts
-        open_on_start = true,
+        open_on_start = false,
         -- mirrors the toggleterm "hidden" parameter, and keeps the task from
         -- being rendered in the toggleable window
         hidden = false,

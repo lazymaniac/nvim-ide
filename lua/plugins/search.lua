@@ -278,7 +278,7 @@ return {
     end,
     -- stylua: ignore
     keys = {
-      { '<leader>se', function() require('ssr').open() end, mode = { 'n', 'v' }, desc = 'desc' },
+      { '<leader>se', function() require('ssr').open() end, mode = { 'n', 'v' }, desc = 'Search Replace (Buffer)' },
     },
   },
 
@@ -289,6 +289,34 @@ return {
       Util.on_load('telescope.nvim', function()
         ---@diagnostic disable-next-line: undefined-field
         require('telescope').load_extension 'import'
+      end)
+    end,
+    keys = {
+      {
+        '<leader>si',
+        '<cmd>Telescope import<cr>',
+        mode = { 'n', 'v' },
+        desc = 'Search Imports',
+      },
+    },
+  },
+
+  {
+    'someone-stole-my-name/yaml-companion.nvim',
+    dependencies = {
+      { 'neovim/nvim-lspconfig' },
+      { 'nvim-lua/plenary.nvim' },
+      { 'nvim-telescope/telescope.nvim' },
+    },
+    keys = {
+      { '<leader>sy', '<cmd>Telescope yaml_schema<cr>', mode = { 'n', 'v' }, desc = 'Search YAML Schema' },
+    },
+    config = function()
+      local cfg = require('yaml-companion').setup {}
+      require('lspconfig')['yamlls'].setup(cfg)
+      Util.on_load('telescope.nvim', function()
+        ---@diagnostic disable-next-line: undefined-field
+        require('telescope').load_extension 'yaml_schema'
       end)
     end,
   },

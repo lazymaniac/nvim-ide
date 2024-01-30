@@ -99,7 +99,6 @@ return {
       -- "akinsho/toggleterm.nvim", -- alternative repl provider
       'benlubas/molten-nvim',
       -- '3rd/image.nvim',
-      'anuvyklack/hydra.nvim',
     },
     opts = {
       -- Code cell marker. Cells start with the marker and end either at the beginning
@@ -109,12 +108,6 @@ return {
       cell_markers = {
         python = '# %%',
       },
-      -- If not `nil` the keymap defined in the string will activate the hydra head.
-      -- If you don't want to use hydra you don't need to install it either.
-      activate_hydra_keys = '<leader>ch',
-      -- If `true` a hint panel will be shown when the hydra head is active. If `false`
-      -- you get a minimalistic hint on the command line.
-      show_hydra_hint = true,
       -- Mappings while the hydra head is active.
       -- Any of the mappings can be set to "nil", the string! Not the value! to unamp it
       hydra_keys = {
