@@ -15,6 +15,7 @@ return {
     },
     config = function()
       local egrep_actions = require 'telescope._extensions.egrepify.actions'
+      ---@diagnostic disable-next-line: undefined-field
       require('telescope').setup {
         extensions = {
           egrepify = {
@@ -56,6 +57,7 @@ return {
           },
         },
       }
+      ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'egrepify'
     end,
   },
@@ -86,6 +88,7 @@ return {
         'rcarriga/nvim-notify',
         config = function()
           Util.on_load('telescope.nvim', function()
+            ---@diagnostic disable-next-line: undefined-field
             require('telescope').load_extension 'notify'
           end)
         end,
@@ -96,6 +99,7 @@ return {
         enabled = vim.fn.executable 'make' == 1,
         config = function()
           Util.on_load('telescope.nvim', function()
+            ---@diagnostic disable-next-line: undefined-field
             require('telescope').load_extension 'fzf'
           end)
         end,
@@ -104,6 +108,7 @@ return {
         'nvim-telescope/telescope-dap.nvim',
         config = function()
           Util.on_load('telescope.nvim', function()
+            ---@diagnostic disable-next-line: undefined-field
             require('telescope').load_extension 'dap'
           end)
         end,
@@ -148,6 +153,7 @@ return {
       { '<leader>uC', Util.telescope('colorscheme', { enable_preview = true }), desc = '[C]olorscheme with preview' },
       { '<leader>ss', function() require('telescope.builtin').lsp_document_symbols {} end, desc = 'Goto [S]ymbol' },
       { '<leader>sS', function() require('telescope.builtin').lsp_dynamic_workspace_symbols {} end, desc = 'Goto [S]ymbol (Workspace)' },
+      ---@diagnostic disable-next-line: undefined-field
       { '<leader>sN', function() require('telescope').extensions.notify.notify() end, desc = '[N]otifications' },
       { '<leader>fp', function() require('telescope.builtin').find_files { cwd = require('lazy.core.config').options.root } end, desc = 'Find [P]lugin File' },
     },

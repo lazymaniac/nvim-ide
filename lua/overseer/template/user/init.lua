@@ -6,6 +6,7 @@ return {
   'user.mvn-component-tests',
   'user.mvn-api-tests',
   'user.mvn-active-profiles',
+  'user.mvn-all-profiles',
   'user.docker-compose-up',
   'user.docker-compose-kill',
   'user.docker-compose-stop',
