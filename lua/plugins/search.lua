@@ -282,6 +282,8 @@ return {
     },
   },
 
+  -- [telescope-import] - Search and add imports with telescope
+  -- see: `:h telescope-import`
   {
     'piersolenski/telescope-import.nvim',
     dependencies = 'nvim-telescope/telescope.nvim',
@@ -301,6 +303,8 @@ return {
     },
   },
 
+  -- [yaml-companion] - Search and apply YAML schema
+  -- see: `:h yaml-companion`
   {
     'someone-stole-my-name/yaml-companion.nvim',
     dependencies = {
