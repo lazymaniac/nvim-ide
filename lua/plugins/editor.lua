@@ -685,6 +685,8 @@ return {
     end,
   },
 
+  -- [windows.nvim] - Plugin for maximizing windows
+  -- see: `:h windows.nvim`
   {
     'anuvyklack/windows.nvim',
     dependencies = {
@@ -702,6 +704,24 @@ return {
       vim.o.winminwidth = 10
       vim.o.equalalways = false
       require('windows').setup()
+    end,
+  },
+
+  -- [better_escape.nvim] - Escpe from insert mode with jj or jk
+  -- see: `:h better_escape.nvim`
+  {
+    'max397574/better-escape.nvim',
+    config = function()
+      require('better_escape').setup {
+        mapping = { 'jk', 'jj' }, -- a table with mappings to use
+        timeout = vim.o.timeoutlen, -- the time in which the keys must be hit in ms. Use option timeoutlen by default
+        clear_empty_lines = false, -- clear line after escaping if there is only whitespace
+        keys = '<Esc>', -- keys used for escaping, if it is a function will use the result everytime
+        -- example(recommended)
+        -- keys = function()
+        --   return vim.api.nvim_win_get_cursor(0)[2] > 1 and '<esc>l' or '<esc>'
+        -- end,
+      }
     end,
   },
 }
