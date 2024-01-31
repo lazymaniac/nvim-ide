@@ -11,37 +11,6 @@ return {
     event = 'VeryLazy',
     cmd = 'Telescope',
     version = false, -- telescope did only one release, so use HEAD for now
-    dependencies = {
-      {
-        'rcarriga/nvim-notify',
-        config = function()
-          Util.on_load('telescope.nvim', function()
-            ---@diagnostic disable-next-line: undefined-field
-            require('telescope').load_extension 'notify'
-          end)
-        end,
-      },
-      {
-        'nvim-telescope/telescope-fzf-native.nvim',
-        build = 'make',
-        enabled = vim.fn.executable 'make' == 1,
-        config = function()
-          Util.on_load('telescope.nvim', function()
-            ---@diagnostic disable-next-line: undefined-field
-            require('telescope').load_extension 'fzf'
-          end)
-        end,
-      },
-      {
-        'nvim-telescope/telescope-dap.nvim',
-        config = function()
-          Util.on_load('telescope.nvim', function()
-            ---@diagnostic disable-next-line: undefined-field
-            require('telescope').load_extension 'dap'
-          end)
-        end,
-      },
-    },
     -- stylua: ignore
     keys = {
       { '<leader>,', '<cmd>Telescope buffers sort_mru=true sort_lastused=true<cr>', desc = 'Switch Buffer [,]' },
@@ -148,44 +117,28 @@ return {
   -- see: `:h telescope-import`
   {
     'piersolenski/telescope-import.nvim',
-    event = 'VeryLazy',
     dependencies = 'nvim-telescope/telescope.nvim',
-    config = function()
-      Util.on_load('telescope.nvim', function()
-        ---@diagnostic disable-next-line: undefined-field
-        require('telescope').load_extension 'import'
-      end)
-    end,
+    -- stylua: ignore
     keys = {
-      {
-        '<leader>si',
-        '<cmd>Telescope import<cr>',
-        mode = { 'n', 'v' },
-        desc = 'Search Imports',
-      },
+      { '<leader>si', '<cmd>Telescope import<cr>', mode = { 'n', 'v' }, desc = 'Search Imports' },
     },
+    config = function()
+      require('telescope').load_extension 'import'
+    end,
   },
 
   -- [yaml-companion] - Search and apply YAML schema
   -- see: `:h yaml-companion`
   {
     'someone-stole-my-name/yaml-companion.nvim',
-    event = 'VeryLazy',
-    dependencies = {
-      { 'neovim/nvim-lspconfig' },
-      { 'nvim-lua/plenary.nvim' },
-      { 'nvim-telescope/telescope.nvim' },
-    },
+    dependencies = { 'neovim/nvim-lspconfig', 'nvim-lua/plenary.nvim', 'nvim-telescope/telescope.nvim' },
     keys = {
       { '<leader>sy', '<cmd>Telescope yaml_schema<cr>', mode = { 'n', 'v' }, desc = 'Search YAML Schema' },
     },
     config = function()
       local cfg = require('yaml-companion').setup {}
       require('lspconfig')['yamlls'].setup(cfg)
-      Util.on_load('telescope.nvim', function()
-        ---@diagnostic disable-next-line: undefined-field
-        require('telescope').load_extension 'yaml_schema'
-      end)
+      require('telescope').load_extension 'yaml_schema'
     end,
   },
 
@@ -193,14 +146,12 @@ return {
   -- see: `:h telescope-tabs`
   {
     'LukasPietzschmann/telescope-tabs',
-    event = 'VeryLazy',
     dependencies = { 'nvim-telescope/telescope.nvim' },
     -- stylua: ignore
     keys = {
       { '<leader><tab>s', '<cmd>Telescope telescope-tabs list_tabs<cr>', mode = { 'n', 'v' }, desc = 'List Tabs' },
     },
     config = function()
-      ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'telescope-tabs'
       require('telescope-tabs').setup {}
     end,
@@ -210,27 +161,12 @@ return {
   -- see: `:h telescope-undo`
   {
     'debugloop/telescope-undo.nvim',
-    event = 'VeryLazy',
     dependencies = { 'nvim-telescope/telescope.nvim' },
     -- stylua: ignore
     keys = {
       { '<leader>su', '<cmd>Telescope undo<cr>', desc = 'Undo History' },
     },
-    opts = {
-      -- don't use `defaults = { }` here, do this in the main telescope spec
-      extensions = {
-        undo = {
-          use_delta = true,
-          side_by_side = true,
-          saved_only = false,
-        },
-        -- no other extensions here, they can have their own spec too
-      },
-    },
-    config = function(_, opts)
-      ---@diagnostic disable-next-line: undefined-field
-      require('telescope').setup(opts)
-      ---@diagnostic disable-next-line: undefined-field
+    config = function()
       require('telescope').load_extension 'undo'
     end,
   },
@@ -239,7 +175,6 @@ return {
   -- see: `:h telescope-egrepify`
   {
     'fdschmidt93/telescope-egrepify.nvim',
-    event = 'VeryLazy',
     dependencies = { 'nvim-telescope/telescope.nvim', 'nvim-lua/plenary.nvim' },
     -- stylua: ignore
     keys = {
@@ -289,8 +224,33 @@ return {
           },
         },
       }
-      ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'egrepify'
+    end,
+  },
+
+  {
+    'rcarriga/nvim-notify',
+    dependencies = { 'nvim-telescope/telescope.nvim' },
+    config = function()
+      require('telescope').load_extension 'notify'
+    end,
+  },
+
+  {
+    'nvim-telescope/telescope-fzf-native.nvim',
+    dependencies = { 'nvim-telescope/telescope.nvim' },
+    event = 'VeryLazy',
+    build = 'make',
+    config = function()
+      require('telescope').load_extension 'fzf'
+    end,
+  },
+
+  {
+    'nvim-telescope/telescope-dap.nvim',
+    dependencies = { 'nvim-telescope/telescope.nvim' },
+    config = function()
+      require('telescope').load_extension 'dap'
     end,
   },
 }

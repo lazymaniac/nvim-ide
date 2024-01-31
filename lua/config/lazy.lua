@@ -17,7 +17,7 @@ require('lazy').setup {
   defaults = {
     -- Disable lazy loading of plugins
     lazy = false,
-    -- Aways use the latest stable git commit for plugins that support semver
+    -- Always use the latest stable git commit for plugins that support semver
     version = '*',
   },
   install = { colorscheme = { 'tokyonight', 'habamax' } },
