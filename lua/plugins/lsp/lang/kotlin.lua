@@ -16,7 +16,6 @@ return {
       vim.list_extend(opts.ensure_installed, {
         'ktlint',
         'kotlin-debug-adapter',
-        'detekt',
       })
     end,
   },
@@ -34,7 +33,7 @@ return {
     'mfussenegger/nvim-lint',
     opts = {
       linters_by_ft = {
-        kotlin = { 'ktlint', 'detekt' },
+        kotlin = { 'ktlint' },
       },
     },
   },

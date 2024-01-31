@@ -303,7 +303,7 @@ return {
     'williamboman/mason.nvim',
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, { 'clang-format', 'checkstyle', 'trivy' })
+      vim.list_extend(opts.ensure_installed, { 'clang-format', 'trivy', 'sonarlint-language-server' })
     end,
   },
 
@@ -319,13 +319,41 @@ return {
     'mfussenegger/nvim-lint',
     opts = {
       linters_by_ft = {
-        java = { 'checkstyle', 'trivy' },
+        java = { 'trivy' },
       },
     },
   },
 
-  -- Configure nvim-lspconfig to install the server automatically via mason, but
-  -- defer actually starting it to our configuration of nvim-jtdls below.
+  -- [sonarlint.nvim] - Sonarlint LSP
+  -- see: `:h sonarlint.nvim`
+  {
+    'https://gitlab.com/schrieveslaach/sonarlint.nvim',
+    dependencies = { 'neovim/nvim-lspconfig', 'mfussenegger/nvim-jdtls' },
+    ft = { 'java', 'cpp', 'python' },
+    config = function()
+      require('sonarlint').setup {
+        server = {
+          cmd = {
+            'sonarlint-language-server',
+            -- Ensure that sonarlint-language-server uses stdio channel
+            '-stdio',
+            '-analyzers',
+            -- paths to the analyzers you need, using those for python and java in this example
+            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonarpython.jar',
+            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonarcfamily.jar',
+            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonarjava.jar',
+          },
+        },
+        filetypes = {
+          -- Tested and working
+          'python',
+          'cpp',
+          'java',
+        },
+      }
+    end,
+  },
+
   {
     'neovim/nvim-lspconfig',
     opts = {

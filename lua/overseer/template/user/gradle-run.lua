@@ -2,9 +2,9 @@ return {
   name = 'Gradle Run',
   builder = function()
     return {
-      cmd = { 'gradle' },
+      cmd = { './gradlew' },
       args = { 'run' },
     }
   end,
-  desc = 'gradle run',
+  desc = './gradlew run',
 }
