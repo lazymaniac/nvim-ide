@@ -122,6 +122,7 @@ return {
   -- see: `:h nvim-treesitter-textobjects`
   {
     'nvim-treesitter/nvim-treesitter-textobjects',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
     event = 'VeryLazy',
     config = function()
       -- When in diff mode, we want to use the default
@@ -151,6 +152,7 @@ return {
   -- see: `:h nvim-ts-autotags`
   {
     'windwp/nvim-ts-autotag',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
     event = 'VeryLazy',
     opts = {},
   },

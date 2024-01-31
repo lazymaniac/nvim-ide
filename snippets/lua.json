@@ -22,7 +22,7 @@
       "    ${2:Function}",
       "  end,",
       "  mode = { 'n', 'v' },",
-      "  desc = '${3:Descritpion}',",
+      "  desc = '${3:Description}',",
       "},"
     ],
     "prefix": "keymapping_fn"

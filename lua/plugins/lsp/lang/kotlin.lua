@@ -63,7 +63,6 @@ return {
               projectRoot = vim.fn.getcwd() .. '/app',
               mainClass = function()
                 return vim.fn.input('Path to main class > ', '', 'file')
-                -- return vim.fn.input("Path to main class > ", "myapp.sample.app.AppKt", "file")
               end,
             },
             {
