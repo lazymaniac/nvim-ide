@@ -55,6 +55,7 @@ return {
             },
           },
         },
+        typos_lsp = {},
       },
       -- you can do any additional lsp server setup here
       -- return true if you don't want this server to be setup with lspconfig
@@ -175,7 +176,6 @@ return {
       ensure_installed = {
         'lua-language-server',
         'stylua',
-        'typos',
         'commitlint',
       },
       ui = {

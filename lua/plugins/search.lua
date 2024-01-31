@@ -330,4 +330,17 @@ return {
       end)
     end,
   },
+
+  {
+    'LukasPietzschmann/telescope-tabs',
+    dependencies = { 'nvim-telescope/telescope.nvim' },
+    -- stylua: ignore
+    keys = {
+      { '<leader><tab>s', '<cmd>Telescope telescope-tabs list_tabs<cr>', mode = { 'n', 'v' }, desc = 'List Tabs' },
+    },
+    config = function()
+      require('telescope').load_extension 'telescope-tabs'
+      require('telescope-tabs').setup {}
+    end,
+  },
 }

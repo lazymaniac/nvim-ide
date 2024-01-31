@@ -684,4 +684,24 @@ return {
       require('guess-indent').setup {}
     end,
   },
+
+  {
+    'anuvyklack/windows.nvim',
+    dependencies = {
+      'anuvyklack/middleclass',
+      'anuvyklack/animation.nvim',
+    },
+    -- stylua: ignore
+    keys = {
+      { '<leader>wm', '<cmd>WindowsMaximize<cr>', mode = { 'n', 'v' }, desc = 'Maximize Window', },
+      { '<leader>we', '<cmd>WindowsEqualize<cr>', mode = { 'n', 'v' }, desc = 'Equalize Window', },
+      { '<leader>wt', '<cmd>WindowsToggleAutowidth<cr>', mode = { 'n', 'v' }, desc = 'Toggle Autowidth', },
+    },
+    config = function()
+      vim.o.winwidth = 10
+      vim.o.winminwidth = 10
+      vim.o.equalalways = false
+      require('windows').setup()
+    end,
+  },
 }
