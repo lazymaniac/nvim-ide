@@ -313,4 +313,63 @@ return {
       require('telescope').load_extension 'lazy'
     end,
   },
+
+  {
+    'paopaol/telescope-git-diffs.nvim',
+    dependencies = { 'nvim-telescope/telescope.nvim', 'nvim-lua/plenary.nvim', 'sindrets/diffview.nvim' },
+    -- stylua: ignore
+    keys = {
+      { '<leader>gc', '<cmd>Telescope git_diffs diff_commits<cr>', mode = { 'n', 'v' }, desc = 'Search Commits' },
+    },
+    config = function()
+      require('telescope').load_extension 'git_diffs'
+    end,
+  },
+
+  {
+    'benfowler/telescope-luasnip.nvim',
+    dependencies = { 'nvim-telescope/telescope.nvim' },
+    -- stylua: ignore
+    keys = {
+      { '<leader>sL', '<cmd>Telescope luasnip<cr>', mode = { 'n', 'v' }, desc = 'Search Snippets' },
+    },
+    config = function()
+      require('telescope').load_extension 'luasnip'
+    end,
+  },
+
+  {
+    'FeiyouG/commander.nvim',
+    dependencies = {
+      'nvim-telescope/telescope.nvim',
+    },
+    keys = {
+      { '<leader>.', '<CMD>Telescope commander<CR>', mode = 'n' },
+    },
+    config = function()
+      ---@diagnostic disable-next-line: missing-fields
+      require('commander').setup {
+        components = {
+          'DESC',
+          'KEYS',
+          'CAT',
+        },
+        sort_by = {
+          'DESC',
+          'KEYS',
+          'CAT',
+          'CMD',
+        },
+        integration = {
+          telescope = {
+            enable = true,
+          },
+          lazy = {
+            enable = true,
+            set_plugin_name_as_cat = true,
+          },
+        },
+      }
+    end,
+  },
 }
