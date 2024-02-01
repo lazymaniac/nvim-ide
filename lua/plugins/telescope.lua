@@ -385,7 +385,22 @@ return {
 
   {
     'nvim-telescope/telescope-frecency.nvim',
+    dependencies = { 'nvim-telescope/telescope.nvim' },
+    -- stylua: ignore
+    keys = {
+      { '<leader>F', '<cmd>Telescope frecency workspace=CWD<cr>', mode = { 'n', 'v' }, desc = 'Frecent Files' },
+    },
     config = function()
+      require('telescope').setup {
+        extensions = {
+          frecency = {
+            show_scores = true,
+            show_unindexed = true,
+            ignore_patterns = { '*.git/*', '*/tmp/*', '*/target/*', '*/build/*' },
+            disable_devicons = false,
+          },
+        },
+      }
       require('telescope').load_extension 'frecency'
     end,
   },
