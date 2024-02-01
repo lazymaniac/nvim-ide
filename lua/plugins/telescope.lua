@@ -340,9 +340,7 @@ return {
 
   {
     'FeiyouG/commander.nvim',
-    dependencies = {
-      'nvim-telescope/telescope.nvim',
-    },
+    dependencies = { 'nvim-telescope/telescope.nvim' },
     keys = {
       { '<leader>.', '<CMD>Telescope commander<CR>', mode = 'n' },
     },
@@ -370,6 +368,25 @@ return {
           },
         },
       }
+    end,
+  },
+
+  {
+    'LinArcX/telescope-ports.nvim',
+    dependencies = { 'nvim-telescope/telescope.nvim' },
+    -- stylua: ignore
+    keys = {
+      { '<leader>sp', '<cmd>Telescope ports<cr>', mode = { 'n', 'v' }, desc = 'List Open Ports' },
+    },
+    config = function()
+      require('telescope').load_extension 'ports'
+    end,
+  },
+
+  {
+    'nvim-telescope/telescope-frecency.nvim',
+    config = function()
+      require('telescope').load_extension 'frecency'
     end,
   },
 }
