@@ -47,9 +47,9 @@ return {
           on_attach = function(client, bufnr)
             local wk = require 'which-key'
             wk.register({
-              ['<leader>ct'] = { '<cmd>lua require("ng").goto_template_for_component()<cr>', 'Goto Template (Angular)' },
-              ['<leader>cc'] = { '<cmd>lua require("ng").goto_component_with_template_file()<cr>', 'Goto Component (Angular)' },
-              ['<leader>cb'] = { '<cmd>lua require("ng").get_template_tcb()<cr>', 'Goto Type Check Block (Angular)' },
+              ['<leader>ct'] = { '<cmd>lua require("ng").goto_template_for_component()<cr>', 'Goto Template [ct]' },
+              ['<leader>cc'] = { '<cmd>lua require("ng").goto_component_with_template_file()<cr>', 'Goto Component [cc]' },
+              ['<leader>cb'] = { '<cmd>lua require("ng").get_template_tcb()<cr>', 'Goto Type Check Block [cb]' },
             }, { mode = 'n', buffer = bufnr })
           end,
         },

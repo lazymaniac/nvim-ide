@@ -68,12 +68,9 @@ return {
         end,
       })
     end,
+    -- stylua: ignore
     keys = {
-      {
-        '<leader>cD',
-        '<cmd>DBUIToggle<CR>',
-        desc = 'Database UI [cD]',
-      },
+      { '<leader>cD', '<cmd>DBUIToggle<CR>', desc = 'Database UI [cD]' },
     },
   },
 }

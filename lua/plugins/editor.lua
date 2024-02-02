@@ -108,15 +108,18 @@ return {
   {
     'RRethy/vim-illuminate',
     event = 'VeryLazy',
-    opts = {
-      delay = 200,
-      large_file_cutoff = 2000,
-      large_file_overrides = {
-        providers = { 'lsp' },
-      },
+    keys = {
+      { ']]', desc = 'Next Reference <]]>' },
+      { '[[', desc = 'Prev Reference <[[>' },
     },
     config = function(_, opts)
-      require('illuminate').configure(opts)
+      require('illuminate').configure {
+        delay = 200,
+        large_file_cutoff = 2000,
+        large_file_overrides = {
+          providers = { 'lsp' },
+        },
+      }
       local function map(key, dir, buffer)
         vim.keymap.set('n', key, function()
           require('illuminate')['goto_' .. dir .. '_reference'](false)
@@ -133,10 +136,6 @@ return {
         end,
       })
     end,
-    keys = {
-      { ']]', desc = 'Next Reference <]]>' },
-      { '[[', desc = 'Prev Reference <[[>' },
-    },
   },
 
   -- [mini.bufremove] - Batter buffer remove
@@ -278,13 +277,13 @@ return {
   {
     'andrewferrier/textobj-diagnostic.nvim',
     event = 'VeryLazy',
-    config = function()
-      require('textobj-diagnostic').setup()
-    end,
     -- stylua: ignore
     keys = {
       { '<leader>xn', function() require('textobj-diagnostic').nearest_diag() end, desc = 'Nearest Diagnostic [xn]' },
     },
+    config = function()
+      require('textobj-diagnostic').setup()
+    end,
   },
 
   -- [todo-comments.nvim] - Finds and lists all of the TODO, HACK, BUG, etc comment
@@ -569,6 +568,28 @@ return {
   {
     'gbprod/yanky.nvim',
     event = 'VeryLazy',
+    -- stylua: ignore
+    keys = {
+        ---@diagnostic disable-next-line: undefined-field
+      { "<leader>p", function() require("telescope").extensions.yank_history.yank_history({ }) end, desc = "Search Yank History [p]" },
+      { 'y', '<Plug>(YankyYank)', mode = { 'n', 'x' }, desc = 'Yank text <y>' },
+      { 'p', '<Plug>(YankyPutAfter)', mode = { 'n', 'x' }, desc = 'Put yanked text after cursor <p>' },
+      { 'P', '<Plug>(YankyPutBefore)', mode = { 'n', 'x' }, desc = 'Put yanked text before cursor <P>' },
+      { 'gp', '<Plug>(YankyGPutAfter)', mode = { 'n', 'x' }, desc = 'Put yanked text after selection <gp>' },
+      { 'gP', '<Plug>(YankyGPutBefore)', mode = { 'n', 'x' }, desc = 'Put yanked text before selection <gP>' },
+      { '[y', '<Plug>(YankyCycleForward)', desc = 'Cycle forward through yank history <[y>' },
+      { ']y', '<Plug>(YankyCycleBackward)', desc = 'Cycle backward through yank history <]y>' },
+      { ']p', '<Plug>(YankyPutIndentAfterLinewise)', desc = 'Put indented after cursor (linewise) <]p>' },
+      { '[p', '<Plug>(YankyPutIndentBeforeLinewise)', desc = 'Put indented before cursor (linewise) <[p>' },
+      { ']P', '<Plug>(YankyPutIndentAfterLinewise)', desc = 'Put indented after cursor (linewise) <]P>' },
+      { '[P', '<Plug>(YankyPutIndentBeforeLinewise)', desc = 'Put indented before cursor (linewise) <[P>' },
+      { '>p', '<Plug>(YankyPutIndentAfterShiftRight)', desc = 'Put and indent right <>p>' },
+      { '<p', '<Plug>(YankyPutIndentAfterShiftLeft)', desc = 'Put and indent left <<p>' },
+      { '>P', '<Plug>(YankyPutIndentBeforeShiftRight)', desc = 'Put before and indent right <>P>' },
+      { '<P', '<Plug>(YankyPutIndentBeforeShiftLeft)', desc = 'Put before and indent left <<P>' },
+      { '=p', '<Plug>(YankyPutAfterFilter)', desc = 'Put after applying a filter <=p>' },
+      { '=P', '<Plug>(YankyPutBeforeFilter)', desc = 'Put before applying a filter <=P>' },
+    },
     opts = {
       ring = {
         history_length = 100,
@@ -603,28 +624,6 @@ return {
         enabled = true,
       },
     },
-    keys = {
-        -- stylua: ignore
-        ---@diagnostic disable-next-line: undefined-field
-      { "<leader>p", function() require("telescope").extensions.yank_history.yank_history({ }) end, desc = "Search Yank History [p]" },
-      { 'y', '<Plug>(YankyYank)', mode = { 'n', 'x' }, desc = 'Yank text <y>' },
-      { 'p', '<Plug>(YankyPutAfter)', mode = { 'n', 'x' }, desc = 'Put yanked text after cursor <p>' },
-      { 'P', '<Plug>(YankyPutBefore)', mode = { 'n', 'x' }, desc = 'Put yanked text before cursor <P>' },
-      { 'gp', '<Plug>(YankyGPutAfter)', mode = { 'n', 'x' }, desc = 'Put yanked text after selection <gp>' },
-      { 'gP', '<Plug>(YankyGPutBefore)', mode = { 'n', 'x' }, desc = 'Put yanked text before selection <gP>' },
-      { '[y', '<Plug>(YankyCycleForward)', desc = 'Cycle forward through yank history <[y>' },
-      { ']y', '<Plug>(YankyCycleBackward)', desc = 'Cycle backward through yank history <]y>' },
-      { ']p', '<Plug>(YankyPutIndentAfterLinewise)', desc = 'Put indented after cursor (linewise) <]p>' },
-      { '[p', '<Plug>(YankyPutIndentBeforeLinewise)', desc = 'Put indented before cursor (linewise) <[p>' },
-      { ']P', '<Plug>(YankyPutIndentAfterLinewise)', desc = 'Put indented after cursor (linewise) <]P>' },
-      { '[P', '<Plug>(YankyPutIndentBeforeLinewise)', desc = 'Put indented before cursor (linewise) <[P>' },
-      { '>p', '<Plug>(YankyPutIndentAfterShiftRight)', desc = 'Put and indent right <>p>' },
-      { '<p', '<Plug>(YankyPutIndentAfterShiftLeft)', desc = 'Put and indent left <<p>' },
-      { '>P', '<Plug>(YankyPutIndentBeforeShiftRight)', desc = 'Put before and indent right <>P>' },
-      { '<P', '<Plug>(YankyPutIndentBeforeShiftLeft)', desc = 'Put before and indent left <<P>' },
-      { '=p', '<Plug>(YankyPutAfterFilter)', desc = 'Put after applying a filter <=p>' },
-      { '=P', '<Plug>(YankyPutBeforeFilter)', desc = 'Put before applying a filter <=P>' },
-    },
   },
 
   -- [[ BUFFER UTILS ]] ---------------------------------------------------------------
@@ -645,9 +644,10 @@ return {
   {
     'carbon-steel/detour.nvim',
     event = 'VeryLazy',
-    config = function()
-      vim.keymap.set('n', '<c-w><enter>', ':Detour<cr>')
-    end,
+    -- stylua: ignore
+    keys = {
+      { '<C-w><enter>', '<cmd>Detour<cr>', mode = { 'n', 'v' }, desc = 'Open Buffer in Popup <C-w><CR>' },
+    },
   },
 
   -- [highlight-undo.nvim] - Highlights result of undo operation

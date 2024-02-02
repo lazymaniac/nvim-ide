@@ -83,9 +83,9 @@ return {
     opts = {},
     cmd = { 'CccPick', 'CccConvert', 'CccHighlighterEnable', 'CccHighlighterDisable', 'CccHighlighterToggle' },
     keys = {
-      { '<leader>UCp', '<cmd>CccPick<cr>', desc = 'Pick' },
-      { '<leader>UCc', '<cmd>CccConvert<cr>', desc = 'Convert' },
-      { '<leader>UCh', '<cmd>CccHighlighterToggle<cr>', desc = 'Toggle Highlighter' },
+      { '<leader>UCp', '<cmd>CccPick<cr>', desc = 'Pick [UCp]' },
+      { '<leader>UCc', '<cmd>CccConvert<cr>', desc = 'Convert [UCc]' },
+      { '<leader>UCh', '<cmd>CccHighlighterToggle<cr>', desc = 'Toggle Highlighter [UCh]' },
     },
   },
 }

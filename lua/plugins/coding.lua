@@ -2,7 +2,7 @@ return {
 
   -- [[ CODING HELPER ]] ---------------------------------------------------------------
 
-  -- [boole.nvim] - Allows to increment numbers and flip common text to oposite value like true -> false
+  -- [boole.nvim] - Allows to increment numbers and flip common text to opposite value like true -> false
   {
     'nat-418/boole.nvim',
     event = 'VeryLazy',
@@ -30,6 +30,10 @@ return {
   {
     'aznhe21/actions-preview.nvim',
     event = 'VeryLazy',
+    -- stylua: ignore
+    keys = {
+      { '<leader>cA', function() require('actions-preview').code_actions() end, desc = 'Preview Code Aciton [cA]' },
+    },
     config = function()
       require('actions-preview').setup {
         -- options for vim.diff(): https://neovim.io/doc/user/lua.html#vim.diff()
@@ -74,10 +78,6 @@ return {
         },
       }
     end,
-    -- stylua: ignore
-    keys = {
-      { '<leader>cq', function() require('actions-preview').code_actions() end, desc = 'Code Action - Preview' },
-    },
   },
 
   -- [glance.nvim] - Preview code like in VSCode
@@ -86,15 +86,78 @@ return {
     'dnlhc/glance.nvim',
     event = 'VeryLazy',
     config = function()
-      require('glance').setup()
+      local glance = require 'glance'
+      local actions = glance.actions
+      glance.setup {
+        height = 20, -- Height of the window
+        zindex = 45,
+        detached = function(winid)
+          return vim.api.nvim_win_get_width(winid) < 100
+        end,
+        preview_win_opts = { -- Configure preview window options
+          cursorline = true,
+          number = true,
+          wrap = true,
+        },
+        border = {
+          enable = true, -- Show window borders. Only horizontal borders allowed
+          top_char = '―',
+          bottom_char = '―',
+        },
+        list = {
+          position = 'right', -- Position of the list window 'left'|'right'
+          width = 0.33, -- 33% width relative to the active window, min 0.1, max 0.5
+        },
+        theme = { -- This feature might not work properly in nvim-0.7.2
+          enable = true, -- Will generate colors for the plugin based on your current colorscheme
+          mode = 'auto', -- 'brighten'|'darken'|'auto', 'auto' will set mode based on the brightness of your colorscheme
+        },
+        mappings = {
+          list = {
+            ['j'] = actions.next, -- Bring the cursor to the next item in the list
+            ['k'] = actions.previous, -- Bring the cursor to the previous item in the list
+            ['<Down>'] = actions.next,
+            ['<Up>'] = actions.previous,
+            ['<Tab>'] = actions.next_location, -- Bring the cursor to the next location skipping groups in the list
+            ['<S-Tab>'] = actions.previous_location, -- Bring the cursor to the previous location skipping groups in the list
+            ['<C-u>'] = actions.preview_scroll_win(5),
+            ['<C-d>'] = actions.preview_scroll_win(-5),
+            ['v'] = actions.jump_vsplit,
+            ['s'] = actions.jump_split,
+            ['t'] = actions.jump_tab,
+            ['<CR>'] = actions.jump,
+            ['o'] = actions.jump,
+            ['l'] = actions.open_fold,
+            ['h'] = actions.close_fold,
+            ['<leader>l'] = actions.enter_win 'preview', -- Focus preview window
+            ['q'] = actions.close,
+            ['Q'] = actions.close,
+            ['<Esc>'] = actions.close,
+            ['<C-q>'] = actions.quickfix,
+            -- ['<Esc>'] = false -- disable a mapping
+          },
+          preview = {
+            ['Q'] = actions.close,
+            ['<Tab>'] = actions.next_location,
+            ['<S-Tab>'] = actions.previous_location,
+            ['<leader>l'] = actions.enter_win 'list', -- Focus list window
+          },
+        },
+        hooks = {},
+        folds = {
+          fold_closed = '',
+          fold_open = '',
+          folded = true, -- Automatically fold list on startup
+        },
+        indent_lines = {
+          enable = true,
+          icon = '│',
+        },
+        winbar = {
+          enable = true, -- Available strating from nvim-0.8+
+        },
+      }
     end,
-    -- stylua: ignore
-    keys = {
-      { 'gpd', '<cmd>Glance definitions<CR>', desc = 'Preview Definition' },
-      { 'gpt', '<cmd>Glance type_definitions<CR>', desc = 'Preview Type Definition' },
-      { 'gpi', '<cmd>Glance implementations<CR>', desc = 'Preview Implementation' },
-      { 'gpr', '<cmd>Glance references<CR>', desc = 'Preview References' },
-    },
   },
 
   -- [auto-indent.nvim] - Auto move cursor to match indentation
@@ -121,26 +184,20 @@ return {
     'tomiis4/Hypersonic.nvim',
     event = 'CmdlineEnter',
     cmd = 'Hypersonic',
+    -- stylua: ignore
+    keys = {
+      { '<leader>cR', '<cmd>Hypersonic<cr>', desc = 'Regex explain [cR]' },
+    },
     config = function()
       require('hypersonic').setup {
-        ---@type 'none'|'single'|'double'|'rounded'|'solid'|'shadow'|table
         border = 'rounded',
-        ---@type number 0-100
         winblend = 0,
-        ---@type boolean
         add_padding = true,
-        ---@type string
         hl_group = 'Keyword',
-        ---@type string
         wrapping = '"',
-        ---@type boolean
         enable_cmdline = true,
       }
     end,
-    -- stylua: ignore
-    keys = {
-      { '<leader>cR', '<cmd>Hypersonic<cr>', desc = 'Regex explain' },
-    },
   },
 
   -- [nvim-surround] - Superior text surroundings. Add, remove, replace.

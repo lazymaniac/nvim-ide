@@ -1,25 +1,12 @@
 return {
 
   -- [[ LINTING ]] ---------------------------------------------------------------
+
   -- [nvim-lint] - Code linting in real-time
   -- see: `:h nvim-lint`
   {
     'mfussenegger/nvim-lint',
     event = 'VeryLazy',
-    keys = {
-      {
-        '<leader>UL',
-        function()
-          local linters = require('lint').get_running()
-          if #linters == 0 then
-            return '󰦕'
-          end
-          print('󱉶 ' .. table.concat(linters, ', '))
-        end,
-        mode = { 'n' },
-        desc = 'Get active linters for buffer',
-      },
-    },
     opts = {
       -- Event to trigger linters
       events = { 'BufWritePost', 'BufReadPost', 'InsertLeave' },

@@ -53,7 +53,7 @@ return {
                   },
                 }
               end,
-              desc = 'Organize Imports',
+              desc = 'Organize Imports [co]',
             },
           },
         },
@@ -82,8 +82,8 @@ return {
       'mfussenegger/nvim-dap-python',
       -- stylua: ignore
       keys = {
-        { "<leader>dPt", function() require('dap-python').test_method() end, desc = "Debug Method", ft = "python" },
-        { "<leader>dPc", function() require('dap-python').test_class() end, desc = "Debug Class", ft = "python" },
+        { "<leader>dM", function() require('dap-python').test_method() end, desc = "Debug Method [dM]", ft = "python" },
+        { "<leader>dS", function() require('dap-python').test_class() end, desc = "Debug Class [dS]", ft = "python" },
       },
       config = function()
         local path = require('mason-registry').get_package('debugpy'):get_install_path()
@@ -95,6 +95,7 @@ return {
   {
     'linux-cultist/venv-selector.nvim',
     cmd = 'VenvSelect',
+    keys = { { '<leader>cv', '<cmd>:VenvSelect<cr>', desc = 'Select VirtualEnv [cv]' } },
     opts = function(_, opts)
       if require('util').has 'nvim-dap-python' then
         opts.dap_enabled = true
@@ -108,6 +109,5 @@ return {
         },
       })
     end,
-    keys = { { '<leader>cv', '<cmd>:VenvSelect<cr>', desc = 'Select VirtualEnv' } },
   },
 }

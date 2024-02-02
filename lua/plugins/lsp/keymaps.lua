@@ -9,20 +9,16 @@ function M.get()
   -- stylua: ignore
   M._keys = {
     { '<leader>cl', '<cmd>LspInfo<cr>', desc = 'Lsp Info [cl]' },
-    { 'gd', function() require('telescope.builtin').lsp_definitions { reuse_win = true } end, desc = 'Goto Definition <gd>', has = 'definition', },
-    { 'gr', '<cmd>Telescope lsp_references<cr>', desc = 'Goto References <gr>' },
-    { 'gD', vim.lsp.buf.declaration, desc = 'Goto Declaration <gD>' },
-    { 'gI', function() require('telescope.builtin').lsp_implementations { reuse_win = true } end, desc = 'Goto Implementation <gI>', },
-    { 'gy', function() require('telescope.builtin').lsp_type_definitions { reuse_win = true } end, desc = 'Goto Type Definition <gy>', },
+    { 'gd', '<cmd>Glance definitions<CR>', desc = 'Goto Definition <gd>', has = 'definition', },
+    { 'gr', '<cmd>Glance references<CR>', desc = 'Goto References <gr>' },
+    { 'gI', '<cmd>Glance implementations<CR>', desc = 'Goto Implementation <gI>', },
+    { 'gD', '<cmd>Glance type_definitions<CR>', desc = 'Goto Type Definition <gy>', },
     { '<leader>cs', function() require('telescope.builtin').lsp_document_symbols() end, desc = 'Document Symbols [cs]', },
     { '<leader>cw', function() require('telescope.builtin').lsp_dynamic_workspace_symbols() end, desc = 'Workspace Symbols [cw]', },
     { 'K', vim.lsp.buf.hover, desc = 'Hover Documentation <K>' },
     { 'gK', vim.lsp.buf.signature_help, desc = 'Signature Documentation <gK>', has = 'signatureHelp' },
     { '<C-k>', vim.lsp.buf.signature_help, mode = 'i', desc = 'Signature Help <C-k>', has = 'signatureHelp' },
     { '<leader>ca', function() require('actions-preview').code_actions() end, desc = 'Code Action [ca]', mode = { 'n', 'v' }, has = 'codeAction' },
-    { '<leader>cWa', vim.lsp.buf.add_workspace_folder, 'Add Workspace Folder [cWa]' },
-    { '<leader>cWr', vim.lsp.buf.remove_workspace_folder, 'Remove Workspace Folder [cWr]' },
-    { '<leader>cWl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, 'List Workspace Folders [cWl]', },
   }
   if require('util').has 'inc-rename.nvim' then
     M._keys[#M._keys + 1] = {

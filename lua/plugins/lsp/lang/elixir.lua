@@ -28,7 +28,6 @@ return {
     config = function()
       local elixir = require 'elixir'
       local elixirls = require 'elixir.elixirls'
-
       elixir.setup {
         nextls = { enable = true },
         credo = {},
@@ -41,9 +40,9 @@ return {
           on_attach = function(client, bufnr)
             local wk = require 'which-key'
             wk.register({
-              ['<leader>cm'] = { ':ElixirFromPipe<cr>', 'From Pipe (Elixir)' },
-              ['<leader>co'] = { ':ElixirToPipe<cr>', 'To Pipe (Elixir)' },
-              ['<leader>ce'] = { ':<cr>ElixirExpandMacro<cr>', 'Expand Macro (Elixir)' },
+              ['<leader>cm'] = { ':ElixirFromPipe<cr>', 'From Pipe [cm]' },
+              ['<leader>co'] = { ':ElixirToPipe<cr>', 'To Pipe [co]' },
+              ['<leader>ce'] = { ':ElixirExpandMacro<cr>', 'Expand Macro [ce]' },
             }, { mode = 'n', buffer = bufnr })
           end,
         },

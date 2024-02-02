@@ -7,6 +7,17 @@ return {
     'stevearc/overseer.nvim',
     event = 'VeryLazy',
     dependencies = { 'akinsho/toggleterm.nvim' },
+    -- stylua: ignore
+    keys = {
+      { '<leader>rb', '<cmd>OverseerBuild<cr>', mode = { 'n', 'v' }, desc = 'Create Task [rb]', },
+      { '<leader>rv', '<cmd>OverseerToggle<cr>', mode = { 'n', 'v' }, desc = 'Show Results [rv]', },
+      { '<leader>rC', '<cmd>OverseerClearCache<cr>', mode = { 'n', 'v' }, desc = 'Clear Cache [rC]', },
+      { '<leader>rl', '<cmd>OverseerLoadBundle<cr>', mode = { 'n', 'v' }, desc = 'Load Task Bundle [rl]', },
+      { '<leader>rq', '<cmd>OverseerQuickAction<cr>', mode = { 'n', 'v' }, desc = 'Task Quick Action [rq]', },
+      { '<leader>rr', '<cmd>OverseerRun<cr>', mode = { 'n', 'v' }, desc = 'Run Task [rr]', },
+      { '<leader>rc', '<cmd>OverseerRunCmd<cr>', mode = { 'n', 'v' }, desc = 'Run Cmd [rc]', },
+      { '<leader>rt', '<cmd>OverseerTaskAction<cr>', mode = { 'n', 'v' }, desc = 'Task Action [rt]', },
+    },
     opts = {
       -- Default task strategy
       strategy = {
@@ -229,17 +240,6 @@ return {
           level = vim.log.levels.WARN,
         },
       },
-    },
-    -- stylua: ignore
-    keys = {
-      { '<leader>rb', '<cmd>OverseerBuild<cr>', mode = { 'n', 'v' }, desc = 'Create Task [Overseer]', },
-      { '<leader>rv', '<cmd>OverseerToggle<cr>', mode = { 'n', 'v' }, desc = 'Show Results [Overseer]', },
-      { '<leader>rC', '<cmd>OverseerClearCache<cr>', mode = { 'n', 'v' }, desc = 'Clear Cache [Overseer]', },
-      { '<leader>rl', '<cmd>OverseerLoadBundle<cr>', mode = { 'n', 'v' }, desc = 'Load Task Bundle [Overseer]', },
-      { '<leader>rq', '<cmd>OverseerQuickAction<cr>', mode = { 'n', 'v' }, desc = 'Task Quick Action [Overseer]', },
-      { '<leader>rr', '<cmd>OverseerRun<cr>', mode = { 'n', 'v' }, desc = 'Run Task [Overseer]', },
-      { '<leader>rc', '<cmd>OverseerRunCmd<cr>', mode = { 'n', 'v' }, desc = 'Run Cmd [Overseer]', },
-      { '<leader>rt', '<cmd>OverseerTaskAction<cr>', mode = { 'n', 'v' }, desc = 'Task Action [Overseer]', },
     },
   },
 }

@@ -58,6 +58,11 @@ return {
     'chrisgrieser/nvim-scissors',
     event = 'VeryLazy',
     dependencies = 'nvim-telescope/telescope.nvim', -- optional
+    -- stylua: ignore
+    keys = {
+      { '<leader>fs', function() require('scissors').addNewSnippet() end, mode = { 'n', 'v' }, desc = 'Add New Snippet [fs]' },
+      { '<leader>fS', function() require('scissors').editSnippet() end, desc = 'Edit Snippet [fS]' },
+    },
     opts = {
       snippetDir = vim.fn.stdpath 'config' .. '/snippets',
       editSnippetPopup = {
@@ -77,11 +82,6 @@ return {
       -- `yq`/`jq` ensure formatted & sorted json files, which is relevant when
       -- you version control your snippets.
       jsonFormatter = 'jq', -- "yq"|"jq"|"none"
-    },
-    -- stylua: ignore
-    keys = {
-      { '<leader>fs', function() require('scissors').addNewSnippet() end, mode = { 'n', 'v' }, desc = 'Add New Snippet [fs]' },
-      { '<leader>fS', function() require('scissors').editSnippet() end, desc = 'Edit Snippet [fS]' },
     },
   },
 }

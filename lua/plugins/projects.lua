@@ -12,19 +12,18 @@ return {
   -- w           <c-w>       change_working_directory
   {
     'ahmedkhalf/project.nvim',
-    opts = {
-      manual_mode = false,
-    },
     event = 'VeryLazy',
-    config = function(_, opts)
-      require('project_nvim').setup(opts)
+    keys = {
+      { '<leader>fP', '<Cmd>Telescope projects<CR>', desc = 'Projects [fP]' },
+    },
+    config = function()
+      require('project_nvim').setup {
+        manual_mode = false,
+      }
       require('util').on_load('telescope.nvim', function()
         ---@diagnostic disable-next-line: undefined-field
         require('telescope').load_extension 'projects'
       end)
     end,
-    keys = {
-      { '<leader>fP', '<Cmd>Telescope projects<CR>', desc = 'Projects [fP]' },
-    },
   },
 }

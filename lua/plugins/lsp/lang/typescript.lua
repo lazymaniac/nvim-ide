@@ -29,7 +29,7 @@ return {
                   },
                 }
               end,
-              desc = 'Organize Imports',
+              desc = 'Organize Imports [co]',
             },
             {
               '<leader>cR',
@@ -42,7 +42,7 @@ return {
                   },
                 }
               end,
-              desc = 'Remove Unused Imports',
+              desc = 'Remove Unused Imports [cR]',
             },
           },
           ---@diagnostic disable-next-line: missing-fields

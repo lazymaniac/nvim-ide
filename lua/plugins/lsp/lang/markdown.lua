@@ -51,13 +51,9 @@ return {
     build = function()
       vim.fn['mkdp#util#install']()
     end,
+    -- stylua: ignore
     keys = {
-      {
-        '<leader>cp',
-        ft = 'markdown',
-        '<cmd>MarkdownPreviewToggle<cr>',
-        desc = 'Markdown Preview (Browser)',
-      },
+      { '<leader>cp', ft = 'markdown', '<cmd>MarkdownPreviewToggle<cr>', desc = 'Markdown Preview (Browser) [cp]' },
     },
     config = function()
       vim.cmd [[do FileType]]
@@ -161,6 +157,11 @@ return {
   -- see: `:h glow.nvim`
   {
     'ellisonleao/glow.nvim',
+    -- stylua: ignore
+    keys = {
+      { '<leader>cP', ft = 'markdown', '<cmd>Glow<cr>', desc = 'Markdown Preview (TUI) [cP]' },
+    },
+    cmd = 'Glow',
     config = function()
       require('glow').setup {
         border = 'rounded', -- floating window border config
@@ -170,14 +171,5 @@ return {
         height_ratio = 0.8,
       }
     end,
-    cmd = 'Glow',
-    keys = {
-      {
-        '<leader>cP',
-        ft = 'markdown',
-        '<cmd>Glow<cr>',
-        desc = 'Markdown Preview (TUI)',
-      },
-    },
   },
 }

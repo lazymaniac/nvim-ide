@@ -35,20 +35,4 @@ return {
       },
     },
   },
-
-  {
-    'telescope.nvim',
-    dependencies = {
-      {
-        'lpoto/telescope-docker.nvim',
-        keys = {
-          { '<leader>fd', '<Cmd>Telescope docker<CR>', desc = 'Docker' },
-        },
-        config = function()
-          ---@diagnostic disable-next-line: undefined-field
-          require('telescope').load_extension 'docker'
-        end,
-      },
-    },
-  },
 }

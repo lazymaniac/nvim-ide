@@ -15,44 +15,42 @@ return {
     keys = {
       { '<leader>,', '<cmd>Telescope buffers sort_mru=true sort_lastused=true<cr>', desc = 'Switch Buffer [,]' },
       { '<leader>:', '<cmd>Telescope command_history<cr>', desc = 'Command History [:]' },
-      { '<leader><space>', Util.telescope 'files', desc = 'Find Files (root dir)' },
+      { '<leader><space>', Util.telescope 'files', desc = 'Find Files (root dir) [SPC]' },
       -- find
-      { '<leader>fb', '<cmd>Telescope buffers sort_mru=true sort_lastused=true<cr>', desc = '[B]uffers' },
-      { '<leader>fc', Util.telescope.config_files(), desc = 'Find [C]onfig File' },
-      { '<leader>ff', Util.telescope 'files', desc = 'Find [F]iles (root dir)' },
-      { '<leader>fF', Util.telescope('files', { cwd = false }), desc = 'Find [F]iles (cwd)' },
-      { '<leader>fr', '<cmd>Telescope oldfiles<cr>', desc = '[R]ecent' },
-      { '<leader>fR', Util.telescope('oldfiles', { cwd = vim.loop.cwd() }), desc = '[R]ecent (cwd)' },
+      { '<leader>fb', '<cmd>Telescope buffers sort_mru=true sort_lastused=true<cr>', desc = 'Buffers [fb]' },
+      { '<leader>fc', Util.telescope.config_files(), desc = 'Find Config File [fc]' },
+      { '<leader>ff', Util.telescope 'files', desc = 'Find Files (root dir) [ff]' },
+      { '<leader>fF', Util.telescope('files', { cwd = false }), desc = 'Find Files (cwd) [fF]' },
+      { '<leader>fr', '<cmd>Telescope oldfiles<cr>', desc = 'Recent [fr]' },
+      { '<leader>fR', Util.telescope('oldfiles', { cwd = vim.loop.cwd() }), desc = 'Recent (cwd) [fR]' },
       -- git
-      { '<leader>gc', '<cmd>Telescope git_commits<CR>', desc = 'Git [C]ommits' },
-      { '<leader>gs', '<cmd>Telescope git_status<CR>', desc = 'Git [S]tatus' },
+      { '<leader>gc', '<cmd>Telescope git_commits<CR>', desc = 'Git Commits [gc]' },
+      { '<leader>gs', '<cmd>Telescope git_status<CR>', desc = 'Git Status [gd]' },
       -- search
-      { '<leader>s"', '<cmd>Telescope registers<cr>', desc = 'Registers ["]' },
-      { '<leader>sa', '<cmd>Telescope autocommands<cr>', desc = '[A]uto Commands' },
-      { '<leader>sb', '<cmd>Telescope current_buffer_fuzzy_find<cr>', desc = 'Fzf [B]uffer' },
-      { '<leader>sc', '<cmd>Telescope command_history<cr>', desc = '[C]ommand History' },
-      { '<leader>sC', '<cmd>Telescope commands<cr>', desc = '[C]ommands' },
-      { '<leader>sd', '<cmd>Telescope diagnostics bufnr=0<cr>', desc = 'Document [D]iagnostics' },
-      { '<leader>sD', '<cmd>Telescope diagnostics<cr>', desc = '[W]orkspace Diagnostics' },
-      { '<leader>sg', Util.telescope 'live_grep', desc = '[G]rep (root dir)' },
-      { '<leader>sG', Util.telescope('live_grep', { cwd = false }), desc = '[G]rep (cwd)' },
-      { '<leader>sh', '<cmd>Telescope help_tags<cr>', desc = '[H]elp Pages' },
-      { '<leader>sH', '<cmd>Telescope highlights<cr>', desc = 'Search [H]ighlight Groups' },
-      { '<leader>sk', '<cmd>Telescope keymaps<cr>', desc = '[K]ey Maps' },
-      { '<leader>sM', '<cmd>Telescope man_pages<cr>', desc = '[M]an Pages' },
-      { '<leader>sm', '<cmd>Telescope marks<cr>', desc = 'Jump to [M]ark' },
-      { '<leader>so', '<cmd>Telescope vim_options<cr>', desc = '[O]ptions' },
-      { '<leader>sR', '<cmd>Telescope resume<cr>', desc = '[R]esume' },
-      { '<leader>sw', Util.telescope('grep_string', { word_match = '-w' }), desc = '[W]ord (root dir)' },
-      { '<leader>sW', Util.telescope('grep_string', { cwd = false, word_match = '-w' }), desc = '[W]ord (cwd)' },
-      { '<leader>sw', Util.telescope 'grep_string', mode = 'v', desc = 'Selection (root dir)' },
-      { '<leader>sW', Util.telescope('grep_string', { cwd = false }), mode = 'v', desc = 'Selection (cwd)' },
-      { '<leader>uC', Util.telescope('colorscheme', { enable_preview = true }), desc = '[C]olorscheme with preview' },
-      { '<leader>ss', function() require('telescope.builtin').lsp_document_symbols {} end, desc = 'Goto [S]ymbol' },
-      { '<leader>sS', function() require('telescope.builtin').lsp_dynamic_workspace_symbols {} end, desc = 'Goto [S]ymbol (Workspace)' },
-      ---@diagnostic disable-next-line: undefined-field
-      { '<leader>sN', function() require('telescope').extensions.notify.notify() end, desc = '[N]otifications' },
-      { '<leader>fp', function() require('telescope.builtin').find_files { cwd = require('lazy.core.config').options.root } end, desc = 'Find [P]lugin File' },
+      { '<leader>s"', '<cmd>Telescope registers<cr>', desc = 'Registers [s"]' },
+      { '<leader>sa', '<cmd>Telescope autocommands<cr>', desc = 'Auto Commands [sa]' },
+      { '<leader>sb', '<cmd>Telescope current_buffer_fuzzy_find<cr>', desc = 'Fzf Buffer [sb]' },
+      { '<leader>sc', '<cmd>Telescope command_history<cr>', desc = 'Command History [sc]' },
+      { '<leader>sC', '<cmd>Telescope commands<cr>', desc = 'Commands [sC]' },
+      { '<leader>sd', '<cmd>Telescope diagnostics bufnr=0<cr>', desc = 'Document Diagnostics [sd]' },
+      { '<leader>sD', '<cmd>Telescope diagnostics<cr>', desc = 'Workspace Diagnostics [sD]' },
+      { '<leader>sg', Util.telescope 'live_grep', desc = 'Grep (root dir) [sg]' },
+      { '<leader>sG', Util.telescope('live_grep', { cwd = false }), desc = 'Grep (cwd) [sG]' },
+      { '<leader>sh', '<cmd>Telescope help_tags<cr>', desc = 'Help Pages [sh]' },
+      { '<leader>sH', '<cmd>Telescope highlights<cr>', desc = 'Search Highlight Groups [sH]' },
+      { '<leader>sk', '<cmd>Telescope keymaps<cr>', desc = 'Key Maps [sk]' },
+      { '<leader>sM', '<cmd>Telescope man_pages<cr>', desc = 'Man Pages [sM]' },
+      { '<leader>sm', '<cmd>Telescope marks<cr>', desc = 'Jump to Mark [sm]' },
+      { '<leader>so', '<cmd>Telescope vim_options<cr>', desc = 'Options [so]' },
+      { '<leader>sR', '<cmd>Telescope resume<cr>', desc = 'Resume [sR]' },
+      { '<leader>sw', Util.telescope('grep_string', { word_match = '-w' }), desc = 'Word (root dir) [sw]' },
+      { '<leader>sW', Util.telescope('grep_string', { cwd = false, word_match = '-w' }), desc = 'Word (cwd) [sW]' },
+      { '<leader>sw', Util.telescope 'grep_string', mode = 'v', desc = 'Selection (root dir) [sw]' },
+      { '<leader>sW', Util.telescope('grep_string', { cwd = false }), mode = 'v', desc = 'Selection (cwd) [sW]' },
+      { '<leader>uC', Util.telescope('colorscheme', { enable_preview = true }), desc = 'Colorscheme with preview [uC]' },
+      { '<leader>ss', function() require('telescope.builtin').lsp_document_symbols {} end, desc = 'Goto Symbol [ss]' },
+      { '<leader>sS', function() require('telescope.builtin').lsp_dynamic_workspace_symbols {} end, desc = 'Goto Symbol (Workspace) [sS]' },
+      { '<leader>fp', function() require('telescope.builtin').find_files { cwd = require('lazy.core.config').options.root } end, desc = 'Find Plugin File [fp]' },
     },
     opts = function()
       local actions = require 'telescope.actions'
@@ -120,9 +118,10 @@ return {
     dependencies = 'nvim-telescope/telescope.nvim',
     -- stylua: ignore
     keys = {
-      { '<leader>si', '<cmd>Telescope import<cr>', mode = { 'n', 'v' }, desc = 'Search Imports' },
+      { '<leader>si', '<cmd>Telescope import<cr>', mode = { 'n', 'v' }, desc = 'Search Imports [si]' },
     },
     config = function()
+      ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'import'
     end,
   },
@@ -133,11 +132,12 @@ return {
     'someone-stole-my-name/yaml-companion.nvim',
     dependencies = { 'neovim/nvim-lspconfig', 'nvim-lua/plenary.nvim', 'nvim-telescope/telescope.nvim' },
     keys = {
-      { '<leader>sy', '<cmd>Telescope yaml_schema<cr>', mode = { 'n', 'v' }, desc = 'Search YAML Schema' },
+      { '<leader>sy', '<cmd>Telescope yaml_schema<cr>', mode = { 'n', 'v' }, desc = 'Search YAML Schema [sy]' },
     },
     config = function()
       local cfg = require('yaml-companion').setup {}
       require('lspconfig')['yamlls'].setup(cfg)
+      ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'yaml_schema'
     end,
   },
@@ -149,9 +149,10 @@ return {
     dependencies = { 'nvim-telescope/telescope.nvim' },
     -- stylua: ignore
     keys = {
-      { '<leader><tab>s', '<cmd>Telescope telescope-tabs list_tabs<cr>', mode = { 'n', 'v' }, desc = 'List Tabs' },
+      { '<leader><tab>s', '<cmd>Telescope telescope-tabs list_tabs<cr>', mode = { 'n', 'v' }, desc = 'List Tabs [<tab>s]' },
     },
     config = function()
+      ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'telescope-tabs'
       require('telescope-tabs').setup {}
     end,
@@ -164,9 +165,10 @@ return {
     dependencies = { 'nvim-telescope/telescope.nvim' },
     -- stylua: ignore
     keys = {
-      { '<leader>su', '<cmd>Telescope undo<cr>', desc = 'Undo History' },
+      { '<leader>su', '<cmd>Telescope undo<cr>', desc = 'Undo History [su]' },
     },
     config = function()
+      ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'undo'
     end,
   },
@@ -224,6 +226,7 @@ return {
           },
         },
       }
+      ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'egrepify'
     end,
   },
@@ -231,7 +234,13 @@ return {
   {
     'rcarriga/nvim-notify',
     dependencies = { 'nvim-telescope/telescope.nvim' },
+    -- stylua: ignore
+    keys = {
+      ---@diagnostic disable-next-line: undefined-field
+      { '<leader>sN', function() require('telescope').extensions.notify.notify() end, desc = 'Notifications [sN]' },
+    },
     config = function()
+      ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'notify'
     end,
   },
@@ -241,10 +250,11 @@ return {
     dependencies = { 'nvim-telescope/telescope.nvim' },
     -- stylua: ignore
     keys = {
-      { '<leader>sf', '<cmd>Telescope fzf<cr>', mode = { 'n', 'v' }, desc = 'Search FZF' },
+      { '<leader>sf', '<cmd>Telescope fzf<cr>', mode = { 'n', 'v' }, desc = 'Search FZF [sf]' },
     },
     build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build',
     config = function()
+      ---@diagnostic disable-next-line: undefined-field
       require('telescope').setup {
         extensions = {
           fzf = {
@@ -256,6 +266,7 @@ return {
           },
         },
       }
+      ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'fzf'
     end,
   },
@@ -263,7 +274,16 @@ return {
   {
     'nvim-telescope/telescope-dap.nvim',
     dependencies = { 'nvim-telescope/telescope.nvim' },
+    -- stylua: ignore
+    keys = {
+      { '<leader>dm', '<cmd>Telescope dap commands<cr>', desc = 'DAP Commands [dm]' },
+      { '<leader>dn', '<cmd>Telescope dap configurations<cr>', desc = 'DAP Configurations [dn]' },
+      { '<leader>dF', '<cmd>Telescope dap frames<cr>', desc = 'DAP Frames [dF]' },
+      { '<leader>dB', '<cmd>Telescope dap list_breakpoints<cr>', desc = 'DAP List Breakpoints [dB]' },
+      { '<leader>dV', '<cmd>Telescope dap variables<cr>', desc = 'DAP Variables [dV]' },
+    },
     config = function()
+      ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'dap'
     end,
   },
@@ -273,9 +293,10 @@ return {
     dependencies = { 'nvim-telescope/telescope.nvim' },
     -- stylua: ignore
     keys = {
-      { '<leader>sl', '<cmd>Telescope lazy<cr>', mode = { 'n', 'v' }, desc = 'List Lazy Plugins' },
+      { '<leader>sl', '<cmd>Telescope lazy<cr>', mode = { 'n', 'v' }, desc = 'List Lazy Plugins [sl]' },
     },
     config = function()
+      ---@diagnostic disable-next-line: undefined-field
       require('telescope').setup {
         extensions = {
           lazy = {
@@ -310,6 +331,7 @@ return {
           },
         },
       }
+      ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'lazy'
     end,
   },
@@ -319,9 +341,10 @@ return {
     dependencies = { 'nvim-telescope/telescope.nvim', 'nvim-lua/plenary.nvim', 'sindrets/diffview.nvim' },
     -- stylua: ignore
     keys = {
-      { '<leader>gc', '<cmd>Telescope git_diffs diff_commits<cr>', mode = { 'n', 'v' }, desc = 'Search Commits' },
+      { '<leader>gc', '<cmd>Telescope git_diffs diff_commits<cr>', mode = { 'n', 'v' }, desc = 'Search Commits [gc]' },
     },
     config = function()
+      ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'git_diffs'
     end,
   },
@@ -331,9 +354,10 @@ return {
     dependencies = { 'nvim-telescope/telescope.nvim' },
     -- stylua: ignore
     keys = {
-      { '<leader>sL', '<cmd>Telescope luasnip<cr>', mode = { 'n', 'v' }, desc = 'Search Snippets' },
+      { '<leader>sL', '<cmd>Telescope luasnip<cr>', mode = { 'n', 'v' }, desc = 'Search Snippets [sL]' },
     },
     config = function()
+      ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'luasnip'
     end,
   },
@@ -376,9 +400,10 @@ return {
     dependencies = { 'nvim-telescope/telescope.nvim' },
     -- stylua: ignore
     keys = {
-      { '<leader>sp', '<cmd>Telescope ports<cr>', mode = { 'n', 'v' }, desc = 'List Open Ports' },
+      { '<leader>sp', '<cmd>Telescope ports<cr>', mode = { 'n', 'v' }, desc = 'List Open Ports [sp]' },
     },
     config = function()
+      ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'ports'
     end,
   },
@@ -391,6 +416,7 @@ return {
       { '<leader>F', '<cmd>Telescope frecency workspace=CWD<cr>', mode = { 'n', 'v' }, desc = 'Frecent Files [F]' },
     },
     config = function()
+      ---@diagnostic disable-next-line: undefined-field
       require('telescope').setup {
         extensions = {
           frecency = {
@@ -401,7 +427,38 @@ return {
           },
         },
       }
+      ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'frecency'
+    end,
+  },
+
+  {
+    'lpoto/telescope-docker.nvim',
+    dependencies = { 'nvim-telescope/telescope.nvim' },
+    keys = {
+      { '<leader>fd', '<Cmd>Telescope docker<CR>', desc = 'Docker' },
+    },
+    config = function()
+      ---@diagnostic disable-next-line: undefined-field
+      require('telescope').load_extension 'docker'
+    end,
+  },
+
+  {
+    'ANGkeith/telescope-terraform-doc.nvim',
+    dependencies = { 'nvim-telescope/telescope.nvim' },
+    config = function()
+      ---@diagnostic disable-next-line: undefined-field
+      require('telescope').load_extension 'terraform_doc'
+    end,
+  },
+
+  {
+    'cappyzawa/telescope-terraform.nvim',
+    dependencies = { 'nvim-telescope/telescope.nvim' },
+    config = function()
+      ---@diagnostic disable-next-line: undefined-field
+      require('telescope').load_extension 'terraform'
     end,
   },
 }

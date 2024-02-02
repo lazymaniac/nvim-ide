@@ -9,8 +9,8 @@ return {
           on_attach = function(client, bufnr)
             local wk = require 'which-key'
             wk.register({
-              ['<leader>ct'] = { '<cmd>lua require("powershell").toggle_term()<cr>', 'Toogle Term (PowerShell)' },
-              ['<leader>ce'] = { '<cmd>lua require("powershell").eval()<cr>', 'Eval (PowerShell)' },
+              ['<leader>ct'] = { '<cmd>lua require("powershell").toggle_term()<cr>', 'Toggle Term (PowerShell) [ct]' },
+              ['<leader>ce'] = { '<cmd>lua require("powershell").eval()<cr>', 'Eval (PowerShell) [ce]' },
             }, { mode = { 'n', 'v' }, buffer = bufnr })
           end,
         },

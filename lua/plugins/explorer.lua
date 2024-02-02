@@ -53,9 +53,7 @@ return {
         end,
         desc = 'File Explorer [e]',
       },
-      { '<leader>fe', function() require('neo-tree.command').execute { action = 'focus', position = 'left', dir = Util.root() } end, desc = 'File Explorer (root dir) [fe]' },
-      { '<leader>ge', function() require('neo-tree.command').execute { source = 'git_status', action = 'focus', position = 'float' } end, desc = 'Git explorer [ge]' },
-      { '<leader>be', function() require('neo-tree.command').execute { source = 'buffers', action = 'focus', position = 'float' } end, desc = 'Buffer explorer [be]' },
+      { '<leader>fe', function() require('neo-tree.command').execute { action = 'focus', position = 'left', dir = Util.root() } end, desc = 'File Explorer (docked) [fe]' },
     },
     deactivate = function()
       vim.cmd [[Neotree close]]

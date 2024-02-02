@@ -178,7 +178,7 @@ return {
       },
     },
     init = function()
-      local lazy = require('lazy')
+      local lazy = require 'lazy'
       vim.ui.select = function(...)
         lazy.load { plugins = { 'dressing.nvim' } }
         return vim.ui.select(...)
@@ -359,6 +359,15 @@ return {
               color = Util.ui.fg 'Debug',
             },
             {
+              function()
+                local linters = require('lint').get_running()
+                if #linters == 0 then
+                  return '󰦕'
+                end
+                return '󱉶 ' .. table.concat(linters, ', ')
+              end,
+            },
+            {
               'overseer',
               label = '', -- Prefix for task counts
               colored = true, -- Color the task icons and counts
@@ -505,7 +514,6 @@ return {
         },
         extensions = { 'neo-tree', 'lazy', 'fzf', 'mason', 'nvim-dap-ui', 'overseer', 'quickfix', 'toggleterm', 'trouble', 'symbols-outline' },
       }
-
       return opts
     end,
   },
@@ -528,6 +536,16 @@ return {
     'folke/noice.nvim',
     event = 'VeryLazy',
     dependencies = { 'MunifTanjim/nui.nvim', 'hrsh7th/nvim-cmp', 'rcarriga/nvim-notify' },
+    -- stylua: ignore
+    keys = {
+      { '<C-S-Enter>', function() require('noice').redirect(vim.fn.getcmdline()) end, mode = 'c', desc = 'Redirect Cmdline <C-S-Enter>', },
+      { '<leader>snl', function() require('noice').cmd 'last' end, desc = 'Noice Last Message [snl]', },
+      { '<leader>snh', function() require('noice').cmd 'history' end, desc = 'Noice History [snh]', },
+      { '<leader>sna', function() require('noice').cmd 'all' end, desc = 'Noice All [sna]', },
+      { '<leader>snd', function() require('noice').cmd 'dismiss' end, desc = 'Dismiss All [snd]', },
+      { '<c-f>', function() if not require('noice.lsp').scroll(4) then return '<c-f>' end end, silent = true, expr = true, desc = 'Scroll forward <c-f>', mode = { 'i', 'n', 's' }, },
+      { '<c-b>', function() if not require('noice.lsp').scroll(-4) then return '<c-b>' end end, silent = true, expr = true, desc = 'Scroll backward <c-b>', mode = { 'i', 'n', 's' }, },
+    },
     config = function()
       require('noice').setup {
         cmdline = {
@@ -725,16 +743,6 @@ return {
         },
       }
     end,
-    -- stylua: ignore
-    keys = {
-      { '<C-S-Enter>', function() require('noice').redirect(vim.fn.getcmdline()) end, mode = 'c', desc = 'Redirect Cmdline <C-S-Enter>', },
-      { '<leader>snl', function() require('noice').cmd 'last' end, desc = 'Noice Last Message [snl]', },
-      { '<leader>snh', function() require('noice').cmd 'history' end, desc = 'Noice History [snh]', },
-      { '<leader>sna', function() require('noice').cmd 'all' end, desc = 'Noice All [sna]', },
-      { '<leader>snd', function() require('noice').cmd 'dismiss' end, desc = 'Dismiss All [snd]', },
-      { '<c-f>', function() if not require('noice.lsp').scroll(4) then return '<c-f>' end end, silent = true, expr = true, desc = 'Scroll forward <c-f>', mode = { 'i', 'n', 's' }, },
-      { '<c-b>', function() if not require('noice.lsp').scroll(-4) then return '<c-b>' end end, silent = true, expr = true, desc = 'Scroll backward <c-b>', mode = { 'i', 'n', 's' }, },
-    },
   },
 
   -- [nvim-web-devicons] - Package of dev icons
@@ -750,6 +758,10 @@ return {
     'nvimdev/dashboard-nvim',
     event = 'VimEnter',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
+    -- stylua: ignore
+    keys = {
+      { '<leader>D', '<cmd>Dashboard<cr>', desc = 'Dashboard [D]' },
+    },
     opts = function()
       local oogway = require 'oogway'
       local opts = {
@@ -793,10 +805,6 @@ return {
       end
       return opts
     end,
-    -- stylua: ignore
-    keys = {
-      { '<leader>D', '<cmd>Dashboard<cr>', desc = 'Dashboard [D]', },
-    },
   },
 
   -- [floating-help.nvim] - Vim help shown in floating popup

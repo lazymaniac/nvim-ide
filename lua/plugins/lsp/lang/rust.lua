@@ -44,7 +44,7 @@ return {
                   vim.lsp.buf.hover()
                 end
               end,
-              desc = 'Show Crate Documentation',
+              desc = 'Show Crate Documentation <K>',
             },
           },
         },
@@ -72,29 +72,29 @@ return {
             local wk = require 'which-key'
             wk.register({
               -- stylua: ignore
-              ['<leader>ca'] = { function() require('actions-preview').code_actions() end, '[C]ode [A]ction [Rust]' },
-              ['<leader>ce'] = { '<cmd>RustLsp externalDocs<cr>', 'External [D]ocs [Rust]' },
-              ['<leader>cp'] = { '<cmd>RustLsp rebuildProcMacros<cr>', 'Rebuild [P]roc Macros [Rust]' },
-              ['<leader>cx'] = { '<cmd>RustLsp explainError<cr>', 'E[x]plain Error [Rust]' },
-              ['<leader>cM'] = { '<cmd>RustLsp expandMacro<cr>', 'Expand [M]acro [Rust]' },
-              ['<leader>cg'] = { '<cmd>RustLsp crateGraph<cr>', 'Crates [G]raph [Rust]' },
-              ['<leader>cS'] = { '<cmd>RustLsp ssr<cr>', '[S]SR [Rust]' },
-              ['<leader>cj'] = { '<cmd>RustLsp moveItem down<cr>', 'Move Item Down [Rust]' },
-              ['<leader>ck'] = { '<cmd>RustLsp moveItem up<cr>', 'Move Item Up [Rust]' },
-              ['<leader>cK'] = { '<cmd>RustLsp hover actions<cr>', 'Hover Actions [Rust]' },
-              ['<leader>co'] = { '<cmd>RustLsp openCargo<cr>', 'Open Cargo.toml [Rust]' },
-              ['<leader>cP'] = { '<cmd>RustLsp parentModule<cr>', 'Parent Module [Rust]' },
-              ['<leader>cJ'] = { '<cmd>RustLsp joinLines<cr>', 'Join Lines [Rust]' },
-              ['<leader>ct'] = { '<cmd>RustLsp syntaxTree<cr>', 'Syntax Tree [Rust]' },
-              ['<leader>dm'] = { '<cmd>RustLsp view mir<cr>', 'View MIR [Rust]' },
-              ['<leader>dh'] = { '<cmd>RustLsp view hir<cr>', 'View HIR [Rust]' },
-              ['<leader>dd'] = { '<cmd>RustLsp debuggables<cr>', 'Debuggables [Rust]' },
-              ['<leader>dl'] = { '<cmd>RustLsp debuggables last<cr>', 'Debuggables last [Rust]' },
-              ['<leader>ru'] = { '<cmd>RustLsp runnables<cr>', 'Runnables [Rust]' },
-              ['<leader>rl'] = { '<cmd>RustLsp runnables last<cr>', 'Runnables last [Rust]' },
+              ['<leader>ca'] = { function() require('actions-preview').code_actions() end, 'Code Action [ca]' },
+              ['<leader>ce'] = { '<cmd>RustLsp externalDocs<cr>', 'External Docs [ce]' },
+              ['<leader>cp'] = { '<cmd>RustLsp rebuildProcMacros<cr>', 'Rebuild Proc Macros [cp]' },
+              ['<leader>cx'] = { '<cmd>RustLsp explainError<cr>', 'Explain Error [cx]' },
+              ['<leader>cM'] = { '<cmd>RustLsp expandMacro<cr>', 'Expand Macro [cM]' },
+              ['<leader>cg'] = { '<cmd>RustLsp crateGraph<cr>', 'Crates Graph [cg]' },
+              ['<leader>cS'] = { '<cmd>RustLsp ssr<cr>', 'SSR [cS]' },
+              ['<leader>cj'] = { '<cmd>RustLsp moveItem down<cr>', 'Move Item Down [cj]' },
+              ['<leader>ck'] = { '<cmd>RustLsp moveItem up<cr>', 'Move Item Up [ck]' },
+              ['<leader>cK'] = { '<cmd>RustLsp hover actions<cr>', 'Hover Actions [cK]' },
+              ['<leader>co'] = { '<cmd>RustLsp openCargo<cr>', 'Open Cargo.toml [co]' },
+              ['<leader>cP'] = { '<cmd>RustLsp parentModule<cr>', 'Parent Module [cP]' },
+              ['<leader>cJ'] = { '<cmd>RustLsp joinLines<cr>', 'Join Lines [cJ]' },
+              ['<leader>ct'] = { '<cmd>RustLsp syntaxTree<cr>', 'Syntax Tree [ct]' },
+              ['<leader>dm'] = { '<cmd>RustLsp view mir<cr>', 'View MIR [dm]' },
+              ['<leader>dh'] = { '<cmd>RustLsp view hir<cr>', 'View HIR [dh]' },
+              ['<leader>dd'] = { '<cmd>RustLsp debuggables<cr>', 'Debuggables [dd]' },
+              ['<leader>dl'] = { '<cmd>RustLsp debuggables last<cr>', 'Debuggables last [dl]' },
+              ['<leader>ru'] = { '<cmd>RustLsp runnables<cr>', 'Runnables [ru]' },
+              ['<leader>rl'] = { '<cmd>RustLsp runnables last<cr>', 'Runnables last [rl]' },
             }, { mode = 'n', buffer = bufnr })
             wk.register({
-              ['<leader>cK'] = { '<cmd>RustLsp hover range<cr>', 'Hover Ranger [Rust]' },
+              ['<leader>cK'] = { '<cmd>RustLsp hover range<cr>', 'Hover Ranger [cK]' },
             }, { mode = 'v', buffer = bufnr })
             -- you can also put keymaps in here
             vim.lsp.inlay_hint.enable(bufnr, true)

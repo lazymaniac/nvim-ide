@@ -1,7 +1,3 @@
 [default.extend-identifiers]
 noice = "noice"
 Noice = "Noice"
-uffers = "uffers"
-uffer = "uffer"
-ommits = "ommits"
-otifications = "otifications"

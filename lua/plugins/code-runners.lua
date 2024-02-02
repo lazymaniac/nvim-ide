@@ -22,9 +22,13 @@ return {
     'michaelb/sniprun',
     event = 'VeryLazy',
     branch = 'master',
-    build = 'sh install.sh',
     -- do 'sh install.sh 1' if you want to force compile locally
     -- (instead of fetching a binary from the github release). Requires Rust >= 1.65
+    build = 'sh install.sh',
+    -- stylua: ignore
+    keys = {
+      { '<leader>rs', '<cmd>SnipRun<cr>', mode = { 'n', 'v' }, desc = 'SnipRun [rs]' },
+    },
     config = function()
       require('sniprun').setup {
         selected_interpreters = {}, --# use those instead of the default for the current filetype
@@ -81,10 +85,6 @@ return {
         --# possible values are 'none', 'single', 'double', or 'shadow'
       }
     end,
-    -- stylua: ignore
-    keys = {
-      { '<leader>rs', '<cmd>SnipRun<cr>', mode = { 'n', 'v' }, desc = 'SnipRun' },
-    },
   },
 
   -- [NotebookNavigator.nvim] - Open, edit and run Jupyter notebook in nvim
@@ -99,6 +99,19 @@ return {
       -- "akinsho/toggleterm.nvim", -- alternative repl provider
       'benlubas/molten-nvim',
       -- '3rd/image.nvim',
+    },
+    -- stylua: ignore
+    keys = {
+      { ']j', function() require('notebook-navigator').move_cell 'd' end, mode = { 'n', 'v' }, desc = 'Move jupyter cell down <]j>' },
+      { '[j', function() require('notebook-navigator').move_cell 'u' end, mode = { 'n', 'v' }, desc = 'Move jupyter cell up <[j>' },
+      { '<leader>jr', "<cmd>lua require('notebook-navigator').run_cell()<cr>", mode = { 'n', 'v' }, desc = 'Run jupyter cell [jr]' },
+      { '<leader>jj', "<cmd>lua require('notebook-navigator').run_and_move()<cr>", mode = { 'n', 'v' }, desc = 'Run jupyter cell and move [jj]' },
+      { '<leader>ja', "<cmd>lua require('notebook-navigator').run_all_cells()<cr>", mode = { 'n', 'v' }, desc = 'Run all jupyter cells [ja]' },
+      { '<leader>jb', "<cmd>lua require('notebook-navigator').run_cells_below()<cr>", mode = { 'n', 'v' }, desc = 'Run jupyter cells below [jb]' },
+      { '<leader>jc', "<cmd>lua require('notebook-navigator').comment_cell()<cr>", mode = { 'n', 'v' }, desc = 'Comment jupyter cell [jc]' },
+      { '<leader>jd', "<cmd>lua require('notebook-navigator').add_cell_below()<cr>", mode = { 'n', 'v' }, desc = 'Add jupyter cell below [jd]' },
+      { '<leader>ju', "<cmd>lua require('notebook-navigator').add_cell_above()<cr>", mode = { 'n', 'v' }, desc = 'Add jupyter cell above [ju]' },
+      { '<leader>jm', "<cmd>lua require('notebook-navigator').merge_cell()<cr>", mode = { 'n', 'v' }, desc = 'Merge jupyter cell [jm]' },
     },
     opts = {
       -- Code cell marker. Cells start with the marker and end either at the beginning
@@ -129,19 +142,6 @@ return {
       syntax_highlight = true,
       -- (Optional) for use with `mini.hipatterns` to highlight cell markers
       cell_highlight_group = 'Folded',
-    },
-    -- stylua: ignore
-    keys = {
-      { ']j', function() require('notebook-navigator').move_cell 'd' end, mode = { 'n', 'v' }, desc = 'Move jupyter cell down' },
-      { '[j', function() require('notebook-navigator').move_cell 'u' end, mode = { 'n', 'v' }, desc = 'Move jupyter cell up' },
-      { '<leader>jr', "<cmd>lua require('notebook-navigator').run_cell()<cr>", mode = { 'n', 'v' }, desc = 'Run jupyter cell' },
-      { '<leader>jj', "<cmd>lua require('notebook-navigator').run_and_move()<cr>", mode = { 'n', 'v' }, desc = 'Run jupyter cell and move' },
-      { '<leader>ja', "<cmd>lua require('notebook-navigator').run_all_cells()<cr>", mode = { 'n', 'v' }, desc = 'Run all jupyter cells' },
-      { '<leader>jb', "<cmd>lua require('notebook-navigator').run_cells_below()<cr>", mode = { 'n', 'v' }, desc = 'Run jupyter cells below' },
-      { '<leader>jc', "<cmd>lua require('notebook-navigator').comment_cell()<cr>", mode = { 'n', 'v' }, desc = 'Comment jupyter cell' },
-      { '<leader>jd', "<cmd>lua require('notebook-navigator').add_cell_below()<cr>", mode = { 'n', 'v' }, desc = 'Add jupyter cell below' },
-      { '<leader>ju', "<cmd>lua require('notebook-navigator').add_cell_above()<cr>", mode = { 'n', 'v' }, desc = 'Add jupyter cell above' },
-      { '<leader>jm', "<cmd>lua require('notebook-navigator').merge_cell()<cr>", mode = { 'n', 'v' }, desc = 'Merge jupyter cell' },
     },
   },
 

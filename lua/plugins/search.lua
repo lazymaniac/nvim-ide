@@ -10,7 +10,10 @@ return {
     'cshuaimin/ssr.nvim',
     event = 'VeryLazy',
     module = 'ssr',
-    -- Calling setup is optional.
+    -- stylua: ignore
+    keys = {
+      { '<leader>se', function() require('ssr').open() end, mode = { 'n', 'v' }, desc = 'Search and Replace (Buffer) [se]' },
+    },
     config = function()
       require('ssr').setup {
         border = 'rounded',
@@ -28,10 +31,6 @@ return {
         },
       }
     end,
-    -- stylua: ignore
-    keys = {
-      { '<leader>se', function() require('ssr').open() end, mode = { 'n', 'v' }, desc = 'Search and Replace (Buffer) [se]' },
-    },
   },
 
   -- [nvim-spectre] - Search files with replace option
@@ -41,11 +40,11 @@ return {
     event = 'VeryLazy',
     build = false,
     cmd = 'Spectre',
-    opts = { open_cmd = 'noswapfile vnew' },
     -- stylua: ignore
     keys = {
       { '<leader>sr', function() require('spectre').open() end, desc = 'Search and Replace [sr]' },
     },
+    opts = { open_cmd = 'noswapfile vnew' },
   },
 
   -- [leap.nvim] - Jump in code with s and S keys
