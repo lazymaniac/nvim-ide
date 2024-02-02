@@ -178,7 +178,7 @@ return {
     dependencies = { 'nvim-telescope/telescope.nvim', 'nvim-lua/plenary.nvim' },
     -- stylua: ignore
     keys = {
-      { '<leader>/', '<cmd>Telescope egrepify<cr>', mode = { 'n', 'v' }, desc = 'Enhanced Grep', },
+      { '<leader>/', '<cmd>Telescope egrepify<cr>', mode = { 'n', 'v' }, desc = 'Enhanced Grep [/]', },
     },
     config = function()
       local egrep_actions = require 'telescope._extensions.egrepify.actions'
@@ -342,7 +342,7 @@ return {
     'FeiyouG/commander.nvim',
     dependencies = { 'nvim-telescope/telescope.nvim' },
     keys = {
-      { '<leader>.', '<CMD>Telescope commander<CR>', mode = 'n' },
+      { '<leader>.', '<CMD>Telescope commander<CR>', mode = 'n', desc = 'Commander [.]' },
     },
     config = function()
       ---@diagnostic disable-next-line: missing-fields
@@ -388,7 +388,7 @@ return {
     dependencies = { 'nvim-telescope/telescope.nvim' },
     -- stylua: ignore
     keys = {
-      { '<leader>F', '<cmd>Telescope frecency workspace=CWD<cr>', mode = { 'n', 'v' }, desc = 'Frecent Files' },
+      { '<leader>F', '<cmd>Telescope frecency workspace=CWD<cr>', mode = { 'n', 'v' }, desc = 'Frecent Files [F]' },
     },
     config = function()
       require('telescope').setup {

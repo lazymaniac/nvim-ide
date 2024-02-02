@@ -30,7 +30,7 @@ return {
     end,
     -- stylua: ignore
     keys = {
-      { '<leader>se', function() require('ssr').open() end, mode = { 'n', 'v' }, desc = 'Search Replace (Buffer)' },
+      { '<leader>se', function() require('ssr').open() end, mode = { 'n', 'v' }, desc = 'Search and Replace (Buffer) [se]' },
     },
   },
 
@@ -44,7 +44,7 @@ return {
     opts = { open_cmd = 'noswapfile vnew' },
     -- stylua: ignore
     keys = {
-      { '<leader>sr', function() require('spectre').open() end, desc = 'Replace in files (Spectre)' },
+      { '<leader>sr', function() require('spectre').open() end, desc = 'Search and Replace [sr]' },
     },
   },
 
@@ -54,9 +54,9 @@ return {
     'ggandor/leap.nvim',
     event = 'VeryLazy',
     keys = {
-      { 's', mode = { 'n', 'x', 'o' }, desc = 'Leap forward to' },
-      { 'S', mode = { 'n', 'x', 'o' }, desc = 'Leap backward to' },
-      { 'gs', mode = { 'n', 'x', 'o' }, desc = 'Leap from windows' },
+      { 's', mode = { 'n', 'x', 'o' }, desc = 'Leap forward to <s>' },
+      { 'S', mode = { 'n', 'x', 'o' }, desc = 'Leap backward to <S>' },
+      { 'gs', mode = { 'n', 'x', 'o' }, desc = 'Leap from windows <gs>' },
     },
     config = function(_, opts)
       local leap = require 'leap'

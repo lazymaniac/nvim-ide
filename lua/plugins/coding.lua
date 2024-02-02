@@ -267,7 +267,7 @@ return {
     opts = {},
     -- stylua: ignore
     keys = {
-      { '<leader>cn', function() require('ts-node-action').node_action() end, desc = 'Trigger Node Action' },
+      { '<leader>cn', function() require('ts-node-action').node_action() end, desc = 'Trigger Node Action [cn]' },
     },
   },
 

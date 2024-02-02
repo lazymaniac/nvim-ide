@@ -34,7 +34,7 @@ return {
     cmd = 'ConformInfo',
     -- stylua: ignore
     keys = {
-      { '<leader>cF', function() require('conform').format { formatters = { 'injected' } } end, mode = { 'n', 'v' }, desc = 'Format Injected Langs' },
+      { '<leader>cF', function() require('conform').format { formatters = { 'injected' } } end, mode = { 'n', 'v' }, desc = 'Format Injected Langs [cF]' },
     },
     init = function()
       -- Install the conform formatter on VeryLazy

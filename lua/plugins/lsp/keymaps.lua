@@ -8,23 +8,21 @@ function M.get()
   end
   -- stylua: ignore
   M._keys = {
-    { '<leader>cl', '<cmd>LspInfo<cr>', desc = 'Lsp Info' },
-    { 'gd', function() require('telescope.builtin').lsp_definitions { reuse_win = true } end, desc = '[G]oto [D]efinition', has = 'definition', },
-    { 'gr', '<cmd>Telescope lsp_references<cr>', desc = '[G]oto [R]eferences' },
-    { 'gD', vim.lsp.buf.declaration, desc = '[G]oto [D]eclaration' },
-    { 'gI', function() require('telescope.builtin').lsp_implementations { reuse_win = true } end, desc = '[G]oto [I]mplementation', },
-    { 'gy', function() require('telescope.builtin').lsp_type_definitions { reuse_win = true } end, desc = '[G]oto T[y]pe Definition', },
-    { '<leader>cs', function() require('telescope.builtin').lsp_document_symbols() end, desc = 'Do[c]ument [S]ymbols', },
-    { '<leader>cw', function() require('telescope.builtin').lsp_dynamic_workspace_symbols() end, desc = 'Workspa[c]e [S]ymbols', },
-    -- See `:help K` for why this keymap
-    { 'K', vim.lsp.buf.hover, desc = 'Hover Documentation' },
-    { 'gK', vim.lsp.buf.signature_help, desc = 'Signature Documentation', has = 'signatureHelp' },
-    { '<c-k>', vim.lsp.buf.signature_help, mode = 'i', desc = 'Signature Help', has = 'signatureHelp' },
-    { '<leader>ca', function() require('actions-preview').code_actions() end, desc = '[C]ode [A]ction', mode = { 'n', 'v' }, has = 'codeAction' },
-    -- Workspace actions
-    { '<leader>cWa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder' },
-    { '<leader>cWr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder' },
-    { '<leader>cWl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, '[W]orkspace [L]ist Folder', },
+    { '<leader>cl', '<cmd>LspInfo<cr>', desc = 'Lsp Info [cl]' },
+    { 'gd', function() require('telescope.builtin').lsp_definitions { reuse_win = true } end, desc = 'Goto Definition <gd>', has = 'definition', },
+    { 'gr', '<cmd>Telescope lsp_references<cr>', desc = 'Goto References <gr>' },
+    { 'gD', vim.lsp.buf.declaration, desc = 'Goto Declaration <gD>' },
+    { 'gI', function() require('telescope.builtin').lsp_implementations { reuse_win = true } end, desc = 'Goto Implementation <gI>', },
+    { 'gy', function() require('telescope.builtin').lsp_type_definitions { reuse_win = true } end, desc = 'Goto Type Definition <gy>', },
+    { '<leader>cs', function() require('telescope.builtin').lsp_document_symbols() end, desc = 'Document Symbols [cs]', },
+    { '<leader>cw', function() require('telescope.builtin').lsp_dynamic_workspace_symbols() end, desc = 'Workspace Symbols [cw]', },
+    { 'K', vim.lsp.buf.hover, desc = 'Hover Documentation <K>' },
+    { 'gK', vim.lsp.buf.signature_help, desc = 'Signature Documentation <gK>', has = 'signatureHelp' },
+    { '<C-k>', vim.lsp.buf.signature_help, mode = 'i', desc = 'Signature Help <C-k>', has = 'signatureHelp' },
+    { '<leader>ca', function() require('actions-preview').code_actions() end, desc = 'Code Action [ca]', mode = { 'n', 'v' }, has = 'codeAction' },
+    { '<leader>cWa', vim.lsp.buf.add_workspace_folder, 'Add Workspace Folder [cWa]' },
+    { '<leader>cWr', vim.lsp.buf.remove_workspace_folder, 'Remove Workspace Folder [cWr]' },
+    { '<leader>cWl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, 'List Workspace Folders [cWl]', },
   }
   if require('util').has 'inc-rename.nvim' then
     M._keys[#M._keys + 1] = {
@@ -34,11 +32,11 @@ function M.get()
         return ':' .. inc_rename.config.cmd_name .. ' ' .. vim.fn.expand '<cword>'
       end,
       expr = true,
-      desc = '[C]ode [R]ename',
+      desc = 'Code Rename [cr]',
       has = 'rename',
     }
   else
-    M._keys[#M._keys + 1] = { '<leader>cr', vim.lsp.buf.rename, desc = '[C]ode [R]ename', has = 'rename' }
+    M._keys[#M._keys + 1] = { '<leader>cr', vim.lsp.buf.rename, desc = 'Code Rename [cr]', has = 'rename' }
   end
   return M._keys
 end

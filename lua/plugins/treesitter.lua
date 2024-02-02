@@ -20,8 +20,8 @@ return {
     dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
     cmd = { 'TSUpdateSync', 'TSUpdate', 'TSInstall' },
     keys = {
-      { '<c-space>', desc = 'Increment selection' },
-      { '<bs>', desc = 'Decrement selection', mode = 'x' },
+      { '<c-space>', desc = 'Increment selection <C-SPC>' },
+      { '<bs>', desc = 'Decrement selection <BS>', mode = 'x' },
     },
     ---@diagnostic disable-next-line: missing-fields
     opts = {

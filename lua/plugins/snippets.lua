@@ -80,8 +80,8 @@ return {
     },
     -- stylua: ignore
     keys = {
-      { '<leader>fs', function() require('scissors').addNewSnippet() end, mode = { 'n', 'v' }, desc = 'Add New Snippet' },
-      { '<leader>fS', function() require('scissors').editSnippet() end, desc = 'Edit Snippet' },
+      { '<leader>fs', function() require('scissors').addNewSnippet() end, mode = { 'n', 'v' }, desc = 'Add New Snippet [fs]' },
+      { '<leader>fS', function() require('scissors').editSnippet() end, desc = 'Edit Snippet [fS]' },
     },
   },
 }

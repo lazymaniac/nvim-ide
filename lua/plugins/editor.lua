@@ -134,8 +134,8 @@ return {
       })
     end,
     keys = {
-      { ']]', desc = 'Next Reference' },
-      { '[[', desc = 'Prev Reference' },
+      { ']]', desc = 'Next Reference <]]>' },
+      { '[[', desc = 'Prev Reference <[[>' },
     },
   },
 
@@ -162,9 +162,9 @@ return {
             bd(0)
           end
         end,
-        desc = '[B]uffer [D]elete',
+        desc = 'Delete Buffer [bd]',
       },
-      { '<leader>bD', function() require('mini.bufremove').delete(0, true) end, desc = '[B]uffer [D]elete (Force)' },
+      { '<leader>bD', function() require('mini.bufremove').delete(0, true) end, desc = 'Delete Buffer (Force) [bD]' },
     },
   },
 
@@ -232,10 +232,10 @@ return {
       use_diagnostic_signs = true, -- enabling this will use the signs defined in your lsp client
     },
     keys = {
-      { '<leader>xx', '<cmd>TroubleToggle document_diagnostics<cr>', desc = 'Document Diagnostics (Trouble)' },
-      { '<leader>xX', '<cmd>TroubleToggle workspace_diagnostics<cr>', desc = 'Workspace Diagnostics (Trouble)' },
-      { '<leader>xL', '<cmd>TroubleToggle loclist<cr>', desc = 'Location List (Trouble)' },
-      { '<leader>xQ', '<cmd>TroubleToggle quickfix<cr>', desc = 'Quickfix List (Trouble)' },
+      { '<leader>xx', '<cmd>TroubleToggle document_diagnostics<cr>', desc = 'Document Diagnostics [xx]' },
+      { '<leader>xX', '<cmd>TroubleToggle workspace_diagnostics<cr>', desc = 'Workspace Diagnostics [xX]' },
+      { '<leader>xL', '<cmd>TroubleToggle loclist<cr>', desc = 'Location List [xL]' },
+      { '<leader>xQ', '<cmd>TroubleToggle quickfix<cr>', desc = 'Quickfix List [xQ]' },
       {
         '[q',
         function()
@@ -248,7 +248,7 @@ return {
             end
           end
         end,
-        desc = 'Previous trouble/quickfix item',
+        desc = 'Previous trouble/quickfix item <[q>',
       },
       {
         ']q',
@@ -262,7 +262,7 @@ return {
             end
           end
         end,
-        desc = 'Next trouble/quickfix item',
+        desc = 'Next trouble/quickfix item <]q>',
       },
     },
   },
@@ -283,7 +283,7 @@ return {
     end,
     -- stylua: ignore
     keys = {
-      { '<leader>xn', function() require('textobj-diagnostic').nearest_diag() end, desc = 'Diagnostic [N]earest' },
+      { '<leader>xn', function() require('textobj-diagnostic').nearest_diag() end, desc = 'Nearest Diagnostic [xn]' },
     },
   },
 
@@ -297,12 +297,12 @@ return {
     config = true,
     -- stylua: ignore
     keys = {
-      { ']t', function() require('todo-comments').jump_next() end, desc = 'Next [t]odo comment' },
-      { '[t', function() require('todo-comments').jump_prev() end, desc = 'Previous [t]odo comment' },
-      { '<leader>xt', '<cmd>TodoTrouble<cr>', desc = 'Todo (Trouble)' },
-      { '<leader>xT', '<cmd>TodoTrouble keywords=TODO,FIX,FIXME<cr>', desc = 'Todo/Fix/Fixme (Trouble)' },
-      { '<leader>st', '<cmd>TodoTelescope<cr>', desc = 'Todo' },
-      { '<leader>sT', '<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>', desc = 'Todo/Fix/Fixme' },
+      { ']t', function() require('todo-comments').jump_next() end, desc = 'Next todo comment <]t>' },
+      { '[t', function() require('todo-comments').jump_prev() end, desc = 'Previous [t]odo comment <[t>' },
+      { '<leader>xt', '<cmd>TodoTrouble<cr>', desc = 'List Todo [xt]' },
+      { '<leader>xT', '<cmd>TodoTrouble keywords=TODO,FIX,FIXME<cr>', desc = 'List Todo/Fix/Fixme [xT]' },
+      { '<leader>st', '<cmd>TodoTelescope<cr>', desc = 'Search Todo [sT]' },
+      { '<leader>sT', '<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>', desc = 'Search Todo/Fix/Fixme [sT]' },
     },
   },
 
@@ -315,7 +315,7 @@ return {
     event = 'VeryLazy',
     -- stylua: ignore
     keys = {
-      { '<leader>o', '<cmd>Outline<cr>', mode = { 'n' }, desc = 'Toggle [o]utline' },
+      { '<leader>o', '<cmd>Outline<cr>', mode = { 'n' }, desc = 'Code Outline [o]' },
     },
     opts = {
       outline_window = {
@@ -606,24 +606,24 @@ return {
     keys = {
         -- stylua: ignore
         ---@diagnostic disable-next-line: undefined-field
-      { "<leader>p", function() require("telescope").extensions.yank_history.yank_history({ }) end, desc = "Open Yank History" },
-      { 'y', '<Plug>(YankyYank)', mode = { 'n', 'x' }, desc = 'Yank text' },
-      { 'p', '<Plug>(YankyPutAfter)', mode = { 'n', 'x' }, desc = 'Put yanked text after cursor' },
-      { 'P', '<Plug>(YankyPutBefore)', mode = { 'n', 'x' }, desc = 'Put yanked text before cursor' },
-      { 'gp', '<Plug>(YankyGPutAfter)', mode = { 'n', 'x' }, desc = 'Put yanked text after selection' },
-      { 'gP', '<Plug>(YankyGPutBefore)', mode = { 'n', 'x' }, desc = 'Put yanked text before selection' },
-      { '[y', '<Plug>(YankyCycleForward)', desc = 'Cycle forward through yank history' },
-      { ']y', '<Plug>(YankyCycleBackward)', desc = 'Cycle backward through yank history' },
-      { ']p', '<Plug>(YankyPutIndentAfterLinewise)', desc = 'Put indented after cursor (linewise)' },
-      { '[p', '<Plug>(YankyPutIndentBeforeLinewise)', desc = 'Put indented before cursor (linewise)' },
-      { ']P', '<Plug>(YankyPutIndentAfterLinewise)', desc = 'Put indented after cursor (linewise)' },
-      { '[P', '<Plug>(YankyPutIndentBeforeLinewise)', desc = 'Put indented before cursor (linewise)' },
-      { '>p', '<Plug>(YankyPutIndentAfterShiftRight)', desc = 'Put and indent right' },
-      { '<p', '<Plug>(YankyPutIndentAfterShiftLeft)', desc = 'Put and indent left' },
-      { '>P', '<Plug>(YankyPutIndentBeforeShiftRight)', desc = 'Put before and indent right' },
-      { '<P', '<Plug>(YankyPutIndentBeforeShiftLeft)', desc = 'Put before and indent left' },
-      { '=p', '<Plug>(YankyPutAfterFilter)', desc = 'Put after applying a filter' },
-      { '=P', '<Plug>(YankyPutBeforeFilter)', desc = 'Put before applying a filter' },
+      { "<leader>p", function() require("telescope").extensions.yank_history.yank_history({ }) end, desc = "Search Yank History [p]" },
+      { 'y', '<Plug>(YankyYank)', mode = { 'n', 'x' }, desc = 'Yank text <y>' },
+      { 'p', '<Plug>(YankyPutAfter)', mode = { 'n', 'x' }, desc = 'Put yanked text after cursor <p>' },
+      { 'P', '<Plug>(YankyPutBefore)', mode = { 'n', 'x' }, desc = 'Put yanked text before cursor <P>' },
+      { 'gp', '<Plug>(YankyGPutAfter)', mode = { 'n', 'x' }, desc = 'Put yanked text after selection <gp>' },
+      { 'gP', '<Plug>(YankyGPutBefore)', mode = { 'n', 'x' }, desc = 'Put yanked text before selection <gP>' },
+      { '[y', '<Plug>(YankyCycleForward)', desc = 'Cycle forward through yank history <[y>' },
+      { ']y', '<Plug>(YankyCycleBackward)', desc = 'Cycle backward through yank history <]y>' },
+      { ']p', '<Plug>(YankyPutIndentAfterLinewise)', desc = 'Put indented after cursor (linewise) <]p>' },
+      { '[p', '<Plug>(YankyPutIndentBeforeLinewise)', desc = 'Put indented before cursor (linewise) <[p>' },
+      { ']P', '<Plug>(YankyPutIndentAfterLinewise)', desc = 'Put indented after cursor (linewise) <]P>' },
+      { '[P', '<Plug>(YankyPutIndentBeforeLinewise)', desc = 'Put indented before cursor (linewise) <[P>' },
+      { '>p', '<Plug>(YankyPutIndentAfterShiftRight)', desc = 'Put and indent right <>p>' },
+      { '<p', '<Plug>(YankyPutIndentAfterShiftLeft)', desc = 'Put and indent left <<p>' },
+      { '>P', '<Plug>(YankyPutIndentBeforeShiftRight)', desc = 'Put before and indent right <>P>' },
+      { '<P', '<Plug>(YankyPutIndentBeforeShiftLeft)', desc = 'Put before and indent left <<P>' },
+      { '=p', '<Plug>(YankyPutAfterFilter)', desc = 'Put after applying a filter <=p>' },
+      { '=P', '<Plug>(YankyPutBeforeFilter)', desc = 'Put before applying a filter <=P>' },
     },
   },
 
@@ -695,9 +695,9 @@ return {
     },
     -- stylua: ignore
     keys = {
-      { '<leader>wm', '<cmd>WindowsMaximize<cr>', mode = { 'n', 'v' }, desc = 'Maximize Window', },
-      { '<leader>we', '<cmd>WindowsEqualize<cr>', mode = { 'n', 'v' }, desc = 'Equalize Window', },
-      { '<leader>wt', '<cmd>WindowsToggleAutowidth<cr>', mode = { 'n', 'v' }, desc = 'Toggle Autowidth', },
+      { '<leader>wm', '<cmd>WindowsMaximize<cr>', mode = { 'n', 'v' }, desc = 'Maximize Window [wm]', },
+      { '<leader>we', '<cmd>WindowsEqualize<cr>', mode = { 'n', 'v' }, desc = 'Equalize Window [we]', },
+      { '<leader>wt', '<cmd>WindowsToggleAutowidth<cr>', mode = { 'n', 'v' }, desc = 'Toggle Autowidth [wt]', },
     },
     config = function()
       vim.o.winwidth = 10

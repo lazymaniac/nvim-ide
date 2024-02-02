@@ -218,7 +218,7 @@ return {
       }
     end,
     keys = {
-      { '<leader>zz', ':Gen<CR>', desc = 'Local LLM', mode = { 'n', 'v' } },
+      { '<leader>zz', ':Gen<CR>', desc = 'Local LLM [zz]', mode = { 'n', 'v' } },
     },
   },
 }

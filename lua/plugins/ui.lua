@@ -10,7 +10,7 @@ return {
     event = 'VeryLazy',
     -- stylua: ignore
     keys = {
-      { '<leader>un', function() require('notify').dismiss { silent = true, pending = true } end, desc = 'Dismiss all Notifications', },
+      { '<leader>un', function() require('notify').dismiss { silent = true, pending = true } end, desc = 'Dismiss all Notifications [un]', },
     },
     opts = {
       timeout = 3000, -- Time to show Notification in ms, set to false ti disable timeout.
@@ -202,15 +202,15 @@ return {
       },
     },
     keys = {
-      { '<leader>bp', '<Cmd>BufferLineTogglePin<CR>', desc = 'Toggle pin' },
-      { '<leader>bP', '<Cmd>BufferLineGroupClose ungrouped<CR>', desc = 'Delete non-pinned buffers' },
-      { '<leader>bo', '<Cmd>BufferLineCloseOthers<CR>', desc = 'Delete other buffers' },
-      { '<leader>br', '<Cmd>BufferLineCloseRight<CR>', desc = 'Delete buffers to the right' },
-      { '<leader>bl', '<Cmd>BufferLineCloseLeft<CR>', desc = 'Delete buffers to the left' },
-      { '<S-h>', '<cmd>BufferLineCyclePrev<cr>', desc = 'Prev buffer' },
-      { '<S-l>', '<cmd>BufferLineCycleNext<cr>', desc = 'Next buffer' },
-      { '[b', '<cmd>BufferLineCyclePrev<cr>', desc = 'Prev buffer' },
-      { ']b', '<cmd>BufferLineCycleNext<cr>', desc = 'Next buffer' },
+      { '<leader>bp', '<Cmd>BufferLineTogglePin<CR>', desc = 'Toggle pin [bp]' },
+      { '<leader>bP', '<Cmd>BufferLineGroupClose ungrouped<CR>', desc = 'Delete non-pinned buffers [bP]' },
+      { '<leader>bo', '<Cmd>BufferLineCloseOthers<CR>', desc = 'Delete other buffers [bo]' },
+      { '<leader>br', '<Cmd>BufferLineCloseRight<CR>', desc = 'Delete buffers to the right [br]' },
+      { '<leader>bl', '<Cmd>BufferLineCloseLeft<CR>', desc = 'Delete buffers to the left [bl]' },
+      { '<S-h>', '<cmd>BufferLineCyclePrev<cr>', desc = 'Prev buffer <S-h>' },
+      { '<S-l>', '<cmd>BufferLineCycleNext<cr>', desc = 'Next buffer <S-l>' },
+      { '[b', '<cmd>BufferLineCyclePrev<cr>', desc = 'Prev buffer <[b>' },
+      { ']b', '<cmd>BufferLineCycleNext<cr>', desc = 'Next buffer <]b>' },
     },
     opts = {
       options = {
@@ -727,13 +727,13 @@ return {
     end,
     -- stylua: ignore
     keys = {
-      { '<C-S-Enter>', function() require('noice').redirect(vim.fn.getcmdline()) end, mode = 'c', desc = 'Redirect Cmdline', },
-      { '<leader>snl', function() require('noice').cmd 'last' end, desc = 'Noice Last Message', },
-      { '<leader>snh', function() require('noice').cmd 'history' end, desc = 'Noice History', },
-      { '<leader>sna', function() require('noice').cmd 'all' end, desc = 'Noice All', },
-      { '<leader>snd', function() require('noice').cmd 'dismiss' end, desc = 'Dismiss All', },
-      { '<c-f>', function() if not require('noice.lsp').scroll(4) then return '<c-f>' end end, silent = true, expr = true, desc = 'Scroll forward', mode = { 'i', 'n', 's' }, },
-      { '<c-b>', function() if not require('noice.lsp').scroll(-4) then return '<c-b>' end end, silent = true, expr = true, desc = 'Scroll backward', mode = { 'i', 'n', 's' }, },
+      { '<C-S-Enter>', function() require('noice').redirect(vim.fn.getcmdline()) end, mode = 'c', desc = 'Redirect Cmdline <C-S-Enter>', },
+      { '<leader>snl', function() require('noice').cmd 'last' end, desc = 'Noice Last Message [snl]', },
+      { '<leader>snh', function() require('noice').cmd 'history' end, desc = 'Noice History [snh]', },
+      { '<leader>sna', function() require('noice').cmd 'all' end, desc = 'Noice All [sna]', },
+      { '<leader>snd', function() require('noice').cmd 'dismiss' end, desc = 'Dismiss All [snd]', },
+      { '<c-f>', function() if not require('noice.lsp').scroll(4) then return '<c-f>' end end, silent = true, expr = true, desc = 'Scroll forward <c-f>', mode = { 'i', 'n', 's' }, },
+      { '<c-b>', function() if not require('noice.lsp').scroll(-4) then return '<c-b>' end end, silent = true, expr = true, desc = 'Scroll backward <c-b>', mode = { 'i', 'n', 's' }, },
     },
   },
 
@@ -795,7 +795,7 @@ return {
     end,
     -- stylua: ignore
     keys = {
-      { '<leader>D', '<cmd>Dashboard<cr>', desc = '[D]ashboard', },
+      { '<leader>D', '<cmd>Dashboard<cr>', desc = 'Dashboard [D]', },
     },
   },
 
@@ -805,7 +805,7 @@ return {
     'Tyler-Barham/floating-help.nvim',
     event = 'VeryLazy',
     keys = {
-      { '<F1>', '<cmd>FloatingHelpToggle<cr>', mode = { 'n' }, desc = 'Toggle Floating Help' },
+      { '<F1>', '<cmd>FloatingHelpToggle<cr>', mode = { 'n' }, desc = 'Toggle Floating Help <F1>' },
     },
     config = function()
       require('floating-help').setup {
@@ -1000,7 +1000,7 @@ return {
     'folke/zen-mode.nvim',
     event = 'VeryLazy',
     keys = {
-      { '<leader>Z', '<cmd>ZenMode<cr>', mode = { 'n' }, desc = 'Zen Mode' },
+      { '<leader>Z', '<cmd>ZenMode<cr>', mode = { 'n' }, desc = 'Zen Mode [Z]' },
     },
     opts = {
       -- your configuration comes here

@@ -8,7 +8,7 @@ return {
     event = 'VeryLazy',
     keys = {
       {
-        '<leader>Ul',
+        '<leader>UL',
         function()
           local linters = require('lint').get_running()
           if #linters == 0 then

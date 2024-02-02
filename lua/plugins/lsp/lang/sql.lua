@@ -72,7 +72,7 @@ return {
       {
         '<leader>cD',
         '<cmd>DBUIToggle<CR>',
-        desc = 'Database UI',
+        desc = 'Database UI [cD]',
       },
     },
   },

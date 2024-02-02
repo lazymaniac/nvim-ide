@@ -24,7 +24,7 @@ return {
       end)
     end,
     keys = {
-      { '<leader>fP', '<Cmd>Telescope projects<CR>', desc = 'Projects' },
+      { '<leader>fP', '<Cmd>Telescope projects<CR>', desc = 'Projects [fP]' },
     },
   },
 }
