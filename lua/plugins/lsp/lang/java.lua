@@ -501,7 +501,7 @@ return {
               ['<leader>cgs'] = { require('jdtls').super_implementation, 'Goto Super [cgs]' },
               ['<leader>cgS'] = { require('jdtls.tests').goto_subjects, 'Goto Subjects [cgS]' },
               ['<leader>ct'] = { require('jdtls.tests').generate, 'Generate Test Class [ct]' },
-              ['<leader>ci'] = { require('jdtls').organize_imports, 'Organize Imports [ci]' },
+              ['<leader>cz'] = { require('jdtls').organize_imports, 'Organize Imports [cz]' },
               ['<leader>cc'] = { require('jdtls').compile, 'Compile Code [cc]' },
               ['<leader>cb'] = { require('jdtls').build_projects, 'Build Projects [cb]' },
               ['<leader>cu'] = { require('jdtls').update_projects_config, 'Update Projects Config [cu]' },

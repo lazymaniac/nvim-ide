@@ -8,32 +8,22 @@ function M.get()
   end
   -- stylua: ignore
   M._keys = {
-    { '<leader>cl', '<cmd>LspInfo<cr>', desc = 'Lsp Info [cl]' },
-    { 'gd', '<cmd>Glance definitions<CR>', desc = 'Goto Definition <gd>', has = 'definition', },
-    { 'gr', '<cmd>Glance references<CR>', desc = 'Goto References <gr>' },
-    { 'gI', '<cmd>Glance implementations<CR>', desc = 'Goto Implementation <gI>', },
-    { 'gD', '<cmd>Glance type_definitions<CR>', desc = 'Goto Type Definition <gy>', },
+    { '<leader>li', '<cmd>LspInfo<cr>', desc = 'Lsp Info [li]' },
+    { '<leader>cl', '<cmd>Lspsaga finder<CR>', desc = 'Symbol Finder [cl]' },
+    { 'gd', '<cmd>Lspsaga peek_definition<CR>', desc = 'Goto Definition <gd>' },
+    { 'gr', '<cmd>Lspsaga finder ref<CR>', desc = 'Goto References <gr>' },
+    { 'gI', '<cmd>Lspsaga finder imp<CR>', desc = 'Goto Implementation <gI>', },
+    { 'gD', '<cmd>Lspsaga peek_type_definitions<CR>', desc = 'Goto Type Definition <gy>', },
     { '<leader>cs', function() require('telescope.builtin').lsp_document_symbols() end, desc = 'Document Symbols [cs]', },
     { '<leader>cw', function() require('telescope.builtin').lsp_dynamic_workspace_symbols() end, desc = 'Workspace Symbols [cw]', },
-    { 'K', vim.lsp.buf.hover, desc = 'Hover Documentation <K>' },
+    { 'K', '<cmd>Lspsaga hover_doc<cr>', desc = 'Hover Documentation <K>' },
     { 'gK', vim.lsp.buf.signature_help, desc = 'Signature Documentation <gK>', has = 'signatureHelp' },
     { '<C-k>', vim.lsp.buf.signature_help, mode = 'i', desc = 'Signature Help <C-k>', has = 'signatureHelp' },
-    { '<leader>ca', function() require('actions-preview').code_actions() end, desc = 'Code Action [ca]', mode = { 'n', 'v' }, has = 'codeAction' },
+    { '<leader>ca', '<cmd>Lspsaga code_action<cr>', desc = 'Code Action [ca]', mode = { 'n', 'v' }},
+    { '<leader>ci', '<cmd>Lspsaga incoming_calls<cr>', desc = 'Incoming Calls [ci]', mode = {'n'}},
+    { '<leader>co', '<cmd>Lspsaga outgoing_calls<cr>', desc = 'Outgoing Calls [co]', mode = {'n'}},
+    { '<leader>cr', '<cmd>Lspsaga rename<cr>', desc = 'Rename [cr]', mode = {'n', 'v'}},
   }
-  if require('util').has 'inc-rename.nvim' then
-    M._keys[#M._keys + 1] = {
-      '<leader>cr',
-      function()
-        local inc_rename = require 'inc_rename'
-        return ':' .. inc_rename.config.cmd_name .. ' ' .. vim.fn.expand '<cword>'
-      end,
-      expr = true,
-      desc = 'Code Rename [cr]',
-      has = 'rename',
-    }
-  else
-    M._keys[#M._keys + 1] = { '<leader>cr', vim.lsp.buf.rename, desc = 'Code Rename [cr]', has = 'rename' }
-  end
   return M._keys
 end
 

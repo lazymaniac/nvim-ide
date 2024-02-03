@@ -2,6 +2,188 @@ return {
 
   -- [[ CODING HELPER ]] ---------------------------------------------------------------
 
+  -- [lspsaga.nvim] - All LSP specific improvements
+  -- see: `:h lspsaga.nvim`
+  {
+    'nvimdev/lspsaga.nvim',
+    dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' },
+    keys = {
+      {
+        '<leader>o',
+        '<cmd>Lspsaga outline<cr>',
+        mode = { 'n', 'v' },
+        desc = 'Code Outline [o]',
+      },
+    },
+    config = function()
+      require('lspsaga').setup {
+        ui = {
+          border = 'rounded',
+          devicon = true,
+          foldericon = true,
+          title = true,
+          expand = '⊞',
+          collapse = '⊟',
+          code_action = '💡',
+          actionfix = ' ',
+          lines = { '┗', '┣', '┃', '━', '┏' },
+          kind = nil,
+          imp_sign = '󰳛 ',
+        },
+        hover = {
+          max_width = 0.9,
+          max_height = 0.8,
+          open_link = 'gx',
+          open_cmd = '!chrome',
+        },
+        diagnostic = {
+          show_code_action = true,
+          show_layout = 'float',
+          show_normal_height = 10,
+          jump_num_shortcut = true,
+          max_width = 0.8,
+          max_height = 0.6,
+          max_show_width = 0.9,
+          max_show_height = 0.6,
+          text_hl_follow = true,
+          border_follow = true,
+          wrap_long_lines = true,
+          extend_relatedInformation = true,
+          diagnostic_only_current = false,
+          keys = {
+            exec_action = 'o',
+            quit = 'q',
+            toggle_or_jump = '<CR>',
+            quit_in_show = { 'q', '<ESC>' },
+          },
+        },
+        code_action = {
+          num_shortcut = true,
+          show_server_name = true,
+          extend_gitsigns = true,
+          only_in_cursor = false,
+          max_height = 0.6,
+          keys = {
+            quit = 'q',
+            exec = '<CR>',
+          },
+        },
+        lightbulb = {
+          enable = true,
+          sign = true,
+          debounce = 1,
+          sign_priority = 40,
+          virtual_text = true,
+          enable_in_insert = true,
+        },
+        scroll_preview = {
+          scroll_down = '<C-f>',
+          scroll_up = '<C-b>',
+        },
+        request_timeout = 2000,
+        finder = {
+          max_height = 0.5,
+          left_width = 0.4,
+          methods = {},
+          default = 'ref+imp',
+          layout = 'float',
+          silent = false,
+          filter = {},
+          fname_sub = nil,
+          sp_inexist = false,
+          sp_global = false,
+          ly_botright = false,
+          keys = {
+            shuttle = '[w',
+            toggle_or_open = 'o',
+            vsplit = 's',
+            split = 'i',
+            tabe = 't',
+            tabnew = 'r',
+            quit = 'q',
+            close = '<C-c>k',
+          },
+        },
+        definition = {
+          width = 0.8,
+          height = 0.8,
+          save_pos = false,
+          keys = {
+            edit = 'o',
+            vsplit = 'v',
+            split = 'i',
+            tabe = 't',
+            tabnew = 'n',
+            quit = 'q',
+            close = 'k',
+          },
+        },
+        rename = {
+          in_select = true,
+          auto_save = false,
+          project_max_width = 0.5,
+          project_max_height = 0.5,
+          keys = {
+            quit = '<C-k>',
+            exec = '<CR>',
+            select = 'x',
+          },
+        },
+        symbol_in_winbar = {
+          enable = false,
+          separator = ' › ',
+          hide_keyword = false,
+          ignore_patterns = nil,
+          show_file = false,
+          folder_level = 1,
+          color_mode = true,
+          dely = 300,
+        },
+        outline = {
+          win_position = 'right',
+          win_width = 40,
+          auto_preview = true,
+          detail = true,
+          auto_close = false,
+          close_after_jump = false,
+          layout = 'float',
+          max_height = 0.5,
+          left_width = 0.3,
+          keys = {
+            toggle_or_jump = '<cr>',
+            quit = 'q',
+            jump = 'e',
+          },
+        },
+        callhierarchy = {
+          layout = 'float',
+          left_width = 0.2,
+          keys = {
+            edit = 'o',
+            vsplit = 's',
+            split = 'i',
+            tabe = 't',
+            close = '<C-c>k',
+            quit = 'q',
+            shuttle = '[w',
+            toggle_or_req = 'u',
+          },
+        },
+        implement = {
+          enable = true,
+          sign = true,
+          lang = {},
+          virtual_text = true,
+          priority = 100,
+        },
+        beacon = {
+          enable = true,
+          frequency = 7,
+        },
+      }
+    end,
+  },
+
   -- [boole.nvim] - Allows to increment numbers and flip common text to opposite value like true -> false
   {
     'nat-418/boole.nvim',
@@ -22,141 +204,6 @@ return {
     },
     config = function(_, opts)
       require('boole').setup(opts)
-    end,
-  },
-
-  -- [actions-preview.nvim] - Preview code actions before applying
-  -- see: `:h actions-preview.nvim`
-  {
-    'aznhe21/actions-preview.nvim',
-    event = 'VeryLazy',
-    -- stylua: ignore
-    keys = {
-      { '<leader>cA', function() require('actions-preview').code_actions() end, desc = 'Preview Code Aciton [cA]' },
-    },
-    config = function()
-      require('actions-preview').setup {
-        -- options for vim.diff(): https://neovim.io/doc/user/lua.html#vim.diff()
-        diff = {
-          ctxlen = 4,
-        },
-        -- priority list of preferred backend
-        backend = {
-          'nui',
-        },
-        -- options for nui.nvim components
-        nui = {
-          -- component direction. "col" or "row"
-          dir = 'row',
-          -- options for nui Layout component: https://github.com/MunifTanjim/nui.nvim/tree/main/lua/nui/layout
-          layout = {
-            position = '50%',
-            size = {
-              width = '80%',
-              height = '70%',
-            },
-            min_width = 40,
-            min_height = 10,
-            relative = 'editor',
-          },
-          -- options for preview area: https://github.com/MunifTanjim/nui.nvim/tree/main/lua/nui/popup
-          preview = {
-            size = '60%',
-            border = {
-              style = 'rounded',
-              padding = { 0, 1 },
-            },
-          },
-          -- options for selection area: https://github.com/MunifTanjim/nui.nvim/tree/main/lua/nui/menu
-          select = {
-            size = '40%',
-            border = {
-              style = 'rounded',
-              padding = { 0, 1 },
-            },
-          },
-        },
-      }
-    end,
-  },
-
-  -- [glance.nvim] - Preview code like in VSCode
-  -- see: `:h glance.nvim`
-  {
-    'dnlhc/glance.nvim',
-    event = 'VeryLazy',
-    config = function()
-      local glance = require 'glance'
-      local actions = glance.actions
-      glance.setup {
-        height = 20, -- Height of the window
-        zindex = 45,
-        detached = function(winid)
-          return vim.api.nvim_win_get_width(winid) < 100
-        end,
-        preview_win_opts = { -- Configure preview window options
-          cursorline = true,
-          number = true,
-          wrap = true,
-        },
-        border = {
-          enable = true, -- Show window borders. Only horizontal borders allowed
-          top_char = '―',
-          bottom_char = '―',
-        },
-        list = {
-          position = 'right', -- Position of the list window 'left'|'right'
-          width = 0.33, -- 33% width relative to the active window, min 0.1, max 0.5
-        },
-        theme = { -- This feature might not work properly in nvim-0.7.2
-          enable = true, -- Will generate colors for the plugin based on your current colorscheme
-          mode = 'auto', -- 'brighten'|'darken'|'auto', 'auto' will set mode based on the brightness of your colorscheme
-        },
-        mappings = {
-          list = {
-            ['j'] = actions.next, -- Bring the cursor to the next item in the list
-            ['k'] = actions.previous, -- Bring the cursor to the previous item in the list
-            ['<Down>'] = actions.next,
-            ['<Up>'] = actions.previous,
-            ['<Tab>'] = actions.next_location, -- Bring the cursor to the next location skipping groups in the list
-            ['<S-Tab>'] = actions.previous_location, -- Bring the cursor to the previous location skipping groups in the list
-            ['<C-u>'] = actions.preview_scroll_win(5),
-            ['<C-d>'] = actions.preview_scroll_win(-5),
-            ['v'] = actions.jump_vsplit,
-            ['s'] = actions.jump_split,
-            ['t'] = actions.jump_tab,
-            ['<CR>'] = actions.jump,
-            ['o'] = actions.jump,
-            ['l'] = actions.open_fold,
-            ['h'] = actions.close_fold,
-            ['<leader>l'] = actions.enter_win 'preview', -- Focus preview window
-            ['q'] = actions.close,
-            ['Q'] = actions.close,
-            ['<Esc>'] = actions.close,
-            ['<C-q>'] = actions.quickfix,
-            -- ['<Esc>'] = false -- disable a mapping
-          },
-          preview = {
-            ['Q'] = actions.close,
-            ['<Tab>'] = actions.next_location,
-            ['<S-Tab>'] = actions.previous_location,
-            ['<leader>l'] = actions.enter_win 'list', -- Focus list window
-          },
-        },
-        hooks = {},
-        folds = {
-          fold_closed = '',
-          fold_open = '',
-          folded = true, -- Automatically fold list on startup
-        },
-        indent_lines = {
-          enable = true,
-          icon = '│',
-        },
-        winbar = {
-          enable = true, -- Available strating from nvim-0.8+
-        },
-      }
     end,
   },
 
@@ -416,18 +463,6 @@ return {
     end,
   },
 
-  -- [nvim-lightbulb] - Show lightbulb where code action is available
-  -- see: `:h lightbulb`
-  {
-    'kosayoda/nvim-lightbulb',
-    event = 'VeryLazy',
-    config = function()
-      require('nvim-lightbulb').setup {
-        autocmd = { enabled = true },
-      }
-    end,
-  },
-
   -- [rainbow_delimiters.nvim] - Rainbow colored delimiters
   -- see: `:h rainbow-delimiters`
   {
@@ -444,30 +479,6 @@ return {
           [''] = 'rainbow-delimiters',
           lua = 'rainbow-blocks',
         },
-      }
-    end,
-  },
-
-  -- [nvim-navic] - Code context in lualine winbar
-  -- see: `:h nvim-navic`
-  {
-    'SmiteshP/nvim-navic',
-    event = 'VeryLazy',
-    init = function()
-      vim.g.navic_silence = true
-      require('util').lsp.on_attach(function(client, buffer)
-        if client.supports_method 'textDocument/documentSymbol' then
-          require('nvim-navic').attach(client, buffer)
-        end
-      end)
-    end,
-    opts = function()
-      return {
-        separator = ' ',
-        highlight = true,
-        depth_limit = 5,
-        icons = require('config').icons.kinds,
-        lazy_update_context = true,
       }
     end,
   },

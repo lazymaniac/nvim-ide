@@ -82,7 +82,7 @@ return {
               ['<leader>cj'] = { '<cmd>RustLsp moveItem down<cr>', 'Move Item Down [cj]' },
               ['<leader>ck'] = { '<cmd>RustLsp moveItem up<cr>', 'Move Item Up [ck]' },
               ['<leader>cK'] = { '<cmd>RustLsp hover actions<cr>', 'Hover Actions [cK]' },
-              ['<leader>co'] = { '<cmd>RustLsp openCargo<cr>', 'Open Cargo.toml [co]' },
+              ['<leader>cO'] = { '<cmd>RustLsp openCargo<cr>', 'Open Cargo.toml [co]' },
               ['<leader>cP'] = { '<cmd>RustLsp parentModule<cr>', 'Parent Module [cP]' },
               ['<leader>cJ'] = { '<cmd>RustLsp joinLines<cr>', 'Join Lines [cJ]' },
               ['<leader>ct'] = { '<cmd>RustLsp syntaxTree<cr>', 'Syntax Tree [ct]' },

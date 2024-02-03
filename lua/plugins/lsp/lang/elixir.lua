@@ -41,7 +41,7 @@ return {
             local wk = require 'which-key'
             wk.register({
               ['<leader>cm'] = { ':ElixirFromPipe<cr>', 'From Pipe [cm]' },
-              ['<leader>co'] = { ':ElixirToPipe<cr>', 'To Pipe [co]' },
+              ['<leader>cO'] = { ':ElixirToPipe<cr>', 'To Pipe [co]' },
               ['<leader>ce'] = { ':ElixirExpandMacro<cr>', 'Expand Macro [ce]' },
             }, { mode = 'n', buffer = bufnr })
           end,
