@@ -70,7 +70,7 @@ return {
       {
         '<leader>?',
         '<cmd>Cheatsheet<cr>',
-        mode = { 'n', 'v' },
+        mode = { 'n' },
         desc = 'Cheatsheet [?]',
       },
     },
