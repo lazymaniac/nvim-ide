@@ -14,7 +14,7 @@ function M.check()
     error 'Neovim >= 0.9.0 is required'
   end
 
-  for _, cmd in ipairs { 'git', 'rg', { 'fd', 'fdfind' }, 'lazygit', 'lazydocker', 'lazysql', 'btop', 'ncdu' } do
+  for _, cmd in ipairs { 'git', 'rg', { 'fd', 'fdfind' }, 'lazygit', 'lazydocker', 'lazysql', 'btop', 'ncdu', 'python', 'node', 'npm', 'gcc', 'make', 'cmake' } do
     local name = type(cmd) == 'string' and cmd or vim.inspect(cmd)
     local commands = type(cmd) == 'string' and { cmd } or cmd
     ---@cast commands string[]

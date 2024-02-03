@@ -26,7 +26,6 @@ return {
       'MunifTanjim/nui.nvim',
       -- '3rd/image.nvim',
     },
-    -- stylua: ignore
     keys = {
       {
         '<leader>e',
@@ -53,7 +52,31 @@ return {
         end,
         desc = 'File Explorer [e]',
       },
-      { '<leader>fe', function() require('neo-tree.command').execute { action = 'focus', position = 'left', dir = Util.root() } end, desc = 'File Explorer (docked) [fe]' },
+      {
+        '<leader>E',
+        function()
+          local reveal_file = vim.fn.expand '%:p'
+          if reveal_file == '' then
+            reveal_file = vim.fn.getcwd()
+          else
+            local f = io.open(reveal_file, 'r')
+            if f then
+              f.close(f)
+            else
+              reveal_file = vim.fn.getcwd()
+            end
+          end
+          require('neo-tree.command').execute {
+            action = 'focus',
+            source = 'filesystem',
+            position = 'left',
+            reveal_file = reveal_file,
+            reveal_force_cwd = true,
+            dir = Util.root(),
+          }
+        end,
+        desc = 'File Explorer (docked) [E]',
+      },
     },
     deactivate = function()
       vim.cmd [[Neotree close]]

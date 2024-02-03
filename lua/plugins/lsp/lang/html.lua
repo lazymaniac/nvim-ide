@@ -72,8 +72,8 @@ return {
     event = 'VeryLazy',
     opts = {
       defaults = {
-        ['<leader>U'] = { name = '+[utils]' },
-        ['<leader>UC'] = { name = '+[color]' },
+        ['<leader>l'] = { name = '+[utils]' },
+        ['<leader>lc'] = { name = '+[color]' },
       },
     },
   },
@@ -83,9 +83,9 @@ return {
     opts = {},
     cmd = { 'CccPick', 'CccConvert', 'CccHighlighterEnable', 'CccHighlighterDisable', 'CccHighlighterToggle' },
     keys = {
-      { '<leader>UCp', '<cmd>CccPick<cr>', desc = 'Pick [UCp]' },
-      { '<leader>UCc', '<cmd>CccConvert<cr>', desc = 'Convert [UCc]' },
-      { '<leader>UCh', '<cmd>CccHighlighterToggle<cr>', desc = 'Toggle Highlighter [UCh]' },
+      { '<leader>lcp', '<cmd>CccPick<cr>', desc = 'Pick [lcp]' },
+      { '<leader>lcc', '<cmd>CccConvert<cr>', desc = 'Convert [lcc]' },
+      { '<leader>lch', '<cmd>CccHighlighterToggle<cr>', desc = 'Toggle Highlighter [lch]' },
     },
   },
 }

@@ -436,7 +436,7 @@ return {
     'lpoto/telescope-docker.nvim',
     dependencies = { 'nvim-telescope/telescope.nvim' },
     keys = {
-      { '<leader>fd', '<Cmd>Telescope docker<CR>', desc = 'Docker' },
+      { '<leader>fD', '<Cmd>Telescope docker<CR>', desc = 'Docker [fD]' },
     },
     config = function()
       ---@diagnostic disable-next-line: undefined-field
@@ -459,6 +459,81 @@ return {
     config = function()
       ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'terraform'
+    end,
+  },
+
+  {
+    'lpoto/telescope-tasks.nvim',
+    dependencies = { 'nvim-telescope/telescope.nvim' },
+    keys = {
+      { '<leader>rg', '<Cmd>Telescope tasks<CR>', desc = 'Run Tasks [rg]' },
+    },
+    config = function()
+      ---@diagnostic disable-next-line: undefined-field
+      require('telescope').setup {
+        extensions = {
+          tasks = {
+            theme = 'ivy',
+            output = {
+              style = 'float', -- "split" | "float" | "tab"
+              layout = 'center', -- "left" | "right" | "center" | "below" | "above"
+              scale = 0.3, -- output window to editor size ratio
+            },
+            env = {},
+            binary = {
+              -- Example binary used when running python projects
+              -- python = 'python3',
+            },
+          },
+        },
+      }
+      ---@diagnostic disable-next-line: undefined-field
+      require('telescope').load_extension 'tasks'
+      local default = require('telescope').extensions.tasks.generators.default
+      default.all()
+    end,
+  },
+
+  {
+    'jonarrien/telescope-cmdline.nvim',
+    dependencies = { 'nvim-telescope/telescope.nvim' },
+    keys = {
+      { ':', '<Cmd>Telescope cmdline<CR>', desc = 'CMD [:]' },
+    },
+    config = function()
+      ---@diagnostic disable-next-line: undefined-field
+      require('telescope').setup {
+        extensions = {
+          cmdline = {
+            picker = {
+              layout_config = {
+                width = 120,
+                height = 25,
+              },
+            },
+            mappings = {
+              complete = '<Tab>',
+              run_selection = '<C-CR>',
+              run_input = '<CR>',
+            },
+          },
+        },
+      }
+      ---@diagnostic disable-next-line: undefined-field
+      require('telescope').load_extension 'cmdline'
+    end,
+  },
+
+  {
+    'fbuchlak/telescope-directory.nvim',
+    dependencies = { 'nvim-telescope/telescope.nvim' },
+    -- stylua: ignore
+    keys = {
+      { '<Leader>fd', function() require('telescope-directory').directory { feature = 'live_grep', } end, desc = 'Select directory for Live Grep [fd]', },
+      { '<Leader>fe', '<CMD>Telescope directory find_files<CR>', },
+    },
+    config = function()
+      require('telescope-directory').setup {}
     end,
   },
 }

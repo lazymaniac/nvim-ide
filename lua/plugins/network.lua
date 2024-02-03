@@ -12,15 +12,25 @@ return {
     -- config = true,
   },
 
+  {
+    'folke/which-key.nvim',
+    event = 'VeryLazy',
+    opts = {
+      defaults = {
+        ['<leader>lr'] = { name = '+[rest]' },
+      },
+    },
+  },
+
   -- [rest.nvim] - Call rest calls defined in files
   -- see: `:h rest.nvim`
   {
     'rest-nvim/rest.nvim',
-    dependencies = { { 'nvim-lua/plenary.nvim' } },
+    dependencies = { 'nvim-lua/plenary.nvim' },
     keys = {
-      { '<leader>Ur', '<cmd>lua require("rest-nvim").run()<cr>', mode = { 'n', 'v' }, desc = 'Call REST [Ur]' },
-      { '<leader>Up', '<cmd>lua require("rest-nvim").run(true)<cr>', mode = { 'n', 'v' }, desc = 'Call REST Preview [Up]' },
-      { '<leader>Ul', '<cmd>lua require("rest-nvim").last()<cr>', mode = { 'n', 'v' }, desc = 'Call REST Last [Ul]' },
+      { '<leader>lrr', '<cmd>lua require("rest-nvim").run()<cr>', mode = { 'n', 'v' }, desc = 'Call REST [lrr]' },
+      { '<leader>lrp', '<cmd>lua require("rest-nvim").run(true)<cr>', mode = { 'n', 'v' }, desc = 'Call REST Preview [lrp]' },
+      { '<leader>lrl', '<cmd>lua require("rest-nvim").last()<cr>', mode = { 'n', 'v' }, desc = 'Call REST Last [lrl]' },
     },
     config = function()
       require('rest-nvim').setup {

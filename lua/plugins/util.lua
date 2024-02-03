@@ -61,7 +61,7 @@ return {
 
   -- [[ CHEATSHEET ]] ---------------------------------------------------------------
   -- [cheatsheet.nvim] - Cheats for editor, vim plugins, nerd-fonts, etc.
-  -- see: `:h cheatsHeet.nvim`
+  -- see: `:h cheatsheet.nvim`
   {
     'sudormrfbin/cheatsheet.nvim',
     event = 'VeryLazy',
@@ -113,7 +113,7 @@ return {
     dependencies = { 'nvim-lua/plenary.nvim', 'MunifTanjim/nui.nvim' },
     -- stylua: ignore
     keys = {
-      { '<leader>Uw', function() require('wttr').get_forecast() end, desc = 'Weather Forecast [Uw]', },
+      { '<leader>lw', function() require('wttr').get_forecast() end, desc = 'Weather Forecast [Uw]', },
     },
     opts = {
       location = '',

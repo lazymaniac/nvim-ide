@@ -76,8 +76,8 @@ map('v', '<', '<gv^')
 map('v', '>', '>gv^')
 
 -- Lazy & Mason
-map('n', '<leader>Ul', '<cmd>Lazy<cr>', { desc = 'Lazy [Ul]' })
-map('n', '<leader>Um', '<cmd>Mason<cr>', { desc = 'Mason [Um]' })
+map('n', '<leader>ll', '<cmd>Lazy<cr>', { desc = 'Lazy [ll]' })
+map('n', '<leader>lm', '<cmd>Mason<cr>', { desc = 'Mason [lm]' })
 
 -- new file
 map('n', '<leader>fn', '<cmd>enew<cr>', { desc = 'New File [fn]' })

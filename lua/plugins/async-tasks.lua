@@ -23,7 +23,7 @@ return {
       strategy = {
         'toggleterm',
         -- load your default shell before starting the task
-        use_shell = true,
+        use_shell = false,
         -- overwrite the default toggleterm "direction" parameter
         direction = 'horizontal',
         -- have the toggleterm window close and delete the terminal buffer
@@ -210,6 +210,7 @@ return {
         save_task_opts = {
           bundleable = true,
         },
+        autostart_on_load = false,
       },
       -- A list of components to preload on setup.
       -- Only matters if you want them to show up in the task editor.
