@@ -66,25 +66,35 @@ return {
     'sudormrfbin/cheatsheet.nvim',
     event = 'VeryLazy',
     dependencies = { 'nvim-telescope/telescope.nvim', 'nvim-lua/popup.nvim', 'nvim-lua/plenary.nvim' },
+    keys = {
+      {
+        '<leader>?',
+        '<cmd>Cheatsheet<cr>',
+        mode = { 'n', 'v' },
+        desc = 'Cheatsheet [?]',
+      },
+    },
     config = function()
+      local ctactions = require 'cheatsheet.telescope.actions'
       require('cheatsheet').setup {
-        -- Whether to show bundled cheatsheets
-        -- For generic cheatsheets like default, unicode, nerd-fonts, etc
-        bundled_cheatsheets = {
-          --     enabled = {},
+        bundled_cheetsheets = {
+          enabled = { 'default', 'lua', 'markdown', 'regex', 'netrw', 'unicode' },
           disabled = { 'nerd-fonts' },
         },
-        bundled_plugin_cheatsheets = true,
-        -- For bundled plugin cheatsheets, do not show a sheet if you
-        -- don't have the plugin installed (searches runtimepath for
-        -- same directory name)
+        bundled_plugin_cheatsheets = {
+          enabled = {
+            'auto-session',
+            'octo.nvim',
+            'telescope.nvim',
+          },
+          disabled = { 'gitsigns' },
+        },
         include_only_installed_plugins = true,
-        -- Key mappings bound inside the telescope window
         telescope_mappings = {
-          ['<CR>'] = require('cheatsheet.telescope.actions').select_or_fill_commandline,
-          ['<C-CR>'] = require('cheatsheet.telescope.actions').select_or_execute,
-          ['<C-Y>'] = require('cheatsheet.telescope.actions').copy_cheat_value,
-          ['<C-E>'] = require('cheatsheet.telescope.actions').edit_user_cheatsheet,
+          ['<CR>'] = ctactions.select_or_fill_commandline,
+          ['<A-CR>'] = ctactions.select_or_execute,
+          ['<C-Y>'] = ctactions.copy_cheat_value,
+          ['<C-E>'] = ctactions.edit_user_cheatsheet,
         },
       }
     end,

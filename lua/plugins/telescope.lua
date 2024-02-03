@@ -42,7 +42,7 @@ return {
       { '<leader>sM', '<cmd>Telescope man_pages<cr>', desc = 'Man Pages [sM]' },
       { '<leader>sm', '<cmd>Telescope marks<cr>', desc = 'Jump to Mark [sm]' },
       { '<leader>so', '<cmd>Telescope vim_options<cr>', desc = 'Options [so]' },
-      { '<leader>sR', '<cmd>Telescope resume<cr>', desc = 'Resume [sR]' },
+      { '<leader>sR', '<cmd>Telescope resume<cr>', desc = 'Resume Last Search [sR]' },
       { '<leader>sw', Util.telescope('grep_string', { word_match = '-w' }), desc = 'Word (root dir) [sw]' },
       { '<leader>sW', Util.telescope('grep_string', { cwd = false, word_match = '-w' }), desc = 'Word (cwd) [sW]' },
       { '<leader>sw', Util.telescope 'grep_string', mode = 'v', desc = 'Selection (root dir) [sw]' },
