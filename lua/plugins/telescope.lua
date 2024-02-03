@@ -463,38 +463,6 @@ return {
   },
 
   {
-    'lpoto/telescope-tasks.nvim',
-    dependencies = { 'nvim-telescope/telescope.nvim' },
-    keys = {
-      { '<leader>rg', '<Cmd>Telescope tasks<CR>', desc = 'Run Tasks [rg]' },
-    },
-    config = function()
-      ---@diagnostic disable-next-line: undefined-field
-      require('telescope').setup {
-        extensions = {
-          tasks = {
-            theme = 'ivy',
-            output = {
-              style = 'float', -- "split" | "float" | "tab"
-              layout = 'center', -- "left" | "right" | "center" | "below" | "above"
-              scale = 0.3, -- output window to editor size ratio
-            },
-            env = {},
-            binary = {
-              -- Example binary used when running python projects
-              -- python = 'python3',
-            },
-          },
-        },
-      }
-      ---@diagnostic disable-next-line: undefined-field
-      require('telescope').load_extension 'tasks'
-      local default = require('telescope').extensions.tasks.generators.default
-      default.all()
-    end,
-  },
-
-  {
     'jonarrien/telescope-cmdline.nvim',
     dependencies = { 'nvim-telescope/telescope.nvim' },
     keys = {
@@ -533,6 +501,7 @@ return {
       { '<Leader>fe', '<CMD>Telescope directory find_files<CR>', },
     },
     config = function()
+      ---@diagnostic disable-next-line: missing-fields
       require('telescope-directory').setup {}
     end,
   },
