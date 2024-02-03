@@ -497,8 +497,8 @@ return {
     dependencies = { 'nvim-telescope/telescope.nvim' },
     -- stylua: ignore
     keys = {
-      { '<Leader>fd', function() require('telescope-directory').directory { feature = 'live_grep', } end, desc = 'Select directory for Live Grep [fd]', },
-      { '<Leader>fe', '<CMD>Telescope directory find_files<CR>', },
+      { '<Leader>fd', '<CMD>Telescope directory live_grep<CR>', desc = 'Search Text in Directory [fd]', },
+      { '<Leader>fe', '<CMD>Telescope directory find_files<CR>', desc = 'Search Files in Directory [fe]' },
     },
     config = function()
       ---@diagnostic disable-next-line: missing-fields
