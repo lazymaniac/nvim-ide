@@ -62,7 +62,7 @@ return {
           show_server_name = true,
           extend_gitsigns = true,
           only_in_cursor = false,
-          max_height = 0.6,
+          max_height = 0.2,
           keys = {
             quit = 'q',
             exec = '<CR>',
@@ -70,7 +70,7 @@ return {
         },
         lightbulb = {
           enable = true,
-          sign = true,
+          sign = false,
           debounce = 1,
           sign_priority = 40,
           virtual_text = true,
