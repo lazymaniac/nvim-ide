@@ -32,7 +32,7 @@ return {
               desc = 'Organize Imports [co]',
             },
             {
-              '<leader>cR',
+              '<leader>cq',
               function()
                 vim.lsp.buf.code_action {
                   apply = true,
@@ -42,7 +42,7 @@ return {
                   },
                 }
               end,
-              desc = 'Remove Unused Imports [cR]',
+              desc = 'Remove Unused Imports [cq]',
             },
           },
           ---@diagnostic disable-next-line: missing-fields

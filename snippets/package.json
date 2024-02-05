@@ -12,6 +12,12 @@
           "java"
         ],
         "path": "./java.json"
+      },
+      {
+        "language": [
+          "rust"
+        ],
+        "path": "./rust.json"
       }
     ]
   },

@@ -6,7 +6,7 @@ return {
   -- see: `:h lspsaga.nvim`
   {
     'nvimdev/lspsaga.nvim',
-    dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' },
+    dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons', 'neovim/nvim-lspconfig' },
     keys = {
       {
         '<leader>o',
@@ -146,7 +146,7 @@ return {
           detail = true,
           auto_close = false,
           close_after_jump = false,
-          layout = 'float',
+          layout = 'normal',
           max_height = 0.5,
           left_width = 0.3,
           keys = {
@@ -233,7 +233,7 @@ return {
     cmd = 'Hypersonic',
     -- stylua: ignore
     keys = {
-      { '<leader>cR', '<cmd>Hypersonic<cr>', desc = 'Regex explain [cR]' },
+      { '<leader>cE', '<cmd>Hypersonic<cr>', desc = 'Regex explain [cE]' },
     },
     config = function()
       require('hypersonic').setup {

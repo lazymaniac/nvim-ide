@@ -23,6 +23,7 @@ function M.get()
     { '<leader>ci', '<cmd>Lspsaga incoming_calls<cr>', desc = 'Incoming Calls [ci]', mode = {'n'}},
     { '<leader>co', '<cmd>Lspsaga outgoing_calls<cr>', desc = 'Outgoing Calls [co]', mode = {'n'}},
     { '<leader>cr', '<cmd>Lspsaga rename<cr>', desc = 'Rename [cr]', mode = {'n', 'v'}},
+    { '<leader>cR', '<cmd>Lspsaga rename ++project<cr>', desc = 'Rename Workspace [cR]', mode = {'n', 'v'}},
   }
   return M._keys
 end
