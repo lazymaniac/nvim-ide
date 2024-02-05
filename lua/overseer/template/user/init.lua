@@ -1,4 +1,5 @@
 return {
+  'user.mvn-workflow',
   'user.mvn-build',
   'user.mvn-build-skip-tests',
   'user.mvn-application-tests',

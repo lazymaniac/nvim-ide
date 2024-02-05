@@ -43,6 +43,7 @@ return {
       name = 'Apply clean goal?',
       desc = 'Will apply clean goal before other goals',
       default = 'true',
+      order = 1,
     },
     goals = {
       type = 'list',
@@ -53,6 +54,7 @@ return {
       },
       optional = true,
       delimiter = ' ',
+      order = 2,
     },
     profiles = {
       type = 'list',
@@ -63,6 +65,7 @@ return {
       },
       optional = true,
       delimiter = ' ',
+      order = 3,
     },
   },
   builder = function(params)
