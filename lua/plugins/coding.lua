@@ -6,22 +6,18 @@ return {
   {
     'nat-418/boole.nvim',
     event = 'VeryLazy',
-    opts = {
-      mappings = {
-        increment = '<C-a>',
-        decrement = '<C-x>',
-      },
-      -- User defined loops
-      additions = {},
-      allow_caps_additions = {
-        { 'enable', 'disable' },
-        -- enable → disable
-        -- Enable → Disable
-        -- ENABLE → DISABLE
-      },
-    },
-    config = function(_, opts)
-      require('boole').setup(opts)
+    config = function()
+      require('boole').setup {
+        mappings = {
+          increment = '<C-a>',
+          decrement = '<C-x>',
+        },
+        -- User defined loops
+        additions = {},
+        allow_caps_additions = {
+          { 'enable', 'disable' },
+        },
+      }
     end,
   },
 
@@ -30,15 +26,11 @@ return {
   {
     'aznhe21/actions-preview.nvim',
     event = 'VeryLazy',
-    -- stylua: ignore
-    keys = {
-      { '<leader>cA', function() require('actions-preview').code_actions() end, desc = 'Preview Code Aciton [cA]' },
-    },
     config = function()
       require('actions-preview').setup {
         -- options for vim.diff(): https://neovim.io/doc/user/lua.html#vim.diff()
         diff = {
-          ctxlen = 4,
+          ctxlen = 0,
         },
         -- priority list of preferred backend
         backend = {
@@ -52,8 +44,8 @@ return {
           layout = {
             position = '50%',
             size = {
-              width = '80%',
-              height = '70%',
+              width = '70%',
+              height = '50%',
             },
             min_width = 40,
             min_height = 10,
@@ -61,7 +53,7 @@ return {
           },
           -- options for preview area: https://github.com/MunifTanjim/nui.nvim/tree/main/lua/nui/popup
           preview = {
-            size = '60%',
+            size = '70%',
             border = {
               style = 'rounded',
               padding = { 0, 1 },
@@ -69,7 +61,7 @@ return {
           },
           -- options for selection area: https://github.com/MunifTanjim/nui.nvim/tree/main/lua/nui/menu
           select = {
-            size = '40%',
+            size = '30%',
             border = {
               style = 'rounded',
               padding = { 0, 1 },
