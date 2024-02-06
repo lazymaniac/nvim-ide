@@ -8,13 +8,16 @@ function M.get()
   end
   -- stylua: ignore
   M._keys = {
-    { '<leader>cl', '<cmd>LspInfo<cr>', desc = 'Lsp Info [cl]' },
+    { '<leader>li', '<cmd>LspInfo<cr>', desc = 'Lsp Info [li]' },
     { 'gd', '<cmd>Glance definitions<CR>', desc = 'Goto Definition <gd>', has = 'definition', },
     { 'gr', '<cmd>Glance references<CR>', desc = 'Goto References <gr>' },
     { 'gI', '<cmd>Glance implementations<CR>', desc = 'Goto Implementation <gI>', },
     { 'gD', '<cmd>Glance type_definitions<CR>', desc = 'Goto Type Definition <gy>', },
-    { '<leader>cs', function() require('telescope.builtin').lsp_document_symbols() end, desc = 'Document Symbols [cs]', },
-    { '<leader>cw', function() require('telescope.builtin').lsp_dynamic_workspace_symbols() end, desc = 'Workspace Symbols [cw]', },
+    { '<leader>cs', '<cmd>Telescope lsp_document_symbols<cr>', desc = 'Document Symbols [cs]', },
+    { '<leader>cw', '<cmd>Telescope lsp_workspace_symbols<cr>', desc = 'Workspace Symbols [cw]', },
+    { '<leader>cW', '<cmd>Telescope lsp_dynamic_workspace_symbols<cr>', desc = 'Dynamic Workspace Symbols [cW]', },
+    { '<leader>ci', '<cmd>Telescope lsp_outgoing_calls<cr>', desc = 'Incoming Calls [ci]', },
+    { '<leader>co', '<cmd>Telescope lsp_outgoing_calls<cr>', desc = 'Outgoing Calls [co]', },
     { 'K', vim.lsp.buf.hover, desc = 'Hover Documentation <K>' },
     { 'gK', vim.lsp.buf.signature_help, desc = 'Signature Documentation <gK>', has = 'signatureHelp' },
     { '<C-k>', vim.lsp.buf.signature_help, mode = 'i', desc = 'Signature Help <C-k>', has = 'signatureHelp' },

@@ -327,7 +327,6 @@ return {
     event = 'VeryLazy',
     config = function()
       require('hlslens').setup {}
-      -- require('hlslens').setup() is not required
     end,
   },
 
