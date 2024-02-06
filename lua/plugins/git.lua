@@ -10,7 +10,6 @@ return {
     event = 'VeryLazy',
     config = function(_, opts)
       require('gitsigns').setup(opts)
-      require('scrollbar.handlers.gitsigns').setup()
     end,
     opts = {
       signs = {
