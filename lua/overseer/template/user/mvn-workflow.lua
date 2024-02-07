@@ -98,7 +98,7 @@ local provider = {
       table.insert(tasks, task)
     end
 
-    for _, task in ipairs(tasks) do
+    for i, task in ipairs(tasks) do
       table.insert(ret, {
         name = 'Maven: ' .. task.name,
         params = {
@@ -185,7 +185,7 @@ local provider = {
             args = args,
           }
         end,
-        priority = 10,
+        priority = i,
         condition = {
           callback = is_pom_xml_in_cwd,
         },
