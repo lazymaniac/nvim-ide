@@ -7,14 +7,15 @@ local M = {}
 local defaults = {
   -- colorscheme can be a string like `catppuccin` or a function that will load the colorscheme
   ---@type string|fun()
-  colorscheme = function()
+  --[[ colorscheme = function()
     local hr = tonumber(os.date('%H', os.time()))
     if hr > 8 and hr < 20 then -- day
       vim.cmd.colorscheme 'dayfox'
     else -- night
       vim.cmd.colorscheme 'terafox'
     end
-  end,
+  end, ]]
+  colorscheme = 'terafox',
   -- load the default settings
   defaults = {
     autocmds = true, -- config.autocmds

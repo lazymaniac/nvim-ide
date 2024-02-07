@@ -25,7 +25,26 @@ return {
     config = function()
       require('overseer').setup {
         -- Default task strategy
-        strategy = 'terminal',
+        strategy = {
+          'toggleterm',
+          -- load your default shell before starting the task
+          use_shell = true,
+          -- overwrite the default toggleterm "direction" parameter
+          direction = 'horizontal',
+          -- have the toggleterm window close and delete the terminal buffer
+          -- automatically after the task exits
+          close_on_exit = false,
+          -- have the toggleterm window close without deleting the terminal buffer
+          -- automatically after the task exits
+          -- can be "never, "success", or "always". "success" will close the window
+          -- only if the exit code is 0.
+          quit_on_exit = 'never',
+          -- open the toggleterm window when a task starts
+          open_on_start = true,
+          -- mirrors the toggleterm "hidden" parameter, and keeps the task from
+          -- being rendered in the toggleable window
+          hidden = false,
+        },
         -- Template modules to load
         templates = { 'builtin', 'user' },
         -- When true, tries to detect a green color from your colorscheme to use for success highlight
@@ -231,10 +250,36 @@ return {
       require('overseer').on_setup(function()
         local path = require 'plenary.path'
 
+        local function find_directories_with_pom_xml()
+          -- Use Neovim's globpath function to find pom.xml files in the current working directory and subdirectories
+          local pomFiles = vim.fn.globpath(vim.fn.getcwd(), '**/pom.xml', false, true)
+
+          local directories = {}
+          for _, filePath in ipairs(pomFiles) do
+            -- Extract the directory part of each file path
+            local dir = vim.fn.fnamemodify(filePath, ':h')
+
+            -- Check if the directory should be excluded
+            if not string.find(dir, '/src') and not string.find(dir, '/target') then
+              directories[dir] = true
+            end
+          end
+
+          -- Convert the directories map to a list
+          local dirList = {}
+          for dir, _ in pairs(directories) do
+            table.insert(dirList, dir)
+          end
+
+          -- Sort the list of directories
+          table.sort(dirList)
+
+          return dirList
+        end
+
         local function parse_maven_phases(output)
-          local lines = vim.split(output, '\n')
           local phases = {}
-          for _, line in ipairs(lines) do
+          for line in output:gmatch '([^\n]+)' do
             local phase = line:match '^([^%s|]+)%s*|.*$'
             if phase and not phases[phase] and phase ~= 'PHASE' then
               phases[phase] = true
@@ -244,62 +289,100 @@ return {
         end
 
         local function parse_maven_profiles(output)
-          local lines = vim.split(output, '\n')
           local profiles = {}
-          for _, line in ipairs(lines) do
+          for line in output:gmatch '([^\n]+)' do
             local profile_id, source = line:match 'Profile Id:%s+([^%s%(]+).-Source:%s+([^%s%)]+)'
             if profile_id and source == 'pom' then
-              table.insert(profiles, profile_id)
+              profiles[profile_id] = true
             end
           end
-          return profiles
+          return vim.tbl_keys(profiles)
         end
 
         local function create_file(file_path, content)
           vim.fn.writefile(vim.split(content, '\n'), file_path)
         end
 
-        local function load_maven_data(project_root)
+        -- Function to run a shell command in the background
+        local function run_command_in_background(cmd, callback)
+          local output = {}
+          local job_id
+          local on_stdout = function(_, data)
+            if data then
+              for _, line in ipairs(data) do
+                if line ~= '' then -- Ignore empty strings (last data event)
+                  table.insert(output, line)
+                end
+              end
+            end
+          end
+          local on_exit = function(_, code)
+            if code == 0 then
+              callback(table.concat(output, '\n'))
+            else
+              print('Command failed with exit code', code)
+            end
+          end
+          -- Start the job
+          job_id = vim.fn.jobstart(cmd, {
+            on_stdout = on_stdout,
+            on_exit = on_exit,
+            stdout_buffered = true,
+          })
+          if job_id == 0 then
+            print 'Failed to run command: Not executable'
+          elseif job_id == -1 then
+            print 'Failed to run command: Invalid arguments'
+          end
+        end
+
+        local function load_goals(project_root)
           local goals_file_path = project_root .. '/.mvn_goals'
           local goals_file = path:new(goals_file_path)
 
-          -- TODO: make it async
           if not goals_file:exists() then
-            require 'notify' 'Loading available maven goals'
-            local co = coroutine.create(function()
-              local buildplan_output = vim.fn.system 'mvn buildplan:list'
+            run_command_in_background('mvn buildplan:list', function(buildplan_output)
+              require 'notify' 'Loading available maven goals'
               local goals = parse_maven_phases(buildplan_output)
               local result = table.concat(goals, ',')
               create_file(goals_file_path, result)
               require 'notify' 'Finished loading maven goals'
             end)
-            coroutine.resume(co)
           end
+        end
 
+        local function load_profles(project_root)
           local profiles_file_path = project_root .. '/.mvn_profiles'
           local profiles_file = path:new(profiles_file_path)
 
           if not profiles_file:exists() then
-            require 'notify' 'Loading available maven profiles'
-            local co = coroutine.create(function()
-              local profiles_output = vim.fn.system 'mvn help:all-profiles'
+            run_command_in_background('mvn help:all-profiles', function(profiles_output)
+              require 'notify' 'Loading available maven profiles'
               local profiles = parse_maven_profiles(profiles_output)
               local result = table.concat(profiles, ',')
               create_file(profiles_file_path, result)
               require 'notify' 'Finished loading maven profiles'
             end)
-            coroutine.resume(co)
           end
+        end
+
+        local function load_maven_data(project_root)
+          load_goals(project_root)
+          load_profles(project_root)
         end
 
         local function is_pom_xml_present(project_root)
           return path:new(project_root .. '/pom.xml'):exists()
         end
 
-        -- Load Maven data if pom.xml is present in the project workspace
         local cwd = vim.fn.getcwd()
+
         if is_pom_xml_present(cwd) then
-          load_maven_data(cwd)
+          local pom_dirs = find_directories_with_pom_xml()
+
+          for _, dir in ipairs(pom_dirs) do
+            load_maven_data(dir)
+          end
         end
       end)
     end,

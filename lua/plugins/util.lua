@@ -101,19 +101,6 @@ return {
   },
 
   -- [[ TOYS ]] ---------------------------------------------------------------
-  -- [Tip.nvim] - Show useful tip on nvim startup
-  {
-    'TobinPalmer/Tip.nvim',
-    event = 'VimEnter',
-    init = function()
-      -- Default config
-      require('tip').setup {
-        seconds = 6,
-        title = 'Tip!',
-        url = 'https://vtip.43z.one',
-      }
-    end,
-  },
 
   -- [wttr.nvim] - Show current weather in lualine or forecast in popup
   -- see: `:h wttr.nvim`
