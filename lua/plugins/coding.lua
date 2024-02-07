@@ -399,6 +399,7 @@ return {
   {
     'kosayoda/nvim-lightbulb',
     event = 'VeryLazy',
+    enabled = false,
     config = function()
       require('nvim-lightbulb').setup {
         autocmd = { enabled = true },

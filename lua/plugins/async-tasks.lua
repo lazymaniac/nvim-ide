@@ -40,10 +40,10 @@ return {
           -- only if the exit code is 0.
           quit_on_exit = 'never',
           -- open the toggleterm window when a task starts
-          open_on_start = true,
+          open_on_start = false,
           -- mirrors the toggleterm "hidden" parameter, and keeps the task from
           -- being rendered in the toggleable window
-          hidden = false,
+          hidden = true,
         },
         -- Template modules to load
         templates = { 'builtin', 'user' },
@@ -105,7 +105,7 @@ return {
           zindex = 40,
           -- Dimensions can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
           -- min_X and max_X can be a single value or a list of mixed integer/float types.
-          min_width = 80,
+          min_width = 90,
           max_width = 0.9,
           width = nil,
           min_height = 10,
@@ -114,43 +114,6 @@ return {
           -- Set any window options here (e.g. winhighlight)
           win_opts = {
             winblend = 10,
-          },
-        },
-        task_launcher = {
-          -- Set keymap to false to remove default behavior
-          -- You can add custom keymaps here as well (anything vim.keymap.set accepts)
-          bindings = {
-            i = {
-              ['<C-s>'] = 'Submit',
-              ['<C-c>'] = 'Cancel',
-            },
-            n = {
-              ['<CR>'] = 'Submit',
-              ['<C-s>'] = 'Submit',
-              ['q'] = 'Cancel',
-              ['?'] = 'ShowHelp',
-            },
-          },
-        },
-        task_editor = {
-          -- Set keymap to false to remove default behavior
-          -- You can add custom keymaps here as well (anything vim.keymap.set accepts)
-          bindings = {
-            i = {
-              ['<CR>'] = 'NextOrSubmit',
-              ['<C-s>'] = 'Submit',
-              ['<Tab>'] = 'Next',
-              ['<S-Tab>'] = 'Prev',
-              ['<C-c>'] = 'Cancel',
-            },
-            n = {
-              ['<CR>'] = 'NextOrSubmit',
-              ['<C-s>'] = 'Submit',
-              ['<Tab>'] = 'Next',
-              ['<S-Tab>'] = 'Prev',
-              ['q'] = 'Cancel',
-              ['?'] = 'ShowHelp',
-            },
           },
         },
         -- Configure the floating window used for confirmation prompts
@@ -371,13 +334,13 @@ return {
           load_profles(project_root)
         end
 
-        local function is_pom_xml_present(project_root)
+        local function is_pom_xml_in_cwd(project_root)
           return path:new(project_root .. '/pom.xml'):exists()
         end
 
         local cwd = vim.fn.getcwd()
 
-        if is_pom_xml_present(cwd) then
+        if is_pom_xml_in_cwd(cwd) then
           local pom_dirs = find_directories_with_pom_xml()
 
           for _, dir in ipairs(pom_dirs) do

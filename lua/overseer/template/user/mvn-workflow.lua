@@ -2,8 +2,9 @@ local path = require 'plenary.path'
 
 local goals_file_path = '/.mvn_goals'
 local profiles_file_path = '/.mvn_profiles'
+local sdk_man_candidates_java = '~/.sdkman/candidates/java/'
 
-local function is_pom_xml_present()
+local function is_pom_xml_in_cwd()
   return path:new(vim.fn.getcwd() .. '/pom.xml'):exists()
 end
 
@@ -21,25 +22,34 @@ local function find_dirs_with_pom_xml()
     end
   end
 
-  -- Convert the directories map to a list
-  local dirList = {}
-  for dir, _ in pairs(directories) do
-    table.insert(dirList, dir)
+  local dirList = vim.tbl_keys(directories)
+  table.sort(dirList)
+  return dirList
+end
+
+local function find_sdk_java_candidates()
+  local java_candidates = vim.fn.globpath(sdk_man_candidates_java, '**/release', false, true)
+
+  local directories = {}
+  for _, filePath in ipairs(java_candidates) do
+    -- Extract the directory part of each file path
+    local dir = vim.fn.fnamemodify(filePath, ':h')
+    directories[dir] = true
   end
 
+  local dirList = vim.tbl_keys(directories)
   table.sort(dirList)
-
   return dirList
 end
 
 local function split_string_by_comma(content)
-  local t = {}
+  local split = {}
   for _, line in ipairs(content) do
     for str in string.gmatch(line, '([^,]+)') do
-      table.insert(t, str)
+      table.insert(split, str)
     end
   end
-  return t
+  return split
 end
 
 local function read_golas_file(cwd)
@@ -65,24 +75,26 @@ end
 local function get_last_directory_in_path(dir)
   local path_with_trailing_slash = dir:gsub('([^/])$', '%1/')
   local last_directory = path_with_trailing_slash:match '.*/([^/]*)/$'
-  print('last_directory', last_directory)
   return last_directory
 end
 
 local provider = {
   condition = {
-    callback = is_pom_xml_present,
+    callback = is_pom_xml_in_cwd,
   },
   generator = function(opts, cb)
     local ret = {}
     local tasks = {}
     local pom_dirs = find_dirs_with_pom_xml()
+    local java_sdks = find_sdk_java_candidates()
+
     for _, dir in ipairs(pom_dirs) do
       local task = {}
       task.name = get_last_directory_in_path(dir)
       task.dir = string.sub(dir, string.len(vim.fn.getcwd()) + 1)
       task.goals = read_golas_file(dir)
       task.profiles = read_profiles_file(dir)
+      task.sdks = java_sdks
       table.insert(tasks, task)
     end
 
@@ -92,20 +104,19 @@ local provider = {
         params = {
           clean = {
             type = 'boolean',
-            name = 'Apply clean goal?',
             desc = 'Will apply clean goal before other goals',
             default = 'true',
             order = 1,
           },
           skip_test = {
             type = 'boolean',
-            name = 'Skip tests?',
+            desc = 'Skip tests?',
             default = true,
             order = 2,
           },
           goals = {
             type = 'list',
-            name = 'Select additional goals',
+            desc = 'Select additional goal(s)',
             subtype = {
               type = 'enum',
               choices = task.goals,
@@ -116,7 +127,7 @@ local provider = {
           },
           profiles = {
             type = 'list',
-            name = 'Add optional profile(s)',
+            desc = 'Add optional profile(s)',
             subtype = {
               type = 'enum',
               choices = task.profiles,
@@ -125,12 +136,18 @@ local provider = {
             delimiter = ' ',
             order = 4,
           },
-          extra_params = {
-            type = 'string',
-            name = 'Add extra parameter',
-            desc = 'Like -Denable.integration.test',
+          sdks = {
+            desc = 'Build with Java version. Empty means current',
+            type = 'enum',
+            choices = task.sdks,
             optional = true,
             order = 5,
+          },
+          extra_params = {
+            type = 'string',
+            desc = 'Add extra parameter like -Denable.integration.test',
+            optional = true,
+            order = 6,
           },
         },
         builder = function(params)
@@ -155,13 +172,22 @@ local provider = {
             end
           end
 
+          local cmd = {}
+          if not params.sdks then
+            table.insert(cmd, 'mvn')
+          else
+            table.insert(cmd, 'JAVA_HOME=' .. params.sdks)
+            table.insert(cmd, 'mvn')
+          end
+
           return {
-            cmd = { './mvnw' },
+            cmd = cmd,
             args = args,
           }
         end,
+        priority = 10,
         condition = {
-          callback = is_pom_xml_present,
+          callback = is_pom_xml_in_cwd,
         },
       })
     end
