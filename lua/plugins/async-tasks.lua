@@ -228,12 +228,7 @@ return {
             end
           end
 
-          -- Convert the directories map to a list
-          local dirList = {}
-          for dir, _ in pairs(directories) do
-            table.insert(dirList, dir)
-          end
-
+          local dirList = vim.tbl_keys(directories)
           -- Sort the list of directories
           table.sort(dirList)
 
@@ -293,9 +288,9 @@ return {
             stdout_buffered = true,
           })
           if job_id == 0 then
-            print 'Failed to run command: Not executable'
+            print 'Failed to run mvn command: Not executable'
           elseif job_id == -1 then
-            print 'Failed to run command: Invalid arguments'
+            print 'Failed to run mvn command: Invalid arguments'
           end
         end
 
