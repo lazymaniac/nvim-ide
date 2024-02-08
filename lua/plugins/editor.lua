@@ -643,11 +643,8 @@ return {
   -- see: `:h detour.nvim`
   {
     'carbon-steel/detour.nvim',
+    branch = 'dev',
     event = 'VeryLazy',
-    -- stylua: ignore
-    keys = {
-      { '<C-w><enter>', '<cmd>Detour<cr>', mode = { 'n', 'v' }, desc = 'Open Buffer in Popup <C-w><CR>' },
-    },
   },
 
   -- [highlight-undo.nvim] - Highlights result of undo operation
