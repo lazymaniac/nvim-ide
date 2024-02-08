@@ -17,19 +17,18 @@ function M.get()
       function()
         local popup_id = detour.Detour()
         if popup_id then
-          telescope.lsp_definitions {} -- Open telescope prompt
+          require('lspsaga.definition'):init(1, 2, {})
           features.ShowPathInTitle(popup_id)
         end
       end,
       desc = 'Goto Definition <gd>',
-      has = 'definition',
     },
     {
       'gr',
       function()
         local popup_id = detour.Detour()
         if popup_id then
-          telescope.lsp_references { include_declaration = false, include_current_line = false }
+          require('lspsaga.finder'):new({'ref', '++float'})
           features.ShowPathInTitle(popup_id)
         end
       end,
@@ -40,7 +39,7 @@ function M.get()
       function()
         local popup_id = detour.Detour()
         if popup_id then
-          telescope.lsp_implementations {}
+          require('lspsaga.finder'):new({'imp', '++float'})
           features.ShowPathInTitle(popup_id)
         end
       end,
@@ -51,7 +50,7 @@ function M.get()
       function()
         local popup_id = detour.Detour()
         if popup_id then
-          telescope.lsp_type_definitions {}
+          require('lspsaga.definition'):init(2, 2, {})
           features.ShowPathInTitle(popup_id)
         end
       end,
@@ -88,7 +87,7 @@ function M.get()
         local popup_id = detour.Detour()
         if popup_id then
           vim.bo.bufhidden = 'delete'
-          telescope.lsp_incoming_calls {}
+          require('lspsaga.callhierarchy'):send_method(2, { '++float' })
           features.ShowPathInTitle(popup_id)
         end
       end,
@@ -100,7 +99,7 @@ function M.get()
         local popup_id = detour.Detour()
         if popup_id then
           vim.bo.bufhidden = 'delete'
-          telescope.lsp_outgoing_calls {}
+          require('lspsaga.callhierarchy'):send_method(3, { '++float' })
           features.ShowPathInTitle(popup_id)
         end
       end,
@@ -111,12 +110,9 @@ function M.get()
     { '<C-k>', vim.lsp.buf.signature_help, mode = 'i', desc = 'Signature Help <C-k>', has = 'signatureHelp' },
     {
       '<leader>ca',
-      function()
-        require('actions-preview').code_actions()
-      end,
+      '<cmd>Lspsaga code_action<cr>',
       desc = 'Code Action [ca]',
       mode = { 'n', 'v' },
-      has = 'codeAction',
     },
   }
   if require('util').has 'inc-rename.nvim' then

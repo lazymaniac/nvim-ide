@@ -454,10 +454,7 @@ return {
           lualine_c = {
             {
               function()
-                return require('nvim-navic').get_location()
-              end,
-              cond = function()
-                return package.loaded['nvim-navic'] and require('nvim-navic').is_available()
+                return require('lspsaga.symbol.winbar').get_bar()
               end,
             },
           },
