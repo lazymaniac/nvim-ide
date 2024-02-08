@@ -4,10 +4,13 @@ local goals_file_path = '/.mvn_goals'
 local profiles_file_path = '/.mvn_profiles'
 local sdk_man_candidates_java = '~/.sdkman/candidates/java/'
 
+local notification_displayed = false
+
 local function is_pom_xml_in_cwd()
   local is_maven = path:new(vim.fn.getcwd() .. '/pom.xml'):exists()
-  if is_maven then
+  if is_maven and not notification_displayed then
     require 'notify' 'Found Maven. Setting up tasks'
+    notification_displayed = true
   end
   return is_maven
 end

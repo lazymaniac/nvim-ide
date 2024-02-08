@@ -1,9 +1,12 @@
 local path = require 'plenary.path'
 
+local notification_displayed = false
+
 local function is_gradle_in_cwd()
   local is_gradle = path:new(vim.fn.getcwd() .. '/gradlew'):exists()
-  if is_gradle then
+  if is_gradle and not notification_displayed then
     require 'notify' 'Found Gradle. Creating task'
+    notification_displayed = true
   end
   return is_gradle
 end
