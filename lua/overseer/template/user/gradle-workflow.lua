@@ -1,7 +1,11 @@
 local path = require 'plenary.path'
 
 local function is_gradle_in_cwd()
-  return path:new(vim.fn.getcwd() .. '/gradlew'):exists()
+  local is_gradle = path:new(vim.fn.getcwd() .. '/gradlew'):exists()
+  if is_gradle then
+    require 'notify' 'Found Gradle. Creating task'
+  end
+  return is_gradle
 end
 
 -- Function to run a shell command in the background
@@ -46,8 +50,6 @@ local provider = {
       local ret = {}
       local gradle_tasks = {}
 
-      require 'notify' 'Loading available gradle tasks'
-
       for task in tasks_output:gmatch '(%w+)%s%-' do
         if task and not gradle_tasks[task] then
           gradle_tasks[task] = true
@@ -56,8 +58,6 @@ local provider = {
 
       gradle_tasks = vim.tbl_keys(gradle_tasks)
       table.sort(gradle_tasks)
-
-      require 'notify' 'Finished loading gradle tasks'
 
       table.insert(ret, {
         name = 'Gradle',
@@ -94,9 +94,6 @@ local provider = {
           }
         end,
         priority = 40,
-        condition = {
-          callback = is_gradle_in_cwd,
-        },
       })
       cb(ret)
     end)

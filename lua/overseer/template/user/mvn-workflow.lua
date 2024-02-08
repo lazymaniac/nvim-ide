@@ -5,7 +5,11 @@ local profiles_file_path = '/.mvn_profiles'
 local sdk_man_candidates_java = '~/.sdkman/candidates/java/'
 
 local function is_pom_xml_in_cwd()
-  return path:new(vim.fn.getcwd() .. '/pom.xml'):exists()
+  local is_maven = path:new(vim.fn.getcwd() .. '/pom.xml'):exists()
+  if is_maven then
+    require 'notify' 'Found Maven. Setting up tasks'
+  end
+  return is_maven
 end
 
 local function find_dirs_with_pom_xml()
@@ -186,9 +190,6 @@ local provider = {
           }
         end,
         priority = i,
-        condition = {
-          callback = is_pom_xml_in_cwd,
-        },
       })
     end
 

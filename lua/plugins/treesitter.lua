@@ -21,7 +21,7 @@ return {
       require('lazy.core.loader').add_to_rtp(plugin)
       require 'nvim-treesitter.query_predicates'
     end,
-    dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
+    dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects', 'LiadOz/nvim-dap-repl-highlights' },
     cmd = { 'TSUpdateSync', 'TSUpdate', 'TSInstall' },
     ---@diagnostic disable-next-line: missing-fields
     opts = {
