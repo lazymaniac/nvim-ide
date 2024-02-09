@@ -42,11 +42,6 @@ return {
         consumers = {
           overseer = require 'neotest.consumers.overseer',
         },
-        -- overseer = {
-        --   enabled = true,
-        --   -- When this is true (the default), it will replace all neotest.run.* commands
-        --   force_default = true,
-        -- },
         default_strategy = 'integrated',
         diagnostic = {
           enabled = true,

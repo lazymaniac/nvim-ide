@@ -158,7 +158,6 @@ return {
   -- see: `:h nvim-surround`
   {
     'kylechui/nvim-surround',
-    version = '*', -- Use for stability; omit to use `main` branch for the latest features
     event = 'VeryLazy',
     config = function()
       require('nvim-surround').setup {
@@ -297,7 +296,6 @@ return {
   -- see: `:h mini.indentscope`
   {
     'echasnovski/mini.indentscope',
-    version = false, -- wait till new 0.7.0 release to put it back on semver
     event = 'VeryLazy',
     opts = {
       draw = {

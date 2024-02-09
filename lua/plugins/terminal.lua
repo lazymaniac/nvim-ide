@@ -6,7 +6,6 @@ return {
   {
     'akinsho/toggleterm.nvim',
     event = 'VeryLazy',
-    version = false,
     -- stylua: ignore
     keys = {
       { '<leader>an', '<cmd>lua _NODE_TOGGLE()<cr>', mode = { 'n' }, desc = 'node [an]', },

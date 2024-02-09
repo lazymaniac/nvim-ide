@@ -10,7 +10,6 @@ return {
     'nvim-telescope/telescope.nvim',
     event = 'VeryLazy',
     cmd = 'Telescope',
-    version = false, -- telescope did only one release, so use HEAD for now
     -- stylua: ignore
     keys = {
       { '<leader>,', '<cmd>Telescope buffers sort_mru=true sort_lastused=true<cr>', desc = 'Switch Buffer [,]' },
