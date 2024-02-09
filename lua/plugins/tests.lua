@@ -32,10 +32,7 @@ return {
       local opts = {
         adapters = {
           ['neotest-java'] = { ignore_wrapper = false },
-          ['neotest-rust'] = {
-            args = { '--no-capture' },
-            dap_adapter = 'codelldb',
-          },
+           require('rustaceanvim.neotest'),
           ['neotest-go'] = {},
           ['neotest-python'] = {},
         },

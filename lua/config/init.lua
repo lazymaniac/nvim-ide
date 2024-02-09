@@ -15,7 +15,7 @@ local defaults = {
       vim.cmd.colorscheme 'terafox'
     end
   end, ]]
-  colorscheme = 'terafox',
+  colorscheme = 'nightfox',
   -- load the default settings
   defaults = {
     autocmds = true, -- config.autocmds
