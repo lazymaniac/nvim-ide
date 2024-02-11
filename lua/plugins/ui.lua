@@ -537,6 +537,7 @@ return {
   -- see: `:h noice`
   {
     'folke/noice.nvim',
+    priority = 1000,
     event = 'VeryLazy',
     dependencies = { 'MunifTanjim/nui.nvim', 'hrsh7th/nvim-cmp', 'rcarriga/nvim-notify' },
     -- stylua: ignore

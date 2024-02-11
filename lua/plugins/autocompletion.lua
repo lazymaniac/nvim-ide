@@ -78,7 +78,7 @@ return {
       -- find more here: https://www.nerdfonts.com/cheat-sheet
       return {
         completion = {
-          keyword_length = 2,
+          keyword_length = 1,
           completeopt = 'menu,menuone,noinsert',
         },
         snippet = {
