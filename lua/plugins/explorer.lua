@@ -4,7 +4,7 @@ local popup = {
   position = { col = '100%', row = 2 },
   size = function()
     return {
-      width = 45,
+      width = 40,
       height = vim.o.lines - 4,
     }
   end,
@@ -195,7 +195,7 @@ return {
       },
       window = {
         position = 'right',
-        width = 46,
+        width = 40,
         mapping_options = {
           noremap = true,
           nowait = true,

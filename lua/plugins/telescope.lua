@@ -71,7 +71,6 @@ return {
       return {
         defaults = {
           sorting_strategy = 'ascending',
-          selection_strategy = 'follow',
           scroll_strategy = 'limit',
           layout_strategy = 'vertical',
           layout_config = {

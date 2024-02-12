@@ -328,7 +328,7 @@ return {
         -- outline window. Eg, 'rightbelow vsplit'.
         split_command = 'botright vs',
         -- Percentage or integer of columns
-        width = 46,
+        width = 40,
         -- Whether width is relative to the total width of nvim
         -- When relative_width = true, this means take 25% of the total
         -- screen width for outline window.
@@ -739,7 +739,7 @@ return {
         exclude_filetypes = { 'help', 'csv', 'dashboard' }, -- Choose certain filetypes to not show minimap on
         max_minimap_height = nil, -- The maximum height the minimap can take (including borders)
         max_lines = nil, -- If auto_enable is true, don't open the minimap for buffers which have more than this many lines.
-        minimap_width = 6, -- The width of the text part of the minimap
+        minimap_width = 4, -- The width of the text part of the minimap
         use_lsp = true, -- Use the builtin LSP to show errors and warnings
         use_treesitter = true, -- Use nvim-treesitter to highlight the code
         use_git = true, -- Show small dots to indicate git additions and deletions
