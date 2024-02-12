@@ -439,7 +439,7 @@ return {
         -- When relative_width = true, this means take 50% of the total
         -- screen width for preview window, ensure the result width is at least 50
         -- characters wide.
-        relative_width = true,
+        relative_width = false,
         -- Border option for floating preview window.
         -- Options include: single/double/rounded/solid/shadow or an array of border
         -- characters.

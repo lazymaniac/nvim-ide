@@ -12,44 +12,42 @@ return {
     cmd = 'Telescope',
     -- stylua: ignore
     keys = {
-      { '<leader>,', '<cmd>Telescope buffers sort_mru=true sort_lastused=true<cr>', desc = 'Switch Buffer [,]' },
-      { '<leader>:', '<cmd>Telescope command_history<cr>', desc = 'Command History [:]' },
-      { '<leader><space>', Util.telescope 'files', desc = 'Find Files (root dir) [SPC]' },
+      { '<leader>,', '<cmd>Telescope buffers sort_mru=true sort_lastused=true layout_strategy=vertical<cr>', desc = 'Switch Buffer [,]' },
+      { '<leader>:', '<cmd>Telescope command_history layout_strategy=vertical<cr>', desc = 'Command History [:]' },
+      { '<leader><space>', Util.telescope('files', { layout_strategy='vertical' }) , desc = 'Find Files (root dir) [SPC]' },
       -- find
-      { '<leader>fb', '<cmd>Telescope buffers sort_mru=true sort_lastused=true<cr>', desc = 'Buffers [fb]' },
       { '<leader>fc', Util.telescope.config_files(), desc = 'Find Config File [fc]' },
-      { '<leader>ff', Util.telescope 'files', desc = 'Find Files (root dir) [ff]' },
-      { '<leader>fF', Util.telescope('files', { cwd = false }), desc = 'Find Files (cwd) [fF]' },
-      { '<leader>fr', '<cmd>Telescope oldfiles<cr>', desc = 'Recent [fr]' },
-      { '<leader>fR', Util.telescope('oldfiles', { cwd = vim.loop.cwd() }), desc = 'Recent (cwd) [fR]' },
+      { '<leader>ff', Util.telescope('files', { cwd = false, layout_strategy='vertical' }), desc = 'Find Files (cwd) [ff]' },
+      { '<leader>fr', '<cmd>Telescope oldfiles layout_strategy=vertical<cr>', desc = 'Recent [fr]' },
+      { '<leader>fR', Util.telescope('oldfiles', { cwd = vim.loop.cwd(), layout_strategy = 'vertical' }), desc = 'Recent (cwd) [fR]' },
       -- git
-      { '<leader>gc', '<cmd>Telescope git_commits<CR>', desc = 'Git Commits [gc]' },
-      { '<leader>gs', '<cmd>Telescope git_status<CR>', desc = 'Git Status [gd]' },
+      { '<leader>gc', '<cmd>Telescope git_commits layout_strategy=vertical<CR>', desc = 'Git Commits [gc]' },
+      { '<leader>gs', '<cmd>Telescope git_status layout_strategy=vertical<CR>', desc = 'Git Status [gd]' },
       -- search
-      { '<leader>s"', '<cmd>Telescope registers<cr>', desc = 'Registers [s"]' },
-      { '<leader>sa', '<cmd>Telescope autocommands<cr>', desc = 'Auto Commands [sa]' },
-      { '<leader>sb', '<cmd>Telescope current_buffer_fuzzy_find<cr>', desc = 'Fzf Buffer [sb]' },
-      { '<leader>sc', '<cmd>Telescope command_history<cr>', desc = 'Command History [sc]' },
-      { '<leader>sC', '<cmd>Telescope commands<cr>', desc = 'Commands [sC]' },
-      { '<leader>sd', '<cmd>Telescope diagnostics bufnr=0<cr>', desc = 'Document Diagnostics [sd]' },
-      { '<leader>sD', '<cmd>Telescope diagnostics<cr>', desc = 'Workspace Diagnostics [sD]' },
-      { '<leader>sg', Util.telescope 'live_grep', desc = 'Grep (root dir) [sg]' },
-      { '<leader>sG', Util.telescope('live_grep', { cwd = false }), desc = 'Grep (cwd) [sG]' },
-      { '<leader>sh', '<cmd>Telescope help_tags<cr>', desc = 'Help Pages [sh]' },
-      { '<leader>sH', '<cmd>Telescope highlights<cr>', desc = 'Search Highlight Groups [sH]' },
-      { '<leader>sk', '<cmd>Telescope keymaps<cr>', desc = 'Key Maps [sk]' },
-      { '<leader>sM', '<cmd>Telescope man_pages<cr>', desc = 'Man Pages [sM]' },
-      { '<leader>sm', '<cmd>Telescope marks<cr>', desc = 'Jump to Mark [sm]' },
-      { '<leader>so', '<cmd>Telescope vim_options<cr>', desc = 'Options [so]' },
+      { '<leader>s"', '<cmd>Telescope registers layout_strategy=vertical<cr>', desc = 'Registers [s"]' },
+      { '<leader>sa', '<cmd>Telescope autocommands layout_strategy=vertical<cr>', desc = 'Auto Commands [sa]' },
+      { '<leader>sb', '<cmd>Telescope current_buffer_fuzzy_find layout_strategy=vertical<cr>', desc = 'Fzf Buffer [sb]' },
+      { '<leader>sc', '<cmd>Telescope command_history layout_strategy=vertical<cr>', desc = 'Command History [sc]' },
+      { '<leader>sC', '<cmd>Telescope commands layout_strategy=vertical<cr>', desc = 'Commands [sC]' },
+      { '<leader>sd', '<cmd>Telescope diagnostics bufnr=0 layout_strategy=vertical<cr>', desc = 'Document Diagnostics [sd]' },
+      { '<leader>sD', '<cmd>Telescope diagnostics layout_strategy=vertical<cr>', desc = 'Workspace Diagnostics [sD]' },
+      { '<leader>sg', Util.telescope('live_grep', { layout_strategy='vertical'}), desc = 'Grep (root dir) [sg]' },
+      { '<leader>sG', Util.telescope('live_grep', { cwd = false, layout_strategy='vertical' }), desc = 'Grep (cwd) [sG]' },
+      { '<leader>sh', '<cmd>Telescope help_tags layout_strategy=vertical<cr>', desc = 'Help Pages [sh]' },
+      { '<leader>sH', '<cmd>Telescope highlights layout_strategy=vertical<cr>', desc = 'Search Highlight Groups [sH]' },
+      { '<leader>sk', '<cmd>Telescope keymaps layout_strategy=vertical<cr>', desc = 'Key Maps [sk]' },
+      { '<leader>sM', '<cmd>Telescope man_pages layout_strategy=vertical<cr>', desc = 'Man Pages [sM]' },
+      { '<leader>sm', '<cmd>Telescope marks layout_strategy=vertical<cr>', desc = 'Jump to Mark [sm]' },
+      { '<leader>so', '<cmd>Telescope vim_options layout_strategy=vertical<cr>', desc = 'Options [so]' },
       { '<leader>sR', '<cmd>Telescope resume<cr>', desc = 'Resume Last Search [sR]' },
-      { '<leader>sw', Util.telescope('grep_string', { word_match = '-w' }), desc = 'Word (root dir) [sw]' },
-      { '<leader>sW', Util.telescope('grep_string', { cwd = false, word_match = '-w' }), desc = 'Word (cwd) [sW]' },
-      { '<leader>sw', Util.telescope 'grep_string', mode = 'v', desc = 'Selection (root dir) [sw]' },
-      { '<leader>sW', Util.telescope('grep_string', { cwd = false }), mode = 'v', desc = 'Selection (cwd) [sW]' },
-      { '<leader>uC', Util.telescope('colorscheme', { enable_preview = true }), desc = 'Colorscheme with preview [uC]' },
-      { '<leader>ss', function() require('telescope.builtin').lsp_document_symbols {} end, desc = 'Goto Symbol [ss]' },
-      { '<leader>sS', function() require('telescope.builtin').lsp_dynamic_workspace_symbols {} end, desc = 'Goto Symbol (Workspace) [sS]' },
-      { '<leader>fp', function() require('telescope.builtin').find_files { cwd = require('lazy.core.config').options.root } end, desc = 'Find Plugin File [fp]' },
+      { '<leader>sw', Util.telescope('grep_string', { word_match = '-w', layout_strategy = 'vertical' }), desc = 'Word (root dir) [sw]' },
+      { '<leader>sW', Util.telescope('grep_string', { cwd = false, word_match = '-w', layout_strategy = 'vertical' }), desc = 'Word (cwd) [sW]' },
+      { '<leader>sw', Util.telescope('grep_string', { layout_strategy = 'vertical' }), mode = 'v', desc = 'Selection (root dir) [sw]' },
+      { '<leader>sW', Util.telescope('grep_string', { cwd = false, layout_strategy = 'vertical' }), mode = 'v', desc = 'Selection (cwd) [sW]' },
+      { '<leader>uC', Util.telescope('colorscheme', { enable_preview = true, layout_strategy = 'vertical' }), desc = 'Colorscheme with preview [uC]' },
+      { '<leader>ss', function() require('telescope.builtin').lsp_document_symbols { layout_strategy = 'vertical' } end, desc = 'Goto Symbol [ss]' },
+      { '<leader>sS', function() require('telescope.builtin').lsp_dynamic_workspace_symbols { layout_strategy = 'vertical' } end, desc = 'Goto Symbol (Workspace) [sS]' },
+      { '<leader>fp', function() require('telescope.builtin').find_files { cwd = require('lazy.core.config').options.root, layout_strategy = 'vertical' } end, desc = 'Find Plugin File [fp]' },
     },
     opts = function()
       local actions = require 'telescope.actions'
@@ -72,12 +70,58 @@ return {
       local egrep_actions = require 'telescope._extensions.egrepify.actions'
       return {
         defaults = {
-          layout_strategy = 'vertical',
-          layout_config = { prompt_position = 'bottom' },
           sorting_strategy = 'ascending',
+          selection_strategy = 'follow',
+          scroll_strategy = 'limit',
+          layout_strategy = 'vertical',
+          layout_config = {
+            bottom_pane = {
+              height = 25,
+              preview_cutoff = 120,
+              prompt_position = 'top',
+            },
+            center = {
+              height = 0.4,
+              mirror = true,
+              preview_cutoff = 40,
+              prompt_position = 'top',
+              width = 0.35,
+            },
+            cursor = {
+              height = 0.5,
+              preview_cutoff = 40,
+              preview_width = 0.6,
+              width = 0.6,
+            },
+            horizontal = {
+              anchor = 'S',
+              height = 0.5,
+              preview_cutoff = 120,
+              preview_width = 0.65,
+              prompt_position = 'top',
+              mirror = false,
+              width = 0.9,
+            },
+            vertical = {
+              anchor = 'NE',
+              height = 0.95,
+              preview_cutoff = 10,
+              preview_width = 0.6,
+              prompt_position = 'top',
+              mirror = true,
+              width = 0.4,
+            },
+            flex = {
+              height = 0.7,
+              prompt_position = 'top',
+              width = 0.5,
+            },
+          },
           winblend = 0,
           prompt_prefix = ' ',
           selection_caret = ' ',
+          dynamic_preview_title = true,
+          file_ignore_patterns = { '^target/' },
           vimgrep_arguments = {
             'rg',
             '--color=never',
@@ -87,6 +131,7 @@ return {
             '--column',
             '--smart-case',
             '--unrestricted',
+            '--trim',
           },
           -- open files in the first window that is an actual file.
           -- use the current window if no other window is available.
@@ -114,6 +159,39 @@ return {
             },
             n = {
               ['q'] = actions.close,
+            },
+          },
+          preview = {
+            mime_hook = function(filepath, bufnr, opts)
+              local is_image = function(filepath)
+                local image_extensions = { 'png', 'jpg' } -- Supported image formats
+                local split_path = vim.split(filepath:lower(), '.', { plain = true })
+                local extension = split_path[#split_path]
+                return vim.tbl_contains(image_extensions, extension)
+              end
+              if is_image(filepath) then
+                local term = vim.api.nvim_open_term(bufnr, {})
+                local function send_output(_, data, _)
+                  for _, d in ipairs(data) do
+                    vim.api.nvim_chan_send(term, d .. '\r\n')
+                  end
+                end
+                vim.fn.jobstart({
+                  'catimg',
+                  filepath, -- Terminal image viewer command
+                }, { on_stdout = send_output, stdout_buffered = true, pty = true })
+              else
+                require('telescope.previewers.utils').set_preview_message(bufnr, opts.winid, 'Binary cannot be previewed')
+              end
+            end,
+          },
+        },
+        pickers = {
+          buffers = {
+            mappings = {
+              i = {
+                ['<c-d>'] = actions.delete_buffer + actions.move_to_top,
+              },
             },
           },
         },
@@ -216,7 +294,7 @@ return {
     dependencies = 'nvim-telescope/telescope.nvim',
     -- stylua: ignore
     keys = {
-      { '<leader>si', '<cmd>Telescope import<cr>', mode = { 'n', 'v' }, desc = 'Search Imports [si]' },
+      { '<leader>si', '<cmd>Telescope import layout_strategy=cursor<cr>', mode = { 'n', 'v' }, desc = 'Search Imports [si]' },
     },
     config = function()
       ---@diagnostic disable-next-line: undefined-field
@@ -446,7 +524,7 @@ return {
     'jonarrien/telescope-cmdline.nvim',
     dependencies = { 'nvim-telescope/telescope.nvim' },
     keys = {
-      { ':', '<Cmd>Telescope cmdline<CR>', desc = 'CMD [:]' },
+      { ':', '<Cmd>Telescope cmdline layout_strategy=center<CR>', desc = 'CMD [:]' },
     },
     config = function()
       ---@diagnostic disable-next-line: undefined-field
@@ -459,7 +537,7 @@ return {
     dependencies = { 'nvim-telescope/telescope.nvim' },
     -- stylua: ignore
     keys = {
-      { '<Leader>fd', '<CMD>Telescope directory live_grep<CR>', desc = 'Search Text in Directory [fd]', },
+      { '<Leader>fd', '<CMD>Telescope directory live_grep<CR>',  desc = 'Search Text in Directory [fd]', },
       { '<Leader>fe', '<CMD>Telescope directory find_files<CR>', desc = 'Search Files in Directory [fe]' },
     },
     config = function()

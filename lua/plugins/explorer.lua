@@ -69,7 +69,7 @@ return {
           require('neo-tree.command').execute {
             action = 'focus',
             source = 'filesystem',
-            position = 'left',
+            position = 'right',
             reveal_file = reveal_file,
             reveal_force_cwd = true,
             dir = Util.root(),
@@ -194,8 +194,8 @@ return {
         },
       },
       window = {
-        position = 'left',
-        width = 40,
+        position = 'right',
+        width = 46,
         mapping_options = {
           noremap = true,
           nowait = true,
