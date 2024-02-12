@@ -328,7 +328,7 @@ return {
         -- outline window. Eg, 'rightbelow vsplit'.
         split_command = 'botright vs',
         -- Percentage or integer of columns
-        width = 45,
+        width = 46,
         -- Whether width is relative to the total width of nvim
         -- When relative_width = true, this means take 25% of the total
         -- screen width for outline window.
@@ -433,8 +433,8 @@ return {
         -- If you disable this you can still open hover_symbol using your keymap
         -- below.
         open_hover_on_preview = true,
-        width = 50, -- Percentage or integer of columns
-        min_width = 50, -- This is the number of columns
+        width = 120, -- Percentage or integer of columns
+        min_width = 80, -- This is the number of columns
         -- Whether width is relative to the total width of nvim.
         -- When relative_width = true, this means take 50% of the total
         -- screen width for preview window, ensure the result width is at least 50

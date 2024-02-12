@@ -63,7 +63,7 @@ return {
               zen_mode = 'zen-mode',
             },
           },
-          ['core.ui.calendar'] = {},
+          -- ['core.ui.calendar'] = {},
         },
       }
     end,

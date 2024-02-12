@@ -69,6 +69,7 @@ return {
         local line = action_state.get_current_line()
         Util.telescope('find_files', { hidden = true, default_text = line })()
       end
+      local egrep_actions = require 'telescope._extensions.egrepify.actions'
       return {
         defaults = {
           layout_strategy = 'vertical',
@@ -114,6 +115,94 @@ return {
             n = {
               ['q'] = actions.close,
             },
+          },
+        },
+        extensions = {
+          egrepify = {
+            -- intersect tokens in prompt ala "str1.*str2" that ONLY matches
+            -- if str1 and str2 are consecutively in line with anything in between (wildcard)
+            AND = true, -- default
+            permutations = false, -- opt-in to imply AND & match all permutations of prompt tokens
+            lnum = true, -- default, not required
+            lnum_hl = 'EgrepifyLnum', -- default, not required, links to `Constant`
+            col = false, -- default, not required
+            col_hl = 'EgrepifyCol', -- default, not required, links to `Constant`
+            title = true, -- default, not required, show filename as title rather than inline
+            filename_hl = 'EgrepifyFile', -- default, not required, links to `Title`
+            -- suffix = long line, see screenshot
+            -- EXAMPLE ON HOW TO ADD PREFIX!
+            prefixes = {
+              -- ADDED ! to invert matches
+              -- example prompt: ! sorter
+              -- matches all lines that do not comprise sorter
+              -- rg --invert-match -- sorter
+              ['!'] = {
+                flag = 'invert-match',
+              },
+              -- HOW TO OPT OUT OF PREFIX
+              -- ^ is not a default prefix and safe example
+              ['^'] = false,
+            },
+            -- default mappings
+            mappings = {
+              i = {
+                -- toggle prefixes, prefixes is default
+                ['<C-z>'] = egrep_actions.toggle_prefixes,
+                -- toggle AND, AND is default, AND matches tokens and any chars in between
+                ['<C-a>'] = egrep_actions.toggle_and,
+                -- toggle permutations, permutations of tokens is opt-in
+                ['<C-r>'] = egrep_actions.toggle_permutations,
+              },
+            },
+          },
+          fzf = {
+            fuzzy = true, -- false will only do exact matching
+            override_generic_sorter = true, -- override the generic sorter
+            override_file_sorter = true, -- override the file sorter
+            case_mode = 'smart_case', -- or "ignore_case" or "respect_case"
+          },
+          lazy = {
+            -- Optional theme (the extension doesn't set a default theme)
+            theme = 'ivy',
+            -- Whether or not to show the icon in the first column
+            show_icon = true,
+            -- Mappings for the actions
+            mappings = {
+              open_in_browser = '<C-o>',
+              open_in_file_browser = '<M-b>',
+              open_in_find_files = '<C-f>',
+              open_in_live_grep = '<C-g>',
+              open_in_terminal = '<C-t>',
+              open_plugins_picker = '<C-b>', -- Works only after having called first another action
+              open_lazy_root_find_files = '<C-r>f',
+              open_lazy_root_live_grep = '<C-r>g',
+              change_cwd_to_plugin = '<C-c>d',
+            },
+            -- Configuration that will be passed to the window that hosts the terminal
+            -- For more configuration options check 'nvim_open_win()'
+            terminal_opts = {
+              relative = 'editor',
+              style = 'minimal',
+              border = 'rounded',
+              title = 'Telescope lazy',
+              title_pos = 'center',
+              width = 0.5,
+              height = 0.5,
+            },
+            -- Other telescope configuration options
+          },
+        },
+        cmdline = {
+          picker = {
+            layout_config = {
+              width = 80,
+              height = 15,
+            },
+          },
+          mappings = {
+            complete = '<Tab>',
+            run_selection = '<C-CR>',
+            run_input = '<CR>',
           },
         },
       }
@@ -192,49 +281,6 @@ return {
       { '<leader>/', '<cmd>Telescope egrepify<cr>', mode = { 'n', 'v' }, desc = 'Enhanced Grep [/]', },
     },
     config = function()
-      local egrep_actions = require 'telescope._extensions.egrepify.actions'
-      ---@diagnostic disable-next-line: undefined-field
-      require('telescope').setup {
-        extensions = {
-          egrepify = {
-            -- intersect tokens in prompt ala "str1.*str2" that ONLY matches
-            -- if str1 and str2 are consecutively in line with anything in between (wildcard)
-            AND = true, -- default
-            permutations = false, -- opt-in to imply AND & match all permutations of prompt tokens
-            lnum = true, -- default, not required
-            lnum_hl = 'EgrepifyLnum', -- default, not required, links to `Constant`
-            col = false, -- default, not required
-            col_hl = 'EgrepifyCol', -- default, not required, links to `Constant`
-            title = true, -- default, not required, show filename as title rather than inline
-            filename_hl = 'EgrepifyFile', -- default, not required, links to `Title`
-            -- suffix = long line, see screenshot
-            -- EXAMPLE ON HOW TO ADD PREFIX!
-            prefixes = {
-              -- ADDED ! to invert matches
-              -- example prompt: ! sorter
-              -- matches all lines that do not comprise sorter
-              -- rg --invert-match -- sorter
-              ['!'] = {
-                flag = 'invert-match',
-              },
-              -- HOW TO OPT OUT OF PREFIX
-              -- ^ is not a default prefix and safe example
-              ['^'] = false,
-            },
-            -- default mappings
-            mappings = {
-              i = {
-                -- toggle prefixes, prefixes is default
-                ['<C-z>'] = egrep_actions.toggle_prefixes,
-                -- toggle AND, AND is default, AND matches tokens and any chars in between
-                ['<C-a>'] = egrep_actions.toggle_and,
-                -- toggle permutations, permutations of tokens is opt-in
-                ['<C-r>'] = egrep_actions.toggle_permutations,
-              },
-            },
-          },
-        },
-      }
       ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'egrepify'
     end,
@@ -257,24 +303,8 @@ return {
   {
     'nvim-telescope/telescope-fzf-native.nvim',
     dependencies = { 'nvim-telescope/telescope.nvim' },
-    -- stylua: ignore
-    keys = {
-      { '<leader>sf', '<cmd>Telescope fzf<cr>', mode = { 'n', 'v' }, desc = 'Search FZF [sf]' },
-    },
     build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build',
     config = function()
-      ---@diagnostic disable-next-line: undefined-field
-      require('telescope').setup {
-        extensions = {
-          fzf = {
-            fuzzy = true, -- false will only do exact matching
-            override_generic_sorter = true, -- override the generic sorter
-            override_file_sorter = true, -- override the file sorter
-            case_mode = 'smart_case', -- or "ignore_case" or "respect_case"
-            -- the default case_mode is "smart_case"
-          },
-        },
-      }
       ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'fzf'
     end,
@@ -305,41 +335,6 @@ return {
       { '<leader>sl', '<cmd>Telescope lazy<cr>', mode = { 'n', 'v' }, desc = 'List Lazy Plugins [sl]' },
     },
     config = function()
-      ---@diagnostic disable-next-line: undefined-field
-      require('telescope').setup {
-        extensions = {
-          lazy = {
-            -- Optional theme (the extension doesn't set a default theme)
-            theme = 'ivy',
-            -- Whether or not to show the icon in the first column
-            show_icon = true,
-            -- Mappings for the actions
-            mappings = {
-              open_in_browser = '<C-o>',
-              open_in_file_browser = '<M-b>',
-              open_in_find_files = '<C-f>',
-              open_in_live_grep = '<C-g>',
-              open_in_terminal = '<C-t>',
-              open_plugins_picker = '<C-b>', -- Works only after having called first another action
-              open_lazy_root_find_files = '<C-r>f',
-              open_lazy_root_live_grep = '<C-r>g',
-              change_cwd_to_plugin = '<C-c>d',
-            },
-            -- Configuration that will be passed to the window that hosts the terminal
-            -- For more configuration options check 'nvim_open_win()'
-            terminal_opts = {
-              relative = 'editor',
-              style = 'minimal',
-              border = 'rounded',
-              title = 'Telescope lazy',
-              title_pos = 'center',
-              width = 0.5,
-              height = 0.5,
-            },
-            -- Other telescope configuration options
-          },
-        },
-      }
       ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'lazy'
     end,
@@ -418,30 +413,6 @@ return {
   },
 
   {
-    'nvim-telescope/telescope-frecency.nvim',
-    dependencies = { 'nvim-telescope/telescope.nvim' },
-    -- stylua: ignore
-    keys = {
-      { '<leader>F', '<cmd>Telescope frecency workspace=CWD<cr>', mode = { 'n', 'v' }, desc = 'Frecent Files [F]' },
-    },
-    config = function()
-      ---@diagnostic disable-next-line: undefined-field
-      require('telescope').setup {
-        extensions = {
-          frecency = {
-            show_scores = true,
-            show_unindexed = true,
-            ignore_patterns = { '*.git/*', '*/tmp/*', '*/target/*', '*/build/*' },
-            disable_devicons = false,
-          },
-        },
-      }
-      ---@diagnostic disable-next-line: undefined-field
-      require('telescope').load_extension 'frecency'
-    end,
-  },
-
-  {
     'lpoto/telescope-docker.nvim',
     dependencies = { 'nvim-telescope/telescope.nvim' },
     keys = {
@@ -478,24 +449,6 @@ return {
       { ':', '<Cmd>Telescope cmdline<CR>', desc = 'CMD [:]' },
     },
     config = function()
-      ---@diagnostic disable-next-line: undefined-field
-      require('telescope').setup {
-        extensions = {
-          cmdline = {
-            picker = {
-              layout_config = {
-                width = 120,
-                height = 25,
-              },
-            },
-            mappings = {
-              complete = '<Tab>',
-              run_selection = '<C-CR>',
-              run_input = '<CR>',
-            },
-          },
-        },
-      }
       ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'cmdline'
     end,

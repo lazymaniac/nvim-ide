@@ -129,7 +129,7 @@ return {
               { id = 'watches', size = 0.2 },
             },
             position = 'right',
-            size = 40,
+            size = 46,
           },
         },
         mappings = {
