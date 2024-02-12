@@ -729,7 +729,7 @@ return {
     event = 'VeryLazy',
     -- stylua: ignore
     keys = {
-      { '<leader>uo', '<cmd>lua require("codewindow").toggle_minimap()<cr>', mode = { 'n', 'v' }, desc = 'desc' },
+      { '<leader>O', '<cmd>lua require("codewindow").toggle_minimap()<cr>', mode = { 'n', 'v' }, desc = 'Scrollbar [O]' },
     },
     config = function()
       local codewindow = require 'codewindow'
