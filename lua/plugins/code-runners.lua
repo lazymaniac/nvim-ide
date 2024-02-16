@@ -21,13 +21,14 @@ return {
   {
     'michaelb/sniprun',
     event = 'VeryLazy',
-    branch = 'master',
     -- do 'sh install.sh 1' if you want to force compile locally
     -- (instead of fetching a binary from the github release). Requires Rust >= 1.65
     build = 'sh install.sh',
     -- stylua: ignore
     keys = {
-      { '<leader>rs', '<cmd>SnipRun<cr>', mode = { 'n', 'v' }, desc = 'SnipRun [rs]' },
+      { '<leader>rl', '<cmd>SnipRun<cr>', mode = { 'n' }, desc = 'Run line of code [rl]' },
+      { '<leader>rs', '<cmd>SnipRun<cr>', mode = { 'v' }, desc = 'Run selected code [rs]' },
+      { '<leader>rf', '<cmd>%SnipRun<cr>', mode = { 'n', 'v' }, desc = 'Run current file [rf]' },
     },
     config = function()
       require('sniprun').setup {
@@ -49,14 +50,14 @@ return {
         --# you can combo different display modes as desired and with the 'Ok' or 'Err' suffix
         --# to filter only successful runs (or errored-out runs respectively)
         display = {
-          'Classic', --# display results in the command-line  area
-          'VirtualTextOk', --# display ok results as virtual text (multiline is shortened)
-          -- "VirtualText",             --# display results as virtual text
+          -- 'Classic', --# display results in the command-line  area
+          -- 'VirtualTextOk', --# display ok results as virtual text (multiline is shortened)
+          'VirtualText', --# display results as virtual text
           -- "TempFloatingWindow",      --# display results in a floating window
           -- "LongTempFloatingWindow",  --# same as above, but only long results. To use with VirtualText[Ok/Err]
           -- "Terminal",                --# display results in a vertical split
           -- "TerminalWithCode",        --# display results and code history in a vertical split
-          -- "NvimNotify",              --# display with the nvim-notify plugin
+          'NvimNotify', --# display with the nvim-notify plugin
           -- "Api"                      --# return output to a programming interface
         },
         live_display = { 'VirtualTextOk' }, --# display mode used in live_mode
@@ -87,64 +88,6 @@ return {
     end,
   },
 
-  -- [NotebookNavigator.nvim] - Open, edit and run Jupyter notebook in nvim
-  -- see: `:h NotebookNavigator.nvim`
-  -- For below plugins to run, first install jupytext with conda: conda install jupytext -c conda-forge
-  {
-    'GCBallesteros/NotebookNavigator.nvim',
-    event = 'VeryLazy',
-    dependencies = {
-      'echasnovski/mini.comment',
-      -- 'hkupty/iron.nvim', -- repl provider
-      -- "akinsho/toggleterm.nvim", -- alternative repl provider
-      'benlubas/molten-nvim',
-      -- '3rd/image.nvim',
-    },
-    -- stylua: ignore
-    keys = {
-      { ']j', function() require('notebook-navigator').move_cell 'd' end, mode = { 'n', 'v' }, desc = 'Move jupyter cell down <]j>' },
-      { '[j', function() require('notebook-navigator').move_cell 'u' end, mode = { 'n', 'v' }, desc = 'Move jupyter cell up <[j>' },
-      { '<leader>jr', "<cmd>lua require('notebook-navigator').run_cell()<cr>", mode = { 'n', 'v' }, desc = 'Run jupyter cell [jr]' },
-      { '<leader>jj', "<cmd>lua require('notebook-navigator').run_and_move()<cr>", mode = { 'n', 'v' }, desc = 'Run jupyter cell and move [jj]' },
-      { '<leader>ja', "<cmd>lua require('notebook-navigator').run_all_cells()<cr>", mode = { 'n', 'v' }, desc = 'Run all jupyter cells [ja]' },
-      { '<leader>jb', "<cmd>lua require('notebook-navigator').run_cells_below()<cr>", mode = { 'n', 'v' }, desc = 'Run jupyter cells below [jb]' },
-      { '<leader>jc', "<cmd>lua require('notebook-navigator').comment_cell()<cr>", mode = { 'n', 'v' }, desc = 'Comment jupyter cell [jc]' },
-      { '<leader>jd', "<cmd>lua require('notebook-navigator').add_cell_below()<cr>", mode = { 'n', 'v' }, desc = 'Add jupyter cell below [jd]' },
-      { '<leader>ju', "<cmd>lua require('notebook-navigator').add_cell_above()<cr>", mode = { 'n', 'v' }, desc = 'Add jupyter cell above [ju]' },
-      { '<leader>jm', "<cmd>lua require('notebook-navigator').merge_cell()<cr>", mode = { 'n', 'v' }, desc = 'Merge jupyter cell [jm]' },
-    },
-    opts = {
-      -- Code cell marker. Cells start with the marker and end either at the beginning
-      -- of the next cell or at the end of the file.
-      -- By default, uses language-specific double percent comments like `# %%`.
-      -- This can be overridden for each language with this setting.
-      cell_markers = {
-        python = '# %%',
-      },
-      -- Mappings while the hydra head is active.
-      -- Any of the mappings can be set to "nil", the string! Not the value! to unamp it
-      hydra_keys = {
-        comment = 'c',
-        run = 'X',
-        run_and_move = 'x',
-        move_up = 'k',
-        move_down = 'j',
-        add_cell_before = 'a',
-        add_cell_after = 'b',
-      },
-      -- The repl plugin with which to interface
-      -- Current options: "iron" for iron.nvim, "toggleterm" for toggleterm.nvim,
-      -- "molten" for molten-nvim or "auto" which checks which of the above are
-      -- installed
-      repl_provider = 'molten',
-      -- Syntax based highlighting. If you don't want to install mini.hipattners or
-      -- enjoy a more minimalistic look
-      syntax_highlight = true,
-      -- (Optional) for use with `mini.hipatterns` to highlight cell markers
-      cell_highlight_group = 'Folded',
-    },
-  },
-
   -- [jupytext.nvim] - Automatically convert Jopyter notebooks to python files.
   -- see: `:h jupytext.nvim`
   {
@@ -170,7 +113,7 @@ return {
   {
     'benlubas/molten-nvim',
     event = 'VeryLazy',
-    -- dependencies = { '3rd/image.nvim' },
+    dependencies = { '3rd/image.nvim' },
     build = ':UpdateRemotePlugins',
     init = function()
       vim.g.molten_image_provider = 'image.nvim'
