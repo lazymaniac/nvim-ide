@@ -225,12 +225,12 @@ return {
   {
     'huynle/ogpt.nvim',
     event = 'VeryLazy',
-    enabled = false,
+    enabled = true,
     init = function(_)
       pcall(io.popen, 'ollama serve > /dev/null 2>&1 &')
     end,
     -- stylua: ignore
-    keys = {
+    --[[ keys = {
       { '<leader>zf', '<cmd>OGPTFocus<CR>', desc = 'GPT Focus' },
       { '<leader>zz', ":'<,'>OGPTRun<CR>", desc = 'GPT', mode = { 'n', 'v' } },
       { '<leader>zc', '<cmd>OGPTRun edit_code_with_instructions<CR>', desc = 'Edit with instructions', mode = { 'n', 'v' } },
@@ -246,7 +246,7 @@ return {
       { '<leader>?', '<cmd>OGPTRun quick_question<CR>', desc = 'Quick Question', mode = { 'n' } },
       { '<leader>zf', '<cmd>OGPTRun fix_bugs<CR>', desc = 'Fix Bugs', mode = { 'n', 'v' } },
       { '<leader>zx', '<cmd>OGPTRun explain_code<CR>', desc = 'Explain Code', mode = { 'n', 'v' } },
-    },
+    }, ]]
     dependencies = {
       'MunifTanjim/nui.nvim',
       'nvim-lua/plenary.nvim',
