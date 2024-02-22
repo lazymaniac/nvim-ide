@@ -93,7 +93,7 @@ Clone NV-IDE:
 - on Linux and Mac
 
 ```sh
-  git clone https://github.com/lazymaniac/nvim-ide.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
+  git clone git@github.com:lazymaniac/nvim-ide.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
 ```
 
 #### Post Installation
