@@ -48,4 +48,25 @@ return {
       hijack_file_patterns = { '*.png', '*.jpg', '*.jpeg', '*.gif', '*.webp' }, -- render image files as images when opened
     },
   },
+
+  {
+    'HakonHarnes/img-clip.nvim',
+    event = 'BufEnter',
+    opts = {
+      markdown = {
+        url_encode_path = true,
+        template = '![$CURSOR]($FILE_PATH)',
+        drag_and_drop = {
+          download_images = false,
+        },
+      },
+      quarto = {
+        url_encode_path = true,
+        template = '![$CURSOR]($FILE_PATH)',
+        drag_and_drop = {
+          download_images = false,
+        },
+      },
+    },
+  },
 }

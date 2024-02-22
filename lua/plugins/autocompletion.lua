@@ -10,6 +10,8 @@ return {
     dependencies = {
       -- Adds LSP completion capabilities
       'hrsh7th/cmp-nvim-lsp',
+      'hrsh7th/cmp-nvim-lsp-signature-help',
+      'ray-x/cmp-treesitter',
       -- Adds buffer text completion capabilities
       'hrsh7th/cmp-buffer',
       -- Adds file path completion capabilities
@@ -28,6 +30,9 @@ return {
       'rafamadriz/friendly-snippets',
       -- Emoji support
       'hrsh7th/cmp-emoji',
+      'jmbuhr/cmp-pandoc-references',
+      'kdheepak/cmp-latex-symbols',
+      'onsails/lspkind-nvim',
       {
         'David-Kunz/cmp-npm',
         dependencies = { 'nvim-lua/plenary.nvim' },
@@ -129,8 +134,12 @@ return {
             end
           end, { 'i', 's' }),
         },
-        sources = cmp.config.sources({
+
+        sources = cmp.config.sources {
+          { name = 'otter', keyword_length = 1, group_index = 1 },
           { name = 'nvim_lsp', keyword_length = 2, group_index = 1 },
+          { name = 'nvim_lsp_signature_help', keyword_length = 1, group_index = 1 },
+          { name = 'pandoc_references', keyword_length = 1, group_index = 1 },
           { name = 'luasnip', keyword_length = 2, group_index = 2 },
           { name = 'friendly-snippets', keyword_length = 2, group_index = 2 },
           { name = 'path', keyword_length = 2, group_index = 3 },
@@ -148,9 +157,10 @@ return {
               end,
             },
           },
-        }, {
-          { name = 'buffer' },
-        }),
+          { name = 'latex_symbols', keyword_length = 2, group_index = 3 },
+          { name = 'treesitter', keyword_length = 1, group_index = 2 },
+          { name = 'buffer', keyword_length = 2, group_index = 2 },
+        },
         formatting = {
           fields = { 'kind', 'abbr', 'menu' },
           expandable_indicator = true,
@@ -159,10 +169,16 @@ return {
             vim_item.kind = string.format('%s', kind_icons[vim_item.kind])
             -- vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind) -- This concatenates the icons with the name of the item kind
             vim_item.menu = ({
+              otter = '[Ottr]',
               nvim_lsp = '[LSP]',
               luasnip = '[Snippet]',
               buffer = '[Buffer]',
               path = '[Path]',
+              spell = '[Spell]',
+              pandoc_references = '[Pandoc]',
+              tags = '[Tag]',
+              treesitter = '[TS]',
+              latex_symbols = '[Tex]',
               emoji = '[Emoji]',
             })[entry.source.name]
             return vim_item
@@ -186,6 +202,9 @@ return {
     end,
     config = function(_, opts)
       local cmp = require 'cmp'
+      local luasnip = require 'luasnip'
+      local lspkind = require 'lspkind'
+      lspkind.init()
       for _, source in ipairs(opts.sources) do
         source.group_index = source.group_index or 1
       end
@@ -217,6 +236,9 @@ return {
           },
         }),
       })
+      -- link quarto and rmarkdown to markdown snippets
+      luasnip.filetype_extend('quarto', { 'markdown' })
+      luasnip.filetype_extend('rmarkdown', { 'markdown' })
     end,
   },
 

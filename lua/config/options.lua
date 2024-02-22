@@ -1,7 +1,7 @@
 -- Set <space> as the leader key
 -- See `:help mapleader`
 vim.g.mapleader = ' '
-vim.g.maplocalleader = '\\'
+vim.g.maplocalleader = ' '
 
 vim.g.autoformat = false
 
@@ -36,17 +36,18 @@ vim.o.linebreak = true -- Break on words
 vim.o.list = true -- Show some invisible characters (tabs...
 vim.o.mouse = 'a' -- Enable mouse mode
 vim.o.number = true -- Print line number
+vim.o.mousefocus = true -- window with mouse gains focus
 vim.o.pumblend = 10 -- Popup blend
 vim.o.pumheight = 10 -- Maximum number of entries in a popup
 vim.o.relativenumber = true -- Relative line numbers
 vim.o.scrolloff = 8 -- Minimal number of screen lines to keep above and below cursor
-vim.o.sessionoptions = 'buffers,curdir,tabpages,winsize,help,globals,skiprtp'
+vim.o.sessionoptions = 'buffers,curdir,tabpages,winsize,help,globals,skiprtp,localoptions'
 vim.o.shiftround = true -- Round indent
 vim.o.shiftwidth = 2 -- Size of an indent
-vim.o.shortmess = 'filnxtToOFWIcC'
+vim.o.shortmess = 'filnxtToOFWIcCA'
 vim.o.showmode = false -- Dont show mode since we have a statusline
 vim.o.sidescrolloff = 8 -- Minimal number of screen lines to keep left and right of the cursor
-vim.o.signcolumn = 'yes' -- Always show the signcolumn, otherwise it would shift the text each time
+vim.o.signcolumn = 'yes:1' -- Always show the signcolumn, otherwise it would shift the text each time
 vim.o.smartcase = true -- Don't ignore case with capitals
 vim.o.smartindent = true -- Insert indents automatically
 vim.o.spelllang = 'en'
