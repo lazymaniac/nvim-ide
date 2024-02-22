@@ -59,9 +59,16 @@
 - luajit
 - golang
 - rustup
-- lazygit
+- artem (cargo)
+- onefetch (cargo)
+- ripgrep (cargo)
+- treesitter-cli (cargo)
+- lazygit (cargo)
+- neovide (cargo)
 - sdk-man
-- bob
+- lazydocker
+- lazysql
+- bob (cargo)
 - btop
 - ncdu
 - node
