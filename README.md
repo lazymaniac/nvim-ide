@@ -41,11 +41,22 @@
     pickers.
 
 #### Packages
-
-- nvim
+- kitty
+- zsh
+- oh-my-zsh
+- oh-my-zsh headline theme
+- tmux
 - build-essential
 - python3-full
 - virtualenv
+- python3-neovim
+- cmake
+- pipx
+- fzf
+- imagemagick
+- libmagickwand-dev libgraphicsmagick1-dev
+- luarocks
+- luajit
 - golang
 - rustup
 - lazygit
@@ -57,14 +68,13 @@
 - zoxide
 - bat
 - eza
-- zsh
-- oh-my-zsh
 - zip
 - unzip
 - jupytext
 - miniconda
 - gradle
 - maven
+- quarto
 
 #### Config paths
 
