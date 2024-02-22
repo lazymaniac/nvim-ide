@@ -66,6 +66,7 @@
 - lazygit (cargo)
 - neovide (cargo)
 - sdk-man
+- java 8, 11, 17, 21
 - lazydocker
 - lazysql
 - bob (cargo)
