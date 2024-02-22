@@ -71,6 +71,7 @@
 - bob (cargo)
 - btop
 - ncdu
+- nvm
 - node
 - zoxide
 - bat
