@@ -39,7 +39,17 @@ return {
     'neovim/nvim-lspconfig',
     opts = {
       servers = {
-        pyright = {},
+        pyright = {
+          settings = {
+            python = {
+              analysis = {
+                diagnosticSeverityOverrides = {
+                  reportUnusedExpression = 'none',
+                },
+              },
+            },
+          },
+        },
         ruff_lsp = {
           keys = {
             {
