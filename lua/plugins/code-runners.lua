@@ -1,3 +1,54 @@
+-- automatically import output chunks from a jupyter notebook
+-- tries to find a kernel that matches the kernel in the jupyter notebook
+-- falls back to a kernel that matches the name of the active venv (if any)
+local imb = function(e) -- init molten buffer
+  vim.schedule(function()
+    local kernels = vim.fn.MoltenAvailableKernels()
+    local try_kernel_name = function()
+      local metadata = vim.json.decode(io.open(e.file, 'r'):read 'a')['metadata']
+      return metadata.kernelspec.name
+    end
+    local ok, kernel_name = pcall(try_kernel_name)
+    if not ok or not vim.tbl_contains(kernels, kernel_name) then
+      kernel_name = nil
+      local venv = os.getenv 'VIRTUAL_ENV'
+      if venv ~= nil then
+        kernel_name = string.match(venv, '/.+/(.+)')
+      end
+    end
+    if kernel_name ~= nil and vim.tbl_contains(kernels, kernel_name) then
+      vim.cmd(('MoltenInit %s'):format(kernel_name))
+    end
+    vim.cmd 'MoltenImportOutput'
+  end)
+end
+
+-- automatically import output chunks from a jupyter notebook
+vim.api.nvim_create_autocmd('BufAdd', {
+  pattern = { '*.ipynb' },
+  callback = imb,
+})
+
+-- we have to do this as well so that we catch files opened like nvim ./hi.ipynb
+vim.api.nvim_create_autocmd('BufEnter', {
+  pattern = { '*.ipynb' },
+  callback = function(e)
+    if vim.api.nvim_get_vvar 'vim_did_enter' ~= 1 then
+      imb(e)
+    end
+  end,
+})
+
+-- automatically export output chunks to a jupyter notebook on write
+vim.api.nvim_create_autocmd('BufWritePost', {
+  pattern = { '*.ipynb' },
+  callback = function()
+    if require('molten.status').initialized() == 'Molten' then
+      vim.cmd 'MoltenExportOutput!'
+    end
+  end,
+})
+
 return {
 
   -- [[ CODE RUNNERS ]] ---------------------------------------------------------------
@@ -90,7 +141,13 @@ return {
   {
     'GCBallesteros/jupytext.nvim',
     event = 'VeryLazy',
-    config = true,
+    config = function()
+      require('jupytext').setup {
+        style = 'markdown',
+        output_extension = 'md',
+        force_ft = 'markdown',
+      }
+    end,
   },
 
   -- Use mini.hipatterns for Jupyter cells
@@ -112,6 +169,16 @@ return {
     event = 'VeryLazy',
     dependencies = { '3rd/image.nvim' },
     build = ':UpdateRemotePlugins',
+    -- stylua: ignore
+    keys = {
+      { '<leader>je', '<cmd>MoltenEvaluateOperator<cr>', mode = { 'n' }, desc = 'Evaluate Operator [je]' },
+      { '<leader>jo', '<cmd>noautocmd MoltenEnterOutput<cr>', mode = { 'n' }, desc = 'Open Output Window [jo]' },
+      { '<leader>jr', '<cmd>MoltenReevaluateCell<cr>', mode = { 'n' }, desc = 'Reevaluta Cell [jr]' },
+      { '<leader>jr', '<cmd><C-u>MoltenEvaluateVisual<cr>', mode = { 'v' }, desc = 'Edxecute Selected Code [jr]' },
+      { '<leader>jh', '<cmd>MoltenHideOutput<cr>', mode = { 'n' }, desc = 'Hide Output [jh]' },
+      { '<leader>jd', '<cmd>MoltenDelete<cr>', mode = { 'n' }, desc = 'Delete Cell [jd]' },
+      { '<leader>jb', '<cmd>MoltenOpenInBrowser<cr>', mode = { 'n' }, desc = 'Open in Browser [jb]' },
+    },
     init = function()
       vim.g.molten_image_provider = 'image.nvim'
       vim.g.molten_use_border_highlights = true
@@ -126,40 +193,59 @@ return {
       -- this will make it so the output shows up below the \`\`\` cell delimiter
       vim.g.molten_virt_lines_off_by_1 = true
       -- add a few new things
-      -- don't change the mappings (unless it's related to your bug)
-      vim.keymap.set('n', '<localleader>e', ':MoltenEvaluateOperator<CR>', { desc = 'evaluate operator', silent = true })
-      vim.keymap.set('n', '<localleader>os', ':noautocmd MoltenEnterOutput<CR>', { desc = 'open output window', silent = true })
-      vim.keymap.set('n', '<localleader>rr', ':MoltenReevaluateCell<CR>', { desc = 're-eval cell', silent = true })
-      vim.keymap.set('v', '<localleader>r', ':<C-u>MoltenEvaluateVisual<CR>gv', { desc = 'execute visual selection', silent = true })
-      vim.keymap.set('n', '<localleader>oh', ':MoltenHideOutput<CR>', { desc = 'close output window', silent = true })
-      vim.keymap.set('n', '<localleader>md', ':MoltenDelete<CR>', { desc = 'delete Molten cell', silent = true })
-
-      -- if you work with html outputs:
-      vim.keymap.set('n', '<localleader>mx', ':MoltenOpenInBrowser<CR>', { desc = 'open output in browser', silent = true })
     end,
   },
 
   {
     'quarto-dev/quarto-nvim',
-    dependencies = {
-      {
-        'jmbuhr/otter.nvim',
-        dependencies = {
-          { 'neovim/nvim-lspconfig' },
-        },
-        opts = {
-          buffers = {
-            -- if set to true, the filetype of the otterbuffers will be set.
-            -- otherwise only the autocommand of lspconfig that attaches
-            -- the language server will be executed without setting the filetype
-            set_filetype = true,
+    ft = { 'quarto', 'markdown' },
+    -- stylua: ignore
+    keys = {
+      { '<leader>jc', '<cmd>lua require("quarto.runner").run_cell()<cr>', mode = { 'n' }, desc = 'Run Cell [jc]' },
+      { '<leader>ja', '<cmd>lua require("quarto.runner").run_above()<cr>', mode = { 'n' }, desc = 'Run Cell and Above [ja]' },
+      { '<leader>jA', '<cmd>lua require("quarto.runner").run_all()<cr>', mode = { 'n' }, desc = 'Run All Cells [jA]' },
+      { '<leader>jl', '<cmd>lua require("quarto.runner").run_line()<cr>', mode = { 'n' }, desc = 'Run Line [jl]' },
+      { '<leader>jR', '<cmd>lua require("quarto.runner").run_range()<cr>', mode = { 'v' }, desc = 'Run Selected Cells [jR]' },
+      { '<leader>jx', '<cmd>lua require("quarto.runner").run_all(true)<cr>', mode = { 'n' }, desc = 'Run All Cells of All Languages [jx]' },
+    },
+    dependencies = { 'jmbuhr/otter.nvim' },
+    config = function()
+      require('quatro').config {
+        lspFeatures = {
+          languages = { 'r', 'python', 'rust', 'java', 'kotlin', 'scala', 'go' },
+          chunks = 'all',
+          diagnostics = {
+            enabled = true,
+            triggers = { 'BufWritePost' },
+          },
+          completion = {
+            enabled = true,
           },
         },
-      },
-    },
+        keymap = {
+          hover = 'K',
+          definition = 'gd',
+          rename = '<leader>cr',
+          references = 'gr',
+          format = '<leader>cf',
+        },
+        codeRunner = {
+          enabled = true,
+          default_method = 'molten',
+        },
+      }
+    end,
+  },
+
+  {
+    'jmbuhr/otter.nvim',
+    dependencies = { 'neovim/nvim-lspconfig' },
     opts = {
-      lspFeatures = {
-        languages = { 'r', 'python', 'julia', 'bash', 'lua', 'html', 'dot' },
+      buffers = {
+        -- if set to true, the filetype of the otterbuffers will be set.
+        -- otherwise only the autocommand of lspconfig that attaches
+        -- the language server will be executed without setting the filetype
+        set_filetype = true,
       },
     },
   },
