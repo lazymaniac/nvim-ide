@@ -144,7 +144,11 @@ map('n', '<leader>ui', vim.show_pos, { desc = 'Inspect Pos [ui]' })
 
 -- windows
 map('n', '<leader>ww', '<C-W>p', { desc = 'Other Window [ww]', remap = true })
-map('n', '<leader>wd', '<C-W>c', { desc = 'Window Delete [wd]', remap = true })
+map('n', '<leader>wd', function()
+  vim.cmd 'close'
+  require('codewindow').toggle_minimap()
+  require('codewindow').toggle_minimap()
+end, { desc = 'Window Delete [wd]', remap = true })
 map('n', '<leader>w-', '<C-W>s', { desc = 'Window Split Below [w-]', remap = true })
 map('n', '<leader>w|', '<C-W>v', { desc = 'Window Split Right [w|]', remap = true })
 map('n', '<leader>-', '<C-W>s', { desc = 'Window Split Below [-]', remap = true })

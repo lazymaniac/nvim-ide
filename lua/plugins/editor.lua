@@ -743,7 +743,7 @@ return {
         use_lsp = true, -- Use the builtin LSP to show errors and warnings
         use_treesitter = true, -- Use nvim-treesitter to highlight the code
         use_git = true, -- Show small dots to indicate git additions and deletions
-        width_multiplier = 9, -- How many characters one dot represents
+        width_multiplier = 15, -- How many characters one dot represents
         z_index = 1, -- The z-index the floating window will be on
         show_cursor = true, -- Show the cursor position in the minimap
         screen_bounds = 'background', -- How the visible area is displayed, "lines": lines above and below, "background": background color
