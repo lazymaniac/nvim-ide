@@ -96,13 +96,13 @@ return {
           goto_next_start = {
             [']f'] = '@function.outer',
             [']c'] = '@class.outer',
-            [']b'] = { query = '@code_cell.inner', desc = 'next code block' },
+            [']B'] = { query = '@code_cell.inner', desc = 'next code block' },
           },
           goto_next_end = { [']F'] = '@function.outer', [']C'] = '@class.outer' },
           goto_previous_start = {
             ['[f'] = '@function.outer',
             ['[c'] = '@class.outer',
-            ['[b'] = { query = '@code_cell.inner', desc = 'previous code block' },
+            ['[B'] = { query = '@code_cell.inner', desc = 'previous code block' },
           },
           goto_previous_end = { ['[F'] = '@function.outer', ['[C'] = '@class.outer' },
         },
