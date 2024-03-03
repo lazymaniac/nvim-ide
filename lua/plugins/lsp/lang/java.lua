@@ -150,16 +150,16 @@ local jdtls_settings = {
         },
         {
           name = 'JavaSE-11',
-          path = '~/.sdkman/candidates/java/11.0.21-tem/',
+          path = '~/.sdkman/candidates/java/11.0.22-tem/',
         },
         {
           name = 'JavaSE-17',
-          path = '~/.sdkman/candidates/java/17.0.9-tem/',
+          path = '~/.sdkman/candidates/java/17.0.10-tem/',
           default = true,
         },
         {
           name = 'JavaSE-21',
-          path = '~/.sdkman/candidates/java/21.0.1-tem/',
+          path = '~/.sdkman/candidates/java/21.0.2-tem/',
         },
       },
       updateBuildConfiguration = 'automatic',

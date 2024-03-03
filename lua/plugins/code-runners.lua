@@ -167,7 +167,8 @@ return {
   {
     'benlubas/molten-nvim',
     event = 'VeryLazy',
-    dependencies = { '3rd/image.nvim' },
+    -- ft = { 'quarto', 'markdown' },
+    -- dependencies = { '3rd/image.nvim' },
     build = ':UpdateRemotePlugins',
     -- stylua: ignore
     keys = {
@@ -180,7 +181,9 @@ return {
       { '<leader>jb', '<cmd>MoltenOpenInBrowser<cr>', mode = { 'n' }, desc = 'Open in Browser [jb]' },
     },
     init = function()
-      vim.g.molten_image_provider = 'image.nvim'
+      vim.g.molten_auto_init_behavior = 'init'
+      vim.g.molten_auto_open_html_in_browser = false
+      -- vim.g.molten_image_provider = 'image.nvim'
       vim.g.molten_use_border_highlights = true
       -- I find auto open annoying, keep in mind setting this option will require setting
       -- a keybind for `:noautocmd MoltenEnterOutput` to open the output again
@@ -193,11 +196,13 @@ return {
       -- this will make it so the output shows up below the \`\`\` cell delimiter
       vim.g.molten_virt_lines_off_by_1 = true
       -- add a few new things
+      vim.g.molten_cover_empty_lines = false
     end,
   },
 
   {
     'quarto-dev/quarto-nvim',
+    event = 'VeryLazy',
     ft = { 'quarto', 'markdown' },
     -- stylua: ignore
     keys = {
@@ -210,7 +215,7 @@ return {
     },
     dependencies = { 'jmbuhr/otter.nvim' },
     config = function()
-      require('quatro').config {
+      require('quarto').setup {
         lspFeatures = {
           languages = { 'r', 'python', 'rust', 'java', 'kotlin', 'scala', 'go' },
           chunks = 'all',
@@ -239,6 +244,7 @@ return {
 
   {
     'jmbuhr/otter.nvim',
+    event = 'VeryLazy',
     dependencies = { 'neovim/nvim-lspconfig' },
     opts = {
       buffers = {
