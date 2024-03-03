@@ -108,7 +108,7 @@ return {
               preview_width = 0.6,
               prompt_position = 'top',
               mirror = true,
-              width = 0.45,
+              width = 0.5,
             },
             flex = {
               height = 0.7,
