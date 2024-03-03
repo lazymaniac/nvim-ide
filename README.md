@@ -41,6 +41,7 @@
     pickers.
 
 #### Packages
+
 - kitty
 - zsh
 - oh-my-zsh
