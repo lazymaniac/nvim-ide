@@ -4,7 +4,7 @@ local popup = {
   position = { col = '100%', row = 2 },
   size = function()
     return {
-      width = 40,
+      width = 50,
       height = vim.o.lines - 4,
     }
   end,

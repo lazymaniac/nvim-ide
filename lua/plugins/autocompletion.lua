@@ -32,7 +32,6 @@ return {
       'hrsh7th/cmp-emoji',
       'jmbuhr/cmp-pandoc-references',
       'kdheepak/cmp-latex-symbols',
-      'onsails/lspkind-nvim',
       {
         'David-Kunz/cmp-npm',
         dependencies = { 'nvim-lua/plenary.nvim' },
@@ -203,8 +202,6 @@ return {
     config = function(_, opts)
       local cmp = require 'cmp'
       local luasnip = require 'luasnip'
-      local lspkind = require 'lspkind'
-      lspkind.init()
       for _, source in ipairs(opts.sources) do
         source.group_index = source.group_index or 1
       end

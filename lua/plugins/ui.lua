@@ -781,10 +781,10 @@ return {
           },
           header = vim.fn.split(oogway.what_is_your_wisdom() .. '\n\n\n\n\n', '\n'),
           shortcut = {
+            { icon = ' ', desc = 'Projects', action = 'Telescope projects', key = 'p' },
             { icon = ' ', desc = 'Find Files', action = 'Telescope find_files', key = 'f' },
             { icon = ' ', desc = 'Find Text', action = 'Telescope live_grep', key = 'g' },
             { icon = ' ', desc = 'Config Files', action = [[lua require("util").telescope.config_files()()]], key = 'c' },
-            { icon = ' ', desc = 'Projects', action = 'Telescope projects', key = 'p' },
             { desc = '󰊳 Lazy', action = 'Lazy update', key = 'l' },
             { desc = '󰊳 Mason', action = 'Mason', key = 'm' },
             { desc = ' Theme', action = 'Telescope colorscheme', key = 'd' },
