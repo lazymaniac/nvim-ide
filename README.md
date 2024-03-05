@@ -3,7 +3,6 @@
 <!--toc:start-->
 
 - [NV-IDE personalized mix of available NVIM distros](#nv-ide-personalized-mix-of-available-nvim-distros)
-  - [TODO](#todo)
   - [Introduction](#introduction)
   - [Installation](#installation)
     - [Requirements](#requirements)
@@ -12,11 +11,6 @@
       - [Install script](#install-script)
       - [Post Installation](#post-installation)
 <!--toc:end-->
-
-## TODO
-
-- code cleanup
-- script installing all the required dependencies for Ubuntu in WSL
 
 ## Introduction
 
