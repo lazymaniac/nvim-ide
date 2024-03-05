@@ -790,7 +790,7 @@ return {
             { icon = ' ', group = '@diff.plus', desc = 'Config Files', action = [[lua require("util").telescope.config_files()()]], key = 'c' },
             { icon = ' ', group = '@tag', desc = 'Lazy', action = 'Lazy update', key = 'l' },
             { icon = '󱊓 ', group = '@tag', desc = 'Mason', action = 'Mason', key = 'm' },
-            { icon = ' ', group = '@include', desc = 'Theme', action = 'Telescope colorscheme', key = 'c' },
+            { icon = ' ', group = '@include', desc = 'Theme', action = 'Telescope colorscheme', key = 't' },
             { icon = ' ', group = '@function.builtin', desc = 'Check Health', action = 'checkhealth', key = 'h' },
           },
           packages = { enabled = true },
