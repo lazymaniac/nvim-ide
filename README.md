@@ -76,6 +76,8 @@ cargo install tree-sitter-cli
 
 # Install bob
 cargo install bob-nvim
+bob install nightly
+bob use nightly
 
 # Install lazydocker
 go install github.com/jesseduffield/lazydocker@latest
