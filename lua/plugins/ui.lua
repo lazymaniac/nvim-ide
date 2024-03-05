@@ -320,6 +320,7 @@ return {
               'dbui',
               'toggleterm',
               'OverseerList',
+              'Outline',
             },
             winbar = {
               'dashboard',
@@ -328,6 +329,7 @@ return {
               'dbui',
               'toggleterm',
               'OverseerList',
+              'Outline',
             },
           },
           ignore_focus = {
@@ -337,6 +339,7 @@ return {
             'dbui',
             'toggleterm',
             'OverseerList',
+            'Outline',
           },
           always_divide_middle = true,
           globalstatus = true,
