@@ -1,12 +1,10 @@
 # NV-IDE personalized mix of available NVIM distros
 
 <!--toc:start-->
-
 - [NV-IDE personalized mix of available NVIM distros](#nv-ide-personalized-mix-of-available-nvim-distros)
   - [Introduction](#introduction)
   - [Installation](#installation)
-    - [Requirements](#requirements)
-      - [Packages](#packages)
+    - [System Packages](#system-packages)
       - [Config paths](#config-paths)
       - [Install script](#install-script)
       - [Post Installation](#post-installation)
@@ -22,15 +20,7 @@
 > **NOTE**
 > Backup your previous configuration (if any exists)
 
-### Requirements
-
-- Make sure to review the readmes of the plugins if you are experiencing errors.
-  In particular:
-  - [ripgrep](https://github.com/BurntSushi/ripgrep#installation) is necessary for
-    [telescope](https://github.com/nvim-telescope/telescope.nvim#suggested-dependencies)
-    pickers.
-
-#### Packages
+### System Packages
 
 Fedora script for dependencies Installation.
 
