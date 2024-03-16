@@ -32,7 +32,7 @@ sudo dnf update
 
 # Install packages
 sudo dnf copr enable atim/lazygit -y
-sudo dnf install -y kitty zsh tmux virtualenv python3-neovim cmake fzf luarocks luajit golang ripgrep lazygit ncdu unzip zip zoxide bat eza btop lazygit fd-find xclip
+sudo dnf install -y kitty zsh tmux virtualenv python3-neovim python3-pip cmake fzf luarocks luajit golang ripgrep lazygit ncdu unzip zip zoxide bat eza btop lazygit fd-find xcli libX11-devel
 sudo dnf group install "C Development Tools and Libraries" "Development Tools"
 
 # Install oh-my-zsh
@@ -59,6 +59,9 @@ sdk install maven
 
 # Install nvm
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # Install node using nvm
 nvm install --lts
