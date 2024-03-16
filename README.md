@@ -33,7 +33,7 @@ sudo dnf update
 # Install packages
 sudo dnf copr enable atim/lazygit -y
 sudo dnf install -y kitty zsh tmux virtualenv python3-neovim python3-pip cmake fzf luarocks luajit golang ripgrep lazygit ncdu unzip zip zoxide bat eza btop lazygit fd-find xcli libX11-devel
-sudo dnf group install "C Development Tools and Libraries" "Development Tools"
+sudo dnf group install -y "C Development Tools and Libraries" "Development Tools"
 
 # Install oh-my-zsh
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
