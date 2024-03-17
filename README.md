@@ -69,7 +69,7 @@ nvm install --lts
 npm install -g neovim
 
 # Install molten deps
-pip install jupytext pynvim pnglatex plotly kaleido pyperclip nbformat
+pip install jupytext pynvim pnglatex plotly kaleido nbformat
 
 # Install one fetch
 cargo install onefetch
