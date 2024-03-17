@@ -10,6 +10,7 @@ return {
     event = 'VeryLazy',
     config = function(_, opts)
       require('gitsigns').setup(opts)
+      require('scrollbar.handlers.gitsigns').setup()
     end,
     opts = {
       signs = {
@@ -426,7 +427,7 @@ return {
           disable_defaults = false, -- Disable the default keymaps
         },
       }
-    end
+    end,
   },
 
   -- [diffview.nvim] - Git diffview for nvim

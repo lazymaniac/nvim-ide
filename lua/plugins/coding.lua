@@ -3,6 +3,10 @@ return {
   -- [[ CODING HELPER ]] ---------------------------------------------------------------
 
   {
+    dir = '~/workspace/voyager.nvim/',
+  },
+
+  {
     'nvimdev/lspsaga.nvim',
     dependencies = {
       'nvim-treesitter/nvim-treesitter',
@@ -287,7 +291,18 @@ return {
     'kevinhwang91/nvim-hlslens',
     event = 'VeryLazy',
     config = function()
-      require('hlslens').setup {}
+      require('hlslens').setup {
+        build_position_cb = function(plist, _, _, _)
+          require('scrollbar.handlers.search').handler.show(plist.start_pos)
+        end,
+      }
+
+      vim.cmd [[
+        augroup scrollbar_search_hide
+            autocmd!
+            autocmd CmdlineLeave : lua require('scrollbar.handlers.search').handler.hide()
+        augroup END
+    ]]
     end,
   },
 
@@ -412,20 +427,20 @@ return {
   },
 
   {
-    "kawre/leetcode.nvim",
-    build = ":TSUpdate html",
+    'kawre/leetcode.nvim',
+    build = ':TSUpdate html',
     dependencies = {
-        "nvim-telescope/telescope.nvim",
-        "nvim-lua/plenary.nvim", -- required by telescope
-        "MunifTanjim/nui.nvim",
+      'nvim-telescope/telescope.nvim',
+      'nvim-lua/plenary.nvim', -- required by telescope
+      'MunifTanjim/nui.nvim',
 
-        -- optional
-        "nvim-treesitter/nvim-treesitter",
-        "rcarriga/nvim-notify",
-        "nvim-tree/nvim-web-devicons",
+      -- optional
+      'nvim-treesitter/nvim-treesitter',
+      'rcarriga/nvim-notify',
+      'nvim-tree/nvim-web-devicons',
     },
     opts = {
-        -- configuration goes here
+      -- configuration goes here
     },
-}
+  },
 }
