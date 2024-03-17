@@ -301,6 +301,9 @@ return {
     'nvim-lualine/lualine.nvim',
     event = 'VeryLazy',
     config = function(_, opts)
+      if vim.g.neovide then
+        opts.winbar = {}
+      end
       ---@diagnostic disable-next-line: undefined-field
       require('lualine').setup(opts)
     end,
