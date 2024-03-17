@@ -522,18 +522,6 @@ return {
   },
 
   {
-    'jonarrien/telescope-cmdline.nvim',
-    dependencies = { 'nvim-telescope/telescope.nvim' },
-    keys = {
-      { ':', '<Cmd>Telescope cmdline layout_strategy=center<CR>', desc = 'CMD [:]' },
-    },
-    config = function()
-      ---@diagnostic disable-next-line: undefined-field
-      require('telescope').load_extension 'cmdline'
-    end,
-  },
-
-  {
     'fbuchlak/telescope-directory.nvim',
     dependencies = { 'nvim-telescope/telescope.nvim' },
     -- stylua: ignore
