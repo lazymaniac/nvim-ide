@@ -24,7 +24,7 @@
 
 Fedora script for dependencies Installation.
 
-```sh
+```bash
 #!/bin/bash
 # TODO Font, jupyter notebooks, quarto, elixir, padas, pytorch, marplotlib, magic using lua 5.1
 # Update package lists
@@ -69,7 +69,7 @@ nvm install --lts
 npm install -g neovim
 
 # Install molten deps
-pip install jupytext pynvim pnglatex plotly kaleido nbformat
+pip install jupytext jupyter-client pynvim pnglatex plotly kaleido nbformat
 
 # Install one fetch
 cargo install onefetch
