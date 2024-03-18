@@ -5,9 +5,7 @@ return {
   {
     'huynle/ogpt.nvim',
     event = 'VeryLazy',
-    init = function(_)
-      pcall(io.popen, 'ollama serve > /dev/null 2>&1 &')
-    end,
+    branch = 'dev',
     -- stylua: ignore
     keys = {
       { '<leader>zf', '<cmd>OGPTFocus<CR>', desc = 'GPT Focus' },
@@ -18,12 +16,11 @@ return {
       { '<leader>zt', '<cmd>OGPTRun translate<CR>', desc = 'Translate', mode = { 'n', 'v' } },
       { '<leader>zk', '<cmd>OGPTRun keywords<CR>', desc = 'Keywords', mode = { 'n', 'v' } },
       { '<leader>zr', '<cmd>OGPTRun do_complete_code<CR>', desc = 'Complete Code', mode = { 'n', 'v' } },
-      { '<leader>?', '<cmd>OGPTRun quick_question<CR>', desc = 'Quick Question', mode = { 'n' } },
+      { '<leader>z?', '<cmd>OGPTRun quick_question<CR>', desc = 'Quick Question', mode = { 'n' } },
       { '<leader>zi', '<cmd>OGPTRun optimize_code<CR>', desc = 'Optimize Code', mode = { 'n', 'v' } },
       { '<leader>zd', '<cmd>OGPTRun docstring<CR>', desc = 'Docstring', mode = { 'n', 'v' } },
       { '<leader>za', '<cmd>OGPTRun add_tests<CR>', desc = 'Add Tests', mode = { 'n', 'v' } },
       { '<leader>z<leader>', '<cmd>OGPTRun custom_input<CR>', desc = 'Custom Input', mode = { 'n', 'v' } },
-      { '<leader>zf', '<cmd>OGPTRun fix_bugs<CR>', desc = 'Fix Bugs', mode = { 'n', 'v' } },
       { '<leader>zx', '<cmd>OGPTRun explain_code<CR>', desc = 'Explain Code', mode = { 'n', 'v' } },
     },
     dependencies = {
@@ -340,7 +337,7 @@ return {
             lang = {
               type = 'string',
               optional = 'true',
-              default = 'vietnamese',
+              default = 'polish',
             },
           },
         },
