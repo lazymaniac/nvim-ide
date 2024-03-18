@@ -316,7 +316,7 @@ return {
 
   {
     'icholy/lsplinks.nvim',
-    setup = function()
+    config = function()
       local lsplinks = require 'lsplinks'
       lsplinks.setup()
       vim.keymap.set('n', 'gl', lsplinks.gx)
