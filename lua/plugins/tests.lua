@@ -17,7 +17,7 @@ return {
   {
     'nvim-neotest/neotest',
     event = 'VeryLazy',
-    dependencies = { 'nvim-lua/plenary.nvim', 'nvim-treesitter/nvim-treesitter', 'stevearc/overseer.nvim' },
+    dependencies = { 'nvim-lua/plenary.nvim', 'nvim-treesitter/nvim-treesitter', 'stevearc/overseer.nvim', 'nvim-neotest/nvim-nio' },
     -- stylua: ignore
     keys = {
       { '<leader>tt', function() require('neotest').run.run(vim.fn.expand '%') end, desc = 'Run File [tt]', },
@@ -32,7 +32,7 @@ return {
       local opts = {
         adapters = {
           ['neotest-java'] = { ignore_wrapper = false },
-           require('rustaceanvim.neotest'),
+          require 'rustaceanvim.neotest',
           ['neotest-go'] = {},
           ['neotest-python'] = {},
         },

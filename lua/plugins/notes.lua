@@ -69,6 +69,14 @@ return {
     end,
   },
 
+  {
+    'massix/org-checkbox.nvim',
+    config = function()
+      require('orgcheckbox').setup({ lhs = "<leader>oT" })
+    end,
+    ft = { 'org' },
+  },
+
   -- Add which-key group for notes
   {
     'folke/which-key.nvim',
