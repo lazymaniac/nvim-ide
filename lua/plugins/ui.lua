@@ -102,7 +102,7 @@ return {
       },
       select = {
         enabled = true, -- Set to false to disable the vim.ui.select implementation
-        backend = { 'nui', 'telescope', 'fzf_lua', 'fzf', 'builtin' }, -- Priority list of preferred vim.select implementations
+        backend = { 'builtin', 'nui', 'telescope', 'fzf_lua', 'fzf' }, -- Priority list of preferred vim.select implementations
         trim_prompt = true, -- Trim trailing `:` from prompt
         -- Options for telescope selector
         -- These are passed into the telescope picker directly. Can be used like:
@@ -301,9 +301,6 @@ return {
     'nvim-lualine/lualine.nvim',
     event = 'VeryLazy',
     config = function(_, opts)
-      if vim.g.neovide then
-        opts.winbar = {}
-      end
       ---@diagnostic disable-next-line: undefined-field
       require('lualine').setup(opts)
     end,
@@ -317,15 +314,6 @@ return {
           section_separators = { left = '', right = '' },
           disabled_filetypes = {
             statusline = {
-              'dashboard',
-              'dap-repl',
-              'neo-tree',
-              'dbui',
-              'toggleterm',
-              'OverseerList',
-              'Outline',
-            },
-            winbar = {
               'dashboard',
               'dap-repl',
               'neo-tree',
@@ -348,15 +336,18 @@ return {
           globalstatus = true,
           refresh = {
             statusline = 500,
-            tabline = 500,
-            winbar = 500,
           },
         },
         sections = {
           lualine_a = { 'mode' },
-          lualine_b = { 'branch' },
+          lualine_b = { { 'branch' }, Util.lualine.root_dir { cwd = true } },
           lualine_c = {
-            { "require'wttr'.text" },
+            { Util.lualine.pretty_path() },
+            {
+              function()
+                return require('lspsaga.symbol.winbar').get_bar()
+              end,
+            },
           },
           lualine_x = {
             { 'require("arrow.statusline").is_on_arrow_file()' },
@@ -398,12 +389,49 @@ return {
             { 'selectioncount' },
           },
           lualine_y = {
-            { 'progress', separator = ' ', padding = { left = 1, right = 0 } },
-            { 'location', padding = { left = 0, right = 1 } },
+            {
+              'diff',
+              symbols = {
+                added = icons.git.added,
+                modified = icons.git.modified,
+                removed = icons.git.removed,
+              },
+              source = function()
+                ---@diagnostic disable-next-line: undefined-field
+                local gitsigns = vim.b.gitsigns_status_dict
+                if gitsigns then
+                  return {
+                    added = gitsigns.added,
+                    modified = gitsigns.changed,
+                    removed = gitsigns.removed,
+                  }
+                end
+              end,
+            },
+            {
+              'diagnostics',
+              symbols = {
+                error = icons.diagnostics.Error,
+                warn = icons.diagnostics.Warn,
+                info = icons.diagnostics.Info,
+                hint = icons.diagnostics.Hint,
+              },
+            },
+            { 'filesize' },
+            {
+              'filetype',
+              icon_only = false,
+              colored = false,
+              separator = '',
+              padding = { left = 1, right = 1 },
+              icon = {
+                align = 'right',
+              },
+            },
+            'encoding',
+            'fileformat',
           },
-          lualine_z = {
-            'datetime',
-          },
+          lualine_z = {},
         },
         inactive_sections = {
           lualine_a = { 'mode' },
@@ -441,80 +469,20 @@ return {
             { 'trouble' },
             { 'selectioncount' },
           },
-          lualine_y = {
-            { 'progress', separator = ' ', padding = { left = 1, right = 0 } },
-            { 'location', padding = { left = 0, right = 1 } },
-          },
-          lualine_z = {
-            'datetime',
-          },
+          lualine_y = {},
+          lualine_z = {},
         },
         tabline = {},
         winbar = {
-          lualine_a = {
-            Util.lualine.root_dir { cwd = true },
-          },
-          lualine_b = {
-            { Util.lualine.pretty_path() },
-          },
-          lualine_c = {
-            {
-              function()
-                return require('lspsaga.symbol.winbar').get_bar()
-              end,
-            },
-          },
-          lualine_x = {
-            {
-              'diff',
-              symbols = {
-                added = icons.git.added,
-                modified = icons.git.modified,
-                removed = icons.git.removed,
-              },
-              source = function()
-                ---@diagnostic disable-next-line: undefined-field
-                local gitsigns = vim.b.gitsigns_status_dict
-                if gitsigns then
-                  return {
-                    added = gitsigns.added,
-                    modified = gitsigns.changed,
-                    removed = gitsigns.removed,
-                  }
-                end
-              end,
-            },
-            {
-              'diagnostics',
-              symbols = {
-                error = icons.diagnostics.Error,
-                warn = icons.diagnostics.Warn,
-                info = icons.diagnostics.Info,
-                hint = icons.diagnostics.Hint,
-              },
-            },
-            { 'filesize' },
-          },
-          lualine_y = {
-            {
-              'filetype',
-              icon_only = false,
-              colored = false,
-              separator = '',
-              padding = { left = 1, right = 1 },
-              icon = {
-                align = 'right',
-              },
-            },
-            { 'encoding' },
-            { 'fileformat' },
-          },
+          lualine_a = {},
+          lualine_b = {},
+          lualine_c = {},
+          lualine_x = {},
+          lualine_y = {},
           lualine_z = {},
         },
         inactive_winbar = {
-          lualine_a = {
-            { Util.lualine.pretty_path() },
-          },
+          lualine_a = {},
           lualine_b = {},
           lualine_c = {},
           lualine_x = {},
@@ -779,7 +747,7 @@ return {
         hide = {
           -- this is taken care of by lualine
           -- enabling this messes up the actual laststatus setting after loading a file
-          statusline = true,
+          statusline = false,
         },
         config = {
           week_header = {
