@@ -534,4 +534,15 @@ return {
       require('telescope-directory').setup {}
     end,
   },
+
+  {
+    'isak102/telescope-git-file-history.nvim',
+    dependencies = { 'nvim-telescope/telescope.nvim', 'tpope/vim-fugitive' },
+    keys = {
+      { '<leader>fh', '<CMD>Telescope git_file_history<CR>', desc = 'Search File History [fh]' },
+    },
+    config = function()
+      require('telescope').load_extension 'git_file_history'
+    end,
+  },
 }
