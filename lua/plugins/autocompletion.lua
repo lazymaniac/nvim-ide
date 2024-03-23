@@ -20,9 +20,6 @@ return {
       'hrsh7th/cmp-calc',
       -- Adds correct spelling completion capabilities
       'f3fora/cmp-spell',
-      -- Adds buffer and history completion to commands
-      'hrsh7th/cmp-cmdline',
-      'dmitmel/cmp-cmdline-history',
       -- Snippet Engine & its associated nvim-cmp source
       'L3MON4D3/LuaSnip',
       'saadparwaiz1/cmp_luasnip',
@@ -206,33 +203,6 @@ return {
         source.group_index = source.group_index or 1
       end
       cmp.setup(opts)
-      cmp.setup.cmdline('/', {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = {
-          { name = 'buffer' },
-          { name = 'cmp-cmdline-history' },
-        },
-      })
-      cmp.setup.cmdline('?', {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = {
-          { name = 'buffer' },
-          { name = 'cmp-cmdline-history' },
-        },
-      })
-      cmp.setup.cmdline(':', {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = cmp.config.sources({
-          { name = 'path' },
-        }, {
-          {
-            name = 'cmdline',
-            option = {
-              ignore_cmds = { 'Man', '!' },
-            },
-          },
-        }),
-      })
       -- link quarto and rmarkdown to markdown snippets
       luasnip.filetype_extend('quarto', { 'markdown' })
       luasnip.filetype_extend('rmarkdown', { 'markdown' })

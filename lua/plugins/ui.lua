@@ -102,7 +102,7 @@ return {
       },
       select = {
         enabled = true, -- Set to false to disable the vim.ui.select implementation
-        backend = { 'telescope', 'fzf_lua', 'fzf', 'builtin', 'nui' }, -- Priority list of preferred vim.select implementations
+        backend = { 'nui', 'telescope', 'fzf_lua', 'fzf', 'builtin' }, -- Priority list of preferred vim.select implementations
         trim_prompt = true, -- Trim trailing `:` from prompt
         -- Options for telescope selector
         -- These are passed into the telescope picker directly. Can be used like:
@@ -559,8 +559,8 @@ return {
     config = function()
       require('noice').setup {
         cmdline = {
-          enabled = true, -- enables the Noice cmdline UI
-          view = 'cmdline_popup', -- view for rendering the cmdline. Change to `cmdline` to get a classic cmdline at the bottom
+          enabled = false, -- enables the Noice cmdline UI
+          view = 'cmdline', -- view for rendering the cmdline. Change to `cmdline` to get a classic cmdline at the bottom
           opts = {}, -- global options for the cmdline. See section on views
           format = {
             -- conceal: (default=true) This will hide the text in the cmdline that matches the pattern.
