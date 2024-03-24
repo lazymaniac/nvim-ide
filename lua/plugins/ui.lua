@@ -108,20 +108,6 @@ return {
         -- These are passed into the telescope picker directly. Can be used like:
         -- telescope = require('telescope.themes').get_ivy({...})
         telescope = nil,
-        -- Options for fzf selector
-        fzf = {
-          window = {
-            width = 0.5,
-            height = 0.4,
-          },
-        },
-        -- Options for fzf-lua
-        fzf_lua = {
-          -- winopts = {
-          --   height = 0.5,
-          --   width = 0.5,
-          -- },
-        },
         -- Options for nui Menu
         nui = {
           position = '50%',
@@ -527,7 +513,7 @@ return {
     config = function()
       require('noice').setup {
         cmdline = {
-          enabled = false, -- enables the Noice cmdline UI
+          enabled = true, -- enables the Noice cmdline UI
           view = 'cmdline', -- view for rendering the cmdline. Change to `cmdline` to get a classic cmdline at the bottom
           opts = {}, -- global options for the cmdline. See section on views
           format = {
@@ -561,7 +547,7 @@ return {
           backend = 'nui', -- backend to use to show regular cmdline completions
           -- Icons for completion item kinds (see defaults at noice.config.icons.kinds)
           kind_icons = {}, -- set to `false` to disable icons
-        },
+        }  ,
         -- default options for require('noice').redirect
         -- see the section on Command Redirection
         redirect = {
