@@ -1,3 +1,15 @@
+local expert = function(filetype)
+  return 'I want you to act as a senior '
+    .. filetype
+    .. ' developer. I will give you specific code examples and ask you questions. I want you to advise me with explanations and code examples.'
+end
+
+local send_code = function(context)
+  local text = require('codecompanion.helpers.code').get_code(context.start_line, context.end_line)
+
+  return 'I have the following code:\n\n```' .. context.filetype .. '\n' .. text .. '\n```\n\n'
+end
+
 return {
 
   -- [[ AI ]] ---------------------------------------------------------------
@@ -35,7 +47,11 @@ return {
               api_key = 'cmd:cat ' .. vim.fn.expand '~/.gpt',
             },
           }),
-          inline = 'openai',
+          inline = require('codecompanion.adapters').use('openai', {
+            env = {
+              api_key = 'cmd:cat ' .. vim.fn.expand '~/.gpt',
+            },
+          }),
         },
         saved_chats = {
           save_dir = vim.fn.stdpath 'data' .. '/codecompanion/saved_chats', -- Path to save chats to
@@ -85,6 +101,89 @@ return {
         send_code = true, -- Send code context to the generative AI service? Disable to prevent leaking code outside of Neovim
         silence_notifications = false, -- Silence notifications for actions like saving saving chats?
         use_default_actions = true, -- Use the default actions in the action palette?
+        actions = {
+          {
+            name = 'Code advisor',
+            strategy = 'chat',
+            description = "Get advice on the code you've selected",
+            type = nil,
+            prompts = {
+              n = function()
+                return require('codecompanion').chat()
+              end,
+              v = {
+                {
+                  role = 'system',
+                  content = function(context)
+                    return 'I want you to act as a senior '
+                      .. context.filetype
+                      .. ' developer. I will ask you specific questions and I want you to return concise explanations and codeblock examples.'
+                  end,
+                },
+                {
+                  role = 'user',
+                  contains_code = true,
+                  content = function(context)
+                    return send_code(context)
+                  end,
+                },
+              },
+            },
+          },
+          {
+            name = 'LSP assistant',
+            strategy = 'chat',
+            description = 'Get help from OpenAI to fix LSP diagnostics',
+            type = nil,
+            opts = {
+              auto_submit = true, -- Automatically submit the chat
+              user_prompt = false, -- Prompt the user for their own input
+            },
+            prompts = {
+              v = {
+                {
+                  role = 'system',
+                  content = [[You are an expert coder and helpful assistant who can help debug code diagnostics, such as warning and error messages. When appropriate, give solutions with code snippets as fenced codeblocks with a language identifier to enable syntax highlighting.]],
+                },
+                {
+                  role = 'user',
+                  content = function(context)
+                    local diagnostics = require('codecompanion.helpers.lsp').get_diagnostics(context.start_line, context.end_line, context.bufnr)
+
+                    local concatenated_diagnostics = ''
+                    for i, diagnostic in ipairs(diagnostics) do
+                      concatenated_diagnostics = concatenated_diagnostics
+                        .. i
+                        .. '. Issue '
+                        .. i
+                        .. '\n  - Location: Line '
+                        .. diagnostic.line_number
+                        .. '\n  - Severity: '
+                        .. diagnostic.severity
+                        .. '\n  - Message: '
+                        .. diagnostic.message
+                        .. '\n'
+                    end
+
+                    return 'The programming language is ' .. context.filetype .. '. This is a list of the diagnostic messages:\n\n' .. concatenated_diagnostics
+                  end,
+                },
+                {
+                  role = 'user',
+                  contains_code = true,
+                  content = function(context)
+                    return 'This is the code, for context:\n\n'
+                      .. '```'
+                      .. context.filetype
+                      .. '\n'
+                      .. require('codecompanion.helpers.code').get_code(context.start_line, context.end_line, { show_line_numbers = true })
+                      .. '\n```\n\n'
+                  end,
+                },
+              },
+            },
+          },
+        },
       }
     end,
   },
@@ -270,44 +369,53 @@ return {
     end,
   },
 
-  -- [gen.nvim] - Integration with local LLMs
-  -- see: `:h gen.nvim`
+  -- [ollama.nvim] - Plugin to interact with local LLM
+  -- see: `:h ollama.nvim`
   {
-    'David-Kunz/gen.nvim',
-    enabled = true,
-    event = 'VeryLazy',
-    config = function()
-      require('gen').setup {
-        model = 'nous-hermes2:10.7b-solar-q5_K_M', -- The default model to use.
-        display_mode = 'split', -- The display mode. Can be "float" or "split".
-        show_prompt = true, -- Shows the Prompt submitted to Ollama.
-        show_model = true, -- Displays which model you are using at the beginning of your chat session.
-        no_auto_close = true, -- Never closes the window automatically.
-        init = function(options)
-          vim.print(options)
-          pcall(io.popen, 'ollama serve > /dev/null 2>&1 &')
-        end,
-        -- Function to initialize Ollama
-        command = 'curl --silent --no-buffer -X POST http://localhost:11434/api/generate -d $body',
-        -- The command for the Ollama service. You can use placeholders $prompt, $model and $body (shellescaped).
-        -- This can also be a lua function returning a command string, with options as the input parameter.
-        -- The executed command must return a JSON object with { response, context }
-        -- (context property is optional).
-        debug = false, -- Prints errors and the command which is run.
-      }
-      require('gen').prompts['Fix_Code'] = {
-        prompt = 'Your task is to fix the following code. Only output the result in format ```$filetype\n...\n```:\n```$filetype\n$text\n```',
-        replace = false,
-        extract = '```$filetype\n(.-)```',
-      }
-      require('gen').prompts['Generate_Tests'] = {
-        prompt = 'Write tests for the following code. Only output the result in format ```$filetype\n...\n```:\n```$filetype\n$text\n```',
-        replace = false,
-        extract = '```$filetype\n(.-)```',
-      }
-    end,
+    'nomnivore/ollama.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+    },
+    cmd = { 'Ollama', 'OllamaModel', 'OllamaServe', 'OllamaServeStop' },
     keys = {
-      { '<leader>zz', ':Gen<CR>', desc = 'Local LLM [zz]', mode = { 'n', 'v' } },
+      { '<leader>zz', ":<c-u>lua require('ollama').prompt()<cr>", desc = 'ollama prompt', mode = { 'n', 'v' } },
+    },
+    opts = {
+      model = 'nous-hermes2:10.7b-solar-q5_K_M',
+      url = 'http://127.0.0.1:11434',
+      serve = {
+        on_start = false,
+        command = 'ollama',
+        args = { 'serve' },
+        stop_command = 'pkill',
+        stop_args = { '-SIGTERM', 'ollama' },
+      },
+      -- View the actual default prompts in ./lua/ollama/prompts.lua
+      prompts = {
+        Implement_Code = {
+          -- Tokens in prompt:
+          -- $input	  Prompt the user for input.
+          -- $sel	    The current or previous selection.
+          -- $ftype 	The filetype of the current buffer.
+          -- $fname	  The filename of the current buffer.
+          -- $buf	    The full contents of the current buffer.
+          -- $line	  The current line in the buffer.
+          -- $lnum	  The current line number in the buffer.
+          prompt = 'Implement code:\n$sel \naccording to instructions: $input. Only output the result in format ```$ftype\n...\n```:\n```$ftype\n```',
+          input_label = '> ',
+          -- Available actions:
+          -- display: Stream and display the response in a floating window.
+          -- replace: Replace the current selection with the response.
+          -- Uses the extract pattern to extract the response.
+          -- insert: Insert the response at the current cursor line
+          -- Uses the extract pattern to extract the response.
+          -- display_replace: Stream and display the response in a floating window, then replace the current selection with the response.
+          -- Uses the extract pattern to extract the response.
+          -- display_insert: Stream and display the response in a floating window, then insert the response at the current cursor line.
+          -- Uses the extract pattern to extract the response.
+          action = 'replace',
+        },
+      },
     },
   },
 }

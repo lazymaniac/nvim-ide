@@ -18,7 +18,7 @@ return {
   -- see: `:h image.nvim`
   {
     '3rd/image.nvim',
-    enabled = false,
+    enabled = true,
     opts = {
       backend = 'kitty',
       integrations = {

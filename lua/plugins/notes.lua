@@ -1,13 +1,19 @@
 return {
 
   -- [[ NOTE TAKING ]] ---------------------------------------------------------------
+
+  {
+    'vhyrro/luarocks.nvim',
+    priority = 1000, -- We'd like this plugin to load first out of the rest
+    config = true, -- This automatically runs `require("luarocks-nvim").setup()`
+  },
+
   -- [neorg] - Note taking, calendar, presentations, journal
   -- see: `:h neorg`
   {
     'nvim-neorg/neorg',
     event = 'VeryLazy',
-    build = ':Neorg sync-parsers',
-    dependencies = { 'nvim-lua/plenary.nvim', 'nvim-neorg/neorg-telescope' },
+    dependencies = { 'nvim-lua/plenary.nvim', 'nvim-neorg/neorg-telescope', 'luarocks.nvim' },
     -- stylua: ignore
     keys = {
       { '<leader>nn', '<cmd>Neorg index<cr>', mode = { 'n', 'v' }, desc = 'Notes index [nn]' },
@@ -72,7 +78,7 @@ return {
   {
     'massix/org-checkbox.nvim',
     config = function()
-      require('orgcheckbox').setup({ lhs = "<leader>oT" })
+      require('orgcheckbox').setup { lhs = '<leader>oT' }
     end,
     ft = { 'org' },
   },
