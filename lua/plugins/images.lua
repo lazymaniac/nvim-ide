@@ -1,3 +1,6 @@
+package.path = package.path .. ';' .. vim.fn.expand '$HOME' .. '/.luarocks/share/lua/5.1/?/init.lua;'
+package.path = package.path .. ';' .. vim.fn.expand '$HOME' .. '/.luarocks/share/lua/5.1/?.lua;'
+
 return {
 
   -- [[ IMAGES ]] ---------------------------------------------------------------
@@ -48,5 +51,4 @@ return {
       hijack_file_patterns = { '*.png', '*.jpg', '*.jpeg', '*.gif', '*.webp' }, -- render image files as images when opened
     },
   },
-
 }
