@@ -38,8 +38,8 @@ return {
       { '<leader>dj', function() require('dap').down() end, desc = 'Down [dj]' },
       { '<leader>dk', function() require('dap').up() end, desc = 'Up [dk]' },
       { '<leader>dl', function() require('dap').run_last() end, desc = 'Run Last [dl]' },
-      { '<leader>dO', function() require('dap').step_out() end, desc = 'Step Out [do]' },
-      { '<leader>do', function() require('dap').step_over() end, desc = 'Step Over [dO]' },
+      { '<leader>dO', function() require('dap').step_out() end, desc = 'Step Out [dO]' },
+      { '<leader>do', function() require('dap').step_over() end, desc = 'Step Over [do]' },
       { '<leader>dp', function() require('dap').pause() end, desc = 'Pause [dp]' },
       { '<leader>dr', function() require('dap').repl.toggle() end, desc = 'Toggle REPL [dr]' },
       { '<leader>ds', function() require('dap').session() end, desc = 'Session [ds]' },
@@ -71,9 +71,11 @@ return {
   {
     'rcarriga/nvim-dap-ui',
     event = 'VeryLazy',
+    dependencies = { 'mfussenegger/nvim-dap', 'nvim-neotest/nvim-nio' },
     -- stylua: ignore
     keys = {
-      { '<leader>du', function() require('dapui').toggle {} end, desc = 'Dap UI [du]' },
+      { '<leader>du', function() require('dapui').toggle { layout = 1, reset = true } end, desc = 'Dap UI Full [du]' },
+      { '<leader>dU', function() require('dapui').toggle { layout = 0, reset = true } end, desc = 'Dap UI Console [du]' },
       { '<leader>de', function() require('dapui').eval() end, desc = 'Eval [de]', mode = { 'n', 'v' } },
       { '<leader>df', function() require('dapui').float_element(nil, { width = 184, height = 44, enter = true, position = 'center' }) end, desc = 'Open floating DAP [df]' },
     },
@@ -101,7 +103,7 @@ return {
         element_mappings = {},
         expand_lines = true,
         floating = {
-          border = 'single',
+          border = 'rounded',
           mappings = {
             close = { 'q', '<Esc>' },
           },
@@ -113,6 +115,13 @@ return {
           expanded = '',
         },
         layouts = {
+          {
+            elements = {
+              { id = 'console', size = 1.0 },
+            },
+            position = 'bottom',
+            size = 15,
+          },
           {
             elements = {
               { id = 'console', size = 0.65 },

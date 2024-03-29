@@ -325,10 +325,12 @@ return {
           },
         },
         sections = {
-          lualine_a = { 'mode' },
-          lualine_b = { { 'branch' }, Util.lualine.root_dir { cwd = true } },
-          lualine_c = {
+          lualine_a = { Util.lualine.root_dir { cwd = true } },
+          lualine_b = {
+            { 'branch' },
             { Util.lualine.pretty_path() },
+          },
+          lualine_c = {
             {
               function()
                 return require('lspsaga.symbol.winbar').get_bar()
@@ -547,7 +549,7 @@ return {
           backend = 'nui', -- backend to use to show regular cmdline completions
           -- Icons for completion item kinds (see defaults at noice.config.icons.kinds)
           kind_icons = {}, -- set to `false` to disable icons
-        }  ,
+        },
         -- default options for require('noice').redirect
         -- see the section on Command Redirection
         redirect = {
