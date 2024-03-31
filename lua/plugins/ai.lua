@@ -26,10 +26,53 @@ As a skilled software engineer you will produce fully complete and working code 
 The user is going to provide you what they wish to be coded, possibly with a sample of the code that they wish to be updated or simply added to.
 ]]
 
+local expert = function(filetype)
+  return 'I want you to act as a senior '
+    .. filetype
+    .. ' developer. I will give you specific code examples and ask you questions. I want you to advise me with explanations and code examples.'
+end
+
 local send_code = function(context)
   local text = require('codecompanion.helpers.code').get_code(context.start_line, context.end_line)
   return 'I have the following code:\n\n```' .. context.filetype .. '\n' .. text .. '\n```\n\n'
 end
+
+local function build_act_as_persona(languageName)
+  return {
+    name = languageName,
+    strategy = 'chat',
+    description = 'Chat as a senior ' .. languageName .. ' developer',
+    type = languageName:lower(),
+    prompts = {
+      {
+        role = 'system',
+        content = expert 'languageName',
+      },
+      {
+        role = 'user',
+        contains_code = true,
+        condition = function(context)
+          return context.is_visual
+        end,
+        content = function(context)
+          return send_code(context)
+        end,
+      },
+      {
+        role = 'user',
+        condition = function(context)
+          return not context.is_visual
+        end,
+        content = '\n \n', -- Assuming this is static
+      },
+    },
+  }
+end
+
+local ollama_model_parameters = {
+  num_ctx = 4096,
+  temperature = 0.6,
+}
 
 return {
 
@@ -69,10 +112,7 @@ return {
           --  display_replace: Stream and display the response in a floating window, then replace the current selection with the response. Uses the extract pattern to extract the response.
           --  display_insert: Stream and display the response in a floating window, then insert the response at the current cursor line. Uses the extract pattern to extract the response.
           action = 'display',
-          options = {
-            temperature = 0.9,
-            repeat_penalty = 1.5,
-          },
+          options = ollama_model_parameters,
         },
         Code_Chat = {
           model = ollama_coder_model,
@@ -80,16 +120,14 @@ return {
           system = aideveloper_prompt_ollama,
           input_label = '󰠗 : ',
           action = 'display',
-          options = {
-            num_ctx = 4096,
-            temperature = 0.6,
-          },
+          options = ollama_model_parameters,
         },
         Explain_Code = {
           model = ollama_coder_model,
           prompt = 'Explain this code:\n```$ftype\n$sel\n```',
           system = aideveloper_prompt_ollama,
           action = 'display',
+          opt = ollama_model_parameters,
         },
         General_Chat = {
           model = ollama_general_model,
@@ -97,23 +135,15 @@ return {
           system = aideveloper_prompt_ollama,
           input_label = '󰠗 : ',
           action = 'display',
-          options = {
-            num_ctx = 4096,
-            temperature = 0.6,
-          },
+          options = ollama_model_parameters,
         },
         Simplify_Code = {
           model = ollama_coder_model,
-          prompt = 'Simplify the following $ftype code so that it is both easier to read and understand. '
-            .. response_format
-            .. '\n\n```$ftype\n$sel```',
+          prompt = 'Simplify the following $ftype code so that it is both easier to read and understand. ' .. response_format .. '\n\n```$ftype\n$sel```',
           system = aideveloper_prompt_ollama,
           action = 'display_replace',
           extract = '```$ftype\n(.-)```',
-          options = {
-            num_ctx = 4096,
-            temperature = 0.6,
-          },
+          options = ollama_model_parameters,
         },
         Modify_Code = {
           model = ollama_coder_model,
@@ -122,10 +152,7 @@ return {
           action = 'display_replace',
           extract = '```$ftype\n(.-)```',
           input_label = '󰠗 :',
-          options = {
-            num_ctx = 4096,
-            temperature = 0.6,
-          },
+          options = ollama_model_parameters,
         },
         Implement_Code = {
           model = ollama_coder_model,
@@ -134,10 +161,7 @@ return {
           action = 'display_insert',
           extract = '```$ftype\n(.-)```',
           input_label = '󰠗 :',
-          options = {
-            num_ctx = 4096,
-            temperature = 0.6,
-          },
+          options = ollama_model_parameters,
         },
         Implement_Tests = {
           model = ollama_coder_model,
@@ -146,30 +170,21 @@ return {
           action = 'display_insert',
           extract = '```$ftype\n(.-)```',
           input_label = '󰠗 :',
-          options = {
-            num_ctx = 4096,
-            temperature = 0.6,
-          },
+          options = ollama_model_parameters,
         },
         Review_Selected_Code = {
           model = ollama_coder_model,
           prompt = 'Respond with review of provided $ftype code:\n$sel \nSuggest improvements in code readability, simplicity, performance, naming and best $ftype practices',
           system = aideveloper_prompt_ollama,
           action = 'display',
-          options = {
-            num_ctx = 4096,
-            temperature = 0.6,
-          },
+          options = ollama_model_parameters,
         },
         Review_File = {
           model = ollama_coder_model,
           prompt = 'Respond with review of provided code:\n$buf\nSuggest improvements in code readability, simplicity, performance, naming and best practices',
           system = aideveloper_prompt_ollama,
           action = 'display',
-          options = {
-            num_ctx = 4096,
-            temperature = 0.6,
-          },
+          options = ollama_model_parameters,
         },
       },
     },
@@ -232,7 +247,7 @@ return {
               buflisted = false,
             },
             float_options = { -- Float window options if the type is "float"
-              border = 'single',
+              border = 'rounded',
               buflisted = false,
               max_height = 0,
               max_width = 0,
@@ -265,6 +280,170 @@ return {
         silence_notifications = false, -- Silence notifications for actions like saving chats?
         use_default_actions = true, -- Use the default actions in the action palette?
         actions = {
+          {
+            name = 'Chat',
+            strategy = 'chat',
+            description = 'Open/restore a chat buffer to converse with OpenAI',
+            type = nil,
+            prompts = {
+              n = function()
+                return require('codecompanion').chat()
+              end,
+              v = {
+                {
+                  role = 'system',
+                  content = function(context)
+                    return 'I want you to act as a senior '
+                      .. context.filetype
+                      .. ' developer. I will give you specific code examples and ask you questions. I want you to advise me with explanations and code examples.'
+                  end,
+                },
+                {
+                  role = 'user',
+                  contains_code = true,
+                  content = function(context)
+                    return send_code(context)
+                  end,
+                },
+              },
+            },
+          },
+          {
+            name = 'Chat as ...',
+            strategy = 'chat',
+            description = 'Open a chat buffer, acting as a specific persona',
+            picker = {
+              prompt = 'Chat as a persona',
+              items = {
+                build_act_as_persona 'JavaScript',
+                build_act_as_persona 'Lua',
+                build_act_as_persona 'Java',
+                build_act_as_persona 'Kotlin',
+                build_act_as_persona 'Python',
+                build_act_as_persona 'Rust',
+              },
+            },
+          },
+          {
+            name = 'Inline code ...',
+            strategy = 'inline',
+            description = 'Get OpenAI to write/refactor code for you',
+            picker = {
+              prompt = 'Select an inline code action',
+              items = {
+                {
+                  name = 'Custom',
+                  strategy = 'inline',
+                  description = 'Custom user input',
+                  opts = {
+                    user_prompt = true,
+                    -- Placement should be determined
+                  },
+                  prompts = {
+                    {
+                      role = 'system',
+                      content = function(context)
+                        if context.buftype == 'terminal' then
+                          return 'I want you to act as an expert in writing terminal commands that will work for my current shell '
+                            .. os.getenv 'SHELL'
+                            .. ". I will ask you specific questions and I want you to return the raw command only (no codeblocks and explanations). If you can't respond with a command, respond with nothing"
+                        end
+                        return 'I want you to act as a senior '
+                          .. context.filetype
+                          .. " developer. I will ask you specific questions and I want you to return raw code only (no codeblocks and no explanations). If you can't respond with code, respond with nothing"
+                      end,
+                    },
+                  },
+                },
+                {
+                  name = '/doc',
+                  strategy = 'inline',
+                  description = 'Add a documentation comment',
+                  opts = {
+                    modes = { 'v' },
+                    placement = 'before', -- cursor|before|after|replace|new
+                  },
+                  prompts = {
+                    {
+                      role = 'system',
+                      content = function(context)
+                        return 'You are an expert coder and helpful assistant who can help write documentation comments for the '
+                          .. context.filetype
+                          .. ' language'
+                      end,
+                    },
+                    {
+                      role = 'user',
+                      contains_code = true,
+                      content = function(context)
+                        return send_code(context)
+                      end,
+                    },
+                    {
+                      role = 'user',
+                      content = 'Please add a documentation comment to the provided code and reply with just the comment only and no explanation, no codeblocks and do not return the code either. If necessary add parameter and return types',
+                    },
+                  },
+                },
+                {
+                  name = '/optimize',
+                  strategy = 'inline',
+                  description = 'Optimize the selected code',
+                  opts = {
+                    modes = { 'v' },
+                    placement = 'replace',
+                  },
+                  prompts = {
+                    {
+                      role = 'system',
+                      content = function(context)
+                        return 'You are an expert coder and helpful assistant who can help optimize code for the ' .. context.filetype .. ' language'
+                      end,
+                    },
+                    {
+                      role = 'user',
+                      contains_code = true,
+                      content = function(context)
+                        return send_code(context)
+                      end,
+                    },
+                    {
+                      role = 'user',
+                      content = 'Please optimize the provided code. Please just respond with the code only and no explanation or markdown block syntax',
+                    },
+                  },
+                },
+                {
+                  name = '/test',
+                  strategy = 'inline',
+                  description = 'Create unit tests for the selected code',
+                  opts = {
+                    modes = { 'v' },
+                    placement = 'new',
+                  },
+                  prompts = {
+                    {
+                      role = 'system',
+                      content = function(context)
+                        return 'You are an expert coder and helpful assistant who can help write unit tests for the ' .. context.filetype .. ' language'
+                      end,
+                    },
+                    {
+                      role = 'user',
+                      contains_code = true,
+                      content = function(context)
+                        return send_code(context)
+                      end,
+                    },
+                    {
+                      role = 'user',
+                      content = 'Please create a unit test for the provided code. Please just respond with the code only and no explanation or markdown block syntax',
+                    },
+                  },
+                },
+              },
+            },
+          },
           {
             name = 'Code advisor',
             strategy = 'chat',
@@ -348,5 +527,4 @@ return {
       }
     end,
   },
-
 }
