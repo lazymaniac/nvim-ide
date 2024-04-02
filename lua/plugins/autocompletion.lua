@@ -11,7 +11,6 @@ return {
       -- Adds LSP completion capabilities
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-nvim-lsp-signature-help',
-      'ray-x/cmp-treesitter',
       -- Adds buffer text completion capabilities
       'hrsh7th/cmp-buffer',
       -- Adds file path completion capabilities
@@ -154,7 +153,6 @@ return {
             },
           },
           { name = 'latex_symbols', keyword_length = 2, group_index = 3 },
-          { name = 'treesitter', keyword_length = 1, group_index = 2 },
           { name = 'buffer', keyword_length = 2, group_index = 2 },
         },
         formatting = {
@@ -173,7 +171,6 @@ return {
               spell = '[Spell]',
               pandoc_references = '[Pandoc]',
               tags = '[Tag]',
-              treesitter = '[TS]',
               latex_symbols = '[Tex]',
               emoji = '[Emoji]',
             })[entry.source.name]

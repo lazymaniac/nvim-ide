@@ -3,7 +3,7 @@ local Util = require 'util'
 -- This is the same as in lspconfig.server_configurations.jdtls, but avoids
 -- needing to require that when this module loads.
 local java_filetypes = { 'java' }
-local root_markers = { 'gradlew', '.git', 'mvnw' }
+local root_markers = { 'gradlew', 'mvnw', 'gradle', 'mvn' }
 
 -- Utility function to extend or override a config table, similar to the way
 -- that Plugin.opts works.

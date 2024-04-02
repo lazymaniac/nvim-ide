@@ -2,10 +2,12 @@ local response_format = 'Respond EXACTLY in this format:\n```$ftype\n<your code>
 
 local ollama_general_model = 'gemma'
 -- local ollama_coder_model = 'dolphincoder'
-local ollama_coder_model = 'opencoder'
+-- local ollama_coder_model = 'opencoder'
+local ollama_coder_model = 'eramax/starling-lm-7b-beta:q6'
 
-local aideveloper_prompt_gpt = [[
-You’re going to act as ‘aideveloper’. An expert programmer with a detailed understanding of high quality coding practices and a technical focus. While in ‘aideveloper’ mode you will act as an organised developer who is meticulous when it comes to following ALL instructions given to you by the user. If you're unsure please ask question for further explanation. Don't assume the solution if something is not clear.
+local function system_prompt_gpt(filetype)
+  return [[
+ChatGPT, you’re going to act as ‘aideveloper’. An expert ]] .. filetype .. [[ programmer with a detailed understanding of high quality coding practices and a technical focus. While in ‘aideveloper’ mode you will act as an organised developer who is meticulous when it comes to following ALL instructions given to you by the user.
 
 As a skilled software engineer you will produce fully complete and working code that is easy to read and understand. The code you write will be well organised, well optimised, make use of clear comments to explain the code, and follow a modular layout. To ensure the code is usable, you should include error handling for such events as null values. As ‘aideveloper’ your code will be extremely well formatted, clean, robust, stable, efficient, well designed and maintainable. The code itself can be long if required as there are no restrictions on code length.
 
@@ -13,20 +15,17 @@ To ensure that you develop only complete and quality code there are some rules y
 
 Your purpose is to produce the highest quality working code for the brief the user provides, with only a single opening message. All details for the application including all features and functions the user provides has to be represented within the code produced. Importantly, You must ALWAYS implement all design or styling requests the user provides. All designs must be created to be well spaced out, aligned and designed with a good user experience in mind. You will not produce a summarised version of the code, length is not a restriction and therefore you must create all required functionality and implement all required design elements.
 
-When outputting the code you will begin your message with a title: “aideveloper.”. Then under this you will give a short, concise single line summary describing the users request to ensure that your understanding aligns with what the user is after. You will then provide the code required. After this you will provide the user with concise bullet point instructions for how they can run the code you’ve provided (maximum 5 values). Finally you will ask the user if they wish to make any further changes to the code from here.
-
-The user is going to provide you what they wish to be coded, possibly with a sample of the code that they wish to be updated or simply added to.
+When outputting the code you will begin your message with a short, concise single line summary describing the users request to ensure that your understanding aligns with what the user is after. You will then provide the code required. After this you will provide the user with concise bullet point instructions for how they can run the code you’ve provided (maximum 5 values). Finally you will ask the user if they wish to make any further changes to the code from here.
 ]]
+end
 
-local aideveloper_prompt_ollama = [[
+local system_prompt_ollama = [[
 You’re going to act as An expert $ftype programmer with a detailed understanding of high quality coding practices and a technical focus. You will act as an organised developer who is meticulous when it comes to following ALL instructions given to you by the user.
 
 As a skilled software engineer you will produce fully complete and working code that is easy to read and understand. The code you write will be well organised, well optimised, make use of clear comments to explain the code, and follow a modular layout. To ensure the code is usable, you should include error handling for such events as null values. As ‘aideveloper’ your code will be extremely well formatted, clean, robust, stable, efficient, well designed and maintainable. The code itself can be long if required as there are no restrictions on code length.
-
-The user is going to provide you what they wish to be coded, possibly with a sample of the code that they wish to be updated or simply added to.
 ]]
 
-local expert = function(filetype)
+local act_as_prompt = function(filetype)
   return 'I want you to act as a senior '
     .. filetype
     .. ' developer. I will give you specific code examples and ask you questions. I want you to advise me with explanations and code examples.'
@@ -46,7 +45,7 @@ local function build_act_as_persona(languageName)
     prompts = {
       {
         role = 'system',
-        content = expert 'languageName',
+        content = act_as_prompt(languageName),
       },
       {
         role = 'user',
@@ -70,8 +69,12 @@ local function build_act_as_persona(languageName)
 end
 
 local ollama_model_parameters = {
-  num_ctx = 4096,
-  temperature = 0.6,
+  num_ctx = 4096, -- Sets the size of the context window used to generate the next token. (Default: 2048)
+  repeat_last_n = 128, -- Sets how far back for the model to look back to prevent repetition. (Default: 64, 0 = disabled, -1 = num_ctx)
+  temperature = 0.9, -- The temperature of the model. Increasing the temperature will make the model answer more creatively. (Default: 0.8)
+  repeat_penalty = 1.2, -- Sets how strongly to penalize repetitions. A higher value (e.g., 1.5) will penalize repetitions more strongly, while a lower value (e.g., 0.9) will be more lenient. (Default: 1.1)
+  top_k = 40, -- Reduces the probability of generating nonsense. A higher value (e.g. 100) will give more diverse answers, while a lower value (e.g. 10) will be more conservative. (Default: 40)
+  top_p = 0.99, -- Works together with top-k. A higher value (e.g., 0.95) will lead to more diverse text, while a lower value (e.g., 0.5) will generate more focused and conservative text. (Default: 0.9)
 }
 
 return {
@@ -103,7 +106,7 @@ return {
           -- $line    The current line in the buffer.
           -- $lnum    The current line number in the buffer.
           prompt = 'I have a question about my code: $input\n\n Here is the code:\n```$ftype\n$sel```',
-          system = aideveloper_prompt_ollama,
+          system = system_prompt_ollama,
           input_label = '󰠗 : ',
           -- Available actions:
           --  display: Stream and display the response in a floating window.
@@ -117,7 +120,7 @@ return {
         Code_Chat = {
           model = ollama_coder_model,
           prompt = '$input',
-          system = aideveloper_prompt_ollama,
+          system = system_prompt_ollama,
           input_label = '󰠗 : ',
           action = 'display',
           options = ollama_model_parameters,
@@ -125,14 +128,13 @@ return {
         Explain_Code = {
           model = ollama_coder_model,
           prompt = 'Explain this code:\n```$ftype\n$sel\n```',
-          system = aideveloper_prompt_ollama,
           action = 'display',
           opt = ollama_model_parameters,
         },
         General_Chat = {
           model = ollama_general_model,
           prompt = '$input',
-          system = aideveloper_prompt_ollama,
+          system = system_prompt_ollama,
           input_label = '󰠗 : ',
           action = 'display',
           options = ollama_model_parameters,
@@ -140,7 +142,7 @@ return {
         Simplify_Code = {
           model = ollama_coder_model,
           prompt = 'Simplify the following $ftype code so that it is both easier to read and understand. ' .. response_format .. '\n\n```$ftype\n$sel```',
-          system = aideveloper_prompt_ollama,
+          system = system_prompt_ollama,
           action = 'display_replace',
           extract = '```$ftype\n(.-)```',
           options = ollama_model_parameters,
@@ -148,7 +150,7 @@ return {
         Modify_Code = {
           model = ollama_coder_model,
           prompt = 'Modify this $ftype code in the following way: $input\n\n' .. response_format .. '\n\n```$ftype\n$sel```',
-          system = aideveloper_prompt_ollama,
+          system = system_prompt_ollama,
           action = 'display_replace',
           extract = '```$ftype\n(.-)```',
           input_label = '󰠗 :',
@@ -157,7 +159,7 @@ return {
         Implement_Code = {
           model = ollama_coder_model,
           prompt = 'Implement code according to instructions: $input.' .. response_format,
-          system = aideveloper_prompt_ollama,
+          system = system_prompt_ollama,
           action = 'display_insert',
           extract = '```$ftype\n(.-)```',
           input_label = '󰠗 :',
@@ -166,7 +168,7 @@ return {
         Implement_Tests = {
           model = ollama_coder_model,
           prompt = 'Implement tests for provided $ftype code: \n$sel.\n\n' .. response_format,
-          system = aideveloper_prompt_ollama,
+          system = system_prompt_ollama,
           action = 'display_insert',
           extract = '```$ftype\n(.-)```',
           input_label = '󰠗 :',
@@ -175,14 +177,12 @@ return {
         Review_Selected_Code = {
           model = ollama_coder_model,
           prompt = 'Respond with review of provided $ftype code:\n$sel \nSuggest improvements in code readability, simplicity, performance, naming and best $ftype practices',
-          system = aideveloper_prompt_ollama,
           action = 'display',
           options = ollama_model_parameters,
         },
         Review_File = {
           model = ollama_coder_model,
           prompt = 'Respond with review of provided code:\n$buf\nSuggest improvements in code readability, simplicity, performance, naming and best practices',
-          system = aideveloper_prompt_ollama,
           action = 'display',
           options = ollama_model_parameters,
         },
@@ -278,7 +278,7 @@ return {
         log_level = 'ERROR', -- TRACE|DEBUG|ERROR
         send_code = true, -- Send code context to the generative AI service? Disable to prevent leaking code outside of Neovim
         silence_notifications = false, -- Silence notifications for actions like saving chats?
-        use_default_actions = true, -- Use the default actions in the action palette?
+        use_default_actions = false, -- Use the default actions in the action palette?
         actions = {
           {
             name = 'Chat',
@@ -360,28 +360,29 @@ return {
                   strategy = 'inline',
                   description = 'Add a documentation comment',
                   opts = {
-                    modes = { 'v' },
                     placement = 'before', -- cursor|before|after|replace|new
                   },
                   prompts = {
-                    {
-                      role = 'system',
-                      content = function(context)
-                        return 'You are an expert coder and helpful assistant who can help write documentation comments for the '
-                          .. context.filetype
-                          .. ' language'
-                      end,
-                    },
-                    {
-                      role = 'user',
-                      contains_code = true,
-                      content = function(context)
-                        return send_code(context)
-                      end,
-                    },
-                    {
-                      role = 'user',
-                      content = 'Please add a documentation comment to the provided code and reply with just the comment only and no explanation, no codeblocks and do not return the code either. If necessary add parameter and return types',
+                    v = {
+                      {
+                        role = 'system',
+                        content = function(context)
+                          return 'You are an expert coder and helpful assistant who can help write documentation comments for the '
+                            .. context.filetype
+                            .. ' language'
+                        end,
+                      },
+                      {
+                        role = 'user',
+                        contains_code = true,
+                        content = function(context)
+                          return send_code(context)
+                        end,
+                      },
+                      {
+                        role = 'user',
+                        content = 'Please add a documentation comment to the provided code and reply with just the comment only and no explanation, no codeblocks and do not return the code either. If necessary add parameter and return types',
+                      },
                     },
                   },
                 },
@@ -390,26 +391,27 @@ return {
                   strategy = 'inline',
                   description = 'Optimize the selected code',
                   opts = {
-                    modes = { 'v' },
                     placement = 'replace',
                   },
                   prompts = {
-                    {
-                      role = 'system',
-                      content = function(context)
-                        return 'You are an expert coder and helpful assistant who can help optimize code for the ' .. context.filetype .. ' language'
-                      end,
-                    },
-                    {
-                      role = 'user',
-                      contains_code = true,
-                      content = function(context)
-                        return send_code(context)
-                      end,
-                    },
-                    {
-                      role = 'user',
-                      content = 'Please optimize the provided code. Please just respond with the code only and no explanation or markdown block syntax',
+                    v = {
+                      {
+                        role = 'system',
+                        content = function(context)
+                          return 'You are an expert coder and helpful assistant who can help optimize code for the ' .. context.filetype .. ' language'
+                        end,
+                      },
+                      {
+                        role = 'user',
+                        contains_code = true,
+                        content = function(context)
+                          return send_code(context)
+                        end,
+                      },
+                      {
+                        role = 'user',
+                        content = 'Please optimize the provided code. Please just respond with the code only and no explanation or markdown block syntax',
+                      },
                     },
                   },
                 },
@@ -418,26 +420,27 @@ return {
                   strategy = 'inline',
                   description = 'Create unit tests for the selected code',
                   opts = {
-                    modes = { 'v' },
                     placement = 'new',
                   },
                   prompts = {
-                    {
-                      role = 'system',
-                      content = function(context)
-                        return 'You are an expert coder and helpful assistant who can help write unit tests for the ' .. context.filetype .. ' language'
-                      end,
-                    },
-                    {
-                      role = 'user',
-                      contains_code = true,
-                      content = function(context)
-                        return send_code(context)
-                      end,
-                    },
-                    {
-                      role = 'user',
-                      content = 'Please create a unit test for the provided code. Please just respond with the code only and no explanation or markdown block syntax',
+                    v = {
+                      {
+                        role = 'system',
+                        content = function(context)
+                          return 'You are an expert coder and helpful assistant who can help write unit tests for the ' .. context.filetype .. ' language'
+                        end,
+                      },
+                      {
+                        role = 'user',
+                        contains_code = true,
+                        content = function(context)
+                          return send_code(context)
+                        end,
+                      },
+                      {
+                        role = 'user',
+                        content = 'Please create a unit test for the provided code. Please just respond with the code only and no explanation or markdown block syntax',
+                      },
                     },
                   },
                 },
