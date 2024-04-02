@@ -4,7 +4,7 @@ return {
     'williamboman/mason.nvim',
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, { 'black', 'ruff', 'pydocstyle', 'pylama', 'pylint' })
+      vim.list_extend(opts.ensure_installed, { 'black', 'ruff', 'pydocstyle' })
     end,
   },
 
@@ -30,7 +30,7 @@ return {
     'mfussenegger/nvim-lint',
     opts = {
       linters_by_ft = {
-        python = { 'ruff', 'pydocstyle', 'pylama', 'pylint' },
+        python = { 'ruff', 'pydocstyle' },
       },
     },
   },
@@ -41,11 +41,12 @@ return {
       servers = {
         pyright = {
           settings = {
+            pyright = {
+              disableOrganizeImports = true, -- Using Ruff
+            },
             python = {
               analysis = {
-                diagnosticSeverityOverrides = {
-                  reportUnusedExpression = 'none',
-                },
+                ignore = { '*' }, -- Using Ruff
               },
             },
           },

@@ -141,6 +141,7 @@ return {
   {
     'nvim-treesitter/nvim-treesitter-textobjects',
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    enabled = false,
     event = 'VeryLazy',
     config = function()
       -- When in diff mode, we want to use the default
