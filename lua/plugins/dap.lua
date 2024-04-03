@@ -74,8 +74,8 @@ return {
     dependencies = { 'mfussenegger/nvim-dap', 'nvim-neotest/nvim-nio' },
     -- stylua: ignore
     keys = {
-      { '<leader>du', function() require('dapui').toggle { layout = 1, reset = true } end, desc = 'Dap UI Full [du]' },
-      { '<leader>dU', function() require('dapui').toggle { layout = 0, reset = true } end, desc = 'Dap UI Console [du]' },
+      { '<leader>du', function() require('dapui').toggle { layout = 1, reset = true } end, desc = 'Dap Tools [du]' },
+      { '<leader>dU', function() require('dapui').toggle { layout = 2, reset = true } end, desc = 'Dap Console [du]' },
       { '<leader>de', function() require('dapui').eval() end, desc = 'Eval [de]', mode = { 'n', 'v' } },
       { '<leader>df', function() require('dapui').float_element(nil, { width = 184, height = 44, enter = true, position = 'center' }) end, desc = 'Open floating DAP [df]' },
     },
@@ -117,28 +117,21 @@ return {
         layouts = {
           {
             elements = {
+              { id = 'scopes', size = 0.2 },
+              { id = 'repl', size = 0.2 },
+              { id = 'breakpoints', size = 0.2 },
+              { id = 'watches', size = 0.2 },
+              { id = 'stacks', size = 0.2 },
+            },
+            position = 'right',
+            size = 60,
+          },
+          {
+            elements = {
               { id = 'console', size = 1.0 },
             },
             position = 'bottom',
             size = 15,
-          },
-          {
-            elements = {
-              { id = 'console', size = 0.65 },
-              { id = 'repl', size = 0.35 },
-            },
-            position = 'bottom',
-            size = 12,
-          },
-          {
-            elements = {
-              { id = 'scopes', size = 0.4 },
-              { id = 'breakpoints', size = 0.2 },
-              { id = 'stacks', size = 0.2 },
-              { id = 'watches', size = 0.2 },
-            },
-            position = 'right',
-            size = 50,
           },
         },
         mappings = {
