@@ -4,7 +4,7 @@ return {
     'williamboman/mason.nvim',
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, { 'black', 'ruff', 'pydocstyle' })
+      vim.list_extend(opts.ensure_installed, { 'ruff', 'pydocstyle', 'pylama', 'pylint', 'autopep8', 'blue', 'docformatter' })
     end,
   },
 
@@ -21,7 +21,7 @@ return {
     'stevearc/conform.nvim',
     opts = {
       formatters_by_ft = {
-        python = { 'black' },
+        python = { 'ruff', 'black', 'autopep8', 'blue', 'docformatter' },
       },
     },
   },
@@ -29,8 +29,14 @@ return {
   {
     'mfussenegger/nvim-lint',
     opts = {
+      linters = {
+        pylint = {
+          cmd = 'python3',
+          args = { '-m', 'pylint', '-f', 'json' },
+        },
+      },
       linters_by_ft = {
-        python = { 'ruff', 'pydocstyle' },
+        python = { 'ruff', 'pydocstyle', 'pylint' },
       },
     },
   },
@@ -65,6 +71,18 @@ return {
                 }
               end,
               desc = 'Organize Imports [co]',
+            },
+          },
+        },
+        pylsp = {
+          settings = {
+            pylsp = {
+              plugins = {
+                pycodestyle = {
+                  ignore = { 'W391' },
+                  maxLineLength = 100,
+                },
+              },
             },
           },
         },

@@ -1,7 +1,5 @@
 local Util = require 'util'
 
--- This is the same as in lspconfig.server_configurations.jdtls, but avoids
--- needing to require that when this module loads.
 local java_filetypes = { 'java' }
 local root_markers = { 'gradlew', 'mvnw', 'gradle', 'mvn' }
 
@@ -328,26 +326,18 @@ return {
   -- see: `:h sonarlint.nvim`
   {
     'https://gitlab.com/schrieveslaach/sonarlint.nvim',
-    dependencies = { 'neovim/nvim-lspconfig', 'mfussenegger/nvim-jdtls' },
-    ft = { 'java', 'cpp', 'python' },
+    ft = { 'java' },
     config = function()
       require('sonarlint').setup {
         server = {
           cmd = {
             'sonarlint-language-server',
-            -- Ensure that sonarlint-language-server uses stdio channel
             '-stdio',
             '-analyzers',
-            -- paths to the analyzers you need, using those for python and java in this example
-            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonarpython.jar',
-            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonarcfamily.jar',
             vim.fn.expand '$MASON/share/sonarlint-analyzers/sonarjava.jar',
           },
         },
         filetypes = {
-          -- Tested and working
-          'python',
-          'cpp',
           'java',
         },
       }
