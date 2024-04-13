@@ -1,8 +1,5 @@
 local openai_model = 'gpt-4-turbo'
--- local ollama_chat_model = 'openhermes' -- 7B model
-local ollama_general_model = 'mixtral' -- 30B model
--- local ollama_coder_model = 'deepseek-coder:6.7b-instruct' -- 7B model
-local ollama_coder_model = 'deepseek-coder:33b-instruct-q5_K_M' -- 30B model
+local ollama_model = 'deepseek-coder:6.7b-instruct' -- 7B model
 
 local function system_prompt_expert_coder(filetype)
   return 'You’re going to act as an expert '
@@ -13,23 +10,6 @@ As a skilled software engineer you will produce fully complete and working code 
     .. filetype
     .. [[ Your code will be extremely well formatted, clean, robust, stable, efficient, well designed and maintainable. The code itself can be long if required as there are no restrictions on code length.
 ]]
-end
-
-local function get_ollama_models()
-  local handle = io.popen 'ollama list'
-  local result = {}
-
-  if handle then
-    for line in handle:lines() do
-      local first_word = line:match '%S+'
-      if first_word ~= nil and first_word ~= 'NAME' then
-        table.insert(result, first_word)
-      end
-    end
-
-    handle:close()
-  end
-  return result
 end
 
 return {
@@ -54,7 +34,7 @@ return {
   -- [codecompanion.nvim] - Integrates LLMs with neovim
   -- see: `:h codecompanion.nvim`
   {
-    'olimorris/codecompanion.nvim',
+    'lazymaniac/codecompanion.nvim',
     enabled = true,
     dependencies = { 'nvim-lua/plenary.nvim', 'nvim-treesitter/nvim-treesitter', 'nvim-telescope/telescope.nvim' },
     -- stylua: ignore
@@ -85,8 +65,8 @@ return {
           ollama = require('codecompanion.adapters').use('ollama', {
             schema = {
               model = {
-                default = ollama_coder_model,
-                choices = get_ollama_models(),
+                default = ollama_model,
+                -- choices = get_ollama_models(),
               },
               temperature = {
                 default = 0.8,
