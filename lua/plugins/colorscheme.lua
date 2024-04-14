@@ -151,4 +151,11 @@ return {
     end,
   },
 
+  {
+    'loganswartz/sunburn.nvim',
+    dependencies = { 'loganswartz/polychrome.nvim' },
+    -- you could do this, or use the standard vimscript `colorscheme sunburn`
+    config = function()
+    end,
+  },
 }
