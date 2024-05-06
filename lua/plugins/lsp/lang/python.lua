@@ -74,18 +74,6 @@ return {
             },
           },
         },
-        pylsp = {
-          settings = {
-            pylsp = {
-              plugins = {
-                pycodestyle = {
-                  ignore = { 'W391' },
-                  maxLineLength = 100,
-                },
-              },
-            },
-          },
-        },
       },
       setup = {
         ruff_lsp = function()
