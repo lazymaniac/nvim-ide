@@ -5,6 +5,7 @@ return {
   -- see: `:h nvim-treesitter`
   {
     'nvim-treesitter/nvim-treesitter',
+    branch = 'master',
     version = false, -- last release is way too old and doesn't work on Windows
     build = ':TSUpdate',
     event = { 'VeryLazy' },
@@ -140,6 +141,7 @@ return {
   -- see: `:h nvim-treesitter-textobjects`
   {
     'nvim-treesitter/nvim-treesitter-textobjects',
+    branch = 'master',
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
     enabled = false,
     event = 'VeryLazy',
@@ -171,6 +173,7 @@ return {
   -- see: `:h nvim-ts-autotags`
   {
     'windwp/nvim-ts-autotag',
+    branch = 'main',
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
     event = 'VeryLazy',
     opts = {},

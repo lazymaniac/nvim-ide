@@ -3,6 +3,7 @@ return {
   -- catppuccin
   {
     'catppuccin/nvim',
+    branch = 'main',
     name = 'catppuccin',
     priority = 1000,
     config = function()
@@ -97,6 +98,7 @@ return {
 
   {
     'sainnhe/everforest',
+    branch = 'master',
     init = function()
       vim.cmd [[let g:everforest_background = 'hard']]
     end,
@@ -104,6 +106,7 @@ return {
 
   {
     'EdenEast/nightfox.nvim',
+    branch = 'main',
     config = function()
       require('nightfox').setup {
         options = {
@@ -153,6 +156,7 @@ return {
 
   {
     'loganswartz/sunburn.nvim',
+    branch = 'main',
     dependencies = { 'loganswartz/polychrome.nvim' },
     -- you could do this, or use the standard vimscript `colorscheme sunburn`
     config = function() end,
@@ -160,6 +164,7 @@ return {
 
   {
     'scottmckendry/cyberdream.nvim',
+    branch = 'main',
     lazy = false,
     priority = 1000,
     config = function()

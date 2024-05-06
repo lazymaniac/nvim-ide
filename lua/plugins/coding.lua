@@ -8,6 +8,7 @@ return {
 
   {
     'nvimdev/lspsaga.nvim',
+    branch = 'main',
     dependencies = {
       'nvim-treesitter/nvim-treesitter',
       'nvim-tree/nvim-web-devicons',
@@ -102,6 +103,7 @@ return {
   -- [boole.nvim] - Allows to increment numbers and flip common text to opposite value like true -> false
   {
     'nat-418/boole.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     config = function()
       require('boole').setup {
@@ -122,6 +124,7 @@ return {
   -- see: `:h auto-indent.nvim`
   {
     'vidocqh/auto-indent.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     opts = {},
   },
@@ -130,6 +133,7 @@ return {
   -- see: `:h hlargs.nvim`
   {
     'm-demare/hlargs.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     config = function()
       require('hlargs').setup()
@@ -140,6 +144,7 @@ return {
   -- see: `:h Hypersonic.nvim`
   {
     'tomiis4/Hypersonic.nvim',
+    branch = 'main',
     event = 'CmdlineEnter',
     cmd = 'Hypersonic',
     -- stylua: ignore
@@ -162,6 +167,7 @@ return {
   -- see: `:h nvim-surround`
   {
     'kylechui/nvim-surround',
+    branch = 'main',
     event = 'VeryLazy',
     config = function()
       require('nvim-surround').setup {
@@ -276,6 +282,7 @@ return {
   -- see: `:h nvim-hlslens`
   {
     'kevinhwang91/nvim-hlslens',
+    branch = 'main',
     event = 'VeryLazy',
     config = function()
       require('hlslens').setup {
@@ -298,6 +305,7 @@ return {
   -- see: `:h mini.indentscope`
   {
     'echasnovski/mini.indentscope',
+    branch = 'main',
     event = 'VeryLazy',
     opts = {
       draw = {
@@ -360,6 +368,7 @@ return {
   -- see: `:h rainbow-delimiters`
   {
     'HiPhish/rainbow-delimiters.nvim',
+    branch = 'master',
     event = 'VeryLazy',
     config = function()
       local rainbow_delimiters = require 'rainbow-delimiters'
@@ -380,6 +389,7 @@ return {
   -- see: `:h nvim-devdocs`
   {
     'luckasRanarison/nvim-devdocs',
+    branch = 'master',
     dependencies = { 'nvim-lua/plenary.nvim', 'nvim-telescope/telescope.nvim', 'nvim-treesitter/nvim-treesitter' },
     -- stylua: ignore
     keys = {
@@ -415,6 +425,7 @@ return {
 
   {
     'kawre/leetcode.nvim',
+    branch = 'master',
     build = ':TSUpdate html',
     dependencies = {
       'nvim-telescope/telescope.nvim',

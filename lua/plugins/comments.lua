@@ -5,6 +5,7 @@ return {
   -- [nvim-ts-context-commentstring] - Automatically selects type of comment for files with multiple languages
   {
     'JoosepAlviste/nvim-ts-context-commentstring',
+    branch = 'main',
     event = 'VeryLazy',
     config = function()
       require('ts_context_commentstring').setup {
@@ -17,6 +18,7 @@ return {
   -- see: `:h comment-nvim`
   {
     'numToStr/Comment.nvim',
+    branch = 'master',
     event = 'VeryLazy',
     config = function()
       require('Comment').setup {

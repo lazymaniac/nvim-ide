@@ -19,6 +19,7 @@ return {
   {
     'folke/edgy.nvim',
     event = 'VeryLazy',
+    branch = 'main',
     enabled = true,
     init = function()
       vim.opt.laststatus = 3
@@ -35,7 +36,7 @@ return {
   -- see: `:h codecompanion.nvim`
   {
     'lazymaniac/codecompanion.nvim',
-    enabled = true,
+    branch = 'main',
     dependencies = { 'nvim-lua/plenary.nvim', 'nvim-treesitter/nvim-treesitter', 'nvim-telescope/telescope.nvim' },
     -- stylua: ignore
     keys = {

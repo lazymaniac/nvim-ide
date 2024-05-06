@@ -8,6 +8,7 @@ return {
   -- see: `:h telescope`
   {
     'nvim-telescope/telescope.nvim',
+    branch = 'master',
     event = 'VeryLazy',
     cmd = 'Telescope',
     -- stylua: ignore
@@ -292,6 +293,7 @@ return {
   -- see: `:h telescope-import`
   {
     'piersolenski/telescope-import.nvim',
+    branch = 'main',
     dependencies = 'nvim-telescope/telescope.nvim',
     -- stylua: ignore
     keys = {
@@ -307,6 +309,7 @@ return {
   -- see: `:h yaml-companion`
   {
     'someone-stole-my-name/yaml-companion.nvim',
+    branch = 'main',
     dependencies = { 'neovim/nvim-lspconfig', 'nvim-lua/plenary.nvim', 'nvim-telescope/telescope.nvim' },
     keys = {
       { '<leader>sy', '<cmd>Telescope yaml_schema<cr>', mode = { 'n', 'v' }, desc = 'Search YAML Schema [sy]' },
@@ -323,6 +326,7 @@ return {
   -- see: `:h telescope-tabs`
   {
     'LukasPietzschmann/telescope-tabs',
+    branch = 'master',
     dependencies = { 'nvim-telescope/telescope.nvim' },
     -- stylua: ignore
     keys = {
@@ -339,6 +343,7 @@ return {
   -- see: `:h telescope-undo`
   {
     'debugloop/telescope-undo.nvim',
+    branch = 'main',
     dependencies = { 'nvim-telescope/telescope.nvim' },
     -- stylua: ignore
     keys = {
@@ -354,6 +359,7 @@ return {
   -- see: `:h telescope-egrepify`
   {
     'fdschmidt93/telescope-egrepify.nvim',
+    branch = 'master',
     dependencies = { 'nvim-telescope/telescope.nvim', 'nvim-lua/plenary.nvim' },
     -- stylua: ignore
     keys = {
@@ -367,6 +373,7 @@ return {
 
   {
     'rcarriga/nvim-notify',
+    branch = 'master',
     dependencies = { 'nvim-telescope/telescope.nvim' },
     -- stylua: ignore
     keys = {
@@ -381,6 +388,7 @@ return {
 
   {
     'nvim-telescope/telescope-fzf-native.nvim',
+    branch = 'main',
     dependencies = { 'nvim-telescope/telescope.nvim' },
     build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build',
     config = function()
@@ -391,6 +399,7 @@ return {
 
   {
     'nvim-telescope/telescope-dap.nvim',
+    branch = 'master',
     dependencies = { 'nvim-telescope/telescope.nvim' },
     -- stylua: ignore
     keys = {
@@ -408,6 +417,7 @@ return {
 
   {
     'tsakirist/telescope-lazy.nvim',
+    branch = 'main',
     dependencies = { 'nvim-telescope/telescope.nvim' },
     -- stylua: ignore
     keys = {
@@ -421,6 +431,7 @@ return {
 
   {
     'paopaol/telescope-git-diffs.nvim',
+    branch = 'main',
     dependencies = { 'nvim-telescope/telescope.nvim', 'nvim-lua/plenary.nvim', 'sindrets/diffview.nvim' },
     -- stylua: ignore
     keys = {
@@ -434,6 +445,7 @@ return {
 
   {
     'benfowler/telescope-luasnip.nvim',
+    branch = 'master',
     dependencies = { 'nvim-telescope/telescope.nvim' },
     -- stylua: ignore
     keys = {
@@ -447,6 +459,7 @@ return {
 
   {
     'FeiyouG/commander.nvim',
+    branch = 'main',
     dependencies = { 'nvim-telescope/telescope.nvim' },
     keys = {
       { '<leader>.', '<CMD>Telescope commander<CR>', mode = 'n', desc = 'Commander [.]' },
@@ -480,6 +493,7 @@ return {
 
   {
     'lpoto/telescope-docker.nvim',
+    branch = 'main',
     dependencies = { 'nvim-telescope/telescope.nvim' },
     keys = {
       { '<leader>fD', '<Cmd>Telescope docker<CR>', desc = 'Docker [fD]' },
@@ -492,6 +506,7 @@ return {
 
   {
     'ANGkeith/telescope-terraform-doc.nvim',
+    branch = 'main',
     dependencies = { 'nvim-telescope/telescope.nvim' },
     config = function()
       ---@diagnostic disable-next-line: undefined-field
@@ -501,6 +516,7 @@ return {
 
   {
     'cappyzawa/telescope-terraform.nvim',
+    branch = 'main',
     dependencies = { 'nvim-telescope/telescope.nvim' },
     config = function()
       ---@diagnostic disable-next-line: undefined-field
@@ -509,21 +525,8 @@ return {
   },
 
   {
-    'fbuchlak/telescope-directory.nvim',
-    dependencies = { 'nvim-telescope/telescope.nvim' },
-    -- stylua: ignore
-    keys = {
-      { '<Leader>fd', '<CMD>Telescope directory live_grep<CR>',  desc = 'Search Text in Directory [fd]', },
-      { '<Leader>fe', '<CMD>Telescope directory find_files<CR>', desc = 'Search Files in Directory [fe]' },
-    },
-    config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      require('telescope-directory').setup {}
-    end,
-  },
-
-  {
     'isak102/telescope-git-file-history.nvim',
+    branch = 'master',
     dependencies = { 'nvim-telescope/telescope.nvim', 'tpope/vim-fugitive' },
     keys = {
       { '<leader>fh', '<CMD>Telescope git_file_history<CR>', desc = 'Search File History [fh]' },

@@ -16,6 +16,7 @@ return {
   -- see: `:h neotest`
   {
     'nvim-neotest/neotest',
+    branch = 'master',
     event = 'VeryLazy',
     dependencies = { 'nvim-lua/plenary.nvim', 'nvim-treesitter/nvim-treesitter', 'stevearc/overseer.nvim', 'nvim-neotest/nvim-nio' },
     -- stylua: ignore
@@ -219,6 +220,7 @@ return {
   -- DAP integration
   {
     'mfussenegger/nvim-dap',
+    branch = 'master',
     optional = true,
     -- stylua: ignore
     keys = {

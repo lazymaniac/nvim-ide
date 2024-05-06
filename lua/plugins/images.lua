@@ -8,6 +8,7 @@ return {
   -- see: `:h hologram.nvim`
   {
     'edluffy/hologram.nvim',
+    branch = 'main',
     enabled = true,
     opts = {
       auto_display = false,
@@ -21,6 +22,7 @@ return {
   -- see: `:h image.nvim`
   {
     '3rd/image.nvim',
+    branch = 'master',
     enabled = false,
     opts = {
       backend = 'kitty',

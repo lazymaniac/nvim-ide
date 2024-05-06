@@ -7,6 +7,7 @@ M.hl = {}
 -- see: `:h mini.hipatterns`
 M.plugin = {
   'echasnovski/mini.hipatterns',
+  branch = 'main',
   event = 'VeryLazy',
   opts = function()
     local hi = require 'mini.hipatterns'

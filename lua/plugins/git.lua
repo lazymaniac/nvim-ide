@@ -7,6 +7,7 @@ return {
   -- see: `:h gitsigns`
   {
     'lewis6991/gitsigns.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     config = function(_, opts)
       require('gitsigns').setup(opts)
@@ -144,6 +145,7 @@ return {
   -- must be an absolute path to the directory that holds your .gitlab.nvim file.
   {
     'harrisoncramer/gitlab.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim', 'sindrets/diffview.nvim', 'stevearc/dressing.nvim', 'nvim-tree/nvim-web-devicons' },
     -- stylua: ignore
@@ -327,6 +329,7 @@ return {
   -- see: `:h octo.nvim`
   {
     'sindrets/diffview.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     -- stylua: ignore
     keys = {
@@ -434,6 +437,7 @@ return {
   -- see: `:h octo.nvim`
   {
     'pwntester/octo.nvim',
+    branch = 'master',
     cmd = 'Octo',
     dependencies = { 'nvim-lua/plenary.nvim', 'nvim-telescope/telescope.nvim', 'nvim-tree/nvim-web-devicons' },
     -- stylua: ignore
@@ -495,6 +499,7 @@ return {
   -- see: `:h neogit`
   {
     'NeogitOrg/neogit',
+    branch = 'master',
     event = 'VeryLazy',
     dependencies = { 'nvim-lua/plenary.nvim', 'sindrets/diffview.nvim', 'nvim-telescope/telescope.nvim' },
     -- stylua: ignore

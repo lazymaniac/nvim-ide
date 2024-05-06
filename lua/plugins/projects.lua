@@ -12,6 +12,7 @@ return {
   -- w           <c-w>       change_working_directory
   {
     'ahmedkhalf/project.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     keys = {
       { '<leader>fP', '<Cmd>Telescope projects<CR>', desc = 'Projects [fP]' },
@@ -31,6 +32,7 @@ return {
   -- see: `:h projections.nvim`
   {
     'gnikdroy/projections.nvim',
+    branch = 'main',
     -- stylua: ignore
     keys = {
       { '<leader>fw', '<cmd>Telescope projections<cr>', mode = { 'n' }, desc = 'Switch Workspace [fw]', },

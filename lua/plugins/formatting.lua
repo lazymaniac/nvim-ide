@@ -29,6 +29,7 @@ return {
     -- [conform.nvim] - Code formatting.
     -- see: `:h conform`
     'stevearc/conform.nvim',
+    branch = 'master',
     event = 'VeryLazy',
     dependencies = { 'williamboman/mason.nvim' },
     cmd = 'ConformInfo',

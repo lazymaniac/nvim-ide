@@ -4,6 +4,7 @@ return {
   -- [vim-startuptime] - Measure startup time. Displayed on dashboard
   {
     'dstein64/vim-startuptime',
+    branch = 'master',
     event = 'VeryLazy',
     cmd = 'StartupTime',
     config = function()
@@ -12,13 +13,14 @@ return {
   },
 
   -- [[ SESSION MANAGEMENT ]] ---------------------------------------------------------------
- 
+
   -- [persistence.nvim] - Session management. This saves your session in the background,
   -- keeping track of open buffers, window arrangement, and more.
   -- You can restore sessions when returning through the dashboard.
   -- see: `:h persistence`
   {
     'folke/persistence.nvim',
+    branch = 'main',
     event = 'BufReadPre',
     -- stylua: ignore
     keys = {
@@ -36,13 +38,14 @@ return {
   -- [[ UTIL LIB ]] ---------------------------------------------------------------
   -- [plenary.nvim] - Utility lib used by other plugins
   -- see: `:h help-tag`
-  { 'nvim-lua/plenary.nvim' },
+  { 'nvim-lua/plenary.nvim', branch = 'master' },
 
   -- [[ LEARNING VIM MOTIONS ]] ---------------------------------------------------------------
   -- [hardtime.nvim] - Plugin that helps learn vim motions and keybindings by providing hints
   -- see: `:h hardtime`
   {
     'm4xshen/hardtime.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim' },
     -- stylua: ignore
@@ -65,6 +68,7 @@ return {
   -- see: `:h cheatsheet.nvim`
   {
     'sudormrfbin/cheatsheet.nvim',
+    branch = 'master',
     event = 'VeryLazy',
     dependencies = { 'nvim-telescope/telescope.nvim', 'nvim-lua/popup.nvim', 'nvim-lua/plenary.nvim' },
     keys = {
@@ -107,6 +111,7 @@ return {
   -- see: `:h wttr.nvim`
   {
     'lazymaniac/wttr.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     dependencies = { 'nvim-lua/plenary.nvim', 'MunifTanjim/nui.nvim' },
     -- stylua: ignore
@@ -125,6 +130,7 @@ return {
   -- see: `:h oogway`
   {
     '0x5a4/oogway.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     cmd = { 'Oogway' },
   },

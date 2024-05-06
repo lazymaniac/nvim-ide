@@ -5,6 +5,7 @@ return {
   -- see: `:h netman`
   {
     'miversen33/netman.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     -- Note, you do not need this if you plan on using Netman with any of the
     -- supported UI Tools such as Neo-tree
@@ -25,6 +26,7 @@ return {
   -- see: `:h rest.nvim`
   {
     'rest-nvim/rest.nvim',
+    branch = 'main',
     dependencies = { 'nvim-lua/plenary.nvim' },
     keys = {
       { '<leader>lrr', '<cmd>lua require("rest-nvim").run()<cr>', mode = { 'n', 'v' }, desc = 'Call REST [lrr]' },

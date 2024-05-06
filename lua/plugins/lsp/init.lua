@@ -170,6 +170,7 @@ return {
   -- see: `:h mason.nvim`
   {
     'williamboman/mason.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     cmd = 'Mason',
     build = ':MasonUpdate',
@@ -213,6 +214,7 @@ return {
 
   {
     'folke/neodev.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     opts = {
       library = {
@@ -237,6 +239,7 @@ return {
 
   {
     'j-hui/fidget.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     opts = {
       -- Options related to LSP progress subsystem
@@ -317,6 +320,7 @@ return {
 
   {
     'icholy/lsplinks.nvim',
+    branch = 'master',
     config = function()
       local lsplinks = require 'lsplinks'
       lsplinks.setup()

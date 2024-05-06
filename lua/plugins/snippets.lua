@@ -5,6 +5,7 @@ return {
   -- see: `:h friendly-snippets`
   {
     'rafamadriz/friendly-snippets',
+    branch = 'main',
     event = 'VeryLazy',
     dependencies = { 'L3MON4D3/LuaSnip' },
     config = function()
@@ -16,6 +17,7 @@ return {
   -- see: `h: luasnip`
   {
     'L3MON4D3/LuaSnip',
+    branch = 'master',
     event = 'VimEnter',
     build = (not jit.os:find 'Windows') and "echo 'NOTE: jsregexp is optional, so not a big deal if it fails to build'; make install_jsregexp" or nil,
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
@@ -44,6 +46,7 @@ return {
   -- [luasnip_snippets] - Library of snippets ported from vim-snippets
   {
     'mireq/luasnip-snippets',
+    branch = 'main',
     event = 'VeryLazy',
     dependencies = { 'L3MON4D3/LuaSnip' },
     init = function()
@@ -56,6 +59,7 @@ return {
   -- see: `:h nvim-scissors`
   {
     'chrisgrieser/nvim-scissors',
+    branch = 'main',
     dependencies = 'nvim-telescope/telescope.nvim',
     -- stylua: ignore
     keys = {

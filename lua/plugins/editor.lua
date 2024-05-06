@@ -5,6 +5,7 @@ return {
   -- see: `:h which-key`
   {
     'folke/which-key.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     opts = {
       plugins = {
@@ -107,6 +108,7 @@ return {
   -- see: `:h vim-illuminate`
   {
     'RRethy/vim-illuminate',
+    branch = 'master',
     event = 'VeryLazy',
     keys = {
       { ']]', desc = 'Next Reference <]]>' },
@@ -142,6 +144,7 @@ return {
   -- see: `:h mini.bufremove`
   {
     'echasnovski/mini.bufremove',
+    branch = 'main',
     event = 'VeryLazy',
     -- stylua: ignore
     keys = {
@@ -173,6 +176,7 @@ return {
   -- see: `:h trouble.nvim`
   {
     'folke/trouble.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     cmd = { 'TroubleToggle', 'Trouble' },
     opts = {
@@ -266,31 +270,12 @@ return {
     },
   },
 
-  -- [textobj-diagnostic.nvim] - Diagnostics text objects
-  -- see: `:h textobj-diagnostic`
-  --
-  -- keymapping | function                                            | purpose
-  -- ig         | require('textobj-diagnostic').next_diag_inclusive() | finds the diagnostic under or after the cursor (including any diagnostic the cursor is sitting on)
-  -- ]g         | require('textobj-diagnostic').next_diag()           | finds the diagnostic after the cursor (excluding any diagnostic the cursor is sitting on)
-  -- [g         | require('textobj-diagnostic').prev_diag()           | finds the diagnostic before the cursor (excluding any diagnostic the cursor is sitting on)
-  --
-  {
-    'andrewferrier/textobj-diagnostic.nvim',
-    event = 'VeryLazy',
-    -- stylua: ignore
-    keys = {
-      { '<leader>xn', function() require('textobj-diagnostic').nearest_diag() end, desc = 'Nearest Diagnostic [xn]' },
-    },
-    config = function()
-      require('textobj-diagnostic').setup()
-    end,
-  },
-
   -- [todo-comments.nvim] - Finds and lists all of the TODO, HACK, BUG, etc comment
   -- in your project and loads them into a browsable list.
   -- see: `:h todo-comments`
   {
     'folke/todo-comments.nvim',
+    branch = 'main',
     cmd = { 'TodoTrouble', 'TodoTelescope' },
     event = 'VeryLazy',
     config = true,
@@ -311,6 +296,7 @@ return {
   -- see: `:h outline.nvim`
   {
     'hedyhli/outline.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     -- stylua: ignore
     keys = {
@@ -567,6 +553,7 @@ return {
   -- see: `h: yanky`
   {
     'gbprod/yanky.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     -- stylua: ignore
     keys = {
@@ -632,6 +619,7 @@ return {
   -- see: `:h arrow.nvim`
   {
     'otavioschwanck/arrow.nvim',
+    branch = 'master',
     event = 'VeryLazy',
     opts = {
       show_icons = true,
@@ -643,7 +631,7 @@ return {
   -- see: `:h detour.nvim`
   {
     'carbon-steel/detour.nvim',
-    branch = 'dev',
+    branch = 'main',
     event = 'VeryLazy',
   },
 
@@ -651,6 +639,7 @@ return {
   -- see: `:h highlight-undo.nvim`
   {
     'tzachar/highlight-undo.nvim',
+    branch = 'main',
     config = function()
       require('highlight-undo').setup {
         duration = 500,
@@ -677,6 +666,7 @@ return {
   -- see: `:h guess-indent.nvim`
   {
     'nmac427/guess-indent.nvim',
+    branch = 'main',
     config = function()
       require('guess-indent').setup {}
     end,
@@ -686,9 +676,10 @@ return {
   -- see: `:h windows.nvim`
   {
     'anuvyklack/windows.nvim',
+    branch = 'main',
     dependencies = {
-      'anuvyklack/middleclass',
-      'anuvyklack/animation.nvim',
+      { 'anuvyklack/middleclass', branch = 'master' },
+      { 'anuvyklack/animation.nvim', branch = 'main' },
     },
     -- stylua: ignore
     keys = {
@@ -708,6 +699,7 @@ return {
   -- see: `:h better_escape.nvim`
   {
     'max397574/better-escape.nvim',
+    branch = 'master',
     config = function()
       require('better_escape').setup {
         mapping = { 'jk', 'jj' }, -- a table with mappings to use
@@ -726,6 +718,7 @@ return {
   -- see: `:h nvim-scrollbar`
   {
     'petertriho/nvim-scrollbar',
+    branch = 'main',
     config = function()
       require('scrollbar').setup {
         show = true,
@@ -787,6 +780,7 @@ return {
   -- see: `:h bigfile.nvim`
   {
     'LunarVim/bigfile.nvim',
+    branch = 'main',
     init = function()
       require('bigfile').setup {
         filesize = 2, -- size of the file in MiB, the plugin round file sizes to the closest MiB
@@ -805,12 +799,13 @@ return {
     end,
   },
 
-  { 'tpope/vim-repeat' },
+  { 'tpope/vim-repeat', branch = 'master' },
 
   -- [gx.nvim] - Open link in browser
   -- see: `:h gx.nvim`
   {
     'chrishrb/gx.nvim',
+    branch = 'main',
     event = { 'BufEnter' },
     dependencies = { 'nvim-lua/plenary.nvim' },
     opts = {
@@ -824,6 +819,7 @@ return {
   -- see: `:h modes.nvim`
   {
     'mvllow/modes.nvim',
+    branch = 'main',
     config = function()
       require('modes').setup {
         colors = {
@@ -852,6 +848,7 @@ return {
   -- see: `:h wilder.nvim`
   {
     'gelguy/wilder.nvim',
+    branch = 'master',
     config = function()
       local wilder = require 'wilder'
       wilder.setup { modes = { ':', '/', '?' } }
