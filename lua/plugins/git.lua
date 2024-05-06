@@ -430,8 +430,8 @@ return {
     end,
   },
 
-  -- [diffview.nvim] - Git diffview for nvim
-  -- see: `:h diffview.nvim`
+  -- [octo.nvim] - Github integration
+  -- see: `:h octo.nvim`
   {
     'pwntester/octo.nvim',
     cmd = 'Octo',

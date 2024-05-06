@@ -155,7 +155,21 @@ return {
     'loganswartz/sunburn.nvim',
     dependencies = { 'loganswartz/polychrome.nvim' },
     -- you could do this, or use the standard vimscript `colorscheme sunburn`
+    config = function() end,
+  },
+
+  {
+    'scottmckendry/cyberdream.nvim',
+    lazy = false,
+    priority = 1000,
     config = function()
+      require('cyberdream').setup {
+        transparent = true,
+        italic_comments = true,
+        hide_fillchars = true,
+        borderless_telescope = false,
+        terminal_colors = true,
+      }
     end,
   },
 }

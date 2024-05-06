@@ -26,7 +26,7 @@ end
 return {
   {
     -- [[ AUTOCOMPLETION ]] ---------------------------------------------------------------
-    -- [conform.nvim] - Code autocompletion.
+    -- [conform.nvim] - Code formatting.
     -- see: `:h conform`
     'stevearc/conform.nvim',
     event = 'VeryLazy',

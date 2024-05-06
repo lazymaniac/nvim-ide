@@ -57,6 +57,8 @@ return {
           border = 'Normal',
           background = 'Normal',
         },
+        width = math.floor(vim.o.columns * 0.9),
+        height = math.floor(vim.o.lines * 0.9),
       },
       winbar = {
         enabled = true,

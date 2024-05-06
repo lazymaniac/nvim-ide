@@ -24,10 +24,8 @@ return {
       'saadparwaiz1/cmp_luasnip',
       -- Adds a number of user-friendly snippets
       'rafamadriz/friendly-snippets',
-      -- Emoji support
-      'hrsh7th/cmp-emoji',
       'jmbuhr/cmp-pandoc-references',
-      'kdheepak/cmp-latex-symbols',
+      'rcarriga/cmp-dap',
       {
         'David-Kunz/cmp-npm',
         dependencies = { 'nvim-lua/plenary.nvim' },
