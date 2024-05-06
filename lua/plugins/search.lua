@@ -4,7 +4,7 @@ return {
 
   -- [[ SEARCHING AND REPLACING ]] ---------------------------------------------------------------
 
-  -- [ssr.nvim] - Search and replace
+  -- [ssr.nvim] - Search and replace in-file
   -- see: `:h ssr.nvim`
   {
     'cshuaimin/ssr.nvim',

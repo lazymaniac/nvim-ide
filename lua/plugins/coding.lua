@@ -272,19 +272,6 @@ return {
     end,
   },
 
-  -- [ts-node-action] - Additional actions for treesitter nodes.
-  -- see: `:h ts-node-action`
-  {
-    'ckolkey/ts-node-action',
-    event = 'VeryLazy',
-    dependencies = { 'nvim-treesitter' },
-    opts = {},
-    -- stylua: ignore
-    keys = {
-      { '<leader>cn', function() require('ts-node-action').node_action() end, desc = 'Trigger Node Action [cn]' },
-    },
-  },
-
   -- [nvim-hlslens] - Helps better glance at matched information, jump between matched instances.
   -- see: `:h nvim-hlslens`
   {

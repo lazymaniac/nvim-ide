@@ -479,19 +479,6 @@ return {
   },
 
   {
-    'LinArcX/telescope-ports.nvim',
-    dependencies = { 'nvim-telescope/telescope.nvim' },
-    -- stylua: ignore
-    keys = {
-      { '<leader>sp', '<cmd>Telescope ports<cr>', mode = { 'n', 'v' }, desc = 'List Open Ports [sp]' },
-    },
-    config = function()
-      ---@diagnostic disable-next-line: undefined-field
-      require('telescope').load_extension 'ports'
-    end,
-  },
-
-  {
     'lpoto/telescope-docker.nvim',
     dependencies = { 'nvim-telescope/telescope.nvim' },
     keys = {
