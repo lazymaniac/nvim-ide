@@ -7,6 +7,7 @@ return {
     -- see: `:h overseer.nvim`
     'stevearc/overseer.nvim',
     event = 'VeryLazy',
+    branch = 'master',
     dependencies = { 'akinsho/toggleterm.nvim' },
     -- stylua: ignore
     keys = {

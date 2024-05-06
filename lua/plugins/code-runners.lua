@@ -68,6 +68,7 @@ return {
   -- see: `:h sniprun`
   {
     'michaelb/sniprun',
+    branch = 'master',
     event = 'VeryLazy',
     -- do 'sh install.sh 1' if you want to force compile locally
     -- (instead of fetching a binary from the github release). Requires Rust >= 1.65
@@ -140,6 +141,7 @@ return {
   -- see: `:h jupytext.nvim`
   {
     'GCBallesteros/jupytext.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     config = function()
       require('jupytext').setup {
@@ -153,6 +155,7 @@ return {
   -- Use mini.hipatterns for Jupyter cells
   {
     'echasnovski/mini.hipatterns',
+    branch = 'main',
     event = 'VeryLazy',
     dependencies = { 'GCBallesteros/NotebookNavigator.nvim' },
     opts = function()
@@ -166,6 +169,7 @@ return {
   -- see: `:h molten-nvim`
   {
     'benlubas/molten-nvim',
+    branch = 'main',
     event = 'VeryLazy',
     -- ft = { 'quarto', 'markdown' },
     -- dependencies = { '3rd/image.nvim' },
@@ -202,6 +206,7 @@ return {
 
   {
     'quarto-dev/quarto-nvim',
+    branch = 'main',
     event = 'VeryLazy',
     ft = { 'quarto', 'markdown' },
     -- stylua: ignore
@@ -244,6 +249,7 @@ return {
 
   {
     'jmbuhr/otter.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     dependencies = { 'neovim/nvim-lspconfig' },
     opts = {

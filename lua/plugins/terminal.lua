@@ -5,6 +5,7 @@ return {
   -- see: `:h toggleterm`
   {
     'akinsho/toggleterm.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     -- stylua: ignore
     keys = {

@@ -8,6 +8,7 @@ return {
   -- see: `:h ssr.nvim`
   {
     'cshuaimin/ssr.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     module = 'ssr',
     -- stylua: ignore
@@ -37,6 +38,7 @@ return {
   -- see: `:h nvim-spectre`
   {
     'nvim-pack/nvim-spectre',
+    branch = 'master',
     event = 'VeryLazy',
     build = false,
     cmd = 'Spectre',
@@ -51,6 +53,7 @@ return {
   -- see: `:h leap.nvim`
   {
     'ggandor/leap.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     keys = {
       { 's', mode = { 'n', 'x', 'o' }, desc = 'Leap forward to <s>' },
@@ -72,6 +75,7 @@ return {
   -- see: `:h improved-search`
   {
     'backdround/improved-search.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     config = function()
       local search = require 'improved-search'

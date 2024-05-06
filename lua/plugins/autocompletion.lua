@@ -6,28 +6,30 @@ return {
   -- see: `:h nvim-cmp`
   {
     'hrsh7th/nvim-cmp',
+    branch = 'main',
     event = 'InsertEnter',
     dependencies = {
       -- Adds LSP completion capabilities
-      'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/cmp-nvim-lsp-signature-help',
+      { 'hrsh7th/cmp-nvim-lsp', branch = 'main' },
+      { 'hrsh7th/cmp-nvim-lsp-signature-help', branch = 'main' },
       -- Adds buffer text completion capabilities
-      'hrsh7th/cmp-buffer',
+      { 'hrsh7th/cmp-buffer', branch = 'main' },
       -- Adds file path completion capabilities
-      'hrsh7th/cmp-path',
+      { 'hrsh7th/cmp-path', branch = 'main' },
       -- Adds calculation result to completion capabilities
-      'hrsh7th/cmp-calc',
+      { 'hrsh7th/cmp-calc', branch = 'main' },
       -- Adds correct spelling completion capabilities
-      'f3fora/cmp-spell',
+      { 'f3fora/cmp-spell', bramch = 'master' },
       -- Snippet Engine & its associated nvim-cmp source
-      'L3MON4D3/LuaSnip',
-      'saadparwaiz1/cmp_luasnip',
+      { 'L3MON4D3/LuaSnip', branch = 'master' },
+      { 'saadparwaiz1/cmp_luasnip', branch = 'master' },
       -- Adds a number of user-friendly snippets
-      'rafamadriz/friendly-snippets',
-      'jmbuhr/cmp-pandoc-references',
-      'rcarriga/cmp-dap',
+      { 'rafamadriz/friendly-snippets', branch = 'main' },
+      { 'jmbuhr/cmp-pandoc-references', branch = 'master' },
+      { 'rcarriga/cmp-dap', branch = 'master' },
       {
         'David-Kunz/cmp-npm',
+        branch = 'main',
         dependencies = { 'nvim-lua/plenary.nvim' },
         ft = 'json',
         config = function()
@@ -208,6 +210,7 @@ return {
   -- see: `:h nvim-autopairs`
   {
     'windwp/nvim-autopairs',
+    branch = 'master',
     event = 'InsertEnter',
     config = function()
       require('nvim-autopairs').setup {
@@ -238,6 +241,7 @@ return {
   -- see: `:h cmp-dap`
   {
     'rcarriga/cmp-dap',
+    branch = 'master',
     event = 'VeryLazy',
     config = function()
       require('cmp').setup {

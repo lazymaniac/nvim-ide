@@ -7,6 +7,7 @@ return {
   -- see: `:h nvim-notify`
   {
     'rcarriga/nvim-notify',
+    branch = 'master',
     event = 'VeryLazy',
     -- stylua: ignore
     keys = {
@@ -58,6 +59,7 @@ return {
   -- see: `:h dressing.nvim`
   {
     'stevearc/dressing.nvim',
+    branch = 'master',
     event = 'VeryLazy',
     opts = {
       input = {
@@ -285,6 +287,7 @@ return {
   -- see: `h: lualine`
   {
     'nvim-lualine/lualine.nvim',
+    branch = 'master',
     event = 'VeryLazy',
     config = function(_, opts)
       ---@diagnostic disable-next-line: undefined-field
@@ -499,6 +502,7 @@ return {
   -- see: `:h noice`
   {
     'folke/noice.nvim',
+    branch = 'main',
     priority = 1000,
     event = 'VeryLazy',
     dependencies = { 'MunifTanjim/nui.nvim', 'hrsh7th/nvim-cmp', 'rcarriga/nvim-notify' },
@@ -712,16 +716,17 @@ return {
   },
 
   -- [nvim-web-devicons] - Package of dev icons
-  { 'nvim-tree/nvim-web-devicons' },
+  { 'nvim-tree/nvim-web-devicons', branch = 'master' },
 
   -- [nui.nvim] - UI components like popups.
   -- see: `:h nui`
-  { 'MunifTanjim/nui.nvim' },
+  { 'MunifTanjim/nui.nvim', branch = 'main' },
 
   -- [dashboard-nvim] - Welcome dashboard like in other IDE
   -- see: `:h dashboard-nvim`
   {
     'nvimdev/dashboard-nvim',
+    branch = 'master',
     event = 'VimEnter',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     -- stylua: ignore
@@ -777,6 +782,7 @@ return {
   -- see: 'h: floating-help'
   {
     'Tyler-Barham/floating-help.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     keys = {
       { '<F1>', '<cmd>FloatingHelpToggle<cr>', mode = { 'n' }, desc = 'Toggle Floating Help <F1>' },
@@ -806,6 +812,7 @@ return {
   -- see: `:h numb`
   {
     'nacro90/numb.nvim',
+    branch = 'master',
     event = 'VeryLazy',
     opts = {
       show_numbers = true, -- Enable 'number' for the window while peeking
@@ -823,6 +830,7 @@ return {
   -- see: `:h window-picker`
   {
     's1n7ax/nvim-window-picker',
+    branch = 'main',
     name = 'window-picker',
     event = 'VeryLazy',
     opts = {
@@ -909,6 +917,7 @@ return {
   -- see: `:h zen-mode`
   {
     'folke/zen-mode.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     keys = {
       { '<leader>Z', '<cmd>ZenMode<cr>', mode = { 'n' }, desc = 'Zen Mode [Z]' },
@@ -981,6 +990,7 @@ return {
   -- see: `:h mini.animate`
   {
     'echasnovski/mini.animate',
+    branch = 'main',
     event = 'VeryLazy',
     opts = function()
       -- don't use animate when scrolling with the mouse

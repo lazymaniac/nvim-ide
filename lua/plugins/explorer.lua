@@ -18,7 +18,7 @@ return {
   {
     'nvim-neo-tree/neo-tree.nvim',
     event = 'VeryLazy',
-    branch = 'v3.x',
+    branch = 'main',
     cmd = 'Neotree',
     dependencies = {
       'nvim-lua/plenary.nvim',
@@ -357,6 +357,7 @@ return {
   -- see: `:h nvim-lsp-file-operations`
   {
     'antosha417/nvim-lsp-file-operations',
+    branch = 'master',
     dependencies = {
       'nvim-lua/plenary.nvim',
       'nvim-neo-tree/neo-tree.nvim',

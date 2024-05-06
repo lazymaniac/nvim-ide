@@ -6,6 +6,7 @@ return {
   -- see: `:h nvim-lint`
   {
     'mfussenegger/nvim-lint',
+    branch = 'master',
     event = 'VeryLazy',
     opts = {
       -- Event to trigger linters
@@ -91,6 +92,7 @@ return {
   -- see: `:h help-tag`
   {
     'neovim/nvim-lspconfig',
+    branch = 'master',
     event = 'VeryLazy',
     -- other settings removed for brevity
     opts = {

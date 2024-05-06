@@ -18,13 +18,14 @@ return {
   -- see: `:h nvim-dap`
   {
     'mfussenegger/nvim-dap',
+    branch = 'master',
     event = 'VeryLazy',
     dependencies = {
-      'rcarriga/nvim-dap-ui',
-      'theHamsta/nvim-dap-virtual-text',
-      'jay-babu/mason-nvim-dap.nvim',
-      'stevearc/overseer.nvim',
-      'LiadOz/nvim-dap-repl-highlights',
+      { 'rcarriga/nvim-dap-ui', branch = 'master' },
+      { 'theHamsta/nvim-dap-virtual-text', branch = 'master' },
+      { 'jay-babu/mason-nvim-dap.nvim', branch = 'main' },
+      { 'stevearc/overseer.nvim', branch = 'master' },
+      { 'LiadOz/nvim-dap-repl-highlights', branch = 'master' },
     },
     -- stylua: ignore
     keys = {
@@ -70,6 +71,7 @@ return {
   -- see: `:h nvim-dap-ui`
   {
     'rcarriga/nvim-dap-ui',
+    branch = 'master',
     event = 'VeryLazy',
     dependencies = { 'mfussenegger/nvim-dap', 'nvim-neotest/nvim-nio' },
     -- stylua: ignore
@@ -157,6 +159,7 @@ return {
   -- see: `:h nvim-dap-virtual-text`
   {
     'theHamsta/nvim-dap-virtual-text',
+    branch = 'master',
     event = 'VeryLazy',
     -- stylua: ignore
     keys = {
@@ -194,6 +197,7 @@ return {
   -- see: `:h mason-nvim-dap`
   {
     'jay-babu/mason-nvim-dap.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     dependencies = { 'williamboman/mason.nvim' },
     cmd = { 'DapInstall', 'DapUninstall' },
@@ -216,6 +220,7 @@ return {
   -- see: `:h nvim-dap-repl-highlights`
   {
     'LiadOz/nvim-dap-repl-highlights',
+    branch = 'master',
     event = 'VeryLazy',
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
     config = function()

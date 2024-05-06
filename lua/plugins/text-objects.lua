@@ -5,6 +5,7 @@ return {
   -- see: `:h mini.ai`
   {
     'echasnovski/mini.ai',
+    branch = 'main',
     -- keys = {
     --   { "a", mode = { "x", "o" } },
     --   { "i", mode = { "x", "o" } },
@@ -213,6 +214,7 @@ return {
   -- ---------------------------------------------------------------------------------------------------------------
   {
     'chrisgrieser/nvim-various-textobjs',
+    branch = 'main',
     event = 'VeryLazy',
     opts = { useDefaultKeymaps = true },
   },

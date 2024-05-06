@@ -4,6 +4,7 @@ return {
 
   {
     'vhyrro/luarocks.nvim',
+    branch = 'main',
     priority = 1000, -- We'd like this plugin to load first out of the rest
     config = true, -- This automatically runs `require("luarocks-nvim").setup()`
   },
@@ -12,6 +13,7 @@ return {
   -- see: `:h neorg`
   {
     'nvim-neorg/neorg',
+    branch = 'main',
     event = 'VeryLazy',
     dependencies = { 'nvim-lua/plenary.nvim', 'nvim-neorg/neorg-telescope', 'luarocks.nvim' },
     -- stylua: ignore
