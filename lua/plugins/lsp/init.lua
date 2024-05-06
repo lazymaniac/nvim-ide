@@ -4,6 +4,7 @@ return {
   -- lspconfig
   {
     'neovim/nvim-lspconfig',
+    branch = 'master',
     event = 'VeryLazy',
     dependencies = { 'folke/neodev.nvim', 'williamboman/mason.nvim', 'williamboman/mason-lspconfig.nvim', 'j-hui/fidget.nvim' },
     ---@class PluginLspOpts
