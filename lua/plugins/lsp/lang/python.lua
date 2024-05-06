@@ -4,7 +4,7 @@ return {
     'williamboman/mason.nvim',
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, { 'ruff', 'pydocstyle', 'pylama', 'pylint', 'autopep8', 'blue', 'docformatter' })
+      vim.list_extend(opts.ensure_installed, { 'black', 'pydocstyle', 'pylint', 'docformatter' })
     end,
   },
 
@@ -21,7 +21,7 @@ return {
     'stevearc/conform.nvim',
     opts = {
       formatters_by_ft = {
-        python = { 'ruff', 'black', 'autopep8', 'blue', 'docformatter' },
+        python = { 'black', 'docformatter' },
       },
     },
   },
@@ -36,7 +36,7 @@ return {
         },
       },
       linters_by_ft = {
-        python = { 'ruff', 'pydocstyle', 'pylint' },
+        python = { 'pylint' },
       },
     },
   },
@@ -45,18 +45,7 @@ return {
     'neovim/nvim-lspconfig',
     opts = {
       servers = {
-        pyright = {
-          settings = {
-            pyright = {
-              disableOrganizeImports = true, -- Using Ruff
-            },
-            python = {
-              analysis = {
-                ignore = { '*' }, -- Using Ruff
-              },
-            },
-          },
-        },
+        basedpyright = {},
         ruff_lsp = {
           keys = {
             {
@@ -91,6 +80,14 @@ return {
   {
     'nvim-neotest/neotest',
     dependencies = { 'nvim-neotest/neotest-python' },
+    opts = {
+      adapters = {
+        ['neotest-python'] = {
+          runner = 'pytest',
+          python = '.venv/bin/python',
+        },
+      },
+    },
   },
 
   {
@@ -104,7 +101,7 @@ return {
       },
       config = function()
         local path = require('mason-registry').get_package('debugpy'):get_install_path()
-        require('dap-python').setup(path .. '/venv/bin/python')
+        require('dap-python').setup '.venv/bin/python'
       end,
     },
   },
