@@ -8,6 +8,7 @@ return {
 
   {
     'scalameta/nvim-metals',
+    branch = 'main',
     dependencies = { 'nvim-lua/plenary.nvim', 'mfussenegger/nvim-dap' },
     ft = { 'scala', 'sbt' },
     init = function()

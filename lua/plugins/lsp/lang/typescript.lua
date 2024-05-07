@@ -5,7 +5,7 @@ return {
     'nvim-treesitter/nvim-treesitter',
     opts = function(_, opts)
       if type(opts.ensure_installed) == 'table' then
-        vim.list_extend(opts.ensure_installed, { 'typescript' })
+        vim.list_extend(opts.ensure_installed, { 'typescript', 'tsx' })
       end
     end,
   },
@@ -29,7 +29,7 @@ return {
                   },
                 }
               end,
-              desc = 'Organize Imports [co]',
+              desc = 'Organize Imports [cz]',
             },
             {
               '<leader>cq',
@@ -76,7 +76,6 @@ return {
           port = '${port}',
           executable = {
             command = 'node',
-            -- 💀 Make sure to update this path to point to your installation
             args = {
               require('mason-registry').get_package('js-debug-adapter'):get_install_path() .. '/js-debug/src/dapDebugServer.js',
               '${port}',

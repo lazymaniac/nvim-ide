@@ -37,6 +37,7 @@ return {
 
   {
     'joeveiga/ng.nvim',
+    branch = 'main',
   },
 
   {

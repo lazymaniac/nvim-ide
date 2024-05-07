@@ -44,6 +44,7 @@ return {
       -- yaml schema support
       {
         'b0o/SchemaStore.nvim',
+        branch = 'main',
       },
     },
     opts = {

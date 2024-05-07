@@ -504,25 +504,6 @@ return {
     end,
   },
 
-  {
-    'ANGkeith/telescope-terraform-doc.nvim',
-    branch = 'main',
-    dependencies = { 'nvim-telescope/telescope.nvim' },
-    config = function()
-      ---@diagnostic disable-next-line: undefined-field
-      require('telescope').load_extension 'terraform_doc'
-    end,
-  },
-
-  {
-    'cappyzawa/telescope-terraform.nvim',
-    branch = 'main',
-    dependencies = { 'nvim-telescope/telescope.nvim' },
-    config = function()
-      ---@diagnostic disable-next-line: undefined-field
-      require('telescope').load_extension 'terraform'
-    end,
-  },
 
   {
     'isak102/telescope-git-file-history.nvim',
