@@ -10,7 +10,7 @@ return {
     'williamboman/mason.nvim',
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, { 'tfsec', 'trivy', 'terraform_validate' })
+      vim.list_extend(opts.ensure_installed, { 'tfsec', 'trivy' })
     end,
   },
 
