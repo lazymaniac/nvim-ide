@@ -1,6 +1,15 @@
 return {
 
   {
+    'williamboman/mason.nvim',
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
+        'elixir-ls',
+      })
+    end,
+  },
+
+  {
     'nvim-treesitter/nvim-treesitter',
     opts = function(_, opts)
       vim.list_extend(opts.ensure_installed, {
@@ -22,6 +31,7 @@ return {
 
   {
     'elixir-tools/elixir-tools.nvim',
+    branch = 'main',
     event = { 'BufReadPre', 'BufNewFile' },
     dependencies = { 'nvim-lua/plenary.nvim' },
     config = function()
@@ -51,7 +61,6 @@ return {
 
   {
     'nvim-neotest/neotest',
-    optional = true,
     dependencies = { 'jfpedroza/neotest-elixir' },
     opts = {
       adapters = {

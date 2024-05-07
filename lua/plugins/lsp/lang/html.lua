@@ -80,6 +80,7 @@ return {
 
   {
     'uga-rosa/ccc.nvim',
+    branch = 'main',
     opts = {},
     cmd = { 'CccPick', 'CccConvert', 'CccHighlighterEnable', 'CccHighlighterDisable', 'CccHighlighterToggle' },
     keys = {

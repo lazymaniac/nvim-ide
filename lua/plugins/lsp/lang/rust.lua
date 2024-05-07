@@ -59,6 +59,7 @@ return {
 
   {
     'mrcjkb/rustaceanvim',
+    branch = 'master',
     ft = { 'rust' },
     config = function()
       vim.g.rustaceanvim = {
@@ -150,6 +151,7 @@ return {
 
   {
     'Saecki/crates.nvim',
+    branch = 'main',
     event = { 'BufRead Cargo.toml' },
     opts = {
       smart_insert = true,

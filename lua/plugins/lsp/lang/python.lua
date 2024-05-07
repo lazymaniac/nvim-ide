@@ -59,7 +59,7 @@ return {
                   },
                 }
               end,
-              desc = 'Organize Imports [co]',
+              desc = 'Organize Imports [cz]',
             },
           },
         },
@@ -108,6 +108,7 @@ return {
 
   {
     'linux-cultist/venv-selector.nvim',
+    branch = 'main',
     cmd = 'VenvSelect',
     keys = { { '<leader>cv', '<cmd>:VenvSelect<cr>', desc = 'Select VirtualEnv [cv]' } },
     opts = function(_, opts)
@@ -122,6 +123,15 @@ return {
           '.env',
         },
       })
+    end,
+  },
+
+  {
+    'hrsh7th/nvim-cmp',
+    branch = 'main',
+    opts = function(_, opts)
+      opts.auto_brackets = opts.auto_brackets or {}
+      table.insert(opts.auto_brackets, 'python')
     end,
   },
 }

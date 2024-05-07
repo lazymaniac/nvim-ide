@@ -47,6 +47,7 @@ return {
   -- Markdown preview
   {
     'iamcco/markdown-preview.nvim',
+    branch = 'master',
     cmd = { 'MarkdownPreviewToggle', 'MarkdownPreview', 'MarkdownPreviewStop' },
     build = function()
       vim.fn['mkdp#util#install']()
@@ -62,6 +63,7 @@ return {
 
   {
     'tadmccorkle/markdown.nvim',
+    branch = 'master',
     event = 'VeryLazy',
     opts = {
       -- Disable all keymaps by setting mappings field to 'false'.
@@ -128,6 +130,7 @@ return {
 
   {
     'lukas-reineke/headlines.nvim',
+    branch = 'main',
     optional = true,
     opts = function()
       local opts = {}
@@ -157,6 +160,7 @@ return {
   -- see: `:h glow.nvim`
   {
     'ellisonleao/glow.nvim',
+    branch = 'main',
     -- stylua: ignore
     keys = {
       { '<leader>cP', ft = 'markdown', '<cmd>Glow<cr>', desc = 'Markdown Preview (TUI) [cP]' },

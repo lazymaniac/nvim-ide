@@ -48,11 +48,12 @@ return {
 
   {
     'tpope/vim-dadbod',
+    branch = 'master',
     cmd = { 'DBUI', 'DBUIToggle', 'DBUIAddConnection', 'DBUIFindBuffer' },
     dependencies = {
-      'kristijanhusak/vim-dadbod-ui',
-      { 'kristijanhusak/vim-dadbod-completion', ft = sql_ft },
-      { 'jsborjesson/vim-uppercase-sql', ft = sql_ft },
+      { 'kristijanhusak/vim-dadbod-ui', branch = 'master' },
+      { 'kristijanhusak/vim-dadbod-completion', branch = 'master', ft = sql_ft },
+      { 'jsborjesson/vim-uppercase-sql', branch = 'master', ft = sql_ft },
     },
     init = function()
       vim.g.db_ui_save_location = vim.fn.stdpath 'data' .. '/db_ui'
