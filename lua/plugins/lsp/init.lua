@@ -170,7 +170,7 @@ return {
   -- see: `:h mason.nvim`
   {
     'williamboman/mason.nvim',
-    branch = 'main',
+    -- branch = 'main',
     event = 'VeryLazy',
     cmd = 'Mason',
     build = ':MasonUpdate',
@@ -182,6 +182,10 @@ return {
       },
       ui = {
         border = 'rounded',
+      },
+      registries = {
+        'github:nvim-java/mason-registry',
+        'github:mason-org/mason-registry',
       },
     },
     config = function(_, opts)
