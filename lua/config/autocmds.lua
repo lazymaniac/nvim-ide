@@ -92,3 +92,10 @@ vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
     vim.fn.mkdir(vim.fn.fnamemodify(file, ':p:h'), 'p')
   end,
 })
+
+vim.api.nvim_create_augroup('lualine_augroup', { clear = true })
+vim.api.nvim_create_autocmd('User', {
+  group = 'lualine_augroup',
+  pattern = 'LspProgressStatusUpdated',
+  callback = require('lualine').refresh,
+})

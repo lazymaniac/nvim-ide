@@ -182,7 +182,6 @@ return {
   -- see: `:h bufferline`
   {
     'akinsho/bufferline.nvim',
-    enabled = false,
     event = 'VeryLazy',
     dependencies = {
       {
@@ -288,7 +287,6 @@ return {
   {
     'nvim-lualine/lualine.nvim',
     branch = 'master',
-    enabled = false,
     event = 'VeryLazy',
     config = function(_, opts)
       ---@diagnostic disable-next-line: undefined-field
@@ -299,9 +297,9 @@ return {
       local opts = {
         options = {
           icons_enabled = true,
-          theme = 'auto',
+          theme = 'cyberdream',
           component_separators = { left = '', right = '' },
-          section_separators = { left = '', right = '' },
+          section_separators = { left = '', right = '' },
           disabled_filetypes = {
             statusline = {
               'dashboard',
@@ -381,6 +379,11 @@ return {
             { 'selectioncount' },
           },
           lualine_y = {
+            {
+              function()
+                return require('lsp-progress').progress()
+              end,
+            },
             {
               'diff',
               symbols = {
