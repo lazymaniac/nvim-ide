@@ -1,13 +1,8 @@
-
 local Util = require 'util'
 
 local java_filetypes = { 'java' }
-local root_markers = { 'gradlew', 'mvnw', 'gradle', 'mvn' }
+local root_markers = { 'gradlew', 'mvnw', 'gradle', 'mvn', '.git' }
 
--- Utility function to extend or override a config table, similar to the way
--- that Plugin.opts works.
----@param config table
----@param custom function | table | nil
 local function extend_or_override(config, custom, ...)
   if type(custom) == 'function' then
     config = custom(config, ...) or config
@@ -24,13 +19,61 @@ local jdtls_settings = {
     },
   },
   java = {
+    configuration = {
+      detectJdksAtStart = true,
+      checkProjectSettingsExclusions = true,
+      workspaceCacheLimit = 90,
+      maven = {
+        notCoveredPluginExecutionSeverity = 'warning',
+        defaultMojoExecutionAction = 'ignore',
+      },
+      runtimes = {
+        {
+          name = 'JavaSE-1.8',
+          path = '~/.sdkman/candidates/java/8.0.402-tem/',
+        },
+        {
+          name = 'JavaSE-11',
+          path = '~/.sdkman/candidates/java/11.0.22-tem/',
+        },
+        {
+          name = 'JavaSE-17',
+          path = '~/.sdkman/candidates/java/17.0.10-tem/',
+          default = true,
+        },
+        {
+          name = 'JavaSE-21',
+          path = '~/.sdkman/candidates/java/21.0.2-tem/',
+        },
+      },
+      updateBuildConfiguration = 'interactive',
+    },
+    jdt = {
+      ls = {
+        vmargs = '-javaagent:/home/seba/.local/share/nvim/mason/packages/jdtls/lombok.jar -XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:enable',
+        protobufSupport = {
+          enabled = true,
+        },
+        androidSupport = {
+          enabled = 'auto',
+        },
+        lombokSupport = {
+          enabled = true,
+        },
+      },
+    },
     server = {
-      launchMode = 'Standard',
+      launchMode = 'Hybrid',
     },
     compile = {
       nullAnalysis = {
-        mode = 'automatic',
+        mode = 'interactive',
         nonnull = { 'javax.annotation.Nonnull', 'org.eclipse.jdt.annotation.NonNull', 'org.springframework.lang.NonNull' },
+        nonnullbydefault = {
+          'javax.annotation.ParametersAreNonnullByDefault',
+          'org.eclipse.jdt.annotation.NonNullByDefault',
+          'org.springframework.lang.NonNullApi',
+        },
         nullable = { 'javax.annotation.Nullable', 'org.eclipse.jdt.annotation.Nullable', 'org.springframework.lang.Nullable' },
       },
     },
@@ -78,6 +121,7 @@ local jdtls_settings = {
       enabled = true,
     },
     cleanup = {
+      actions = { 'renameFileToType' },
       actionsOnSave = {
         -- "qualifyMembers",
         -- "qualifyStaticMembers",
@@ -114,6 +158,10 @@ local jdtls_settings = {
     },
     completion = {
       enabled = true,
+      chain = {
+        enabled = true,
+      },
+      collapseCompletionItems = true,
       lazyResolveTextEdit = {
         enabled = true,
       },
@@ -134,34 +182,6 @@ local jdtls_settings = {
       postfix = {
         enabled = true,
       },
-    },
-    configuration = {
-      checkProjectSettingsExclusions = true,
-      workspaceCacheLimit = 90,
-      maven = {
-        notCoveredPluginExecutionSeverity = 'warning',
-        defaultMojoExecutionAction = 'ignore',
-      },
-      runtimes = {
-        {
-          name = 'JavaSE-1.8',
-          path = '~/.sdkman/candidates/java/8.0.402-tem/',
-        },
-        {
-          name = 'JavaSE-11',
-          path = '~/.sdkman/candidates/java/11.0.22-tem/',
-        },
-        {
-          name = 'JavaSE-17',
-          path = '~/.sdkman/candidates/java/17.0.10-tem/',
-          default = true,
-        },
-        {
-          name = 'JavaSE-21',
-          path = '~/.sdkman/candidates/java/21.0.2-tem/',
-        },
-      },
-      updateBuildConfiguration = 'automatic',
     },
     contentProvider = { preferred = 'fernflower' },
     eclipse = {
@@ -191,6 +211,7 @@ local jdtls_settings = {
       enabled = true,
     },
     import = {
+      project_selection = 'automatic',
       generatesMetadataFilesAtProjectRoot = false,
       exclusions = {
         '**/node_modules/**',
@@ -225,20 +246,6 @@ local jdtls_settings = {
         exclusions = {},
       },
     },
-    jdt = {
-      ls = {
-        vmargs = '-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx3G -Xms100m -Xlog:disable',
-        protobufSupport = {
-          enabled = true,
-        },
-        androidSupport = {
-          enabled = 'auto',
-        },
-        lombokSupport = {
-          enabled = true,
-        },
-      },
-    },
     maven = {
       downloadSources = true,
       updateSnapshots = false,
@@ -247,7 +254,7 @@ local jdtls_settings = {
     project = {
       importHint = true,
       importOnFirstTimeStartup = 'automatic',
-      encoding = 'setDefault',
+      encoding = 'ignore',
       referencedLibraries = { 'lib/**/*.jar' },
       resourceFilters = { 'node_modules', '\\.git' },
       sourcePaths = {},
@@ -291,7 +298,10 @@ local jdtls_settings = {
       server = 'off',
     },
     edit = {
-      validateAllOpenBuffersOnChanges = false,
+      validateAllOpenBuffersOnChanges = true,
+      smartSemicolonDetection = {
+        enabled = true,
+      },
     },
   },
 }
@@ -302,7 +312,7 @@ return {
     'williamboman/mason.nvim',
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, { 'clang-format', 'trivy', 'sonarlint-language-server' })
+      vim.list_extend(opts.ensure_installed, { 'clang-format', 'trivy', 'sonarlint-language-server', 'xmlformatter' })
     end,
   },
 
@@ -361,7 +371,6 @@ return {
 
   {
     'mfussenegger/nvim-jdtls',
-    enabled = true,
     branch = 'master',
     ft = java_filetypes,
     dependencies = { 'folke/which-key.nvim' },
@@ -390,7 +399,7 @@ return {
           local jdtls_dir = mason_registry.get_package('jdtls'):get_install_path()
           local lombok_path = jdtls_dir .. '/lombok.jar'
           local lombok_agent_param = '--jvm-arg=-javaagent:' .. lombok_path
-          local xmx_param = '--jvm-arg=-Xmx8g'
+          local xmx_param = '--jvm-arg=-Xmx2g'
           local project_name = opts.project_name(root_dir)
           local cmd = vim.deepcopy(opts.cmd)
           if project_name then
@@ -410,8 +419,8 @@ return {
         test = true,
       }
     end,
-    config = function()
-      local opts = Util.opts 'nvim-jdtls' or {}
+    config = function(_, opts)
+      -- local opts = Util.opts 'nvim-jdtls' or {}
       -- Find the extra bundles that should be passed on the jdtls command-line
       -- if nvim-dap is enabled with java debug/test.
       local mason_registry = require 'mason-registry'
