@@ -297,7 +297,7 @@ return {
       local opts = {
         options = {
           icons_enabled = true,
-          theme = 'cyberdream',
+          theme = 'auto',
           component_separators = { left = '', right = '' },
           section_separators = { left = '', right = '' },
           disabled_filetypes = {
