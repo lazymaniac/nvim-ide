@@ -298,8 +298,8 @@ return {
         options = {
           icons_enabled = true,
           theme = 'auto',
-          component_separators = { left = '', right = '' },
-          section_separators = { left = '', right = '' },
+          component_separators = { left = '|', right = '|' },
+          section_separators = { left = '', right = '' },
           disabled_filetypes = {
             statusline = {
               'dashboard',
@@ -329,7 +329,6 @@ return {
         sections = {
           lualine_a = { Util.lualine.root_dir { cwd = true } },
           lualine_b = {
-            { 'branch' },
             { Util.lualine.pretty_path() },
           },
           lualine_c = {
@@ -350,15 +349,6 @@ return {
                 return package.loaded['dap'] and require('dap').status() ~= ''
               end,
               color = Util.ui.fg 'Debug',
-            },
-            {
-              function()
-                local linters = require('lint').get_running()
-                if #linters == 0 then
-                  return '󰦕'
-                end
-                return '󱉶 ' .. table.concat(linters, ', ')
-              end,
             },
             {
               'overseer',
@@ -412,7 +402,6 @@ return {
                 hint = icons.diagnostics.Hint,
               },
             },
-            { 'filesize' },
             {
               'filetype',
               icon_only = false,
@@ -423,8 +412,9 @@ return {
                 align = 'right',
               },
             },
-            'encoding',
-            'fileformat',
+            { 'encoding' },
+            { 'fileformat' },
+            { 'branch' },
           },
           lualine_z = {},
         },
