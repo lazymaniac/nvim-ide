@@ -286,6 +286,7 @@ return {
   -- see: `h: lualine`
   {
     'nvim-lualine/lualine.nvim',
+    enabled = true,
     branch = 'master',
     event = 'VeryLazy',
     config = function(_, opts)
@@ -454,23 +455,6 @@ return {
             { 'trouble' },
             { 'selectioncount' },
           },
-          lualine_y = {},
-          lualine_z = {},
-        },
-        tabline = {},
-        winbar = {
-          lualine_a = {},
-          lualine_b = {},
-          lualine_c = {},
-          lualine_x = {},
-          lualine_y = {},
-          lualine_z = {},
-        },
-        inactive_winbar = {
-          lualine_a = {},
-          lualine_b = {},
-          lualine_c = {},
-          lualine_x = {},
           lualine_y = {},
           lualine_z = {},
         },

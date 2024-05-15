@@ -120,10 +120,10 @@ return {
           {
             elements = {
               { id = 'scopes', size = 0.2 },
-              { id = 'repl', size = 0.2 },
-              { id = 'breakpoints', size = 0.2 },
-              { id = 'watches', size = 0.2 },
               { id = 'stacks', size = 0.2 },
+              { id = 'watches', size = 0.2 },
+              { id = 'breakpoints', size = 0.2 },
+              { id = 'repl', size = 0.2 },
             },
             position = 'right',
             size = 60,
