@@ -95,7 +95,7 @@ return {
       if opts.inlay_hints.enabled then
         Util.lsp.on_attach(function(client, buffer)
           if client.supports_method 'textDocument/inlayHint' then
-            Util.toggle.inlay_hints(buffer, true)
+            Util.toggle.inlay_hints()
           end
         end)
       end
