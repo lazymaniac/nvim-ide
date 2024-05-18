@@ -1,7 +1,7 @@
 -- automatically import output chunks from a jupyter notebook
 -- tries to find a kernel that matches the kernel in the jupyter notebook
 -- falls back to a kernel that matches the name of the active venv (if any)
-local imb = function(e) -- init molten buffer
+local init_molten_buffer = function(e) -- init molten buffer
   vim.schedule(function()
     local kernels = vim.fn.MoltenAvailableKernels()
     local try_kernel_name = function()
@@ -26,7 +26,7 @@ end
 -- automatically import output chunks from a jupyter notebook
 vim.api.nvim_create_autocmd('BufAdd', {
   pattern = { '*.ipynb' },
-  callback = imb,
+  callback = init_molten_buffer,
 })
 
 -- we have to do this as well so that we catch files opened like nvim ./hi.ipynb
@@ -34,7 +34,7 @@ vim.api.nvim_create_autocmd('BufEnter', {
   pattern = { '*.ipynb' },
   callback = function(e)
     if vim.api.nvim_get_vvar 'vim_did_enter' ~= 1 then
-      imb(e)
+      init_molten_buffer(e)
     end
   end,
 })
@@ -64,8 +64,9 @@ return {
     },
   },
 
-  -- [sniprun] - Run lines or part of code without running whole program
+  -- [sniprun] - Execute part of code or whole file.
   -- see: `:h sniprun`
+  -- link: https://github.com/michaelb/sniprun
   {
     'michaelb/sniprun',
     branch = 'master',
@@ -139,6 +140,7 @@ return {
 
   -- [jupytext.nvim] - Automatically convert Jopyter notebooks to python files.
   -- see: `:h jupytext.nvim`
+  -- link: https://github.com/GCBallesteros/jupytext.nvim
   {
     'GCBallesteros/jupytext.nvim',
     branch = 'main',
@@ -167,6 +169,7 @@ return {
 
   -- [molten-nvim] - REPL for jupyter notebook
   -- see: `:h molten-nvim`
+  -- link: https://github.com/benlubas/molten-nvim
   {
     'benlubas/molten-nvim',
     branch = 'main',
@@ -204,6 +207,9 @@ return {
     end,
   },
 
+  -- [quarto-nvim] - Integration with quarto manuscript
+  -- see: `:h quarto-nvim`
+  -- link: https://github.com/quarto-dev/quarto-nvim
   {
     'quarto-dev/quarto-nvim',
     branch = 'main',
@@ -247,6 +253,9 @@ return {
     end,
   },
 
+  -- [otter.nvim] - Add LSP features and autocompletion to embedded code.
+  -- see: `:h otter.nvim`
+  -- link: https://github.com/jmbuhr/otter.nvim
   {
     'jmbuhr/otter.nvim',
     branch = 'main',

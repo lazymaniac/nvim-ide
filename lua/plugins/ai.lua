@@ -16,6 +16,9 @@ return {
 
   -- [[ AI ]] ---------------------------------------------------------------
 
+  -- [edgy.nvim] - Create and manage windows layout
+  -- see: `:h edgy.nvim`
+  -- link: https://github.com/folke/edgy.nvim
   {
     'folke/edgy.nvim',
     event = 'VeryLazy',
@@ -34,6 +37,7 @@ return {
 
   -- [codecompanion.nvim] - Integrates LLMs with neovim
   -- see: `:h codecompanion.nvim`
+  -- link: https://github.com/olimorris/codecompanion.nvim
   {
     'lazymaniac/codecompanion.nvim',
     branch = 'main',
