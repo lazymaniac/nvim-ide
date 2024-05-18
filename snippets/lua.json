@@ -30,7 +30,8 @@
   "plug_doc": {
     "body": [
       "-- [${1:plugin name}] - ${2:description}",
-      "-- see: `:h ${1:help-tag}`"
+      "-- see: `:h ${1:help-tag}`",
+      "-- link: ${3:link-to-repo}"
     ],
     "prefix": "plug_doc"
   },

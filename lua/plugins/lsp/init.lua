@@ -1,7 +1,9 @@
 local Util = require 'util'
 
 return {
-  -- lspconfig
+  -- [nvim-lspconfig] - LSP integration config. Handles lsp servers initializetion.
+  -- see: `:h nvim-lspconfig`
+  -- link: https://github.com/neovim/nvim-lspconfig
   {
     'neovim/nvim-lspconfig',
     branch = 'master',
