@@ -14,6 +14,17 @@ end
 
 return {
 
+  -- Add which-key group for AI
+  {
+    'folke/which-key.nvim',
+    optional = true,
+    opts = {
+      defaults = {
+        ['<leader>z'] = { name = '+[AI]' },
+      },
+    },
+  },
+  
   -- [[ AI ]] ---------------------------------------------------------------
 
   -- [edgy.nvim] - Create and manage windows layout
