@@ -57,6 +57,9 @@ return {
     },
   },
 
+  -- [rustaceanvim] - LSP extension for Rust.
+  -- see: `:h rustaceanvim`
+  -- link: https://github.com/mrcjkb/rustaceanvim
   {
     'mrcjkb/rustaceanvim',
     branch = 'master',
@@ -149,6 +152,9 @@ return {
     end,
   },
 
+  -- [crates.nvim] - Rust Crates support.
+  -- see: `:h crates.nvim`
+  -- link: https://github.com/Saecki/crates.nvim
   {
     'Saecki/crates.nvim',
     branch = 'main',
@@ -205,6 +211,9 @@ return {
     },
   },
 
+  -- [nvim-cmp-rust] - Reorgnize autocompletion items for rust.
+  -- see: `:h nvim-cmp-rust`
+  -- link: https://github.com/ryo33/nvim-cmp-rust
   {
     'ryo33/nvim-cmp-rust',
     config = function()

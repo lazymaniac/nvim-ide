@@ -1,5 +1,8 @@
 return {
 
+  -- [omnisharp-extended-lsp] - Extends native LSP for omnisharp
+  -- see: `:h omnisharp-extended-lsp`
+  -- link: https://github.com/Hoffs/omnisharp-extended-lsp.nvim
   { 'Hoffs/omnisharp-extended-lsp.nvim', lazy = true },
 
   {

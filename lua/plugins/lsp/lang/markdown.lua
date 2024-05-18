@@ -44,7 +44,9 @@ return {
     },
   },
 
-  -- Markdown preview
+  -- [markdown-preview.nvim] - Preview markdown in bnowser.
+  -- see: `:h markdown-preview.nvim`
+  -- link: https://github.com/iamcco/markdown-preview.nvim
   {
     'iamcco/markdown-preview.nvim',
     branch = 'master',
@@ -61,6 +63,9 @@ return {
     end,
   },
 
+  -- [markdown.nvim] - Tools for writing markdown
+  -- see: `:h markdown.nvim`
+  -- link: https://github.com/tadmccorkle/markdown.nvim
   {
     'tadmccorkle/markdown.nvim',
     branch = 'master',
@@ -128,6 +133,9 @@ return {
     },
   },
 
+  -- [headlines.nvim] - Adds highlights to markdown, norg files
+  -- see: `:h headlines.nvim`
+  -- link: https://github.com/lukas-reineke/headlines.nvim
   {
     'lukas-reineke/headlines.nvim',
     branch = 'main',
@@ -158,6 +166,7 @@ return {
 
   -- [glow.nvim] - Markdown preview in terminal
   -- see: `:h glow.nvim`
+  -- link: https://github.com/ellisonleao/glow.nvim
   {
     'ellisonleao/glow.nvim',
     branch = 'main',

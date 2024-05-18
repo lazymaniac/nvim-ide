@@ -1,6 +1,5 @@
 return {
 
-  -- add json to treesitter
   {
     'nvim-treesitter/nvim-treesitter',
     opts = function(_, opts)
@@ -10,7 +9,6 @@ return {
     end,
   },
 
-  -- Ensure JSON tools are installed
   {
     'williamboman/mason.nvim',
     opts = function(_, opts)
@@ -37,11 +35,9 @@ return {
     },
   },
 
-  -- correctly setup lspconfig
   {
     'neovim/nvim-lspconfig',
     dependencies = {
-      -- yaml schema support
       {
         'b0o/SchemaStore.nvim',
         branch = 'main',

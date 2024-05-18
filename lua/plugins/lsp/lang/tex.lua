@@ -9,7 +9,6 @@ return {
     },
   },
 
-  -- Add BibTeX/LaTeX to treesitter
   {
     'nvim-treesitter/nvim-treesitter',
     opts = function(_, opts)
@@ -24,6 +23,9 @@ return {
     end,
   },
 
+  -- [vimtex] - Syntax plugin for Latex
+  -- see: `:h vimtex`
+  -- link: https://github.com/lervag/vimtex
   {
     'lervag/vimtex',
     branch = 'master',
@@ -34,7 +36,6 @@ return {
     end,
   },
 
-  -- Correctly setup lspconfig for LaTeX 🚀
   {
     'neovim/nvim-lspconfig',
     optional = true,

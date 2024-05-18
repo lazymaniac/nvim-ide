@@ -1,5 +1,7 @@
 return {
-  -- "numiras/semshi",
+  -- [semshi] - Syntax highlights for python.
+  -- see: `:h semshi`
+  -- link: https://github.com/numirias/semshi
   'wookayin/semshi', -- use a maintained fork
   branch = 'master',
   ft = 'python',

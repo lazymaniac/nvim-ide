@@ -2,6 +2,7 @@ return {
 
   -- [[ PERFORMANCE ]] --------------------------------------------------------------
   -- [vim-startuptime] - Measure startup time. Displayed on dashboard
+  -- link: https://github.com/dstein64/vim-startuptime
   {
     'dstein64/vim-startuptime',
     branch = 'master',
@@ -18,6 +19,7 @@ return {
   -- keeping track of open buffers, window arrangement, and more.
   -- You can restore sessions when returning through the dashboard.
   -- see: `:h persistence`
+  -- link: https://github.com/folke/persistence.nvim
   {
     'folke/persistence.nvim',
     branch = 'main',
@@ -38,11 +40,13 @@ return {
   -- [[ UTIL LIB ]] ---------------------------------------------------------------
   -- [plenary.nvim] - Utility lib used by other plugins
   -- see: `:h help-tag`
+  -- link: https://github.com/nvim-lua/plenary.nvim
   { 'nvim-lua/plenary.nvim', branch = 'master' },
 
   -- [[ LEARNING VIM MOTIONS ]] ---------------------------------------------------------------
   -- [hardtime.nvim] - Plugin that helps learn vim motions and keybindings by providing hints
   -- see: `:h hardtime`
+  -- link: https://github.com/m4xshen/hardtime.nvim
   {
     'm4xshen/hardtime.nvim',
     branch = 'main',
@@ -63,52 +67,11 @@ return {
     },
   },
 
-  -- [[ CHEATSHEET ]] ---------------------------------------------------------------
-  -- [cheatsheet.nvim] - Cheats for editor, vim plugins, nerd-fonts, etc.
-  -- see: `:h cheatsheet.nvim`
-  {
-    'sudormrfbin/cheatsheet.nvim',
-    branch = 'master',
-    event = 'VeryLazy',
-    dependencies = { 'nvim-telescope/telescope.nvim', 'nvim-lua/popup.nvim', 'nvim-lua/plenary.nvim' },
-    keys = {
-      {
-        '<leader>?',
-        '<cmd>Cheatsheet<cr>',
-        mode = { 'n' },
-        desc = 'Cheatsheet [?]',
-      },
-    },
-    config = function()
-      local ctactions = require 'cheatsheet.telescope.actions'
-      require('cheatsheet').setup {
-        bundled_cheetsheets = {
-          enabled = { 'default', 'lua', 'markdown', 'regex', 'netrw', 'unicode' },
-          disabled = { 'nerd-fonts' },
-        },
-        bundled_plugin_cheatsheets = {
-          enabled = {
-            'auto-session',
-            'octo.nvim',
-            'telescope.nvim',
-          },
-          disabled = { 'gitsigns' },
-        },
-        include_only_installed_plugins = true,
-        telescope_mappings = {
-          ['<CR>'] = ctactions.select_or_fill_commandline,
-          ['<A-CR>'] = ctactions.select_or_execute,
-          ['<C-Y>'] = ctactions.copy_cheat_value,
-          ['<C-E>'] = ctactions.edit_user_cheatsheet,
-        },
-      }
-    end,
-  },
-
   -- [[ TOYS ]] ---------------------------------------------------------------
 
   -- [wttr.nvim] - Show current weather in lualine or forecast in popup
   -- see: `:h wttr.nvim`
+  -- link: https://github.com/lazymaniac/wttr.nvim
   {
     'lazymaniac/wttr.nvim',
     branch = 'main',
@@ -128,6 +91,7 @@ return {
 
   -- [oogway.nvim] - Provides list of Oogway sentences and ascii prictures
   -- see: `:h oogway`
+  -- link: https://github.com/0x5a4/oogway.nvim
   {
     '0x5a4/oogway.nvim',
     branch = 'main',

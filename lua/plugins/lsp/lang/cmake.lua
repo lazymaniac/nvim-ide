@@ -35,6 +35,9 @@ return {
     },
   },
 
+  -- [cmake-tools.nvim] - Tools for cmake projects.
+  -- see: `:h cmake-tools.nvim`
+  -- link: https://github.com/Civitasv/cmake-tools.nvim
   {
     "Civitasv/cmake-tools.nvim",
     branch = 'master',

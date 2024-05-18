@@ -6,6 +6,7 @@ return {
 
   -- [telescope.nvim] - Fuzzy finder for project files
   -- see: `:h telescope`
+  -- link: https://github.com/nvim-telescope/telescope.nvim
   {
     'nvim-telescope/telescope.nvim',
     branch = 'master',
@@ -289,24 +290,9 @@ return {
     end,
   },
 
-  -- [telescope-import] - Search and add imports with telescope
-  -- see: `:h telescope-import`
-  {
-    'piersolenski/telescope-import.nvim',
-    branch = 'main',
-    dependencies = 'nvim-telescope/telescope.nvim',
-    -- stylua: ignore
-    keys = {
-      { '<leader>si', '<cmd>Telescope import layout_strategy=cursor<cr>', mode = { 'n', 'v' }, desc = 'Search Imports [si]' },
-    },
-    config = function()
-      ---@diagnostic disable-next-line: undefined-field
-      require('telescope').load_extension 'import'
-    end,
-  },
-
   -- [yaml-companion] - Search and apply YAML schema
   -- see: `:h yaml-companion`
+  -- link: https://github.com/someone-stole-my-name/yaml-companion.nvim
   {
     'someone-stole-my-name/yaml-companion.nvim',
     branch = 'main',
@@ -324,6 +310,7 @@ return {
 
   -- [telescope-tabs] - Tabs selector with telescope
   -- see: `:h telescope-tabs`
+  -- link: https://github.com/LukasPietzschmann/telescope-tabs
   {
     'LukasPietzschmann/telescope-tabs',
     branch = 'master',
@@ -341,6 +328,7 @@ return {
 
   -- [telescope-undo] - Search undo history with telescope.
   -- see: `:h telescope-undo`
+  -- link: https://github.com/debugloop/telescope-undo.nvim
   {
     'debugloop/telescope-undo.nvim',
     branch = 'main',
@@ -357,6 +345,7 @@ return {
 
   -- [telescope-egrepify] - Enhanced grepping in Telescope
   -- see: `:h telescope-egrepify`
+  -- link: https://github.com/fdschmidt93/telescope-egrepify.nvim
   {
     'fdschmidt93/telescope-egrepify.nvim',
     branch = 'master',
@@ -371,6 +360,9 @@ return {
     end,
   },
 
+  -- [nvim-notify] - browse notifications with telescope.
+  -- see: `:h nvim-notify`
+  -- link: https://github.com/rcarriga/nvim-notify
   {
     'rcarriga/nvim-notify',
     branch = 'master',
@@ -386,6 +378,9 @@ return {
     end,
   },
 
+  -- [telescope-fzf-native.nvim] - Power telescope search with fzf
+  -- see: `:h telescope-fzf-native.nvim`
+  -- link: https://github.com/nvim-telescope/telescope-fzf-native.nvim
   {
     'nvim-telescope/telescope-fzf-native.nvim',
     branch = 'main',
@@ -397,6 +392,9 @@ return {
     end,
   },
 
+  -- [telescope-dap.nvim] - Integratio of nvim-dap with telescope
+  -- see: `:h telescope-dap.nvim`
+  -- link: https://github.com/nvim-telescope/telescope-dap.nvim
   {
     'nvim-telescope/telescope-dap.nvim',
     branch = 'master',
@@ -415,6 +413,9 @@ return {
     end,
   },
 
+  -- [telescope-lazy] - Lazy integartion with telescope
+  -- see: `:h telescope-lazy`
+  -- link: https://github.com/tsakirist/telescope-lazy.nvim
   {
     'tsakirist/telescope-lazy.nvim',
     branch = 'main',
@@ -429,13 +430,16 @@ return {
     end,
   },
 
+  -- [telescope-git-diffs] - Telescope picker for git diffs before commit.
+  -- see: `:h telescope-git-diffs`
+  -- link: https://github.com/paopaol/telescope-git-diffs.nvim
   {
     'paopaol/telescope-git-diffs.nvim',
     branch = 'main',
     dependencies = { 'nvim-telescope/telescope.nvim', 'nvim-lua/plenary.nvim', 'sindrets/diffview.nvim' },
     -- stylua: ignore
     keys = {
-      { '<leader>gc', '<cmd>Telescope git_diffs diff_commits<cr>', mode = { 'n', 'v' }, desc = 'Search Commits [gc]' },
+      { '<leader>gC', '<cmd>Telescope git_diffs diff_commits<cr>', mode = { 'n', 'v' }, desc = 'Search Commits [gc]' },
     },
     config = function()
       ---@diagnostic disable-next-line: undefined-field
@@ -443,6 +447,9 @@ return {
     end,
   },
 
+  -- [telescope-luasnip] - Telescope picker for luasnip.
+  -- see: `:h telescope-luasnip`
+  -- link: https://github.com/benfowler/telescope-luasnip.nvim
   {
     'benfowler/telescope-luasnip.nvim',
     branch = 'master',
@@ -457,6 +464,9 @@ return {
     end,
   },
 
+  -- [commander.nvim] - Telecope picker for available command/shortcuts.
+  -- see: `:h commander.nvim`
+  -- link: https://github.com/FeiyouG/commander.nvim
   {
     'FeiyouG/commander.nvim',
     branch = 'main',
@@ -491,6 +501,9 @@ return {
     end,
   },
 
+  -- [telescope-docker] - Telecope picker for docker stuff.
+  -- see: `:h telescope-docker`
+  -- link: https://github.com/lpoto/telescope-docker.nvim
   {
     'lpoto/telescope-docker.nvim',
     branch = 'main',
@@ -504,7 +517,9 @@ return {
     end,
   },
 
-
+  -- [telescope-git-file-history] - Telescope pcker for git file history.
+  -- see: `:h telescope-git-file-history`
+  -- link: https://github.com/isak102/telescope-git-file-history.nvim
   {
     'isak102/telescope-git-file-history.nvim',
     branch = 'master',

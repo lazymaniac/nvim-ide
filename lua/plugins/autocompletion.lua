@@ -34,17 +34,11 @@ return {
       -- see: `:h cmp-spell`
       -- link: https://github.com/f3fora/cmp-spell
       { 'f3fora/cmp-spell', branch = 'master' },
-      -- [LuaSnip] - Snippet engine.
-      -- see: `:h LuaSnip`
-      -- link: https://github.com/L3MON4D3/LuaSnip
       { 'L3MON4D3/LuaSnip', branch = 'master' },
       -- [cmp_luasnip] - Connect luasnip with nvim-cmp.
       -- see: `:h cmp_luasnip`
       -- link: https://github.com/saadparwaiz1/cmp_luasnip
       { 'saadparwaiz1/cmp_luasnip', branch = 'master' },
-      -- [friendly-snippets] - Snippets endgine.
-      -- see: `:h friendly-snippets`
-      -- link: https://github.com/rafamadriz/friendly-snippets
       { 'rafamadriz/friendly-snippets', branch = 'main' },
       { 'rcarriga/cmp-dap', branch = 'master' },
       -- [cmp-npm] - Add npm packages and versions to autocompletion.

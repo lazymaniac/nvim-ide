@@ -24,7 +24,7 @@ return {
       },
     },
   },
-  
+
   -- [[ AI ]] ---------------------------------------------------------------
 
   -- [edgy.nvim] - Create and manage windows layout

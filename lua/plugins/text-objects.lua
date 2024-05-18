@@ -1,8 +1,10 @@
 return {
 
   -- [[ TEXT OBJECTS ]] ---------------------------------------------------------------
+
   -- [mini.ai] - Better text object_scope
   -- see: `:h mini.ai`
+  -- link: https://github.com/echasnovski/mini.ai
   {
     'echasnovski/mini.ai',
     branch = 'main',
@@ -77,6 +79,7 @@ return {
 
   -- [nvim-various-textobjs] - Extends buildin text objects
   -- see: `:h nvim-various-textobjs`
+  -- link: https://github.com/chrisgrieser/nvim-various-textobjs
   --
   -- ---------------------------------------------------------------------------------------------------------------
   -- textobject               description             inner / outer          forward-seeking    default  filetypes

@@ -3,8 +3,10 @@ local Util = require 'util'
 return {
 
   -- [[ UI ENHANCEMENTS ]] ---------------------------------------------------------------
+
   -- [nvim-notify] - Better 'vim.notify()'
   -- see: `:h nvim-notify`
+  -- link: https://github.com/rcarriga/nvim-notify
   {
     'rcarriga/nvim-notify',
     branch = 'master',
@@ -57,6 +59,7 @@ return {
 
   -- [dressing.nvim] - Better vim.ui for input boxes, selects etc.
   -- see: `:h dressing.nvim`
+  -- link: https://github.com/stevearc/dressing.nvim
   {
     'stevearc/dressing.nvim',
     branch = 'master',
@@ -180,6 +183,7 @@ return {
 
   -- [bufferline.nvim] - This is what powers fancy-looking tabs, which include filetype icons and close buttons.
   -- see: `:h bufferline`
+  -- link: https://github.com/akinsho/bufferline.nvim
   {
     'akinsho/bufferline.nvim',
     branch = 'main',
@@ -285,6 +289,7 @@ return {
 
   -- [lualine.nvim] Shows statusline and winbar
   -- see: `h: lualine`
+  -- link: https://github.com/nvim-lualine/lualine.nvim
   {
     'nvim-lualine/lualine.nvim',
     enabled = true,
@@ -479,6 +484,7 @@ return {
 
   -- [noice.nvim] - Highly experimental plugin that completely replaces the UI for messages, cmdline and the popupmenu.
   -- see: `:h noice`
+  -- link: https://github.com/folke/noice.nvim
   {
     'folke/noice.nvim',
     branch = 'main',
@@ -695,14 +701,17 @@ return {
   },
 
   -- [nvim-web-devicons] - Package of dev icons
+  -- link: https://github.com/nvim-tree/nvim-web-devicons
   { 'nvim-tree/nvim-web-devicons', branch = 'master' },
 
   -- [nui.nvim] - UI components like popups.
   -- see: `:h nui`
+  -- link: https://github.com/MunifTanjim/nui.nvim
   { 'MunifTanjim/nui.nvim', branch = 'main' },
 
   -- [dashboard-nvim] - Welcome dashboard like in other IDE
   -- see: `:h dashboard-nvim`
+  -- link: https://github.com/nvimdev/dashboard-nvim
   {
     'nvimdev/dashboard-nvim',
     branch = 'master',
@@ -759,6 +768,7 @@ return {
 
   -- [floating-help.nvim] - Vim help shown in floating popup
   -- see: 'h: floating-help'
+  -- link: https://github.com/Tyler-Barham/floating-help.nvim
   {
     'Tyler-Barham/floating-help.nvim',
     branch = 'main',
@@ -789,6 +799,7 @@ return {
 
   -- [numb.nvim] - Show preview of location when jumping to line with `:{number}`
   -- see: `:h numb`
+  -- link: https://github.com/nacro90/numb.nvim
   {
     'nacro90/numb.nvim',
     branch = 'master',
@@ -807,6 +818,7 @@ return {
 
   -- [nvim-window-picker] - Allows to decide where to split a window from neo-tree
   -- see: `:h window-picker`
+  -- link: https://github.com/s1n7ax/nvim-window-picker
   {
     's1n7ax/nvim-window-picker',
     branch = 'main',
@@ -894,6 +906,7 @@ return {
 
   -- [zen-mode.nvim] - Creates distraction free view for smooth coding
   -- see: `:h zen-mode`
+  -- link: https://github.com/folke/zen-mode.nvim
   {
     'folke/zen-mode.nvim',
     branch = 'main',
@@ -967,6 +980,7 @@ return {
 
   -- [mini.animate] - Nice animations for UI
   -- see: `:h mini.animate`
+  -- link: https://github.com/echasnovski/mini.animate
   {
     'echasnovski/mini.animate',
     branch = 'main',

@@ -68,6 +68,9 @@ return {
     },
   },
 
+  -- [telescope-terraform-doc] - Telescope picker for Terraform docs.
+  -- see: `:h telescope-terraform-doc`
+  -- link: https://github.com/ANGkeith/telescope-terraform-doc.nvim
   {
     'ANGkeith/telescope-terraform-doc.nvim',
     branch = 'main',
@@ -78,6 +81,9 @@ return {
     end,
   },
 
+  -- [telescope-terraform] - Privdes info about terraform workspace.
+  -- see: `:h telescope-terraform`
+  -- link: https://github.com/cappyzawa/telescope-terraform.nvim
   {
     'cappyzawa/telescope-terraform.nvim',
     branch = 'main',

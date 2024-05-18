@@ -1,8 +1,10 @@
 return {
 
   -- [[ TERMINAL ]] ---------------------------------------------------------------
+
   -- [toggleterm.nvim] - Terminal integration in nvim
   -- see: `:h toggleterm`
+  -- link: https://github.com/akinsho/toggleterm.nvim
   {
     'akinsho/toggleterm.nvim',
     branch = 'main',
@@ -28,7 +30,6 @@ return {
       { '<leader>al', '<cmd>TermSelect<cr>', mode = { 'n' }, desc = 'List Active Terminals [al]', },
       { '<leader>ar', '<cmd>ToggleTermSetName<cr>', mode = { 'n' }, desc = 'Rename Terminal [ar]', },
       { '<leader>ae', '<cmd>ToggleTermSendVisualSelection<cr>', mode = { 'v' }, desc = 'Execute Selection in Terminal [ae]', },
-
     },
     opts = {
       size = function(term)

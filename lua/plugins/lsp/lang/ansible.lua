@@ -1,35 +1,38 @@
 return {
   {
-    "nvim-treesitter/nvim-treesitter",
+    'nvim-treesitter/nvim-treesitter',
     opts = function(_, opts)
-      if type(opts.ensure_installed) == "table" then
-        vim.list_extend(opts.ensure_installed, { "yaml" })
+      if type(opts.ensure_installed) == 'table' then
+        vim.list_extend(opts.ensure_installed, { 'yaml' })
       end
     end,
   },
+
   {
-    "williamboman/mason.nvim",
+    'williamboman/mason.nvim',
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, { "ansible-lint" })
+      vim.list_extend(opts.ensure_installed, { 'ansible-lint' })
     end,
   },
+
   {
-    "neovim/nvim-lspconfig",
+    'neovim/nvim-lspconfig',
     opts = {
       servers = {
         ansiblels = {},
       },
     },
   },
+
   {
-    "mfussenegger/nvim-ansible",
+    'mfussenegger/nvim-ansible',
     branch = 'main',
     keys = {
       {
-        "<leader>tr",
+        '<leader>tr',
         function()
-          require("ansible").run()
+          require('ansible').run()
         end,
         silent = true,
       },

@@ -18,6 +18,9 @@ return {
     },
   },
 
+  -- [powershell.nvim] - Powershell LSP support.
+  -- see: `:h powershell.nvim`
+  -- link: https://github.com/TheLeoP/powershell.nvim
   {
     'TheLeoP/powershell.nvim',
     branch = 'main',

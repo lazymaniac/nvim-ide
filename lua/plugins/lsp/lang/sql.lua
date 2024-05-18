@@ -46,6 +46,9 @@ return {
     },
   },
 
+  -- [vim-dadbod] - SQL database intehration.
+  -- see: `:h vim-dadbod`
+  -- link: https://github.com/tpope/vim-dadbod
   {
     'tpope/vim-dadbod',
     branch = 'master',
@@ -60,7 +63,6 @@ return {
       vim.g.db_ui_use_nerd_fonts = true
       vim.g.db_ui_execute_on_save = false
       vim.g.db_ui_use_nvim_notify = true
-
       vim.api.nvim_create_autocmd('FileType', {
         pattern = sql_ft,
         callback = function()

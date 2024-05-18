@@ -335,6 +335,7 @@ return {
 
   -- [sonarlint.nvim] - Sonarlint LSP
   -- see: `:h sonarlint.nvim`
+  -- link: https://gitlab.com/schrieveslaach/sonarlint.nvim
   {
     'https://gitlab.com/schrieveslaach/sonarlint.nvim',
     ft = { 'java' },
@@ -369,6 +370,9 @@ return {
     },
   },
 
+  -- [nvim-jdtls] - Java LSP extension for Nvim.
+  -- see: `:h nvim-jdtls`
+  -- link: https://github.com/mfussenegger/nvim-jdtls
   {
     'mfussenegger/nvim-jdtls',
     branch = 'master',
@@ -552,7 +556,6 @@ return {
     end,
   },
 
-  -- Ensure java debugger and test packages are installed.
   {
     'mfussenegger/nvim-dap',
     dependencies = {
@@ -570,7 +573,6 @@ return {
     },
   },
 
-  -- Setup neotest
   {
     'nvim-neotest/neotest',
     dependencies = { 'rcasia/neotest-java' },

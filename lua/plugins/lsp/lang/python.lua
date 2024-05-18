@@ -106,6 +106,10 @@ return {
     },
   },
 
+  -- [venv-selector.nvim] - Python Virtual Env selector.
+  -- see: `:h venv-selector.nvim`
+  -- link: https://github.com/linux-cultist/venv-selector.nvim
+  -- TODO: check new `regexp` branch
   {
     'linux-cultist/venv-selector.nvim',
     branch = 'main',
