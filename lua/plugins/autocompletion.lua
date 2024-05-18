@@ -19,7 +19,7 @@ return {
       -- Adds calculation result to completion capabilities
       { 'hrsh7th/cmp-calc', branch = 'main' },
       -- Adds correct spelling completion capabilities
-      { 'f3fora/cmp-spell', bramch = 'master' },
+      { 'f3fora/cmp-spell', branch = 'master' },
       -- Snippet Engine & its associated nvim-cmp source
       { 'L3MON4D3/LuaSnip', branch = 'master' },
       { 'saadparwaiz1/cmp_luasnip', branch = 'master' },
