@@ -7,6 +7,9 @@ return {
     branch = 'main',
     priority = 1000, -- We'd like this plugin to load first out of the rest
     config = true, -- This automatically runs `require("luarocks-nvim").setup()`
+    opts = {
+      rocks = { 'lua-curl', 'nvim-nio', 'mimetypes', 'xml2lua' },
+    },
   },
 
   -- [neorg] - Note taking, calendar, presentations, journal
