@@ -6,6 +6,9 @@ return {
     dir = '~/workspace/voyager.nvim/',
   },
 
+  -- [lspsaga.nvim] - Improves LSP experience in neovim.
+  -- see: `:h lspsaga.nvim`
+  -- link: https://github.com/nvimdev/lspsaga.nvim
   {
     'nvimdev/lspsaga.nvim',
     branch = 'main',
@@ -100,7 +103,10 @@ return {
       }
     end,
   },
-  -- [boole.nvim] - Allows to increment numbers and flip common text to opposite value like true -> false
+
+  -- [boole.nvim] - Allows to flip opposite values, or quickly increase or decrease numbers.
+  -- see: `:h boole.nvim`
+  -- link: https://github.com/nat-418/boole.nvim
   {
     'nat-418/boole.nvim',
     branch = 'main',
@@ -111,7 +117,6 @@ return {
           increment = '<C-a>',
           decrement = '<C-x>',
         },
-        -- User defined loops
         additions = {},
         allow_caps_additions = {
           { 'enable', 'disable' },
@@ -142,6 +147,7 @@ return {
 
   -- [Hypersonic.nvim] - Regex explainer
   -- see: `:h Hypersonic.nvim`
+  -- link: https://github.com/VidocqH/auto-indent.nvim
   {
     'tomiis4/Hypersonic.nvim',
     branch = 'main',
@@ -165,6 +171,7 @@ return {
 
   -- [nvim-surround] - Superior text surroundings. Add, remove, replace.
   -- see: `:h nvim-surround`
+  -- link: https://github.com/kylechui/nvim-surround
   {
     'kylechui/nvim-surround',
     branch = 'main',
@@ -278,8 +285,9 @@ return {
     end,
   },
 
-  -- [nvim-hlslens] - Helps better glance at matched information, jump between matched instances.
+  -- [nvim-hlslens] - Highlights matched search, jump between matched instances.
   -- see: `:h nvim-hlslens`
+  -- link: https://github.com/kevinhwang91/nvim-hlslens
   {
     'kevinhwang91/nvim-hlslens',
     branch = 'main',
@@ -290,7 +298,6 @@ return {
           require('scrollbar.handlers.search').handler.show(plist.start_pos)
         end,
       }
-
       vim.cmd [[
         augroup scrollbar_search_hide
             autocmd!
@@ -300,9 +307,9 @@ return {
     end,
   },
 
-  -- [mini.indentscope] - Active indent guide and indent text objects. When browsing
-  -- code, this highlights the current level of indentation, and animates the highlighting.
+  -- [mini.indentscope] - Visual guide for indentations.
   -- see: `:h mini.indentscope`
+  -- link: https://github.com/echasnovski/mini.indentscope
   {
     'echasnovski/mini.indentscope',
     branch = 'main',
@@ -366,6 +373,7 @@ return {
 
   -- [rainbow_delimiters.nvim] - Rainbow colored delimiters
   -- see: `:h rainbow-delimiters`
+  -- link: https://github.com/HiPhish/rainbow-delimiters.nvim
   {
     'HiPhish/rainbow-delimiters.nvim',
     branch = 'master',
@@ -385,51 +393,16 @@ return {
     end,
   },
 
-  -- [nvim-devdocs] - Dev docs
-  -- see: `:h nvim-devdocs`
-  {
-    'luckasRanarison/nvim-devdocs',
-    branch = 'master',
-    dependencies = { 'nvim-lua/plenary.nvim', 'nvim-telescope/telescope.nvim', 'nvim-treesitter/nvim-treesitter' },
-    -- stylua: ignore
-    keys = {
-      { '<leader>ld', '<cmd>DevdocsOpenFloat<cr>', mode = { 'n' }, desc = 'Open DevDocs' },
-    },
-    config = function()
-      require('nvim-devdocs').setup {
-        dir_path = vim.fn.stdpath 'data' .. '/devdocs', -- installation directory
-        filetypes = {
-          -- extends the filetype to docs mappings used by the `DevdocsOpenCurrent` command, the version doesn't have to be specified
-          -- scss = "sass",
-          -- javascript = { "node", "javascript" }
-        },
-        float_win = { -- passed to nvim_open_win(), see :h api-floatwin
-          relative = 'editor',
-          height = 35,
-          width = 160,
-          border = 'rounded',
-        },
-        wrap = false, -- text wrap, only applies to floating window
-        previewer_cmd = 'glow', -- for example: "glow"
-        cmd_args = { '-s', 'dark', '-w', '150' }, -- example using glow: { "-s", "dark", "-w", "80" }
-        cmd_ignore = {}, -- ignore cmd rendering for the listed docs
-        picker_cmd = true, -- use cmd previewer in picker preview
-        picker_cmd_args = { '-s', 'dark', '-w', '100' }, -- example using glow: { "-s", "dark", "-w", "50" }
-        mappings = { -- keymaps for the doc buffer
-          open_in_browser = '',
-        },
-        ensure_installed = {}, -- get automatically installed
-      }
-    end,
-  },
-
+  -- [leetcode.nvim] - LeetCode integration.
+  -- see: `:h leetcode.nvim`
+  -- link: https://github.com/kawre/leetcode.nvim
   {
     'kawre/leetcode.nvim',
     branch = 'master',
     build = ':TSUpdate html',
     dependencies = {
       'nvim-telescope/telescope.nvim',
-      'nvim-lua/plenary.nvim', -- required by telescope
+      'nvim-lua/plenary.nvim',
       'MunifTanjim/nui.nvim',
 
       -- optional
@@ -438,7 +411,7 @@ return {
       'nvim-tree/nvim-web-devicons',
     },
     opts = {
-      -- configuration goes here
+      -- TODO: finish config.
     },
   },
 }
