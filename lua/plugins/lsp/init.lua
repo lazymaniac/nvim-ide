@@ -170,6 +170,7 @@ return {
 
   -- [mason.nvim] - LSP, formatter, dap, test tools installer
   -- see: `:h mason.nvim`
+  -- link: https://github.com/williamboman/mason.nvim
   {
     'williamboman/mason.nvim',
     -- branch = 'main',
@@ -217,6 +218,9 @@ return {
     end,
   },
 
+  -- [neodev.nvim] - Loads all plugins into Lua LSP.
+  -- see: `:h neodev.nvim`
+  -- link: https://github.com/folke/neodev.nvim
   {
     'folke/neodev.nvim',
     branch = 'main',
@@ -242,6 +246,9 @@ return {
     },
   },
 
+  -- [lsplinks.nvim] - Open code docs in browser
+  -- see: `:h lsplinks.nvim`
+  -- link: https://github.com/icholy/lsplinks.nvim
   {
     'icholy/lsplinks.nvim',
     branch = 'master',
@@ -252,6 +259,9 @@ return {
     end,
   },
 
+  -- [lsp-progress.nvim] - Show LSP notifications in lualine
+  -- see: `:h lsp-progress.nvim`
+  -- link: https://github.com/linrongbin16/lsp-progress.nvim
   {
     'linrongbin16/lsp-progress.nvim',
     config = function()
