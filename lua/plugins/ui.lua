@@ -182,6 +182,7 @@ return {
   -- see: `:h bufferline`
   {
     'akinsho/bufferline.nvim',
+    branch = 'main',
     event = 'VeryLazy',
     dependencies = {
       {
