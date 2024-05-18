@@ -28,6 +28,7 @@ return {
     -- [[ AUTOCOMPLETION ]] ---------------------------------------------------------------
     -- [conform.nvim] - Code formatting.
     -- see: `:h conform`
+    -- link: https://github.com/stevearc/conform.nvim
     'stevearc/conform.nvim',
     branch = 'master',
     event = 'VeryLazy',
