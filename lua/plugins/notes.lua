@@ -2,6 +2,9 @@ return {
 
   -- [[ NOTE TAKING ]] ---------------------------------------------------------------
 
+  -- [luarocks.nvim] - Install lua dependencies from nvim.
+  -- see: `:h luarocks.nvim`
+  -- link: https://github.com/vhyrro/luarocks.nvim
   {
     'vhyrro/luarocks.nvim',
     branch = 'main',
@@ -14,6 +17,7 @@ return {
 
   -- [neorg] - Note taking, calendar, presentations, journal
   -- see: `:h neorg`
+  -- link: https://github.com/nvim-neorg/neorg
   {
     'nvim-neorg/neorg',
     branch = 'main',
@@ -37,7 +41,6 @@ return {
       { '<leader>nfw', '<cmd>Telescope neorg switch_workspace<cr>', mode = { 'n', 'v' }, desc = 'Switch Workspace [nfw]', },
       { '<leader>nfc', '<cmd>Telescope neorg find_context_tasks<cr>', mode = { 'n', 'v' }, desc = 'Find Context Tasks [nfc]', },
       { '<leader>nft', '<cmd>Telescope neorg find_project_tasks<cr>', mode = { 'n', 'v' }, desc = 'Find Project Tasks [nft]', },
-
     },
     config = function()
       require('neorg').setup {
@@ -80,6 +83,9 @@ return {
     end,
   },
 
+  -- [org-checkbox.nvim] - Convert list into checkboxes and viceversa
+  -- see: `:h org-checkbox.nvim`
+  -- link: https://github.com/massix/org-checkbox.nvim
   {
     'massix/org-checkbox.nvim',
     config = function()
