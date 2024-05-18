@@ -4,6 +4,7 @@ return {
 
   -- [nvim-lint] - Code linting in real-time
   -- see: `:h nvim-lint`
+  -- link: https://github.com/mfussenegger/nvim-lint
   {
     'mfussenegger/nvim-lint',
     branch = 'master',
@@ -90,11 +91,11 @@ return {
 
   -- [nvim-lspconfig] - LSP automatic configuration
   -- see: `:h help-tag`
+  -- link: https://github.com/neovim/nvim-lspconfig
   {
     'neovim/nvim-lspconfig',
     branch = 'master',
     event = 'VeryLazy',
-    -- other settings removed for brevity
     opts = {
       servers = {
         eslint = {

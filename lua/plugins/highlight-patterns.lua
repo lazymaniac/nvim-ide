@@ -5,6 +5,7 @@ M.hl = {}
 
 -- [mini.hipatterns] - Highlight hex colors, todo, fixme etc.
 -- see: `:h mini.hipatterns`
+-- link: https://github.com/echasnovski/mini.hipatterns
 M.plugin = {
   'echasnovski/mini.hipatterns',
   branch = 'main',

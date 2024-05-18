@@ -6,6 +6,7 @@ return {
   -- [[ IMAGES ]] ---------------------------------------------------------------
   -- [hologram.nvim] - Image support in MD files. Requires Kitty
   -- see: `:h hologram.nvim`
+  -- link: https://github.com/edluffy/hologram.nvim
   {
     'edluffy/hologram.nvim',
     branch = 'main',
@@ -20,6 +21,7 @@ return {
 
   -- [image.nvim] - Image loader. Integrate into neo-tree, jupyter notebooks etc. Requires Kitty
   -- see: `:h image.nvim`
+  -- link: https://github.com/3rd/image.nvim
   {
     '3rd/image.nvim',
     branch = 'master',
