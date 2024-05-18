@@ -5,6 +5,7 @@ return {
 
     -- [overseer.nvim] - Async task runner.
     -- see: `:h overseer.nvim`
+    -- link: https://github.com/stevearc/overseer.nvim
     'stevearc/overseer.nvim',
     event = 'VeryLazy',
     branch = 'master',

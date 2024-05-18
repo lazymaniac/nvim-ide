@@ -4,29 +4,52 @@ return {
 
   -- [nvim-cmp] - Autocompletion engine. Suggests LSP, Buffer text, Paths, Snippets, Emojis
   -- see: `:h nvim-cmp`
+  -- link: https://github.com/hrsh7th/nvim-cmp
   {
     'hrsh7th/nvim-cmp',
     branch = 'main',
     event = 'InsertEnter',
     dependencies = {
-      -- Adds LSP completion capabilities
+      -- [cmp-nvim-lsp] - Add lsp completion to cmp-nvim.
+      -- see: `:h cmp-nvim-lsp`
+      -- link: https://github.com/hrsh7th/cmp-nvim-lsp
       { 'hrsh7th/cmp-nvim-lsp', branch = 'main' },
+      -- [cmp-nvim-lsp-signature-help] - Displays functions signature.
+      -- see: `:h cmp-nvim-lsp-signature-help`
+      -- link: https://github.com/hrsh7th/cmp-nvim-lsp-signature-help
       { 'hrsh7th/cmp-nvim-lsp-signature-help', branch = 'main' },
-      -- Adds buffer text completion capabilities
+      -- [cmp-buffer] - Adds buffer content to autocompletion.
+      -- see: `:h cmp-buffer`
+      -- link: https://github.com/hrsh7th/cmp-buffer
       { 'hrsh7th/cmp-buffer', branch = 'main' },
-      -- Adds file path completion capabilities
+      -- [cmp-path] - Add system file tree autocompletion.
+      -- see: `:h cmp-path`
+      -- link: https://github.com/hrsh7th/cmp-path
       { 'hrsh7th/cmp-path', branch = 'main' },
-      -- Adds calculation result to completion capabilities
+      -- [cmp-calc] - Add result of calculations to autocompletion.
+      -- see: `:h cmp-calc`
+      -- link: https://github.com/hrsh7th/cmp-calc
       { 'hrsh7th/cmp-calc', branch = 'main' },
-      -- Adds correct spelling completion capabilities
+      -- [cmp-spell] - Add correct spelling to autocompletion.
+      -- see: `:h cmp-spell`
+      -- link: https://github.com/f3fora/cmp-spell
       { 'f3fora/cmp-spell', branch = 'master' },
-      -- Snippet Engine & its associated nvim-cmp source
+      -- [LuaSnip] - Snippet engine.
+      -- see: `:h LuaSnip`
+      -- link: https://github.com/L3MON4D3/LuaSnip
       { 'L3MON4D3/LuaSnip', branch = 'master' },
+      -- [cmp_luasnip] - Connect luasnip with nvim-cmp.
+      -- see: `:h cmp_luasnip`
+      -- link: https://github.com/saadparwaiz1/cmp_luasnip
       { 'saadparwaiz1/cmp_luasnip', branch = 'master' },
-      -- Adds a number of user-friendly snippets
+      -- [friendly-snippets] - Snippets endgine.
+      -- see: `:h friendly-snippets`
+      -- link: https://github.com/rafamadriz/friendly-snippets
       { 'rafamadriz/friendly-snippets', branch = 'main' },
-      { 'jmbuhr/cmp-pandoc-references', branch = 'master' },
       { 'rcarriga/cmp-dap', branch = 'master' },
+      -- [cmp-npm] - Add npm packages and versions to autocompletion.
+      -- see: `:h cmp-npm`
+      -- link: https://github.com/David-Kunz/cmp-npm
       {
         'David-Kunz/cmp-npm',
         branch = 'main',
@@ -129,7 +152,6 @@ return {
             end
           end, { 'i', 's' }),
         },
-
         sources = cmp.config.sources {
           { name = 'otter', keyword_length = 1, group_index = 1 },
           { name = 'nvim_lsp', keyword_length = 2, group_index = 1 },
@@ -208,6 +230,7 @@ return {
 
   -- [nvim-autopairs] - Automatically adds closing pair for chars like: (, [, {, ", ' etc.
   -- see: `:h nvim-autopairs`
+  -- link: https://github.com/windwp/nvim-autopairs
   {
     'windwp/nvim-autopairs',
     branch = 'master',
@@ -239,6 +262,7 @@ return {
 
   -- [cmp-dap] - Autocompletion for DAP Repl and watchers.
   -- see: `:h cmp-dap`
+  -- link: https://github.com/rcarriga/cmp-dap
   {
     'rcarriga/cmp-dap',
     branch = 'master',
