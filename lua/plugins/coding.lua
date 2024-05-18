@@ -127,6 +127,7 @@ return {
 
   -- [auto-indent.nvim] - Auto move cursor to match indentation
   -- see: `:h auto-indent.nvim`
+  -- link: https://github.com/VidocqH/auto-indent.nvim
   {
     'vidocqh/auto-indent.nvim',
     branch = 'main',
@@ -136,6 +137,7 @@ return {
 
   -- [hlargs.nvim] - Highlight function arguments
   -- see: `:h hlargs.nvim`
+  -- link: https://github.com/m-demare/hlargs.nvim
   {
     'm-demare/hlargs.nvim',
     branch = 'main',
@@ -145,9 +147,9 @@ return {
     end,
   },
 
-  -- [Hypersonic.nvim] - Regex explainer
+  -- [Hypersonic.nvim] - Regex writing and testing
   -- see: `:h Hypersonic.nvim`
-  -- link: https://github.com/VidocqH/auto-indent.nvim
+  -- link: https://github.com/tomiis4/hypersonic.nvim
   {
     'tomiis4/Hypersonic.nvim',
     branch = 'main',
@@ -404,8 +406,6 @@ return {
       'nvim-telescope/telescope.nvim',
       'nvim-lua/plenary.nvim',
       'MunifTanjim/nui.nvim',
-
-      -- optional
       'nvim-treesitter/nvim-treesitter',
       'rcarriga/nvim-notify',
       'nvim-tree/nvim-web-devicons',

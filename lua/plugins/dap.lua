@@ -1,11 +1,9 @@
----@param config {args?:string[]|fun():string[]?}
 local function get_args(config)
   local args = type(config.args) == 'function' and (config.args() or {}) or config.args or {}
   config = vim.deepcopy(config)
-  ---@cast args string[]
   config.args = function()
-    local new_args = vim.fn.input('Run with args: ', table.concat(args, ' ')) --[[@as string]]
-    return vim.split(vim.fn.expand(new_args) --[[@as string]], ' ')
+    local new_args = vim.fn.input('Run with args: ', table.concat(args, ' '))
+    return vim.split(vim.fn.expand(new_args))
   end
   return config
 end
@@ -16,6 +14,7 @@ return {
 
   -- [nvim-dap] - Debug in neovim
   -- see: `:h nvim-dap`
+  -- link: https://github.com/mfussenegger/nvim-dap
   {
     'mfussenegger/nvim-dap',
     branch = 'master',
@@ -69,6 +68,7 @@ return {
 
   -- [nvim-dap-ui] - Creates UI setup for debug sessions
   -- see: `:h nvim-dap-ui`
+  -- link: https://github.com/rcarriga/nvim-dap-ui
   {
     'rcarriga/nvim-dap-ui',
     branch = 'master',
@@ -157,6 +157,7 @@ return {
 
   -- [nvim-dap-virtual-text] - Virtual text for debbug session
   -- see: `:h nvim-dap-virtual-text`
+  -- link: https://github.com/theHamsta/nvim-dap-virtual-text
   {
     'theHamsta/nvim-dap-virtual-text',
     branch = 'master',
@@ -195,6 +196,7 @@ return {
 
   -- [mason-nvim-dap] - Couple Mason with nvim dap for automatic installation of debug servers
   -- see: `:h mason-nvim-dap`
+  -- link: https://github.com/theHamsta/nvim-dap-virtual-text
   {
     'jay-babu/mason-nvim-dap.nvim',
     branch = 'main',
@@ -218,6 +220,7 @@ return {
 
   -- [nvim-dap-repl-highlights] - Highlights for repl window
   -- see: `:h nvim-dap-repl-highlights`
+  -- link: https://github.com/LiadOz/nvim-dap-repl-highlights
   {
     'LiadOz/nvim-dap-repl-highlights',
     branch = 'master',

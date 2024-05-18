@@ -2,7 +2,9 @@ return {
 
   -- [[ CODE COMMENTS ]] ---------------------------------------------------------------
 
-  -- [nvim-ts-context-commentstring] - Automatically selects type of comment for files with multiple languages
+  -- [nvim-ts-context-commentstring] - Automatically selects type of comment based on cursor location.
+  -- see: `:h nvim-ts-context-commentstring`
+  -- link: https://github.com/JoosepAlviste/nvim-ts-context-commentstring
   {
     'JoosepAlviste/nvim-ts-context-commentstring',
     branch = 'main',
@@ -14,8 +16,9 @@ return {
     end,
   },
 
-  -- [comment-nvim] - Provides option to add comments in code
+  -- [comment.nvim] - Provides option to add comments in code
   -- see: `:h comment-nvim`
+  -- link: https://github.com/numToStr/Comment.nvim
   {
     'numToStr/Comment.nvim',
     branch = 'master',
