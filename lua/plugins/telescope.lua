@@ -509,7 +509,7 @@ return {
     branch = 'main',
     dependencies = { 'nvim-telescope/telescope.nvim' },
     keys = {
-      { '<leader>fd', '<Cmd>Telescope docker<CR>', desc = 'Docker [fD]' },
+      { '<leader>fd', '<Cmd>Telescope docker<CR>', desc = 'Docker [fd]' },
     },
     config = function()
       ---@diagnostic disable-next-line: undefined-field
