@@ -1,10 +1,12 @@
 return {
 
   -- [[ GIT ]] ---------------------------------------------------------------
+
   -- [gitsigns.nvim] - git signs highlights text that has changed since the list
   -- git commit, and also lets you interactively stage & unstage
   -- hunks in a commit.
   -- see: `:h gitsigns`
+  -- link: https://github.com/lewis6991/gitsigns.nvim
   {
     'lewis6991/gitsigns.nvim',
     branch = 'main',
@@ -117,6 +119,8 @@ return {
 
   --
   -- [gitlab.nvim] Gitlab integration
+  -- see: `h: gitlab.nvim`
+  -- link: https://github.com/harrisoncramer/gitlab.nvim
   --
   -- ## Usage
   -- First, check out the branch that you want to review locally.
@@ -325,8 +329,9 @@ return {
     end,
   },
 
-  -- [octo.nvim] - GitHub integration
-  -- see: `:h octo.nvim`
+  -- [diffview.nvim] - View files diff in neovim.
+  -- see: `:h diffview.nvim`
+  -- link: https://github.com/sindrets/diffview.nvim
   {
     'sindrets/diffview.nvim',
     branch = 'main',
@@ -433,8 +438,9 @@ return {
     end,
   },
 
-  -- [octo.nvim] - Github integration
+  -- [octo.nvim] - Edit and review GitHub issues and pull requests
   -- see: `:h octo.nvim`
+  -- link: https://github.com/pwntester/octo.nvim
   {
     'pwntester/octo.nvim',
     branch = 'master',
@@ -497,6 +503,7 @@ return {
 
   -- [neogit] - Git integration in nvim
   -- see: `:h neogit`
+  -- link: https://github.com/NeogitOrg/neogit
   {
     'NeogitOrg/neogit',
     branch = 'master',

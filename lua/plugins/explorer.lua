@@ -356,6 +356,7 @@ return {
 
   -- [nvim-lsp-file-operations] - File operations supported by LSP
   -- see: `:h nvim-lsp-file-operations`
+  -- link: https://github.com/antosha417/nvim-lsp-file-operations
   {
     'antosha417/nvim-lsp-file-operations',
     branch = 'master',
