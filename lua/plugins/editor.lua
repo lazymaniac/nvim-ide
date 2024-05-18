@@ -1,8 +1,10 @@
 return {
 
   -- [[ KEYMAPS ]] ---------------------------------------------------------------
+
   -- [which-key.nvim] - Autocompletion for keymaps
   -- see: `:h which-key`
+  -- link: https://github.com/folke/which-key.nvim
   {
     'folke/which-key.nvim',
     branch = 'main',
@@ -103,9 +105,10 @@ return {
   },
 
   -- [[ TEXT HIGHLIGHT ]] ---------------------------------------------------------------
+
   -- [vim-illuminate] - Automatically highlights other instances of the word under your cursor.
-  -- This works with LSP, Treesitter, and regexp matching to find the other instances.
   -- see: `:h vim-illuminate`
+  -- link: https://github.com/RRethy/vim-illuminate
   {
     'RRethy/vim-illuminate',
     branch = 'master',
@@ -142,6 +145,7 @@ return {
 
   -- [mini.bufremove] - Batter buffer remove
   -- see: `:h mini.bufremove`
+  -- link: https://github.com/echasnovski/mini.bufremove
   {
     'echasnovski/mini.bufremove',
     branch = 'main',
@@ -174,6 +178,7 @@ return {
 
   -- [trouble.nvim] - Better diagnostics, loclist, quickfix etc.
   -- see: `:h trouble.nvim`
+  -- link: https://github.com/folke/trouble.nvim
   {
     'folke/trouble.nvim',
     branch = 'main',
@@ -273,6 +278,7 @@ return {
   -- [todo-comments.nvim] - Finds and lists all of the TODO, HACK, BUG, etc comment
   -- in your project and loads them into a browsable list.
   -- see: `:h todo-comments`
+  -- link: https://github.com/folke/todo-comments.nvim
   {
     'folke/todo-comments.nvim',
     branch = 'main',
@@ -294,6 +300,7 @@ return {
 
   -- [outline.nvim] - Show symbols outline for current buffer
   -- see: `:h outline.nvim`
+  -- link: https://github.com/hedyhli/outline.nvim
   {
     'hedyhli/outline.nvim',
     branch = 'main',
@@ -551,6 +558,7 @@ return {
 
   -- [yanky.nvim] - Better yank/paste
   -- see: `h: yanky`
+  -- link: https://github.com/gbprod/yanky.nvim
   {
     'gbprod/yanky.nvim',
     branch = 'main',
@@ -617,6 +625,7 @@ return {
 
   -- [arrow.nvim] - Pin buffers for quick access
   -- see: `:h arrow.nvim`
+  -- link: https://github.com/otavioschwanck/arrow.nvim
   {
     'otavioschwanck/arrow.nvim',
     branch = 'master',
@@ -629,41 +638,16 @@ return {
 
   -- [detour.nvim] - Open current buffer in popup
   -- see: `:h detour.nvim`
+  -- link: https://github.com/carbon-steel/detour.nvim
   {
     'carbon-steel/detour.nvim',
     branch = 'main',
     event = 'VeryLazy',
   },
 
-  -- [highlight-undo.nvim] - Highlights result of undo operation
-  -- see: `:h highlight-undo.nvim`
-  {
-    'tzachar/highlight-undo.nvim',
-    branch = 'main',
-    config = function()
-      require('highlight-undo').setup {
-        duration = 500,
-        undo = {
-          hlgroup = 'HighlightUndo',
-          mode = 'n',
-          lhs = 'u',
-          map = 'undo',
-          opts = {},
-        },
-        redo = {
-          hlgroup = 'HighlightUndo',
-          mode = 'n',
-          lhs = '<C-r>',
-          map = 'redo',
-          opts = {},
-        },
-        highlight_for_count = true,
-      }
-    end,
-  },
-
-  -- [guess-indent.nvim] - Plugin to set proper indentation
+  -- [guess-indent.nvim] - Plugin to guess proper indentation level.
   -- see: `:h guess-indent.nvim`
+  -- link: https://github.com/NMAC427/guess-indent.nvim
   {
     'nmac427/guess-indent.nvim',
     branch = 'main',
@@ -674,6 +658,7 @@ return {
 
   -- [windows.nvim] - Plugin for maximizing windows
   -- see: `:h windows.nvim`
+  -- link: https://github.com/anuvyklack/windows.nvim
   {
     'anuvyklack/windows.nvim',
     branch = 'main',
@@ -697,6 +682,7 @@ return {
 
   -- [better_escape.nvim] - Escpe from insert mode with jj or jk
   -- see: `:h better_escape.nvim`
+  -- link: https://github.com/max397574/better-escape.nvim
   {
     'max397574/better-escape.nvim',
     branch = 'master',
@@ -716,6 +702,7 @@ return {
 
   -- [nvim-scrollbar] - Scorllbar with git and lsp integration
   -- see: `:h nvim-scrollbar`
+  -- link: https://github.com/petertriho/nvim-scrollbar
   {
     'petertriho/nvim-scrollbar',
     branch = 'main',
@@ -778,6 +765,7 @@ return {
 
   -- [bigfile.nvim] - Disable editor functions like lsp, treesitter when big file is loaded
   -- see: `:h bigfile.nvim`
+  -- link: https://github.com/LunarVim/bigfile.nvim
   {
     'LunarVim/bigfile.nvim',
     branch = 'main',
@@ -799,10 +787,14 @@ return {
     end,
   },
 
+  -- [vim-repeat] - Support `.` repeat in plugins.
+  -- see: `:h vim-repeat`
+  -- link: https://github.com/tpope/vim-repeat
   { 'tpope/vim-repeat', branch = 'master' },
 
   -- [gx.nvim] - Open link in browser
   -- see: `:h gx.nvim`
+  -- link: https://github.com/chrishrb/gx.nvim
   {
     'chrishrb/gx.nvim',
     branch = 'main',
@@ -817,6 +809,7 @@ return {
 
   -- [modes.nvim] - Highlights current line accordingly to mode
   -- see: `:h modes.nvim`
+  -- link: https://github.com/mvllow/modes.nvim
   {
     'mvllow/modes.nvim',
     branch = 'main',
@@ -829,7 +822,7 @@ return {
           visual = '#9745be',
         },
         -- Set opacity for cursorline and number background
-        line_opacity = 0.15,
+        line_opacity = 0.3,
         -- Enable cursor highlights
         set_cursor = true,
         -- Enable cursorline initially, and disable cursorline for inactive windows
@@ -846,6 +839,7 @@ return {
 
   -- [wilder.nvim] - cmdline improving plugin
   -- see: `:h wilder.nvim`
+  -- link: https://github.com/gelguy/wilder.nvim
   {
     'gelguy/wilder.nvim',
     branch = 'master',
