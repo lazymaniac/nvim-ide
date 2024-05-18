@@ -9,6 +9,9 @@ return {
     end,
   },
 
+  -- [clangd_extensions] - Extend native LSP functionality.
+  -- see: `:h clangd_extensions`
+  -- link: https://github.com/p00f/clangd_extensions.nvim
   {
     "p00f/clangd_extensions.nvim",
     branch = 'main',
@@ -41,7 +44,6 @@ return {
     },
   },
 
-  -- Correctly setup lspconfig for clangd 🚀
   {
     "neovim/nvim-lspconfig",
     opts = {
@@ -102,7 +104,6 @@ return {
   {
     "mfussenegger/nvim-dap",
     dependencies = {
-      -- Ensure C/C++ debugger is installed
       "williamboman/mason.nvim",
       optional = true,
       opts = function(_, opts)

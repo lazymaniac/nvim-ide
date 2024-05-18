@@ -3,6 +3,7 @@ return {
   -- [[ SYNTAX HIGHLIGHTING ]] ---------------------------------------------------------------
   -- [nvim-treesitter] - Syntax highlighting.
   -- see: `:h nvim-treesitter`
+  -- link: https://github.com/nvim-treesitter/nvim-treesitter
   {
     'nvim-treesitter/nvim-treesitter',
     branch = 'master',
@@ -139,6 +140,7 @@ return {
 
   -- [nvim-treesitter-textobjects] - Treesitter textobjects
   -- see: `:h nvim-treesitter-textobjects`
+  -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   {
     'nvim-treesitter/nvim-treesitter-textobjects',
     branch = 'master',
@@ -171,6 +173,7 @@ return {
 
   -- [nvim-ts-autotags] - Automatically add closing tags for HTML and JSX
   -- see: `:h nvim-ts-autotags`
+  -- link: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   {
     'windwp/nvim-ts-autotag',
     branch = 'main',

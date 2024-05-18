@@ -2,6 +2,7 @@ return {
   -- [[ PROJECT MANAGEMENT ]] ---------------------------------------------------------------
   -- [project.nvim] - Active projects selection with Telescope
   -- see: `:h project.nvim`
+  -- link: https://github.com/ahmedkhalf/project.nvim
   --
   -- Normal mode Insert mode Action
   -- f           <c-f>       find_project_files
@@ -30,6 +31,7 @@ return {
 
   -- [projections.nvim] - Plugin to manage project in defined directory (workspace)
   -- see: `:h projections.nvim`
+  -- link: https://github.com/GnikDroy/projections.nvim
   {
     'gnikdroy/projections.nvim',
     branch = 'main',
@@ -71,5 +73,4 @@ return {
       })
     end,
   },
-
 }

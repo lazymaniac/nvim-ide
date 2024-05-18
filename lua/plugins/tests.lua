@@ -14,6 +14,7 @@ return {
 
   -- [neotest] - Test runner. List tests available in project
   -- see: `:h neotest`
+  -- link: https://github.com/nvim-neotest/neotest
   {
     'nvim-neotest/neotest',
     branch = 'master',

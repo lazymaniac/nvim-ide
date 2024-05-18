@@ -6,6 +6,9 @@ return {
     end,
   },
 
+  -- [nvim-metals] - Scala metals tools.
+  -- see: `:h nvim-metals`
+  -- link: https://github.com/scalameta/nvim-metals
   {
     'scalameta/nvim-metals',
     branch = 'main',

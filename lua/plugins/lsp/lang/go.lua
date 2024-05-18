@@ -20,7 +20,6 @@ return {
     end,
   },
 
-  -- Ensure Go tools are installed
   {
     'mfussenegger/nvim-lint',
     opts = {
@@ -111,6 +110,9 @@ return {
     },
   },
 
+  -- [go.nvim] - All GO related tools and improvements.
+  -- see: `:h go.nvim`
+  -- link: https://github.com/ray-x/go.nvim
   {
     'ray-x/go.nvim',
     dependencies = { -- optional packages

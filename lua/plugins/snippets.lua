@@ -1,8 +1,10 @@
 return {
 
   -- [[ CODE SNIPPETS ]] ---------------------------------------------------------------
+
   -- [friendly-snippets] - Set of useful snippets in vscode format
   -- see: `:h friendly-snippets`
+  -- link: https://github.com/rafamadriz/friendly-snippets
   {
     'rafamadriz/friendly-snippets',
     branch = 'main',
@@ -15,6 +17,7 @@ return {
 
   -- [luasnip] - Snippets engine. Loads snippets from various sources like vscode
   -- see: `h: luasnip`
+  -- link: https://github.com/L3MON4D3/LuaSnip
   {
     'L3MON4D3/LuaSnip',
     branch = 'master',
@@ -44,6 +47,8 @@ return {
   },
 
   -- [luasnip_snippets] - Library of snippets ported from vim-snippets
+  -- see: `luasnip_snippets`
+  -- link: https://github.com/mireq/luasnip-snippets
   {
     'mireq/luasnip-snippets',
     branch = 'main',
@@ -57,6 +62,7 @@ return {
 
   -- [nvim-scissors] - Allows to create and edit snippets stored in json file
   -- see: `:h nvim-scissors`
+  -- link: https://github.com/chrisgrieser/nvim-scissors
   {
     'chrisgrieser/nvim-scissors',
     branch = 'main',

@@ -6,6 +6,7 @@ return {
 
   -- [ssr.nvim] - Search and replace in-file
   -- see: `:h ssr.nvim`
+  -- link: https://github.com/cshuaimin/ssr.nvim
   {
     'cshuaimin/ssr.nvim',
     branch = 'main',
@@ -36,6 +37,7 @@ return {
 
   -- [nvim-spectre] - Search files with replace option
   -- see: `:h nvim-spectre`
+  -- link: https://github.com/cshuaimin/ssr.nvim
   {
     'nvim-pack/nvim-spectre',
     branch = 'master',
@@ -51,6 +53,7 @@ return {
 
   -- [leap.nvim] - Jump in code with s and S keys
   -- see: `:h leap.nvim`
+  -- link: https://github.com/ggandor/leap.nvim
   {
     'ggandor/leap.nvim',
     branch = 'main',
@@ -73,6 +76,7 @@ return {
 
   -- [improved-search] - Enhance searching with n and N keys
   -- see: `:h improved-search`
+  -- link: https://github.com/backdround/improved-search.nvim
   {
     'backdround/improved-search.nvim',
     branch = 'main',

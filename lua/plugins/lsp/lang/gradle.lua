@@ -9,7 +9,6 @@ return {
     end,
   },
 
-  -- GRADLE
   {
     'neovim/nvim-lspconfig',
     ---@class PluginLspOpts

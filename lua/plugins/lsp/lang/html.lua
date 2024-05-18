@@ -44,13 +44,10 @@ return {
   {
     'neovim/nvim-lspconfig',
     opts = {
-      -- make sure mason installs the server
       servers = {
-        -- html
         html = {
           filetypes = { 'html', 'javascript', 'javascriptreact', 'javascript.jsx', 'typescript', 'typescriptreact', 'typescript.tsx' },
         },
-        -- Emmet
         emmet_ls = {
           init_options = {
             html = {
@@ -61,7 +58,6 @@ return {
             },
           },
         },
-        -- CSS
         cssls = {},
       },
     },
@@ -78,6 +74,9 @@ return {
     },
   },
 
+  -- [ccc.nvim] - Color picker in Nvim
+  -- see: `:h ccc.nvim`
+  -- link: https://github.com/uga-rosa/ccc.nvim
   {
     'uga-rosa/ccc.nvim',
     branch = 'main',

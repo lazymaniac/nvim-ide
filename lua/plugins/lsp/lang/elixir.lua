@@ -29,6 +29,9 @@ return {
     },
   },
 
+  -- [elixir-tools] - Improves experience with Elixir in neovim.
+  -- see: `:h elixir-tools`
+  -- link: https://github.com/elixir-tools/elixir-tools.nvim
   {
     'elixir-tools/elixir-tools.nvim',
     branch = 'main',
