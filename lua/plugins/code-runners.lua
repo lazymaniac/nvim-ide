@@ -83,7 +83,7 @@ return {
     config = function()
       require('sniprun').setup {
         selected_interpreters = {}, --# use those instead of the default for the current filetype
-        repl_enable = {}, --# enable REPL-like behavior for the given interpreters
+        repl_enable = { 'Python3_original' }, --# enable REPL-like behavior for the given interpreters
         repl_disable = {}, --# disable REPL-like behavior for the given interpreters
         interpreter_options = { --# interpreter-specific options, see doc / :SnipInfo <name>
           --# use the interpreter name as key
@@ -106,8 +106,8 @@ return {
           -- "TempFloatingWindow",      --# display results in a floating window
           -- "LongTempFloatingWindow",  --# same as above, but only long results. To use with VirtualText[Ok/Err]
           -- "Terminal",                --# display results in a vertical split
-          -- "TerminalWithCode",        --# display results and code history in a vertical split
-          'NvimNotify', --# display with the nvim-notify plugin
+          'TerminalWithCode', --# display results and code history in a vertical split
+          -- 'NvimNotify', --# display with the nvim-notify plugin
           -- "Api"                      --# return output to a programming interface
         },
         live_display = { 'VirtualTextOk' }, --# display mode used in live_mode
