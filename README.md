@@ -26,7 +26,7 @@ Fedora script for dependencies Installation.
 
 ```bash
 #!/bin/bash
-# TODO Font, jupyter notebooks, quarto, elixir, padas, pytorch, marplotlib, magic using lua 5.1
+# TODO Font, quarto, elixir, padas, pytorch, marplotlib, magic using lua 5.1
 # Update package lists
 sudo dnf update
 
