@@ -83,7 +83,7 @@ return {
     config = function()
       require('sniprun').setup {
         selected_interpreters = {}, --# use those instead of the default for the current filetype
-        repl_enable = { 'Python3_original' }, --# enable REPL-like behavior for the given interpreters
+        repl_enable = {}, --# enable REPL-like behavior for the given interpreters
         repl_disable = {}, --# disable REPL-like behavior for the given interpreters
         interpreter_options = { --# interpreter-specific options, see doc / :SnipInfo <name>
           --# use the interpreter name as key
@@ -105,8 +105,8 @@ return {
           'VirtualText', --# display results as virtual text
           -- "TempFloatingWindow",      --# display results in a floating window
           -- "LongTempFloatingWindow",  --# same as above, but only long results. To use with VirtualText[Ok/Err]
-          -- "Terminal",                --# display results in a vertical split
-          'TerminalWithCode', --# display results and code history in a vertical split
+          'Terminal', --# display results in a vertical split
+          -- 'TerminalWithCode', --# display results and code history in a vertical split
           -- 'NvimNotify', --# display with the nvim-notify plugin
           -- "Api"                      --# return output to a programming interface
         },
@@ -116,9 +116,9 @@ return {
           terminal_line_number = false, --# whether show line number in terminal window
           terminal_signcolumn = false, --# whether show signcolumn in terminal window
           terminal_persistence = true, --# always keep the terminal open (true) or close it at every occasion (false)
-          terminal_position = 'vertical', --# or "horizontal", to open as horizontal split instead of vertical split
+          terminal_position = 'horizontal', --# or "horizontal", to open as horizontal split instead of vertical split
           terminal_width = 45, --# change the terminal display option width (if vertical)
-          terminal_height = 20, --# change the terminal display option height (if horizontal)
+          terminal_height = 15, --# change the terminal display option height (if horizontal)
           notification_timeout = 5, --# timeout for nvim_notify output
         },
         --# You can use the same keys to customize whether a sniprun producing
