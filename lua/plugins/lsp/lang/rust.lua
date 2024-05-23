@@ -19,15 +19,6 @@ return {
   },
 
   {
-    'mfussenegger/nvim-lint',
-    opts = {
-      linters_by_ft = {
-        rust = { 'trivy' },
-      },
-    },
-  },
-
-  {
     'neovim/nvim-lspconfig',
     opts = {
       -- make sure mason installs the server

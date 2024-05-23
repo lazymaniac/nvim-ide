@@ -50,7 +50,8 @@ local jdtls_settings = {
     },
     jdt = {
       ls = {
-        vmargs = '-javaagent:/home/seba/.local/share/nvim/mason/packages/jdtls/lombok.jar -XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:enable',
+        vmargs =
+        '-javaagent:/home/seba/.local/share/nvim/mason/packages/jdtls/lombok.jar -XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:enable',
         protobufSupport = {
           enabled = true,
         },
@@ -322,15 +323,6 @@ return {
       opts.ensure_installed = opts.ensure_installed or {}
       vim.list_extend(opts.ensure_installed, { 'java', 'xml', 'yaml', 'properties' })
     end,
-  },
-
-  {
-    'mfussenegger/nvim-lint',
-    opts = {
-      linters_by_ft = {
-        java = { 'trivy' },
-      },
-    },
   },
 
   -- [sonarlint.nvim] - Sonarlint LSP

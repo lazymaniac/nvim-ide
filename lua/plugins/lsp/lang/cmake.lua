@@ -17,24 +17,6 @@ return {
     end,
   },
 
-  {
-    "mfussenegger/nvim-lint",
-    opts = {
-      linters_by_ft = {
-        cmake = { "cmakelint" },
-      },
-    },
-  },
-
-  {
-    "neovim/nvim-lspconfig",
-    opts = {
-      servers = {
-        neocmake = {},
-      },
-    },
-  },
-
   -- [cmake-tools.nvim] - Tools for cmake projects.
   -- see: `:h cmake-tools.nvim`
   -- link: https://github.com/Civitasv/cmake-tools.nvim

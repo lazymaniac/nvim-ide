@@ -21,24 +21,6 @@ return {
   },
 
   {
-    'mfussenegger/nvim-lint',
-    opts = {
-      linters_by_ft = {
-        go = { 'gomodifytags', 'impl', 'staticcheck', 'trivy' },
-      },
-    },
-  },
-
-  {
-    'stevearc/conform.nvim',
-    opts = {
-      formatters_by_ft = {
-        go = { 'goimports', 'gofumpt' },
-      },
-    },
-  },
-
-  {
     'neovim/nvim-lspconfig',
     opts = {
       servers = {
