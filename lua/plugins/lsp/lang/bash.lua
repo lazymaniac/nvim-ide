@@ -18,26 +18,6 @@ return {
   },
 
   {
-    'stevearc/conform.nvim',
-    opts = {
-      formatters_by_ft = {
-        bash = { 'beautysh' },
-        zsh = { 'beautysh' },
-      },
-    },
-  },
-
-  {
-    'mfussenegger/nvim-lint',
-    opts = {
-      linters_by_ft = {
-        bash = { 'shellcheck', 'shellharden' },
-        zsh = { 'shellcheck', 'shellharden' },
-      },
-    },
-  },
-
-  {
     'neovim/nvim-lspconfig',
     opts = {
       servers = {

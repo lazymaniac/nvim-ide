@@ -17,24 +17,6 @@ return {
     end,
   },
 
-  {
-    'stevearc/conform.nvim',
-    opts = {
-      formatters_by_ft = {
-        angular = { 'prettierd' },
-      },
-    },
-  },
-
-  {
-    'mfussenegger/nvim-lint',
-    opts = {
-      linters_by_ft = {
-        angular = { 'djlint' },
-      },
-    },
-  },
-
   -- [ng.nvim] - Adds extra command to native lsp.
   -- see: `:h ng,nvim`
   -- link: https://github.com/joeveiga/ng.nvim

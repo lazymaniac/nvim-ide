@@ -21,24 +21,6 @@ return {
   },
 
   {
-    'stevearc/conform.nvim',
-    opts = {
-      formatters_by_ft = {
-        kotlin = { 'ktlint' },
-      },
-    },
-  },
-
-  {
-    'mfussenegger/nvim-lint',
-    opts = {
-      linters_by_ft = {
-        kotlin = { 'ktlint' },
-      },
-    },
-  },
-
-  {
     'neovim/nvim-lspconfig',
     opts = {
       servers = {

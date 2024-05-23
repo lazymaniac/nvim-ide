@@ -20,24 +20,6 @@ return {
   },
 
   {
-    'stevearc/conform.nvim',
-    opts = {
-      formatters_by_ft = {
-        sql = { 'sqlfmt' },
-      },
-    },
-  },
-
-  {
-    'mfussenegger/nvim-lint',
-    opts = {
-      linters_by_ft = {
-        sql = { 'sqlfluff' },
-      },
-    },
-  },
-
-  {
     'neovim/nvim-lspconfig',
     opts = {
       servers = {

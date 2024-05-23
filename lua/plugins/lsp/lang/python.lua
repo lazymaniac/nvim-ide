@@ -18,30 +18,6 @@ return {
   },
 
   {
-    'stevearc/conform.nvim',
-    opts = {
-      formatters_by_ft = {
-        python = { 'black', 'docformatter' },
-      },
-    },
-  },
-
-  {
-    'mfussenegger/nvim-lint',
-    opts = {
-      linters = {
-        pylint = {
-          cmd = 'python3',
-          args = { '-m', 'pylint', '-f', 'json' },
-        },
-      },
-      linters_by_ft = {
-        python = { 'pylint' },
-      },
-    },
-  },
-
-  {
     'neovim/nvim-lspconfig',
     opts = {
       servers = {

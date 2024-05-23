@@ -15,33 +15,6 @@ return {
   },
 
   {
-    'stevearc/conform.nvim',
-    opts = {
-      formatters_by_ft = {
-        html = { 'prettierd' },
-        javascript = { 'prettierd' },
-        css = { 'prettierd' },
-        less = { 'prettierd' },
-        scss = { 'prettierd' },
-        jsx = { 'prettierd' },
-      },
-    },
-  },
-
-  {
-    'mfussenegger/nvim-lint',
-    opts = {
-      linters_by_ft = {
-        html = { 'htmlhint', 'stylelint' },
-        javascript = { 'eslint_d' },
-        css = { 'stylelint' },
-        scss = { 'stylelint' },
-        less = { 'stylelint' },
-      },
-    },
-  },
-
-  {
     'neovim/nvim-lspconfig',
     opts = {
       servers = {
@@ -83,8 +56,8 @@ return {
     opts = {},
     cmd = { 'CccPick', 'CccConvert', 'CccHighlighterEnable', 'CccHighlighterDisable', 'CccHighlighterToggle' },
     keys = {
-      { '<leader>lcp', '<cmd>CccPick<cr>', desc = 'Pick [lcp]' },
-      { '<leader>lcc', '<cmd>CccConvert<cr>', desc = 'Convert [lcc]' },
+      { '<leader>lcp', '<cmd>CccPick<cr>',              desc = 'Pick [lcp]' },
+      { '<leader>lcc', '<cmd>CccConvert<cr>',           desc = 'Convert [lcc]' },
       { '<leader>lch', '<cmd>CccHighlighterToggle<cr>', desc = 'Toggle Highlighter [lch]' },
     },
   },
