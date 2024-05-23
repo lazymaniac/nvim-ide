@@ -38,12 +38,14 @@ return {
   },
 
   -- [[ UTIL LIB ]] ---------------------------------------------------------------
+
   -- [plenary.nvim] - Utility lib used by other plugins
   -- see: `:h help-tag`
   -- link: https://github.com/nvim-lua/plenary.nvim
   { 'nvim-lua/plenary.nvim', branch = 'master' },
 
   -- [[ LEARNING VIM MOTIONS ]] ---------------------------------------------------------------
+
   -- [hardtime.nvim] - Plugin that helps learn vim motions and keybindings by providing hints
   -- see: `:h hardtime`
   -- link: https://github.com/m4xshen/hardtime.nvim
@@ -65,6 +67,21 @@ return {
       allow_different_key = false,
       enabled = false,
     },
+  },
+
+  {
+    'NStefan002/screenkey.nvim',
+    keys = {
+      {
+        '<leader>lk',
+        '<cmd>Screenkey<cr>',
+        mode = { 'n', 'v' },
+        desc = 'Show pressed keys',
+      },
+    },
+    cmd = 'Screenkey',
+    version = '*',
+    config = true,
   },
 
   -- [[ TOYS ]] ---------------------------------------------------------------
