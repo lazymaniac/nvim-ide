@@ -32,11 +32,17 @@ sudo dnf update
 
 # Install packages
 sudo dnf copr enable atim/lazygit -y
-sudo dnf install -y kitty zsh tmux virtualenv python3-neovim python3-pip cmake fzf luarocks luajit golang ripgrep lazygit ncdu unzip zip zoxide bat eza btop lazygit fd-find libX11-devel fastfetch compat-lua-devel-5.1.5
+sudo dnf install -y kitty zsh tmux virtualenv python3-neovim python3-pip cmake fzf luarocks luajit golang ripgrep lazygit ncdu unzip zip zoxide bat eza btop lazygit fd-find libX11-devel fastfetch compat-lua-devel-5.1.5 pipx
 sudo dnf group install -y "C Development Tools and Libraries" "Development Tools"
 
 # Install oh-my-zsh
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+# Install zsh-autosuggestions plugin.
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+# Install zsh-syntax-highlighting plugin
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
 # Install oh-my-zsh headline theme
 git clone https://github.com/moarram/headline.git "$ZSH_CUSTOM/themes/headline"
@@ -70,6 +76,12 @@ npm install -g neovim
 
 # Install molten deps
 pip install jupytext jupyter-client pynvim pnglatex plotly kaleido nbformat yarp
+
+# Install poetry
+pipx install poetry
+
+# Install jupyter notebooks.
+pipx install notebook
 
 # Install one fetch
 cargo install onefetch
