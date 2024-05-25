@@ -3,14 +3,12 @@ local ollama_model = 'llama3:8b-instruct-q6_K' -- 8B model
 
 local function system_prompt_expert_coder(filetype)
   return 'You’re going to act as an expert '
-      .. filetype
-      ..
-      [[ programmer with a detailed understanding of high quality coding practices and a technical focus. You will act as an organised developer who is meticulous when it comes to following ALL instructions given to you by the user.
+    .. filetype
+    .. [[ programmer with a detailed understanding of high quality coding practices and a technical focus. You will act as an organised developer who is meticulous when it comes to following ALL instructions given to you by the user.
 
 As a skilled software engineer you will produce fully complete and working code that is easy to read and understand. The code you write will be well organised, well optimised, make use of clear comments to explain the code, and follow a modular layout. To ensure the code is usable, you should include error handling for such events as null values. As ]]
-      .. filetype
-      ..
-      [[ Your code will be extremely well formatted, clean, robust, stable, efficient, well designed and maintainable. The code itself can be long if required as there are no restrictions on code length.
+    .. filetype
+    .. [[ Your code will be extremely well formatted, clean, robust, stable, efficient, well designed and maintainable. The code itself can be long if required as there are no restrictions on code length.
 ]]
 end
 
@@ -104,11 +102,11 @@ return {
             width = 95,
             height = 10,
           },
-          chat = {                   -- Options for the chat strategy
-            type = 'float',          -- float|buffer
-            show_settings = true,    -- Show the model settings in the chat buffer?
+          chat = { -- Options for the chat strategy
+            type = 'float', -- float|buffer
+            show_settings = true, -- Show the model settings in the chat buffer?
             show_token_count = true, -- Show the token count for the current chat in the buffer?
-            buf_options = {          -- Buffer options for the chat buffer
+            buf_options = { -- Buffer options for the chat buffer
               buflisted = false,
             },
             float_options = { -- Float window options if the type is "float"
@@ -131,19 +129,19 @@ return {
           },
         },
         keymaps = {
-          ['<C-s>'] = 'keymaps.save',       -- Save the chat buffer and trigger the API
-          ['<C-c>'] = 'keymaps.close',      -- Close the chat buffer
+          ['<C-s>'] = 'keymaps.save', -- Save the chat buffer and trigger the API
+          ['<C-c>'] = 'keymaps.close', -- Close the chat buffer
           ['q'] = 'keymaps.cancel_request', -- Cancel the currently streaming request
-          ['gc'] = 'keymaps.clear',         -- Clear the contents of the chat
-          ['ga'] = 'keymaps.codeblock',     -- Insert a codeblock into the chat
-          ['gs'] = 'keymaps.save_chat',     -- Save the current chat
-          [']'] = 'keymaps.next',           -- Move to the next header in the chat
-          ['['] = 'keymaps.previous',       -- Move to the previous header in the chat
+          ['gc'] = 'keymaps.clear', -- Clear the contents of the chat
+          ['ga'] = 'keymaps.codeblock', -- Insert a codeblock into the chat
+          ['gs'] = 'keymaps.save_chat', -- Save the current chat
+          [']'] = 'keymaps.next', -- Move to the next header in the chat
+          ['['] = 'keymaps.previous', -- Move to the previous header in the chat
         },
-        log_level = 'ERROR',                -- TRACE|DEBUG|ERROR
-        send_code = true,                   -- Send code context to the generative AI service? Disable to prevent leaking code outside of Neovim
-        silence_notifications = false,      -- Silence notifications for actions like saving saving chats?
-        use_default_actions = true,         -- Use the default actions in the action palette?
+        log_level = 'ERROR', -- TRACE|DEBUG|ERROR
+        send_code = true, -- Send code context to the generative AI service? Disable to prevent leaking code outside of Neovim
+        silence_notifications = false, -- Silence notifications for actions like saving saving chats?
+        use_default_actions = true, -- Use the default actions in the action palette?
         actions = {
           {
             name = 'Coding Expert Chat',
