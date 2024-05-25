@@ -13,7 +13,7 @@ return {
       -- [cmp-nvim-lsp] - Add lsp completion to cmp-nvim.
       -- see: `:h cmp-nvim-lsp`
       -- link: https://github.com/hrsh7th/cmp-nvim-lsp
-      { 'hrsh7th/cmp-nvim-lsp',                branch = 'main' },
+      { 'hrsh7th/cmp-nvim-lsp', branch = 'main' },
       -- [cmp-nvim-lsp-signature-help] - Displays functions signature.
       -- see: `:h cmp-nvim-lsp-signature-help`
       -- link: https://github.com/hrsh7th/cmp-nvim-lsp-signature-help
@@ -21,26 +21,26 @@ return {
       -- [cmp-buffer] - Adds buffer content to autocompletion.
       -- see: `:h cmp-buffer`
       -- link: https://github.com/hrsh7th/cmp-buffer
-      { 'hrsh7th/cmp-buffer',                  branch = 'main' },
+      { 'hrsh7th/cmp-buffer', branch = 'main' },
       -- [cmp-path] - Add system file tree autocompletion.
       -- see: `:h cmp-path`
       -- link: https://github.com/hrsh7th/cmp-path
-      { 'hrsh7th/cmp-path',                    branch = 'main' },
+      { 'hrsh7th/cmp-path', branch = 'main' },
       -- [cmp-calc] - Add result of calculations to autocompletion.
       -- see: `:h cmp-calc`
       -- link: https://github.com/hrsh7th/cmp-calc
-      { 'hrsh7th/cmp-calc',                    branch = 'main' },
+      { 'hrsh7th/cmp-calc', branch = 'main' },
       -- [cmp-spell] - Add correct spelling to autocompletion.
       -- see: `:h cmp-spell`
       -- link: https://github.com/f3fora/cmp-spell
-      { 'f3fora/cmp-spell',                    branch = 'master' },
-      { 'L3MON4D3/LuaSnip',                    branch = 'master' },
+      { 'f3fora/cmp-spell', branch = 'master' },
+      { 'L3MON4D3/LuaSnip', branch = 'master' },
       -- [cmp_luasnip] - Connect luasnip with nvim-cmp.
       -- see: `:h cmp_luasnip`
       -- link: https://github.com/saadparwaiz1/cmp_luasnip
-      { 'saadparwaiz1/cmp_luasnip',            branch = 'master' },
-      { 'rafamadriz/friendly-snippets',        branch = 'main' },
-      { 'rcarriga/cmp-dap',                    branch = 'master' },
+      { 'saadparwaiz1/cmp_luasnip', branch = 'master' },
+      { 'rafamadriz/friendly-snippets', branch = 'main' },
+      { 'rcarriga/cmp-dap', branch = 'master' },
       -- [cmp-npm] - Add npm packages and versions to autocompletion.
       -- see: `:h cmp-npm`
       -- link: https://github.com/David-Kunz/cmp-npm
@@ -57,7 +57,7 @@ return {
     opts = function()
       vim.api.nvim_set_hl(0, 'CmpGhostText', { link = 'Comment', default = true })
       local cmp = require 'cmp'
-      local defaults = require 'cmp.config.default' ()
+      local defaults = require 'cmp.config.default'()
       local has_words_before = function()
         unpack = unpack or table.unpack
         local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -147,16 +147,16 @@ return {
           end, { 'i', 's' }),
         },
         sources = cmp.config.sources {
-          { name = 'otter',                   keyword_length = 1, group_index = 1 },
-          { name = 'nvim_lsp',                keyword_length = 0, group_index = 1 },
+          { name = 'otter', keyword_length = 1, group_index = 1 },
+          { name = 'nvim_lsp', keyword_length = 0, group_index = 1 },
           { name = 'nvim_lsp_signature_help', keyword_length = 0, group_index = 1 },
-          { name = 'pandoc_references',       keyword_length = 1, group_index = 1 },
-          { name = 'luasnip',                 keyword_length = 1, group_index = 2 },
-          { name = 'friendly-snippets',       keyword_length = 1, group_index = 2 },
-          { name = 'path',                    keyword_length = 1, group_index = 3 },
-          { name = 'emoji',                   keyword_length = 1, group_index = 6 },
-          { name = 'calc',                    keyword_length = 1, group_index = 6 },
-          { name = 'npm',                     keyword_length = 1, group_index = 6 },
+          { name = 'pandoc_references', keyword_length = 1, group_index = 1 },
+          { name = 'luasnip', keyword_length = 1, group_index = 2 },
+          { name = 'friendly-snippets', keyword_length = 1, group_index = 2 },
+          { name = 'path', keyword_length = 1, group_index = 3 },
+          { name = 'emoji', keyword_length = 1, group_index = 6 },
+          { name = 'calc', keyword_length = 1, group_index = 6 },
+          { name = 'npm', keyword_length = 1, group_index = 6 },
           {
             name = 'spell',
             keyword_length = 2,
@@ -169,7 +169,7 @@ return {
             },
           },
           { name = 'latex_symbols', keyword_length = 2, group_index = 3 },
-          { name = 'buffer',        keyword_length = 2, group_index = 2 },
+          { name = 'buffer', keyword_length = 2, group_index = 2 },
         },
         formatting = {
           fields = { 'kind', 'abbr', 'menu' },
@@ -219,6 +219,31 @@ return {
       -- link quarto and rmarkdown to markdown snippets
       luasnip.filetype_extend('quarto', { 'markdown' })
       luasnip.filetype_extend('rmarkdown', { 'markdown' })
+      -- reorder rust autocompletion items.
+      local compare = require 'cmp.config.compare'
+      cmp.setup.filetype({ 'rust' }, {
+        sorting = {
+          priority_weight = 2,
+          comparators = {
+            -- deprioritize `.box`, `.mut`, etc.
+            require('cmp-rust').deprioritize_postfix,
+            -- deprioritize `Borrow::borrow` and `BorrowMut::borrow_mut`
+            require('cmp-rust').deprioritize_borrow,
+            -- deprioritize `Deref::deref` and `DerefMut::deref_mut`
+            require('cmp-rust').deprioritize_deref,
+            -- deprioritize `Into::into`, `Clone::clone`, etc.
+            require('cmp-rust').deprioritize_common_traits,
+            compare.offset,
+            compare.exact,
+            compare.score,
+            compare.recently_used,
+            compare.locality,
+            compare.sort_text,
+            compare.length,
+            compare.order,
+          },
+        },
+      })
     end,
   },
 
@@ -232,19 +257,19 @@ return {
     config = function()
       require('nvim-autopairs').setup {
         disable_filetype = { 'TelescopePrompt', 'vim' },
-        disable_in_macro = true,        -- disable when recording or executing a macro
+        disable_in_macro = true, -- disable when recording or executing a macro
         disable_in_visualblock = false, -- disable when insert after visual block mode
         disable_in_replace_mode = true,
         ignored_next_char = [=[[%w%%%'%[%"%.%`%$]]=],
         enable_moveright = true,
-        enable_afterquote = true,         -- add bracket pairs after quote
+        enable_afterquote = true, -- add bracket pairs after quote
         enable_check_bracket_line = true, --- check bracket in same line
-        enable_bracket_in_quote = true,   --
-        enable_abbr = false,              -- trigger abbreviation
-        break_undo = true,                -- switch for basic rule break undo sequence
+        enable_bracket_in_quote = true, --
+        enable_abbr = false, -- trigger abbreviation
+        break_undo = true, -- switch for basic rule break undo sequence
         check_ts = false,
         map_cr = true,
-        map_bs = true,  -- map the <BS> key
+        map_bs = true, -- map the <BS> key
         map_c_h = true, -- Map the <C-h> key to delete a pair
         map_c_w = true, -- map <c-w> to delete a pair if possible
       }
@@ -273,5 +298,9 @@ return {
         },
       })
     end,
+  },
+
+  {
+    'ryo33/nvim-cmp-rust',
   },
 }
