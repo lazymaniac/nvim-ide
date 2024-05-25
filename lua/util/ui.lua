@@ -1,20 +1,9 @@
----@class util.ui
 local M = {}
 
----@alias Sign {name:string, text:string, texthl:string, priority:number}
-
--- Returns a list of regular and extmark signs sorted by priority (low to high)
----@return Sign[]
----@param buf number
----@param lnum number
 function M.get_signs(buf, lnum)
-  -- Get regular signs
-  ---@type Sign[]
   local signs = {}
 
   if vim.fn.has 'nvim-0.10' == 0 then
-    -- Only needed for Neovim <0.10
-    -- Newer versions include legacy signs in nvim_buf_get_extmarks
     for _, sign in ipairs(vim.fn.sign_getplaced(buf, { group = '*', lnum = lnum })[1].signs) do
       local ret = vim.fn.sign_getdefined(sign.name)[1] --[[@as Sign]]
       if ret then
@@ -43,9 +32,6 @@ function M.get_signs(buf, lnum)
   return signs
 end
 
----@return Sign?
----@param buf number
----@param lnum number
 function M.get_mark(buf, lnum)
   local marks = vim.fn.getmarklist(buf)
   vim.list_extend(marks, vim.fn.getmarklist())
@@ -56,8 +42,6 @@ function M.get_mark(buf, lnum)
   end
 end
 
----@param sign? Sign
----@param len? number
 function M.icon(sign, len)
   sign = sign or {}
   len = len or 2

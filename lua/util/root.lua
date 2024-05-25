@@ -1,22 +1,11 @@
 local Util = require 'util'
 
----@class util.root
----@overload fun(): string
 local M = setmetatable({}, {
   __call = function(m)
     return m.get()
   end,
 })
 
----@class LazyRoot
----@field paths string[]
----@field spec LazyRootSpec
-
----@alias LazyRootFn fun(buf: number): (string|string[])
-
----@alias LazyRootSpec string|string[]|LazyRootFn
-
----@type LazyRootSpec[]
 M.spec = { 'lsp', { '.git', 'lua' }, 'cwd' }
 
 M.detectors = {}
@@ -45,7 +34,6 @@ function M.detectors.lsp(buf)
   end, roots)
 end
 
----@param patterns string[]|string
 function M.detectors.pattern(buf, patterns)
   patterns = type(patterns) == 'string' and { patterns } or patterns
   local path = M.bufpath(buf) or vim.loop.cwd()
@@ -69,8 +57,6 @@ function M.realpath(path)
   return Util.norm(path)
 end
 
----@param spec LazyRootSpec
----@return LazyRootFn
 function M.resolve(spec)
   if M.detectors[spec] then
     return M.detectors[spec]
@@ -82,7 +68,6 @@ function M.resolve(spec)
   end
 end
 
----@param opts? { buf?: number, spec?: LazyRootSpec[], all?: boolean }
 function M.detect(opts)
   opts = opts or {}
   opts.spec = opts.spec or type(vim.g.root_spec) == 'table' and vim.g.root_spec or M.spec

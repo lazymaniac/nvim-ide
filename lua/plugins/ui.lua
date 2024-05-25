@@ -16,14 +16,14 @@ return {
       { '<leader>un', function() require('notify').dismiss { silent = true, pending = true } end, desc = 'Dismiss all Notifications [un]', },
     },
     opts = {
-      timeout = 3000, -- Time to show Notification in ms, set to false ti disable timeout.
-      fps = 60, -- Frames per second for animnation stages, higher value means smoother animations but more CPU usage.
-      level = 2, -- Minimum log level to display. See vim.log.levels.
-      minimum_width = 35, -- Minimum width for notification window.
+      timeout = 3000,             -- Time to show Notification in ms, set to false ti disable timeout.
+      fps = 60,                   -- Frames per second for animnation stages, higher value means smoother animations but more CPU usage.
+      level = 2,                  -- Minimum log level to display. See vim.log.levels.
+      minimum_width = 35,         -- Minimum width for notification window.
       render = 'wrapped-compact', -- 'default' | 'minimal' | 'simple' | 'wrapped-compact'. Function to render a notification buffer or a build-in renderer name
-      stages = 'fade', -- 'slide' | 'fade' | 'static' | 'fade_in_slide_out' Animation stages.
-      top_down = true, -- Whether or not to position the notification at the top or not
-      icons = { -- Icons for each log level (upper case names)
+      stages = 'fade',            -- 'slide' | 'fade' | 'static' | 'fade_in_slide_out' Animation stages.
+      top_down = true,            -- Whether or not to position the notification at the top or not
+      icons = {                   -- Icons for each log level (upper case names)
         DEBUG = '',
         ERROR = '',
         INFO = '',
@@ -66,22 +66,22 @@ return {
     event = 'VeryLazy',
     opts = {
       input = {
-        enabled = true, -- Set to false to disable the vim.ui.input implementation
+        enabled = true,            -- Set to false to disable the vim.ui.input implementation
         default_prompt = 'Input:', -- Default prompt string
-        title_pos = 'right', -- Can be 'left', 'right', or 'center'
-        insert_only = true, -- When true, <Esc> will close the modal
-        start_in_insert = true, -- When true, input will start in insert mode.
-        border = 'rounded', -- These are passed to nvim_open_win
-        relative = 'cursor', -- 'editor' and 'win' will default to being centered
-        prefer_width = 40, -- These can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
+        title_pos = 'right',       -- Can be 'left', 'right', or 'center'
+        insert_only = true,        -- When true, <Esc> will close the modal
+        start_in_insert = true,    -- When true, input will start in insert mode.
+        border = 'rounded',        -- These are passed to nvim_open_win
+        relative = 'cursor',       -- 'editor' and 'win' will default to being centered
+        prefer_width = 40,         -- These can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
         width = nil,
         -- min_width and max_width can be a list of mixed types.
         max_width = { 140, 0.9 },
         min_width = { 20, 0.2 },
         buf_options = {},
         win_options = {
-          wrap = true, -- Disable line wrapping
-          list = true, -- Indicator for when text exceeds window
+          wrap = true,       -- Disable line wrapping
+          list = true,       -- Indicator for when text exceeds window
           listchars = 'precedes:…,extends:…',
           sidescrolloff = 4, -- Increase this for more context when text scrolls off the window
         },
@@ -106,9 +106,9 @@ return {
         get_config = nil, -- see :help dressing_get_config
       },
       select = {
-        enabled = true, -- Set to false to disable the vim.ui.select implementation
+        enabled = true,                                                -- Set to false to disable the vim.ui.select implementation
         backend = { 'builtin', 'nui', 'telescope', 'fzf_lua', 'fzf' }, -- Priority list of preferred vim.select implementations
-        trim_prompt = true, -- Trim trailing `:` from prompt
+        trim_prompt = true,                                            -- Trim trailing `:` from prompt
         -- Options for telescope selector
         -- These are passed into the telescope picker directly. Can be used like:
         -- telescope = require('telescope.themes').get_ivy({...})
@@ -136,7 +136,7 @@ return {
         -- Options for built-in selector
         builtin = {
           show_numbers = true, -- Display numbers for options and set up keymaps
-          border = 'rounded', -- These are passed to nvim_open_win
+          border = 'rounded',  -- These are passed to nvim_open_win
           relative = 'editor', -- 'editor' and 'win' will default to being centered
           buf_options = {},
           win_options = {
@@ -195,30 +195,30 @@ return {
       },
     },
     keys = {
-      { '<leader>bp', '<Cmd>BufferLineTogglePin<CR>', desc = 'Toggle pin [bp]' },
+      { '<leader>bp', '<Cmd>BufferLineTogglePin<CR>',            desc = 'Toggle pin [bp]' },
       { '<leader>bP', '<Cmd>BufferLineGroupClose ungrouped<CR>', desc = 'Delete non-pinned buffers [bP]' },
-      { '<leader>bo', '<Cmd>BufferLineCloseOthers<CR>', desc = 'Delete other buffers [bo]' },
-      { '<leader>br', '<Cmd>BufferLineCloseRight<CR>', desc = 'Delete buffers to the right [br]' },
-      { '<leader>bl', '<Cmd>BufferLineCloseLeft<CR>', desc = 'Delete buffers to the left [bl]' },
-      { '<S-h>', '<cmd>BufferLineCyclePrev<cr>', desc = 'Prev buffer <S-h>' },
-      { '<S-l>', '<cmd>BufferLineCycleNext<cr>', desc = 'Next buffer <S-l>' },
-      { '[b', '<cmd>BufferLineCyclePrev<cr>', desc = 'Prev buffer <[b>' },
-      { ']b', '<cmd>BufferLineCycleNext<cr>', desc = 'Next buffer <]b>' },
+      { '<leader>bo', '<Cmd>BufferLineCloseOthers<CR>',          desc = 'Delete other buffers [bo]' },
+      { '<leader>br', '<Cmd>BufferLineCloseRight<CR>',           desc = 'Delete buffers to the right [br]' },
+      { '<leader>bl', '<Cmd>BufferLineCloseLeft<CR>',            desc = 'Delete buffers to the left [bl]' },
+      { '<S-h>',      '<cmd>BufferLineCyclePrev<cr>',            desc = 'Prev buffer <S-h>' },
+      { '<S-l>',      '<cmd>BufferLineCycleNext<cr>',            desc = 'Next buffer <S-l>' },
+      { '[b',         '<cmd>BufferLineCyclePrev<cr>',            desc = 'Prev buffer <[b>' },
+      { ']b',         '<cmd>BufferLineCycleNext<cr>',            desc = 'Next buffer <]b>' },
     },
     opts = {
       options = {
-        mode = 'buffers', -- Set to "tabs" to only show tabpages instead
+        mode = 'buffers',    -- Set to "tabs" to only show tabpages instead
         -- style_preset = require('bufferline').style_preset.minimal, -- or style_preset.minimal
-        themable = true, --Allows highlight groups to be overridden i.e. sets highlights as default
+        themable = true,     --Allows highlight groups to be overridden i.e. sets highlights as default
         numbers = 'ordinal', -- "none" | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
         close_command = function(n)
           require('mini.bufremove').delete(n, false)
         end, -- can be a string | function, see "Mouse actions"
         right_mouse_command = function(n)
           require('mini.bufremove').delete(n, false)
-        end, -- can be a string | function, see "Mouse actions"
+        end,                              -- can be a string | function, see "Mouse actions"
         left_mouse_command = 'buffer %d', -- can be a string | function, see "Mouse actions"
-        middle_mouse_command = nil, -- can be a string | function, see "Mouse actions"
+        middle_mouse_command = nil,       -- can be a string | function, see "Mouse actions"
         indicator = { style = 'icon', icon = '▎' },
         buffer_close_icon = ' ',
         modified_icon = '●',
@@ -236,19 +236,19 @@ return {
         --   end
         -- end,
         max_name_length = 30,
-        max_prefix_length = 30, -- prefix used when a buffer is de-duplicated
-        truncate_names = true, -- Whether or not tab names should be truncated
+        max_prefix_length = 30,   -- prefix used when a buffer is de-duplicated
+        truncate_names = true,    -- Whether or not tab names should be truncated
         tab_size = 18,
-        diagnostics = false, -- | "nvim_lsp" | "coc" | false
+        diagnostics = false,      -- | "nvim_lsp" | "coc" | false
         diagnostics_update_in_insert = false,
-        color_icons = true, -- Whether or not to add the filetype icon to highlights
+        color_icons = true,       -- Whether or not to add the filetype icon to highlights
         show_buffer_icons = true, -- Disable filetype icons for buffers
         show_buffer_close_icons = true,
         show_close_icon = true,
         show_tab_indicators = true,
         show_duplicate_prefix = true, -- Whether to show duplicate buffer prefix
-        persist_buffer_sort = true, -- Whether or not custom sorted buffers should persist
-        move_wraps_at_ends = true, -- whether or not the move command "wraps" at the first or last position
+        persist_buffer_sort = true,   -- Whether or not custom sorted buffers should persist
+        move_wraps_at_ends = true,    -- whether or not the move command "wraps" at the first or last position
         -- can also be a table containing 2 custom separators
         -- [focused and unfocused]. eg: { '|', '|' }
         separator_style = { '|' }, -- 'slant' | 'slope' | 'thick' | 'thin' | { 'any', 'any' },
@@ -359,10 +359,10 @@ return {
             },
             {
               'overseer',
-              label = '', -- Prefix for task counts
-              colored = true, -- Color the task icons and counts
-              unique = true, -- Unique-ify non-running task count by name
-              name_not = false, -- When true, invert the name search
+              label = '',         -- Prefix for task counts
+              colored = true,     -- Color the task icons and counts
+              unique = true,      -- Unique-ify non-running task count by name
+              name_not = false,   -- When true, invert the name search
               status_not = false, -- When true, invert the status search
             },
             { 'lazy' },
@@ -446,10 +446,10 @@ return {
             },
             {
               'overseer',
-              label = '', -- Prefix for task counts
-              colored = true, -- Color the task icons and counts
-              unique = true, -- Unique-ify non-running task count by name
-              name_not = false, -- When true, invert the name search
+              label = '',         -- Prefix for task counts
+              colored = true,     -- Color the task icons and counts
+              unique = true,      -- Unique-ify non-running task count by name
+              name_not = false,   -- When true, invert the name search
               status_not = false, -- When true, invert the status search
             },
             { 'lazy' },
@@ -493,20 +493,20 @@ return {
     dependencies = { 'MunifTanjim/nui.nvim', 'hrsh7th/nvim-cmp', 'rcarriga/nvim-notify' },
     -- stylua: ignore
     keys = {
-      { '<C-S-Enter>', function() require('noice').redirect(vim.fn.getcmdline()) end, mode = 'c', desc = 'Redirect Cmdline <C-S-Enter>', },
-      { '<leader>snl', function() require('noice').cmd 'last' end, desc = 'Noice Last Message [snl]', },
-      { '<leader>snh', function() require('noice').cmd 'history' end, desc = 'Noice History [snh]', },
-      { '<leader>sna', function() require('noice').cmd 'all' end, desc = 'Noice All [sna]', },
-      { '<leader>snd', function() require('noice').cmd 'dismiss' end, desc = 'Dismiss All [snd]', },
-      { '<c-f>', function() if not require('noice.lsp').scroll(4) then return '<c-f>' end end, silent = true, expr = true, desc = 'Scroll forward <c-f>', mode = { 'i', 'n', 's' }, },
-      { '<c-b>', function() if not require('noice.lsp').scroll(-4) then return '<c-b>' end end, silent = true, expr = true, desc = 'Scroll backward <c-b>', mode = { 'i', 'n', 's' }, },
+      { '<C-S-Enter>', function() require('noice').redirect(vim.fn.getcmdline()) end,                 mode = 'c',                        desc = 'Redirect Cmdline <C-S-Enter>', },
+      { '<leader>snl', function() require('noice').cmd 'last' end,                                    desc = 'Noice Last Message [snl]', },
+      { '<leader>snh', function() require('noice').cmd 'history' end,                                 desc = 'Noice History [snh]', },
+      { '<leader>sna', function() require('noice').cmd 'all' end,                                     desc = 'Noice All [sna]', },
+      { '<leader>snd', function() require('noice').cmd 'dismiss' end,                                 desc = 'Dismiss All [snd]', },
+      { '<c-f>',       function() if not require('noice.lsp').scroll(4) then return '<c-f>' end end,  silent = true,                     expr = true,                           desc = 'Scroll forward <c-f>',  mode = { 'i', 'n', 's' }, },
+      { '<c-b>',       function() if not require('noice.lsp').scroll(-4) then return '<c-b>' end end, silent = true,                     expr = true,                           desc = 'Scroll backward <c-b>', mode = { 'i', 'n', 's' }, },
     },
     config = function()
       require('noice').setup {
         cmdline = {
-          enabled = true, -- enables the Noice cmdline UI
+          enabled = true,   -- enables the Noice cmdline UI
           view = 'cmdline', -- view for rendering the cmdline. Change to `cmdline` to get a classic cmdline at the bottom
-          opts = {}, -- global options for the cmdline. See section on views
+          opts = {},        -- global options for the cmdline. See section on views
           format = {
             -- conceal: (default=true) This will hide the text in the cmdline that matches the pattern.
             -- view: (default is cmdline view)
@@ -526,15 +526,15 @@ return {
         messages = {
           -- NOTE: If you enable messages, then the cmdline is enabled automatically.
           -- This is a current Neovim limitation.
-          enabled = true, -- enables the Noice messages UI
-          view = 'notify', -- default view for messages
-          view_error = 'notify', -- view for errors
-          view_warn = 'notify', -- view for warnings
-          view_history = 'messages', -- view for :messages
+          enabled = true,              -- enables the Noice messages UI
+          view = 'notify',             -- default view for messages
+          view_error = 'notify',       -- view for errors
+          view_warn = 'notify',        -- view for warnings
+          view_history = 'messages',   -- view for :messages
           view_search = 'virtualtext', -- view for search count messages. Set to `false` to disable
         },
         popupmenu = {
-          enabled = true, -- enables the Noice popupmenu UI
+          enabled = true,  -- enables the Noice popupmenu UI
           backend = 'nui', -- backend to use to show regular cmdline completions
           -- Icons for completion item kinds (see defaults at noice.config.icons.kinds)
           kind_icons = {}, -- set to `false` to disable icons
@@ -557,7 +557,7 @@ return {
                 { error = true },
                 { warning = true },
                 { event = 'msg_show', kind = { '' } },
-                { event = 'lsp', kind = 'message' },
+                { event = 'lsp',      kind = 'message' },
               },
             },
           },
@@ -571,7 +571,7 @@ return {
                 { error = true },
                 { warning = true },
                 { event = 'msg_show', kind = { '' } },
-                { event = 'lsp', kind = 'message' },
+                { event = 'lsp',      kind = 'message' },
               },
             },
             filter_opts = { count = 1 },
@@ -615,8 +615,8 @@ return {
           hover = {
             enabled = true,
             silent = false, -- set to true to not show a message if hover is not available
-            view = nil, -- when nil, use defaults from documentation
-            opts = {}, -- merged with defaults from documentation
+            view = nil,     -- when nil, use defaults from documentation
+            opts = {},      -- merged with defaults from documentation
           },
           signature = {
             enabled = false,
@@ -624,10 +624,10 @@ return {
               enabled = true,
               trigger = true, -- Automatically show signature help when typing a trigger character from the LSP
               luasnip = true, -- Will open signature help when jumping to Luasnip insert nodes
-              throttle = 50, -- Debounce lsp signature help request by 50ms
+              throttle = 50,  -- Debounce lsp signature help request by 50ms
             },
-            view = nil, -- when nil, use defaults from documentation
-            opts = {}, -- merged with defaults from documentation
+            view = nil,       -- when nil, use defaults from documentation
+            opts = {},        -- merged with defaults from documentation
           },
           message = {
             -- Messages shown by lsp servers
@@ -649,7 +649,7 @@ return {
         },
         markdown = {
           hover = {
-            ['|(%S-)|'] = vim.cmd.help, -- vim help links
+            ['|(%S-)|'] = vim.cmd.help,                       -- vim help links
             ['%[.-%]%((%S-)%)'] = require('noice.util').open, -- markdown links
           },
           highlights = {
@@ -673,16 +673,16 @@ return {
         presets = {
           -- you can enable a preset by setting it to true, or a table that will override the preset config
           -- you can also add custom presets that you can enable/disable with enabled=true
-          bottom_search = false, -- use a classic bottom cmdline for search
-          command_palette = true, -- position the cmdline and popupmenu together
+          bottom_search = false,        -- use a classic bottom cmdline for search
+          command_palette = true,       -- position the cmdline and popupmenu together
           long_message_to_split = true, -- long messages will be sent to a split
-          inc_rename = true, -- enables an input dialog for inc-rename.nvim
-          lsp_doc_border = true, -- add a border to hover docs and signature help
+          inc_rename = true,            -- enables an input dialog for inc-rename.nvim
+          lsp_doc_border = true,        -- add a border to hover docs and signature help
         },
-        throttle = 1000 / 30, -- how frequently does Noice need to check for ui updates? This has no effect when in blocking mode.
+        throttle = 1000 / 30,           -- how frequently does Noice need to check for ui updates? This has no effect when in blocking mode.
         views = {}, ---@see section on views
-        status = {}, --- @see section on statusline components
-        format = {}, --- @see section on formatting
+        status = {},                    --- @see section on statusline components
+        format = {},                    --- @see section on formatting
         routes = {
           {
             filter = {
@@ -707,7 +707,7 @@ return {
   -- [nui.nvim] - UI components like popups.
   -- see: `:h nui`
   -- link: https://github.com/MunifTanjim/nui.nvim
-  { 'MunifTanjim/nui.nvim', branch = 'main' },
+  { 'MunifTanjim/nui.nvim',        branch = 'main' },
 
   -- [dashboard-nvim] - Welcome dashboard like in other IDE
   -- see: `:h dashboard-nvim`
@@ -779,14 +779,15 @@ return {
     config = function()
       require('floating-help').setup {
         -- Defaults
-        width = 82, -- Whole numbers are columns/rows
-        height = 0.80, -- Decimals are a percentage of the editor
+        width = 82,      -- Whole numbers are columns/rows
+        height = 0.80,   -- Decimals are a percentage of the editor
         position = 'NE', -- NW,N,NW,W,C,E,SW,S,SE (C==center)
         borderchars = { '─', '│', '─', '│', '╭', '╮', '╯', '╰' },
       }
       -- Only replace cmds, not search; only replace the first instance
       local function cmd_abbrev(abbrev, expansion)
-        local cmd = 'cabbr ' .. abbrev .. ' <c-r>=(getcmdpos() == 1 && getcmdtype() == ":" ? "' .. expansion .. '" : "' .. abbrev .. '")<CR>'
+        local cmd = 'cabbr ' ..
+        abbrev .. ' <c-r>=(getcmdpos() == 1 && getcmdtype() == ":" ? "' .. expansion .. '" : "' .. abbrev .. '")<CR>'
         vim.cmd(cmd)
       end
       -- Redirect `:h` to `:FloatingHelp`
@@ -805,11 +806,11 @@ return {
     branch = 'master',
     event = 'VeryLazy',
     opts = {
-      show_numbers = true, -- Enable 'number' for the window while peeking
-      show_cursorline = true, -- Enable 'cursorline' for the window while peeking
+      show_numbers = true,         -- Enable 'number' for the window while peeking
+      show_cursorline = true,      -- Enable 'cursorline' for the window while peeking
       hide_relativenumbers = true, -- Enable turning off 'relativenumber' for the window while peeking
-      number_only = false, -- Peek only when the command is only a number instead of when it starts with a number
-      centered_peeking = true, -- Peeked line will be centered relative to window
+      number_only = false,         -- Peek only when the command is only a number instead of when it starts with a number
+      centered_peeking = true,     -- Peeked line will be centered relative to window
     },
     config = function(_, opts)
       require('numb').setup(opts)
@@ -925,7 +926,7 @@ return {
         -- * a percentage of the width / height of the editor when <= 1
         -- * a function that returns the width or the height
         width = 120, -- width of the Zen window
-        height = 1, -- height of the Zen window
+        height = 1,  -- height of the Zen window
         -- by default, no options are changed for the Zen window
         -- uncomment any of the options below, or add other vim.wo options you want to apply
         options = {
@@ -943,15 +944,15 @@ return {
         -- comment the lines to not apply the options
         options = {
           enabled = true,
-          ruler = false, -- disables the ruler text in the cmd line area
+          ruler = false,   -- disables the ruler text in the cmd line area
           showcmd = false, -- disables the command in the last line of the screen
           -- you may turn on/off statusline in zen mode by setting 'laststatus'
           -- statusline will be shown only if 'laststatus' == 3
-          laststatus = 0, -- turn off the statusline in zen mode
+          laststatus = 0,              -- turn off the statusline in zen mode
         },
         twilight = { enabled = true }, -- enable to start Twilight when zen mode opens
         gitsigns = { enabled = true }, -- disables git signs
-        tmux = { enabled = false }, -- disables the tmux statusline
+        tmux = { enabled = false },    -- disables the tmux statusline
         -- this will change the font size on kitty when in zen mode
         -- to make this work, you need to set the following kitty options:
         -- - allow_remote_control socket-only

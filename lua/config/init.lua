@@ -19,7 +19,7 @@ local defaults = {
   -- load the default settings
   defaults = {
     autocmds = true, -- config.autocmds
-    keymaps = true, -- config.keymaps
+    keymaps = true,  -- config.keymaps
     -- config.options can't be configured here since that's loaded before lazyvim setup
     -- if you want to disable loading options, add `package.loaded["config.options"] = true` to the top of your init.lua
   },

@@ -26,14 +26,14 @@ return {
     event = 'BufReadPre',
     -- stylua: ignore
     keys = {
-      { '<leader>qs', function() require('persistence').load() end, desc = 'Restore Session [qs]', },
+      { '<leader>qs', function() require('persistence').load() end,               desc = 'Restore Session [qs]', },
       { '<leader>ql', function() require('persistence').load { last = true } end, desc = 'Restore Last Session [ql]', },
-      { '<leader>qd', function() require('persistence').stop() end, desc = "Don't Save Current Session [qd]", },
+      { '<leader>qd', function() require('persistence').stop() end,               desc = "Don't Save Current Session [qd]", },
     },
     opts = {
       dir = vim.fn.expand(vim.fn.stdpath 'state' .. '/sessions/'), -- directory where session files are saved
       options = vim.opt.sessionoptions:get(),
-      save_empty = false, -- don't save if there are no open file buffers
+      save_empty = false,                                          -- don't save if there are no open file buffers
     },
   },
 

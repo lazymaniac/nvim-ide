@@ -59,8 +59,8 @@ return {
     branch = 'main',
     event = 'VeryLazy',
     keys = {
-      { 's', mode = { 'n', 'x', 'o' }, desc = 'Leap forward to <s>' },
-      { 'S', mode = { 'n', 'x', 'o' }, desc = 'Leap backward to <S>' },
+      { 's',  mode = { 'n', 'x', 'o' }, desc = 'Leap forward to <s>' },
+      { 'S',  mode = { 'n', 'x', 'o' }, desc = 'Leap backward to <S>' },
       { 'gs', mode = { 'n', 'x', 'o' }, desc = 'Leap from windows <gs>' },
     },
     config = function(_, opts)
@@ -90,7 +90,7 @@ return {
       vim.keymap.set('n', '!', search.current_word)
       -- Search selected text in visual mode
       vim.keymap.set('x', '!', search.in_place) -- search selection without moving
-      vim.keymap.set('x', '*', search.forward) -- search selection forward
+      vim.keymap.set('x', '*', search.forward)  -- search selection forward
       vim.keymap.set('x', '#', search.backward) -- search selection backward
       -- Search by motion in place
       vim.keymap.set('n', '|', search.in_place)

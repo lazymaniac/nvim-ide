@@ -9,23 +9,23 @@ return {
     config = function()
       require('catppuccin').setup {
         flavour = 'latte', -- latte, frappe, macchiato, mocha
-        background = { -- :h background
+        background = {     -- :h background
           light = 'latte',
           dark = 'mocha',
         },
         transparent_background = false, -- disables setting the background color.
-        show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
-        term_colors = false, -- sets terminal colors (e.g. `g:terminal_color_0`)
+        show_end_of_buffer = false,     -- shows the '~' characters after the end of buffers
+        term_colors = false,            -- sets terminal colors (e.g. `g:terminal_color_0`)
         dim_inactive = {
-          enabled = true, -- dims the background color of inactive window
+          enabled = true,               -- dims the background color of inactive window
           shade = 'dark',
-          percentage = 0.15, -- percentage of the shade to apply to the inactive window
+          percentage = 0.15,            -- percentage of the shade to apply to the inactive window
         },
-        no_italic = false, -- Force no italic
-        no_bold = false, -- Force no bold
-        no_underline = false, -- Force no underline
-        styles = { -- Handles the styles of general hi groups (see `:h highlight-args`):
-          comments = {}, -- Change the style of comments
+        no_italic = false,              -- Force no italic
+        no_bold = false,                -- Force no bold
+        no_underline = false,           -- Force no underline
+        styles = {                      -- Handles the styles of general hi groups (see `:h highlight-args`):
+          comments = {},                -- Change the style of comments
           conditionals = { 'italic' },
           loops = { 'italic' },
           functions = {},
@@ -113,20 +113,20 @@ return {
           -- Compiled file's destination location
           compile_path = vim.fn.stdpath 'cache' .. '/nightfox',
           compile_file_suffix = '_compiled', -- Compiled file suffix
-          transparent = false, -- Disable setting background
-          terminal_colors = true, -- Set terminal colors (vim.g.terminal_color_*) used in `:terminal`
-          dim_inactive = true, -- Non focused panes set to alternative background
-          module_default = true, -- Default enable value for modules
+          transparent = false,               -- Disable setting background
+          terminal_colors = true,            -- Set terminal colors (vim.g.terminal_color_*) used in `:terminal`
+          dim_inactive = true,               -- Non focused panes set to alternative background
+          module_default = true,             -- Default enable value for modules
           colorblind = {
-            enable = false, -- Enable colorblind support
-            simulate_only = false, -- Only show simulated colorblind colors and not diff shifted
+            enable = false,                  -- Enable colorblind support
+            simulate_only = false,           -- Only show simulated colorblind colors and not diff shifted
             severity = {
-              protan = 0, -- Severity [0,1] for protan (red)
-              deutan = 0, -- Severity [0,1] for deutan (green)
-              tritan = 0, -- Severity [0,1] for tritan (blue)
+              protan = 0,                    -- Severity [0,1] for protan (red)
+              deutan = 0,                    -- Severity [0,1] for deutan (green)
+              tritan = 0,                    -- Severity [0,1] for tritan (blue)
             },
           },
-          styles = { -- Style to be applied to different syntax groups
+          styles = {             -- Style to be applied to different syntax groups
             comments = 'italic', -- Value is any valid attr-list value `:help attr-list`
             conditionals = 'italic',
             constants = 'bold',

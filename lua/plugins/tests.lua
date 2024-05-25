@@ -22,13 +22,13 @@ return {
     dependencies = { 'nvim-lua/plenary.nvim', 'nvim-treesitter/nvim-treesitter', 'stevearc/overseer.nvim', 'nvim-neotest/nvim-nio' },
     -- stylua: ignore
     keys = {
-      { '<leader>tt', function() require('neotest').run.run(vim.fn.expand '%') end, desc = 'Run File [tt]', },
-      { '<leader>tT', function() require('neotest').run.run(vim.loop.cwd()) end, desc = 'Run All Test Files [tT]', },
-      { '<leader>tr', function() require('neotest').run.run() end, desc = 'Run Nearest [tr]', },
-      { '<leader>ts', function() require('neotest').summary.toggle() end, desc = 'Toggle Summary [ts]', },
+      { '<leader>tt', function() require('neotest').run.run(vim.fn.expand '%') end,                      desc = 'Run File [tt]', },
+      { '<leader>tT', function() require('neotest').run.run(vim.loop.cwd()) end,                         desc = 'Run All Test Files [tT]', },
+      { '<leader>tr', function() require('neotest').run.run() end,                                       desc = 'Run Nearest [tr]', },
+      { '<leader>ts', function() require('neotest').summary.toggle() end,                                desc = 'Toggle Summary [ts]', },
       { '<leader>to', function() require('neotest').output.open { enter = true, auto_close = true } end, desc = 'Show Output [to]', },
-      { '<leader>tO', function() require('neotest').output_panel.toggle() end, desc = 'Toggle Output Panel [tO]', },
-      { '<leader>tS', function() require('neotest').run.stop() end, desc = 'Stop [ts]', },
+      { '<leader>tO', function() require('neotest').output_panel.toggle() end,                           desc = 'Toggle Output Panel [tO]', },
+      { '<leader>tS', function() require('neotest').run.stop() end,                                      desc = 'Stop [ts]', },
     },
     config = function()
       local opts = {
@@ -145,9 +145,12 @@ return {
           enabled = true,
           symbol_queries = {
             elixir = '<function 1>',
-            go = '        ;query\n        ;Captures imported types\n        (qualified_type name: (type_identifier) @symbol)\n        ;Captures package-local and built-in types\n        (type_identifier)@symbol\n        ;Captures imported function calls and variables/constants\n        (selector_expression field: (field_identifier) @symbol)\n        ;Captures package-local functions calls\n        (call_expression function: (identifier) @symbol)\n      ',
-            lua = '        ;query\n        ;Captures module names in require calls\n        (function_call\n          name: ((identifier) @function (#eq? @function "require"))\n          arguments: (arguments (string) @symbol))\n      ',
-            python = "        ;query\n        ;Captures imports and modules they're imported from\n        (import_from_statement (_ (identifier) @symbol))\n        (import_statement (_ (identifier) @symbol))\n      ",
+            go =
+            '        ;query\n        ;Captures imported types\n        (qualified_type name: (type_identifier) @symbol)\n        ;Captures package-local and built-in types\n        (type_identifier)@symbol\n        ;Captures imported function calls and variables/constants\n        (selector_expression field: (field_identifier) @symbol)\n        ;Captures package-local functions calls\n        (call_expression function: (identifier) @symbol)\n      ',
+            lua =
+            '        ;query\n        ;Captures module names in require calls\n        (function_call\n          name: ((identifier) @function (#eq? @function "require"))\n          arguments: (arguments (string) @symbol))\n      ',
+            python =
+            "        ;query\n        ;Captures imports and modules they're imported from\n        (import_from_statement (_ (identifier) @symbol))\n        (import_statement (_ (identifier) @symbol))\n      ",
           },
         },
       }
