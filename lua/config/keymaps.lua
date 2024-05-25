@@ -89,11 +89,6 @@ map('n', '<leader>xq', '<cmd>copen<cr>', { desc = 'Quickfix List [xq]' })
 map('n', '[q', vim.cmd.cprev, { desc = 'Previous quickfix <[q>' })
 map('n', ']q', vim.cmd.cnext, { desc = 'Next quickfix <]q>' })
 
--- formatting
-map({ 'n', 'v' }, '<leader>cf', function()
-  Util.format { force = true }
-end, { desc = 'Format [cf]' })
-
 -- diagnostic
 local diagnostic_goto = function(next, severity)
   local go = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev

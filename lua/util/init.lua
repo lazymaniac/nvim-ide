@@ -106,8 +106,6 @@ function M.lazy_notify()
   timer:start(500, 0, replay)
 end
 
----@param name string
----@param fn fun(name:string)
 function M.on_load(name, fn)
   local Config = require 'lazy.core.config'
   if Config.plugins[name] and Config.plugins[name]._.loaded then
