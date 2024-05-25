@@ -55,8 +55,8 @@ return {
     cmd = 'ConformInfo',
     -- stylua: ignore
     keys = {
-      { '<leader>cf', function() require('conform').format { } end, mode = { 'n', 'v' }, desc = 'Format [cf]' },
-      { '<leader>cF', function() require('conform').format { formatters = { 'injected' } } end, mode = { 'n', 'v' }, desc = 'Format Injected Langs [cF]' },
+      { '<leader>cf', function() require('conform').format { async = true, lsp_fallback = true } end, mode = { 'n', 'v' }, desc = 'Format [cf]' },
+      { '<leader>cF', function() require('conform').format { async = true, lsp_fallback = true, formatters = { 'injected' } } end, mode = { 'n', 'v' }, desc = 'Format Injected Langs [cF]' },
     },
     config = function()
       require('conform').setup {
