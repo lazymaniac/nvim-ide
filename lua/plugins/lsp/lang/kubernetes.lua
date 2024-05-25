@@ -5,7 +5,7 @@ return {
   -- link: https://github.com/h4ckm1n-dev/kube-utils-nvim
   {
     "h4ckm1n-dev/kube-utils-nvim",
-    branch = "main", -- comment to use local folder
+    branch = "main",
     config = function()
       require("init").setup()
       local helm_mappings = {
@@ -24,9 +24,7 @@ return {
           l = { "<cmd>ToggleYamlHelm<CR>", "Toggle YAML/Helm" },
         },
       }
-
       local wk = require 'which-key'
-      -- Register the Helm keybindings with a specific prefix
       wk.register(helm_mappings, { prefix = "<leader>" })
     end,
   },
