@@ -76,16 +76,16 @@ return {
     build = 'sh install.sh',
     -- stylua: ignore
     keys = {
-      { '<leader>rl', '<cmd>SnipRun<cr>', mode = { 'n' }, desc = 'Run line of code [rl]' },
-      { '<leader>rs', '<cmd>SnipRun<cr>', mode = { 'v' }, desc = 'Run selected code [rs]' },
+      { '<leader>rl', '<cmd>SnipRun<cr>',  mode = { 'n' },      desc = 'Run line of code [rl]' },
+      { '<leader>rs', '<cmd>SnipRun<cr>',  mode = { 'v' },      desc = 'Run selected code [rs]' },
       { '<leader>rf', '<cmd>%SnipRun<cr>', mode = { 'n', 'v' }, desc = 'Run current file [rf]' },
     },
     config = function()
       require('sniprun').setup {
         selected_interpreters = {}, --# use those instead of the default for the current filetype
-        repl_enable = {}, --# enable REPL-like behavior for the given interpreters
-        repl_disable = {}, --# disable REPL-like behavior for the given interpreters
-        interpreter_options = { --# interpreter-specific options, see doc / :SnipInfo <name>
+        repl_enable = {},           --# enable REPL-like behavior for the given interpreters
+        repl_disable = {},          --# disable REPL-like behavior for the given interpreters
+        interpreter_options = {     --# interpreter-specific options, see doc / :SnipInfo <name>
           --# use the interpreter name as key
           GFM_original = {
             use_on_filetypes = { 'markdown.pandoc' }, --# the 'use_on_filetypes' configuration key is
@@ -110,16 +110,16 @@ return {
           -- 'NvimNotify', --# display with the nvim-notify plugin
           -- "Api"                      --# return output to a programming interface
         },
-        live_display = { 'VirtualTextOk' }, --# display mode used in live_mode
+        live_display = { 'VirtualTextOk' },       --# display mode used in live_mode
         display_options = {
           terminal_scrollback = vim.o.scrollback, --# change terminal display scrollback lines
-          terminal_line_number = false, --# whether show line number in terminal window
-          terminal_signcolumn = false, --# whether show signcolumn in terminal window
-          terminal_persistence = true, --# always keep the terminal open (true) or close it at every occasion (false)
-          terminal_position = 'horizontal', --# or "horizontal", to open as horizontal split instead of vertical split
-          terminal_width = 45, --# change the terminal display option width (if vertical)
-          terminal_height = 15, --# change the terminal display option height (if horizontal)
-          notification_timeout = 5, --# timeout for nvim_notify output
+          terminal_line_number = false,           --# whether show line number in terminal window
+          terminal_signcolumn = false,            --# whether show signcolumn in terminal window
+          terminal_persistence = true,            --# always keep the terminal open (true) or close it at every occasion (false)
+          terminal_position = 'horizontal',       --# or "horizontal", to open as horizontal split instead of vertical split
+          terminal_width = 45,                    --# change the terminal display option width (if vertical)
+          terminal_height = 15,                   --# change the terminal display option height (if horizontal)
+          notification_timeout = 5,               --# timeout for nvim_notify output
         },
         --# You can use the same keys to customize whether a sniprun producing
         --# no output should display nothing or '(no output)'
@@ -130,9 +130,9 @@ return {
         --# customize highlight groups (setting this overrides colorscheme)
         live_mode_toggle = 'off', --# live mode toggle, see Usage - Running for more info
         --# miscellaneous compatibility/adjustement settings
-        inline_messages = false, --# boolean toggle for a one-line way to display messages
+        inline_messages = false,  --# boolean toggle for a one-line way to display messages
         --# to workaround sniprun not being able to display anything
-        borders = 'single', --# display borders around floating windows
+        borders = 'single',       --# display borders around floating windows
         --# possible values are 'none', 'single', 'double', or 'shadow'
       }
     end,
@@ -179,13 +179,13 @@ return {
     build = ':UpdateRemotePlugins',
     -- stylua: ignore
     keys = {
-      { '<leader>je', '<cmd>MoltenEvaluateOperator<cr>', mode = { 'n' }, desc = 'Evaluate Operator [je]' },
+      { '<leader>je', '<cmd>MoltenEvaluateOperator<cr>',      mode = { 'n' }, desc = 'Evaluate Operator [je]' },
       { '<leader>jo', '<cmd>noautocmd MoltenEnterOutput<cr>', mode = { 'n' }, desc = 'Open Output Window [jo]' },
-      { '<leader>jr', '<cmd>MoltenReevaluateCell<cr>', mode = { 'n' }, desc = 'Reevaluta Cell [jr]' },
-      { '<leader>jr', '<cmd><C-u>MoltenEvaluateVisual<cr>', mode = { 'v' }, desc = 'Edxecute Selected Code [jr]' },
-      { '<leader>jh', '<cmd>MoltenHideOutput<cr>', mode = { 'n' }, desc = 'Hide Output [jh]' },
-      { '<leader>jd', '<cmd>MoltenDelete<cr>', mode = { 'n' }, desc = 'Delete Cell [jd]' },
-      { '<leader>jb', '<cmd>MoltenOpenInBrowser<cr>', mode = { 'n' }, desc = 'Open in Browser [jb]' },
+      { '<leader>jr', '<cmd>MoltenReevaluateCell<cr>',        mode = { 'n' }, desc = 'Reevaluta Cell [jr]' },
+      { '<leader>jr', '<cmd><C-u>MoltenEvaluateVisual<cr>',   mode = { 'v' }, desc = 'Edxecute Selected Code [jr]' },
+      { '<leader>jh', '<cmd>MoltenHideOutput<cr>',            mode = { 'n' }, desc = 'Hide Output [jh]' },
+      { '<leader>jd', '<cmd>MoltenDelete<cr>',                mode = { 'n' }, desc = 'Delete Cell [jd]' },
+      { '<leader>jb', '<cmd>MoltenOpenInBrowser<cr>',         mode = { 'n' }, desc = 'Open in Browser [jb]' },
     },
     init = function()
       vim.g.molten_auto_init_behavior = 'init'
@@ -217,11 +217,11 @@ return {
     ft = { 'quarto', 'markdown' },
     -- stylua: ignore
     keys = {
-      { '<leader>jc', '<cmd>lua require("quarto.runner").run_cell()<cr>', mode = { 'n' }, desc = 'Run Cell [jc]' },
-      { '<leader>ja', '<cmd>lua require("quarto.runner").run_above()<cr>', mode = { 'n' }, desc = 'Run Cell and Above [ja]' },
-      { '<leader>jA', '<cmd>lua require("quarto.runner").run_all()<cr>', mode = { 'n' }, desc = 'Run All Cells [jA]' },
-      { '<leader>jl', '<cmd>lua require("quarto.runner").run_line()<cr>', mode = { 'n' }, desc = 'Run Line [jl]' },
-      { '<leader>jR', '<cmd>lua require("quarto.runner").run_range()<cr>', mode = { 'v' }, desc = 'Run Selected Cells [jR]' },
+      { '<leader>jc', '<cmd>lua require("quarto.runner").run_cell()<cr>',    mode = { 'n' }, desc = 'Run Cell [jc]' },
+      { '<leader>ja', '<cmd>lua require("quarto.runner").run_above()<cr>',   mode = { 'n' }, desc = 'Run Cell and Above [ja]' },
+      { '<leader>jA', '<cmd>lua require("quarto.runner").run_all()<cr>',     mode = { 'n' }, desc = 'Run All Cells [jA]' },
+      { '<leader>jl', '<cmd>lua require("quarto.runner").run_line()<cr>',    mode = { 'n' }, desc = 'Run Line [jl]' },
+      { '<leader>jR', '<cmd>lua require("quarto.runner").run_range()<cr>',   mode = { 'v' }, desc = 'Run Selected Cells [jR]' },
       { '<leader>jx', '<cmd>lua require("quarto.runner").run_all(true)<cr>', mode = { 'n' }, desc = 'Run All Cells of All Languages [jx]' },
     },
     dependencies = { 'jmbuhr/otter.nvim' },

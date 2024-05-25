@@ -12,17 +12,17 @@ return {
     dependencies = { 'akinsho/toggleterm.nvim' },
     -- stylua: ignore
     keys = {
-      { '<leader>rb', '<cmd>OverseerBuild<cr>', mode = { 'n' }, desc = 'Create Task [rb]' },
-      { '<leader>rv', '<cmd>OverseerToggle!<cr>', mode = { 'n' }, desc = 'Show Results [rv]' },
-      { '<leader>rC', '<cmd>OverseerClearCache<cr>', mode = { 'n' }, desc = 'Clear Cache [rC]' },
-      { '<leader>rL', '<cmd>OverseerLoadBundle<cr>', mode = { 'n' }, desc = 'Load Task Bundle [rL]' },
-      { '<leader>rS', '<cmd>OverseerSaveBundle<cr>', mode = { 'n' }, desc = 'Save Task Bundle [rS]' },
+      { '<leader>rb', '<cmd>OverseerBuild<cr>',        mode = { 'n' }, desc = 'Create Task [rb]' },
+      { '<leader>rv', '<cmd>OverseerToggle!<cr>',      mode = { 'n' }, desc = 'Show Results [rv]' },
+      { '<leader>rC', '<cmd>OverseerClearCache<cr>',   mode = { 'n' }, desc = 'Clear Cache [rC]' },
+      { '<leader>rL', '<cmd>OverseerLoadBundle<cr>',   mode = { 'n' }, desc = 'Load Task Bundle [rL]' },
+      { '<leader>rS', '<cmd>OverseerSaveBundle<cr>',   mode = { 'n' }, desc = 'Save Task Bundle [rS]' },
       { '<leader>rD', '<cmd>OverseerDeleteBundle<cr>', mode = { 'n' }, desc = 'Delete Task Bundle [rD]' },
-      { '<leader>rq', '<cmd>OverseerQuickAction<cr>', mode = { 'n' }, desc = 'Task Quick Action [rq]' },
-      { '<leader>rr', '<cmd>OverseerRun<cr>', mode = { 'n' }, desc = 'Run Task [rr]' },
-      { '<leader>rc', '<cmd>OverseerRunCmd<cr>', mode = { 'n' }, desc = 'Run Cmd [rc]' },
-      { '<leader>rt', '<cmd>OverseerTaskAction<cr>', mode = { 'n' }, desc = 'Task Action [rt]' },
-      { '<leader>rI', '<cmd>OverseerInfo<cr>', mode = { 'n' }, desc = 'Task Runner Info [rI]' },
+      { '<leader>rq', '<cmd>OverseerQuickAction<cr>',  mode = { 'n' }, desc = 'Task Quick Action [rq]' },
+      { '<leader>rr', '<cmd>OverseerRun<cr>',          mode = { 'n' }, desc = 'Run Task [rr]' },
+      { '<leader>rc', '<cmd>OverseerRunCmd<cr>',       mode = { 'n' }, desc = 'Run Cmd [rc]' },
+      { '<leader>rt', '<cmd>OverseerTaskAction<cr>',   mode = { 'n' }, desc = 'Task Action [rt]' },
+      { '<leader>rI', '<cmd>OverseerInfo<cr>',         mode = { 'n' }, desc = 'Task Runner Info [rI]' },
     },
     config = function()
       require('overseer').setup {
