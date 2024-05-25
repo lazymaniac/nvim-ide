@@ -1,9 +1,7 @@
 local Util = require 'util'
 
----@class LazyVimConfig: LazyVimOptions
 local M = {}
 
----@class LazyVimOptions
 local defaults = {
   -- colorscheme can be a string like `catppuccin` or a function that will load the colorscheme
   ---@type string|fun()
@@ -93,10 +91,8 @@ local defaults = {
   },
 }
 
----@type LazyVimOptions
 local options
 
----@param opts? LazyVimOptions
 function M.setup(opts)
   options = vim.tbl_deep_extend('force', defaults, opts or {}) or {}
 
@@ -106,7 +102,6 @@ function M.setup(opts)
     M.load 'autocmds'
   end
   M.load 'keymaps'
-  Util.format.setup()
   Util.root.setup()
   Util.track 'colorscheme'
   Util.try(function()
@@ -125,7 +120,6 @@ function M.setup(opts)
   Util.track()
 end
 
----@param name "autocmds" | "options" | "keymaps"
 function M.load(name)
   local function _load(mod)
     if require('lazy.core.cache').find(mod)[1] then
@@ -151,7 +145,6 @@ function M.init()
     return
   end
   M.did_init = true
-  require 'util.format'
 
   -- delay notifications till vim.notify was replaced or after 500ms
   require('util').lazy_notify()
