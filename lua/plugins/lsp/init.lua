@@ -103,14 +103,14 @@ return {
       end
       if type(opts.diagnostics.virtual_text) == 'table' and opts.diagnostics.virtual_text.prefix == 'icons' then
         opts.diagnostics.virtual_text.prefix = vim.fn.has 'nvim-0.10.0' == 0 and '●'
-          or function(diagnostic)
-            local icons = require('config').icons.diagnostics
-            for d, icon in pairs(icons) do
-              if diagnostic.severity == vim.diagnostic.severity[d:upper()] then
-                return icon
+            or function(diagnostic)
+              local icons = require('config').icons.diagnostics
+              for d, icon in pairs(icons) do
+                if diagnostic.severity == vim.diagnostic.severity[d:upper()] then
+                  return icon
+                end
               end
             end
-          end
       end
       vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
       local servers = opts.servers
@@ -230,7 +230,7 @@ return {
         enabled = true, -- when not enabled, neodev will not change any settings to the LSP server
         -- these settings will be used for your Neovim config directory
         runtime = true, -- runtime path
-        types = true, -- full signature, docs and completion of vim.api, vim.treesitter, vim.lsp and others
+        types = true,   -- full signature, docs and completion of vim.api, vim.treesitter, vim.lsp and others
         plugins = true, -- installed opt or start plugins in packpath
         -- you can also specify the list of plugins to make available as a workspace library
         -- plugins = { "nvim-treesitter", "plenary.nvim", "telescope.nvim" },

@@ -12,22 +12,22 @@ return {
     opts = {
       plugins = {
         spelling = {
-          enabled = true, -- Enabling this will show WhichKey when pressing z= to select spelling suggestion
+          enabled = true,   -- Enabling this will show WhichKey when pressing z= to select spelling suggestion
           suggestions = 20, -- How many suggestions should be shown in the list?
         },
-        marks = true, -- Show a list of marks on ' and `
-        registers = true, -- Shows registers on " in NORMAL or <C-r> in INSERT mode
+        marks = true,       -- Show a list of marks on ' and `
+        registers = true,   -- Shows registers on " in NORMAL or <C-r> in INSERT mode
       },
       -- The presets plugin, adds help for bunch of default keybindings in Neovim
       -- No actual keybindings are created
       presets = {
-        oprators = true, -- Adds help for operators like d, y, ... and registers them for motion / text completion
-        motions = true, -- Adds help for motions
+        oprators = true,     -- Adds help for operators like d, y, ... and registers them for motion / text completion
+        motions = true,      -- Adds help for motions
         text_objects = true, -- Adds help for text objects triggered after entering an operator
-        windows = true, -- Help for windows. Default bindings on <C-w>
-        nav = true, -- Misc bindings to work with windows
-        z = true, -- Bindings for folds, spelling and other prefixed with z
-        g = true, -- Bindings for prefixed with g
+        windows = true,      -- Help for windows. Default bindings on <C-w>
+        nav = true,          -- Misc bindings to work with windows
+        z = true,            -- Bindings for folds, spelling and other prefixed with z
+        g = true,            -- Bindings for prefixed with g
       },
       -- Add operators that will trigger motion and text objects completion.
       -- To enable all native operators, set the preset / operators plugin
@@ -49,25 +49,25 @@ return {
       },
       popup_mappings = {
         scroll_down = '<c-d>', -- binding to scroll down inside the popup
-        scroll_up = '<c-u>', -- binding to scroll up inside the popup
+        scroll_up = '<c-u>',   -- binding to scroll up inside the popup
       },
       window = {
-        border = 'rounded', -- none, single, double, shadow, rounded
-        position = 'bottom', -- bottom, top
-        margin = { 1, 0, 1, 0 }, -- extra window margin [top, right, bottom, left]
+        border = 'rounded',       -- none, single, double, shadow, rounded
+        position = 'bottom',      -- bottom, top
+        margin = { 1, 0, 1, 0 },  -- extra window margin [top, right, bottom, left]
         padding = { 1, 1, 1, 1 }, -- extra window padding [top, right, bottom, left]
         winblend = 0,
       },
       layout = {
         height = { min = 4, max = 25 }, -- min and max height of the columns
         width = { min = 20, max = 50 }, -- min and max width of the columns
-        spacing = 2, -- spacing between columns
-        align = 'left', -- align columns left, center or right
+        spacing = 2,                    -- spacing between columns
+        align = 'left',                 -- align columns left, center or right
       },
       ignore_missing = false,
       hidden = { '<silent>', '<cmd>', '<Cmd>', '<CR>', 'call', 'lua', '^:', '^ ' }, -- hide mapping boilerplate
-      show_help = true, -- show help message on the command line when the popup is visible
-      triggers = 'auto', -- automatically setup triggers
+      show_help = true,                                                             -- show help message on the command line when the popup is visible
+      triggers = 'auto',                                                            -- automatically setup triggers
       -- triggers = {"<leader>"} -- or specify a list manually
       triggers_blacklist = {
         -- list of mode / prefixes that should never be hooked by WhichKey
@@ -199,35 +199,35 @@ return {
       action_keys = { -- key mappings for actions in the trouble list
         -- map to {} to remove a mapping, for example:
         -- close = {},
-        close = 'q', -- close the list
-        cancel = '<esc>', -- cancel the preview and get back to your last window / buffer / cursor
-        refresh = 'r', -- manually refresh
-        jump = { '<cr>', '<tab>', '<2-leftmouse>' }, -- jump to the diagnostic or open / close folds
-        open_split = { '<c-x>' }, -- open buffer in new split
-        open_vsplit = { '<c-v>' }, -- open buffer in new vsplit
-        open_tab = { '<c-t>' }, -- open buffer in new tab
-        jump_close = { 'o' }, -- jump to the diagnostic and close the list
-        toggle_mode = 'm', -- toggle between "workspace" and "document" diagnostics mode
-        switch_severity = 's', -- switch "diagnostics" severity filter level to HINT / INFO / WARN / ERROR
-        toggle_preview = 'P', -- toggle auto_preview
-        hover = 'K', -- opens a small popup with the full multiline message
-        preview = 'p', -- preview the diagnostic location
-        open_code_href = 'c', -- if present, open a URI with more information about the diagnostic error
-        close_folds = { 'zM', 'zm' }, -- close all folds
-        open_folds = { 'zR', 'zr' }, -- open all folds
-        toggle_fold = { 'zA', 'za' }, -- toggle fold of current file
-        previous = 'k', -- previous item
-        next = 'j', -- next item
-        help = '?', -- help menu
+        close = 'q',                                                                        -- close the list
+        cancel = '<esc>',                                                                   -- cancel the preview and get back to your last window / buffer / cursor
+        refresh = 'r',                                                                      -- manually refresh
+        jump = { '<cr>', '<tab>', '<2-leftmouse>' },                                        -- jump to the diagnostic or open / close folds
+        open_split = { '<c-x>' },                                                           -- open buffer in new split
+        open_vsplit = { '<c-v>' },                                                          -- open buffer in new vsplit
+        open_tab = { '<c-t>' },                                                             -- open buffer in new tab
+        jump_close = { 'o' },                                                               -- jump to the diagnostic and close the list
+        toggle_mode = 'm',                                                                  -- toggle between "workspace" and "document" diagnostics mode
+        switch_severity = 's',                                                              -- switch "diagnostics" severity filter level to HINT / INFO / WARN / ERROR
+        toggle_preview = 'P',                                                               -- toggle auto_preview
+        hover = 'K',                                                                        -- opens a small popup with the full multiline message
+        preview = 'p',                                                                      -- preview the diagnostic location
+        open_code_href = 'c',                                                               -- if present, open a URI with more information about the diagnostic error
+        close_folds = { 'zM', 'zm' },                                                       -- close all folds
+        open_folds = { 'zR', 'zr' },                                                        -- open all folds
+        toggle_fold = { 'zA', 'za' },                                                       -- toggle fold of current file
+        previous = 'k',                                                                     -- previous item
+        next = 'j',                                                                         -- next item
+        help = '?',                                                                         -- help menu
       },
-      multiline = true, -- render multi-line messages
-      indent_lines = true, -- add an indent guide below the fold icons
-      win_config = { border = 'rounded' }, -- window configuration for floating windows. See |nvim_open_win()|.
-      auto_open = false, -- automatically open the list when you have diagnostics
-      auto_close = true, -- automatically close the list when you have no diagnostics
-      auto_preview = true, -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
-      auto_fold = true, -- automatically fold a file trouble list at creation
-      auto_jump = { 'lsp_definitions' }, -- for the given modes, automatically jump if there is only a single result
+      multiline = true,                                                                     -- render multi-line messages
+      indent_lines = true,                                                                  -- add an indent guide below the fold icons
+      win_config = { border = 'rounded' },                                                  -- window configuration for floating windows. See |nvim_open_win()|.
+      auto_open = false,                                                                    -- automatically open the list when you have diagnostics
+      auto_close = true,                                                                    -- automatically close the list when you have no diagnostics
+      auto_preview = true,                                                                  -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
+      auto_fold = true,                                                                     -- automatically fold a file trouble list at creation
+      auto_jump = { 'lsp_definitions' },                                                    -- for the given modes, automatically jump if there is only a single result
       include_declaration = { 'lsp_references', 'lsp_implementations', 'lsp_definitions' }, -- for the given modes, include the declaration of the current symbol in the results
       signs = {
         -- icons / text used for a diagnostic
@@ -240,10 +240,10 @@ return {
       use_diagnostic_signs = true, -- enabling this will use the signs defined in your lsp client
     },
     keys = {
-      { '<leader>xx', '<cmd>TroubleToggle document_diagnostics<cr>', desc = 'Document Diagnostics [xx]' },
+      { '<leader>xx', '<cmd>TroubleToggle document_diagnostics<cr>',  desc = 'Document Diagnostics [xx]' },
       { '<leader>xX', '<cmd>TroubleToggle workspace_diagnostics<cr>', desc = 'Workspace Diagnostics [xX]' },
-      { '<leader>xL', '<cmd>TroubleToggle loclist<cr>', desc = 'Location List [xL]' },
-      { '<leader>xQ', '<cmd>TroubleToggle quickfix<cr>', desc = 'Quickfix List [xQ]' },
+      { '<leader>xL', '<cmd>TroubleToggle loclist<cr>',               desc = 'Location List [xL]' },
+      { '<leader>xQ', '<cmd>TroubleToggle quickfix<cr>',              desc = 'Quickfix List [xQ]' },
       {
         '[q',
         function()
@@ -287,12 +287,12 @@ return {
     config = true,
     -- stylua: ignore
     keys = {
-      { ']t', function() require('todo-comments').jump_next() end, desc = 'Next todo comment <]t>' },
-      { '[t', function() require('todo-comments').jump_prev() end, desc = 'Previous [t]odo comment <[t>' },
-      { '<leader>xt', '<cmd>TodoTrouble<cr>', desc = 'List Todo [xt]' },
-      { '<leader>xT', '<cmd>TodoTrouble keywords=TODO,FIX,FIXME<cr>', desc = 'List Todo/Fix/Fixme [xT]' },
-      { '<leader>st', '<cmd>TodoTelescope<cr>', desc = 'Search Todo [sT]' },
-      { '<leader>sT', '<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>', desc = 'Search Todo/Fix/Fixme [sT]' },
+      { ']t',         function() require('todo-comments').jump_next() end, desc = 'Next todo comment <]t>' },
+      { '[t',         function() require('todo-comments').jump_prev() end, desc = 'Previous [t]odo comment <[t>' },
+      { '<leader>xt', '<cmd>TodoTrouble<cr>',                              desc = 'List Todo [xt]' },
+      { '<leader>xT', '<cmd>TodoTrouble keywords=TODO,FIX,FIXME<cr>',      desc = 'List Todo/Fix/Fixme [xT]' },
+      { '<leader>st', '<cmd>TodoTelescope<cr>',                            desc = 'Search Todo [sT]' },
+      { '<leader>sT', '<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>',    desc = 'Search Todo/Fix/Fixme [sT]' },
     },
   },
 
@@ -426,7 +426,7 @@ return {
         -- If you disable this you can still open hover_symbol using your keymap
         -- below.
         open_hover_on_preview = true,
-        width = 120, -- Percentage or integer of columns
+        width = 120,    -- Percentage or integer of columns
         min_width = 80, -- This is the number of columns
         -- Whether width is relative to the total width of nvim.
         -- When relative_width = true, this means take 50% of the total
@@ -565,25 +565,25 @@ return {
     event = 'VeryLazy',
     -- stylua: ignore
     keys = {
-        ---@diagnostic disable-next-line: undefined-field
-      { "<leader>p", function() require("telescope").extensions.yank_history.yank_history({ }) end, desc = "Search Yank History [p]" },
-      { 'y', '<Plug>(YankyYank)', mode = { 'n', 'x' }, desc = 'Yank text <y>' },
-      { 'p', '<Plug>(YankyPutAfter)', mode = { 'n', 'x' }, desc = 'Put yanked text after cursor <p>' },
-      { 'P', '<Plug>(YankyPutBefore)', mode = { 'n', 'x' }, desc = 'Put yanked text before cursor <P>' },
-      { 'gp', '<Plug>(YankyGPutAfter)', mode = { 'n', 'x' }, desc = 'Put yanked text after selection <gp>' },
-      { 'gP', '<Plug>(YankyGPutBefore)', mode = { 'n', 'x' }, desc = 'Put yanked text before selection <gP>' },
-      { '[y', '<Plug>(YankyCycleForward)', desc = 'Cycle forward through yank history <[y>' },
-      { ']y', '<Plug>(YankyCycleBackward)', desc = 'Cycle backward through yank history <]y>' },
-      { ']p', '<Plug>(YankyPutIndentAfterLinewise)', desc = 'Put indented after cursor (linewise) <]p>' },
-      { '[p', '<Plug>(YankyPutIndentBeforeLinewise)', desc = 'Put indented before cursor (linewise) <[p>' },
-      { ']P', '<Plug>(YankyPutIndentAfterLinewise)', desc = 'Put indented after cursor (linewise) <]P>' },
-      { '[P', '<Plug>(YankyPutIndentBeforeLinewise)', desc = 'Put indented before cursor (linewise) <[P>' },
-      { '>p', '<Plug>(YankyPutIndentAfterShiftRight)', desc = 'Put and indent right <>p>' },
-      { '<p', '<Plug>(YankyPutIndentAfterShiftLeft)', desc = 'Put and indent left <<p>' },
-      { '>P', '<Plug>(YankyPutIndentBeforeShiftRight)', desc = 'Put before and indent right <>P>' },
-      { '<P', '<Plug>(YankyPutIndentBeforeShiftLeft)', desc = 'Put before and indent left <<P>' },
-      { '=p', '<Plug>(YankyPutAfterFilter)', desc = 'Put after applying a filter <=p>' },
-      { '=P', '<Plug>(YankyPutBeforeFilter)', desc = 'Put before applying a filter <=P>' },
+      ---@diagnostic disable-next-line: undefined-field
+      { "<leader>p", function() require("telescope").extensions.yank_history.yank_history({}) end,  desc = "Search Yank History [p]" },
+      { 'y',         '<Plug>(YankyYank)',                                                           mode = { 'n', 'x' },                                desc = 'Yank text <y>' },
+      { 'p',         '<Plug>(YankyPutAfter)',                                                       mode = { 'n', 'x' },                                desc = 'Put yanked text after cursor <p>' },
+      { 'P',         '<Plug>(YankyPutBefore)',                                                      mode = { 'n', 'x' },                                desc = 'Put yanked text before cursor <P>' },
+      { 'gp',        '<Plug>(YankyGPutAfter)',                                                      mode = { 'n', 'x' },                                desc = 'Put yanked text after selection <gp>' },
+      { 'gP',        '<Plug>(YankyGPutBefore)',                                                     mode = { 'n', 'x' },                                desc = 'Put yanked text before selection <gP>' },
+      { '[y',        '<Plug>(YankyCycleForward)',                                                   desc = 'Cycle forward through yank history <[y>' },
+      { ']y',        '<Plug>(YankyCycleBackward)',                                                  desc = 'Cycle backward through yank history <]y>' },
+      { ']p',        '<Plug>(YankyPutIndentAfterLinewise)',                                         desc = 'Put indented after cursor (linewise) <]p>' },
+      { '[p',        '<Plug>(YankyPutIndentBeforeLinewise)',                                        desc = 'Put indented before cursor (linewise) <[p>' },
+      { ']P',        '<Plug>(YankyPutIndentAfterLinewise)',                                         desc = 'Put indented after cursor (linewise) <]P>' },
+      { '[P',        '<Plug>(YankyPutIndentBeforeLinewise)',                                        desc = 'Put indented before cursor (linewise) <[P>' },
+      { '>p',        '<Plug>(YankyPutIndentAfterShiftRight)',                                       desc = 'Put and indent right <>p>' },
+      { '<p',        '<Plug>(YankyPutIndentAfterShiftLeft)',                                        desc = 'Put and indent left <<p>' },
+      { '>P',        '<Plug>(YankyPutIndentBeforeShiftRight)',                                      desc = 'Put before and indent right <>P>' },
+      { '<P',        '<Plug>(YankyPutIndentBeforeShiftLeft)',                                       desc = 'Put before and indent left <<P>' },
+      { '=p',        '<Plug>(YankyPutAfterFilter)',                                                 desc = 'Put after applying a filter <=p>' },
+      { '=P',        '<Plug>(YankyPutBeforeFilter)',                                                desc = 'Put before applying a filter <=P>' },
     },
     opts = {
       ring = {
@@ -601,7 +601,7 @@ return {
         },
         telescope = {
           use_default_mappings = true, -- if default mappings should be used
-          mappings = nil, -- nil to use default mappings or no mappings (see `use_default_mappings`)
+          mappings = nil,              -- nil to use default mappings or no mappings (see `use_default_mappings`)
         },
       },
       system_clipboard = {
@@ -663,13 +663,13 @@ return {
     'anuvyklack/windows.nvim',
     branch = 'main',
     dependencies = {
-      { 'anuvyklack/middleclass', branch = 'master' },
+      { 'anuvyklack/middleclass',    branch = 'master' },
       { 'anuvyklack/animation.nvim', branch = 'main' },
     },
     -- stylua: ignore
     keys = {
-      { '<leader>wm', '<cmd>WindowsMaximize<cr>', mode = { 'n', 'v' }, desc = 'Maximize Window [wm]', },
-      { '<leader>we', '<cmd>WindowsEqualize<cr>', mode = { 'n', 'v' }, desc = 'Equalize Window [we]', },
+      { '<leader>wm', '<cmd>WindowsMaximize<cr>',        mode = { 'n', 'v' }, desc = 'Maximize Window [wm]', },
+      { '<leader>we', '<cmd>WindowsEqualize<cr>',        mode = { 'n', 'v' }, desc = 'Equalize Window [we]', },
       { '<leader>wt', '<cmd>WindowsToggleAutowidth<cr>', mode = { 'n', 'v' }, desc = 'Toggle Autowidth [wt]', },
     },
     config = function()
@@ -688,10 +688,10 @@ return {
     branch = 'master',
     config = function()
       require('better_escape').setup {
-        mapping = { 'jk', 'jj' }, -- a table with mappings to use
+        mapping = { 'jk', 'jj' },   -- a table with mappings to use
         timeout = vim.o.timeoutlen, -- the time in which the keys must be hit in ms. Use option timeoutlen by default
-        clear_empty_lines = false, -- clear line after escaping if there is only whitespace
-        keys = '<Esc>', -- keys used for escaping, if it is a function will use the result everytime
+        clear_empty_lines = false,  -- clear line after escaping if there is only whitespace
+        keys = '<Esc>',             -- keys used for escaping, if it is a function will use the result everytime
         -- example(recommended)
         -- keys = function()
         --   return vim.api.nvim_win_get_cursor(0)[2] > 1 and '<esc>l' or '<esc>'
@@ -711,15 +711,15 @@ return {
         show = true,
         show_in_active_only = false,
         set_highlights = true,
-        folds = 1000, -- handle folds, set to number to disable folds if no. of lines in buffer exceeds this
-        max_lines = false, -- disables if no. of lines in buffer exceeds this
+        folds = 1000,                -- handle folds, set to number to disable folds if no. of lines in buffer exceeds this
+        max_lines = false,           -- disables if no. of lines in buffer exceeds this
         hide_if_all_visible = false, -- Hides everything if all lines are visible
         throttle_ms = 100,
         handle = {
           text = ' ',
-          blend = 30, -- Integer between 0 and 100. 0 for fully opaque and 100 to full transparent. Defaults to 30.
+          blend = 30,                 -- Integer between 0 and 100. 0 for fully opaque and 100 to full transparent. Defaults to 30.
           color = nil,
-          color_nr = nil, -- cterm
+          color_nr = nil,             -- cterm
           highlight = 'CursorColumn',
           hide_if_all_visible = true, -- Hides handle if all lines are visible
         },
@@ -756,8 +756,8 @@ return {
           diagnostic = true,
           gitsigns = true, -- Requires gitsigns
           handle = true,
-          search = true, -- Requires hlslens
-          ale = false, -- Requires ALE
+          search = true,   -- Requires hlslens
+          ale = false,     -- Requires ALE
         },
       }
     end,
@@ -771,9 +771,9 @@ return {
     branch = 'main',
     init = function()
       require('bigfile').setup {
-        filesize = 2, -- size of the file in MiB, the plugin round file sizes to the closest MiB
+        filesize = 2,      -- size of the file in MiB, the plugin round file sizes to the closest MiB
         pattern = { '*' }, -- autocmd pattern
-        features = { -- features to disable
+        features = {       -- features to disable
           'indent_blankline',
           'illuminate',
           'lsp',

@@ -41,8 +41,8 @@ return {
     },
     config = function()
       require('projections').setup {
-        workspaces = { -- Default workspaces to search for
-          { '~/workspace/', { '.git' } }, -- Documents/dev is a workspace. patterns = { ".git" }
+        workspaces = {                        -- Default workspaces to search for
+          { '~/workspace/', { '.git' } },     -- Documents/dev is a workspace. patterns = { ".git" }
         },
         patterns = { '.git', '.svn', '.hg' }, -- Default patterns to use if none were specified. These are NOT regexps.
         -- store_hooks = { pre = nil, post = nil },   -- pre and post hooks for store_session, callable | nil

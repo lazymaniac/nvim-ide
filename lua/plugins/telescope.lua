@@ -14,42 +14,42 @@ return {
     cmd = 'Telescope',
     -- stylua: ignore
     keys = {
-      { '<leader>,', '<cmd>Telescope buffers sort_mru=true sort_lastused=true layout_strategy=vertical<cr>', desc = 'Switch Buffer [,]' },
-      { '<leader>:', '<cmd>Telescope command_history layout_strategy=vertical<cr>', desc = 'Command History [:]' },
-      { '<leader><space>', Util.telescope('files', { layout_strategy='vertical' }) , desc = 'Find Files (root dir) [SPC]' },
+      { '<leader>,',       '<cmd>Telescope buffers sort_mru=true sort_lastused=true layout_strategy=vertical<cr>',                                                  desc = 'Switch Buffer [,]' },
+      { '<leader>:',       '<cmd>Telescope command_history layout_strategy=vertical<cr>',                                                                           desc = 'Command History [:]' },
+      { '<leader><space>', Util.telescope('files', { layout_strategy = 'vertical' }),                                                                               desc = 'Find Files (root dir) [SPC]' },
       -- find
-      { '<leader>fc', Util.telescope.config_files(), desc = 'Find Config File [fc]' },
-      { '<leader>ff', Util.telescope('files', { cwd = false, layout_strategy='vertical' }), desc = 'Find Files (cwd) [ff]' },
-      { '<leader>fr', '<cmd>Telescope oldfiles layout_strategy=vertical<cr>', desc = 'Recent [fr]' },
-      { '<leader>fR', Util.telescope('oldfiles', { cwd = vim.loop.cwd(), layout_strategy = 'vertical' }), desc = 'Recent (cwd) [fR]' },
+      { '<leader>fc',      Util.telescope.config_files(),                                                                                                           desc = 'Find Config File [fc]' },
+      { '<leader>ff',      Util.telescope('files', { cwd = false, layout_strategy = 'vertical' }),                                                                  desc = 'Find Files (cwd) [ff]' },
+      { '<leader>fr',      '<cmd>Telescope oldfiles layout_strategy=vertical<cr>',                                                                                  desc = 'Recent [fr]' },
+      { '<leader>fR',      Util.telescope('oldfiles', { cwd = vim.loop.cwd(), layout_strategy = 'vertical' }),                                                      desc = 'Recent (cwd) [fR]' },
       -- git
-      { '<leader>gc', '<cmd>Telescope git_commits layout_strategy=vertical<CR>', desc = 'Git Commits [gc]' },
-      { '<leader>gs', '<cmd>Telescope git_status layout_strategy=vertical<CR>', desc = 'Git Status [gd]' },
+      { '<leader>gc',      '<cmd>Telescope git_commits layout_strategy=vertical<CR>',                                                                               desc = 'Git Commits [gc]' },
+      { '<leader>gs',      '<cmd>Telescope git_status layout_strategy=vertical<CR>',                                                                                desc = 'Git Status [gd]' },
       -- search
-      { '<leader>s"', '<cmd>Telescope registers layout_strategy=vertical<cr>', desc = 'Registers [s"]' },
-      { '<leader>sa', '<cmd>Telescope autocommands layout_strategy=vertical<cr>', desc = 'Auto Commands [sa]' },
-      { '<leader>sb', '<cmd>Telescope current_buffer_fuzzy_find layout_strategy=vertical<cr>', desc = 'Fzf Buffer [sb]' },
-      { '<leader>sc', '<cmd>Telescope command_history layout_strategy=vertical<cr>', desc = 'Command History [sc]' },
-      { '<leader>sC', '<cmd>Telescope commands layout_strategy=vertical<cr>', desc = 'Commands [sC]' },
-      { '<leader>sd', '<cmd>Telescope diagnostics bufnr=0 layout_strategy=vertical<cr>', desc = 'Document Diagnostics [sd]' },
-      { '<leader>sD', '<cmd>Telescope diagnostics layout_strategy=vertical<cr>', desc = 'Workspace Diagnostics [sD]' },
-      { '<leader>sg', Util.telescope('live_grep', { layout_strategy='vertical'}), desc = 'Grep (root dir) [sg]' },
-      { '<leader>sG', Util.telescope('live_grep', { cwd = false, layout_strategy='vertical' }), desc = 'Grep (cwd) [sG]' },
-      { '<leader>sh', '<cmd>Telescope help_tags layout_strategy=vertical<cr>', desc = 'Help Pages [sh]' },
-      { '<leader>sH', '<cmd>Telescope highlights layout_strategy=vertical<cr>', desc = 'Search Highlight Groups [sH]' },
-      { '<leader>sk', '<cmd>Telescope keymaps layout_strategy=vertical<cr>', desc = 'Key Maps [sk]' },
-      { '<leader>sM', '<cmd>Telescope man_pages layout_strategy=vertical<cr>', desc = 'Man Pages [sM]' },
-      { '<leader>sm', '<cmd>Telescope marks layout_strategy=vertical<cr>', desc = 'Jump to Mark [sm]' },
-      { '<leader>so', '<cmd>Telescope vim_options layout_strategy=vertical<cr>', desc = 'Options [so]' },
-      { '<leader>sR', '<cmd>Telescope resume<cr>', desc = 'Resume Last Search [sR]' },
-      { '<leader>sw', Util.telescope('grep_string', { word_match = '-w', layout_strategy = 'vertical' }), desc = 'Word (root dir) [sw]' },
-      { '<leader>sW', Util.telescope('grep_string', { cwd = false, word_match = '-w', layout_strategy = 'vertical' }), desc = 'Word (cwd) [sW]' },
-      { '<leader>sw', Util.telescope('grep_string', { layout_strategy = 'vertical' }), mode = 'v', desc = 'Selection (root dir) [sw]' },
-      { '<leader>sW', Util.telescope('grep_string', { cwd = false, layout_strategy = 'vertical' }), mode = 'v', desc = 'Selection (cwd) [sW]' },
-      { '<leader>uC', Util.telescope('colorscheme', { enable_preview = true, layout_strategy = 'vertical' }), desc = 'Colorscheme with preview [uC]' },
-      { '<leader>ss', function() require('telescope.builtin').lsp_document_symbols { layout_strategy = 'vertical' } end, desc = 'Goto Symbol [ss]' },
-      { '<leader>sS', function() require('telescope.builtin').lsp_dynamic_workspace_symbols { layout_strategy = 'vertical' } end, desc = 'Goto Symbol (Workspace) [sS]' },
-      { '<leader>sP', function() require('telescope.builtin').find_files { cwd = require('lazy.core.config').options.root, layout_strategy = 'vertical' } end, desc = 'Search Plugin File [sP]' },
+      { '<leader>s"',      '<cmd>Telescope registers layout_strategy=vertical<cr>',                                                                                 desc = 'Registers [s"]' },
+      { '<leader>sa',      '<cmd>Telescope autocommands layout_strategy=vertical<cr>',                                                                              desc = 'Auto Commands [sa]' },
+      { '<leader>sb',      '<cmd>Telescope current_buffer_fuzzy_find layout_strategy=vertical<cr>',                                                                 desc = 'Fzf Buffer [sb]' },
+      { '<leader>sc',      '<cmd>Telescope command_history layout_strategy=vertical<cr>',                                                                           desc = 'Command History [sc]' },
+      { '<leader>sC',      '<cmd>Telescope commands layout_strategy=vertical<cr>',                                                                                  desc = 'Commands [sC]' },
+      { '<leader>sd',      '<cmd>Telescope diagnostics bufnr=0 layout_strategy=vertical<cr>',                                                                       desc = 'Document Diagnostics [sd]' },
+      { '<leader>sD',      '<cmd>Telescope diagnostics layout_strategy=vertical<cr>',                                                                               desc = 'Workspace Diagnostics [sD]' },
+      { '<leader>sg',      Util.telescope('live_grep', { layout_strategy = 'vertical' }),                                                                           desc = 'Grep (root dir) [sg]' },
+      { '<leader>sG',      Util.telescope('live_grep', { cwd = false, layout_strategy = 'vertical' }),                                                              desc = 'Grep (cwd) [sG]' },
+      { '<leader>sh',      '<cmd>Telescope help_tags layout_strategy=vertical<cr>',                                                                                 desc = 'Help Pages [sh]' },
+      { '<leader>sH',      '<cmd>Telescope highlights layout_strategy=vertical<cr>',                                                                                desc = 'Search Highlight Groups [sH]' },
+      { '<leader>sk',      '<cmd>Telescope keymaps layout_strategy=vertical<cr>',                                                                                   desc = 'Key Maps [sk]' },
+      { '<leader>sM',      '<cmd>Telescope man_pages layout_strategy=vertical<cr>',                                                                                 desc = 'Man Pages [sM]' },
+      { '<leader>sm',      '<cmd>Telescope marks layout_strategy=vertical<cr>',                                                                                     desc = 'Jump to Mark [sm]' },
+      { '<leader>so',      '<cmd>Telescope vim_options layout_strategy=vertical<cr>',                                                                               desc = 'Options [so]' },
+      { '<leader>sR',      '<cmd>Telescope resume<cr>',                                                                                                             desc = 'Resume Last Search [sR]' },
+      { '<leader>sw',      Util.telescope('grep_string', { word_match = '-w', layout_strategy = 'vertical' }),                                                      desc = 'Word (root dir) [sw]' },
+      { '<leader>sW',      Util.telescope('grep_string', { cwd = false, word_match = '-w', layout_strategy = 'vertical' }),                                         desc = 'Word (cwd) [sW]' },
+      { '<leader>sw',      Util.telescope('grep_string', { layout_strategy = 'vertical' }),                                  mode = 'v',                            desc = 'Selection (root dir) [sw]' },
+      { '<leader>sW',      Util.telescope('grep_string', { cwd = false, layout_strategy = 'vertical' }),                     mode = 'v',                            desc = 'Selection (cwd) [sW]' },
+      { '<leader>uC',      Util.telescope('colorscheme', { enable_preview = true, layout_strategy = 'vertical' }),                                                  desc = 'Colorscheme with preview [uC]' },
+      { '<leader>ss',      function() require('telescope.builtin').lsp_document_symbols { layout_strategy = 'vertical' } end,                                       desc = 'Goto Symbol [ss]' },
+      { '<leader>sS',      function() require('telescope.builtin').lsp_dynamic_workspace_symbols { layout_strategy = 'vertical' } end,                              desc = 'Goto Symbol (Workspace) [sS]' },
+      { '<leader>sP',      function() require('telescope.builtin').find_files { cwd = require('lazy.core.config').options.root, layout_strategy = 'vertical' } end, desc = 'Search Plugin File [sP]' },
     },
     opts = function()
       local actions = require 'telescope.actions'
@@ -202,13 +202,13 @@ return {
           egrepify = {
             -- intersect tokens in prompt ala "str1.*str2" that ONLY matches
             -- if str1 and str2 are consecutively in line with anything in between (wildcard)
-            AND = true, -- default
-            permutations = false, -- opt-in to imply AND & match all permutations of prompt tokens
-            lnum = true, -- default, not required
-            lnum_hl = 'EgrepifyLnum', -- default, not required, links to `Constant`
-            col = false, -- default, not required
-            col_hl = 'EgrepifyCol', -- default, not required, links to `Constant`
-            title = true, -- default, not required, show filename as title rather than inline
+            AND = true,                   -- default
+            permutations = false,         -- opt-in to imply AND & match all permutations of prompt tokens
+            lnum = true,                  -- default, not required
+            lnum_hl = 'EgrepifyLnum',     -- default, not required, links to `Constant`
+            col = false,                  -- default, not required
+            col_hl = 'EgrepifyCol',       -- default, not required, links to `Constant`
+            title = true,                 -- default, not required, show filename as title rather than inline
             filename_hl = 'EgrepifyFile', -- default, not required, links to `Title`
             -- suffix = long line, see screenshot
             -- EXAMPLE ON HOW TO ADD PREFIX!
@@ -237,10 +237,10 @@ return {
             },
           },
           fzf = {
-            fuzzy = true, -- false will only do exact matching
+            fuzzy = true,                   -- false will only do exact matching
             override_generic_sorter = true, -- override the generic sorter
-            override_file_sorter = true, -- override the file sorter
-            case_mode = 'smart_case', -- or "ignore_case" or "respect_case"
+            override_file_sorter = true,    -- override the file sorter
+            case_mode = 'smart_case',       -- or "ignore_case" or "respect_case"
           },
           lazy = {
             -- Optional theme (the extension doesn't set a default theme)
@@ -385,7 +385,8 @@ return {
     'nvim-telescope/telescope-fzf-native.nvim',
     branch = 'main',
     dependencies = { 'nvim-telescope/telescope.nvim' },
-    build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build',
+    build =
+    'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build',
     config = function()
       ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'fzf'
@@ -401,11 +402,11 @@ return {
     dependencies = { 'nvim-telescope/telescope.nvim' },
     -- stylua: ignore
     keys = {
-      { '<leader>dm', '<cmd>Telescope dap commands<cr>', desc = 'DAP Commands [dm]' },
-      { '<leader>dn', '<cmd>Telescope dap configurations<cr>', desc = 'DAP Configurations [dn]' },
-      { '<leader>dF', '<cmd>Telescope dap frames<cr>', desc = 'DAP Frames [dF]' },
+      { '<leader>dm', '<cmd>Telescope dap commands<cr>',         desc = 'DAP Commands [dm]' },
+      { '<leader>dn', '<cmd>Telescope dap configurations<cr>',   desc = 'DAP Configurations [dn]' },
+      { '<leader>dF', '<cmd>Telescope dap frames<cr>',           desc = 'DAP Frames [dF]' },
       { '<leader>dB', '<cmd>Telescope dap list_breakpoints<cr>', desc = 'DAP List Breakpoints [dB]' },
-      { '<leader>dV', '<cmd>Telescope dap variables<cr>', desc = 'DAP Variables [dV]' },
+      { '<leader>dV', '<cmd>Telescope dap variables<cr>',        desc = 'DAP Variables [dV]' },
     },
     config = function()
       ---@diagnostic disable-next-line: undefined-field

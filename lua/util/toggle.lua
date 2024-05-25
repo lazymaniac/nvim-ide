@@ -1,10 +1,7 @@
 local Util = require 'util'
 
----@class util.toggle
 local M = {}
 
----@param silent boolean?
----@param values? {[1]:any, [2]:any}
 function M.option(option, silent, values)
   if values then
     if vim.opt_local[option]:get() == values[1] then

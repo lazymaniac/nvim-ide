@@ -22,7 +22,8 @@ return {
     'L3MON4D3/LuaSnip',
     branch = 'master',
     event = 'VimEnter',
-    build = (not jit.os:find 'Windows') and "echo 'NOTE: jsregexp is optional, so not a big deal if it fails to build'; make install_jsregexp" or nil,
+    build = (not jit.os:find 'Windows') and
+    "echo 'NOTE: jsregexp is optional, so not a big deal if it fails to build'; make install_jsregexp" or nil,
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
     init = function()
       local ls = require 'luasnip'
@@ -69,8 +70,8 @@ return {
     dependencies = 'nvim-telescope/telescope.nvim',
     -- stylua: ignore
     keys = {
-      { '<leader>fs', function() require('scissors').addNewSnippet() end, mode = { 'n', 'v' }, desc = 'Add New Snippet [fs]' },
-      { '<leader>fS', function() require('scissors').editSnippet() end, desc = 'Edit Snippet [fS]' },
+      { '<leader>fs', function() require('scissors').addNewSnippet() end, mode = { 'n', 'v' },       desc = 'Add New Snippet [fs]' },
+      { '<leader>fS', function() require('scissors').editSnippet() end,   desc = 'Edit Snippet [fS]' },
     },
     opts = {
       snippetDir = vim.fn.stdpath 'config' .. '/snippets',

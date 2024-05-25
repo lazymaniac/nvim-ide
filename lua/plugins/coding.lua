@@ -253,7 +253,8 @@ return {
       for char, desc in pairs(all_targets) do
         mappings['<leader>']['S']['a'][char] = { name = desc }
         for ichar, target in pairs(abbreviated_and_grammar_targets) do
-          mappings['<leader>']['S']['a'][char][ichar] = { "<CMD>call feedkeys('ysa" .. char .. ichar .. "')<CR>", 'ysa' .. char .. ichar .. target }
+          mappings['<leader>']['S']['a'][char][ichar] = { "<CMD>call feedkeys('ysa" .. char .. ichar .. "')<CR>", 'ysa' ..
+          char .. ichar .. target }
         end
       end
       -- inner mappings
@@ -261,7 +262,8 @@ return {
       for char, desc in pairs(all_targets) do
         mappings['<leader>']['S']['i'][char] = { name = desc }
         for ichar, target in pairs(all_targets) do
-          mappings['<leader>']['S']['i'][char][ichar] = { "<CMD>call feedkeys('ysi" .. char .. ichar .. "')<CR>", 'ysi' .. char .. ichar .. target }
+          mappings['<leader>']['S']['i'][char][ichar] = { "<CMD>call feedkeys('ysi" .. char .. ichar .. "')<CR>", 'ysi' ..
+          char .. ichar .. target }
         end
       end
       -- change mappings
@@ -270,7 +272,8 @@ return {
         mappings['<leader>']['S']['c'][char] = { name = desc }
         for ichar, target in pairs(all_targets) do
           -- FIXME: escape ''s
-          mappings['<leader>']['S']['c'][char][ichar] = { "<CMD>call feedkeys('cs" .. char .. ichar .. "')<CR>", 'cs' .. char .. ichar .. target }
+          mappings['<leader>']['S']['c'][char][ichar] = { "<CMD>call feedkeys('cs" .. char .. ichar .. "')<CR>", 'cs' ..
+          char .. ichar .. target }
         end
       end
       -- delete mappings

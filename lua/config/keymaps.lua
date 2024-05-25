@@ -50,7 +50,8 @@ map({ 'i', 'n' }, '<esc>', '<cmd>noh<cr><esc>', { desc = 'Escape and clear hlsea
 
 -- Clear search, diff update and redraw
 -- taken from runtime/lua/_editor.lua
-map('n', '<leader>ur', '<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>', { desc = 'Redraw / clear hlsearch / diff update <C-L><CR>' })
+map('n', '<leader>ur', '<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>',
+  { desc = 'Redraw / clear hlsearch / diff update <C-L><CR>' })
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
 map('n', 'n', "'Nn'[v:searchforward].'zv'", { expr = true, desc = 'Next search result <n>' })
@@ -111,7 +112,8 @@ map('n', '[w', diagnostic_goto(false, 'WARN'), { desc = 'Prev Warning <[w>' })
 
 -- toggle options
 -- stylua: ignore
-map('n', '<leader>ub', function() Util.toggle('background', false, { 'light', 'dark' }) end, { desc = 'Toggle Background [ub]' })
+map('n', '<leader>ub', function() Util.toggle('background', false, { 'light', 'dark' }) end,
+  { desc = 'Toggle Background [ub]' })
 -- stylua: ignore
 map('n', '<leader>uf', function() Util.format.toggle() end, { desc = 'Toggle auto format (global) [uf]' })
 -- stylua: ignore
@@ -128,13 +130,15 @@ map('n', '<leader>ul', function() Util.toggle.number() end, { desc = 'Toggle Lin
 map('n', '<leader>ud', function() Util.toggle.diagnostics() end, { desc = 'Toggle Diagnostics [ud]' })
 local conceallevel = vim.o.conceallevel > 0 and vim.o.conceallevel or 3
 -- stylua: ignore
-map('n', '<leader>uc', function() Util.toggle('conceallevel', false, { 0, conceallevel }) end, { desc = 'Toggle Conceal [uc]' })
+map('n', '<leader>uc', function() Util.toggle('conceallevel', false, { 0, conceallevel }) end,
+  { desc = 'Toggle Conceal [uc]' })
 if vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint then
--- stylua: ignore
+  -- stylua: ignore
   map('n', '<leader>uh', function() Util.toggle.inlay_hints() end, { desc = 'Toggle Inlay Hints [uh]' })
 end
 -- stylua: ignore
-map('n', '<leader>uT', function() if vim.b.ts_highlight then vim.treesitter.stop() else vim.treesitter.start() end end, { desc = 'Toggle Treesitter Highlight [uT]' })
+map('n', '<leader>uT', function() if vim.b.ts_highlight then vim.treesitter.stop() else vim.treesitter.start() end end,
+  { desc = 'Toggle Treesitter Highlight [uT]' })
 
 -- quit
 map('n', '<leader>qq', '<cmd>qa<cr>', { desc = 'Quit all [qq]' })

@@ -38,12 +38,10 @@ function M.is_win()
   return vim.loop.os_uname().sysname:find 'Windows' ~= nil
 end
 
----@param plugin string
 function M.has(plugin)
   return require('lazy.core.config').spec.plugins[plugin] ~= nil
 end
 
----@param fn fun()
 function M.on_very_lazy(fn)
   vim.api.nvim_create_autocmd('User', {
     pattern = 'VeryLazy',
@@ -53,7 +51,6 @@ function M.on_very_lazy(fn)
   })
 end
 
----@param name string
 function M.opts(name)
   local plugin = require('lazy.core.config').plugins[name]
   if not plugin then

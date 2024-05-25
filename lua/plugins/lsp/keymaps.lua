@@ -11,7 +11,7 @@ function M.get()
     return M._keys
   end
   M._keys = {
-    { '<leader>li', '<cmd>LspInfo<cr>', desc = 'Lsp Info [li]' },
+    { '<leader>li', '<cmd>LspInfo<cr>',                        desc = 'Lsp Info [li]' },
     {
       'gd',
       function()
@@ -28,7 +28,7 @@ function M.get()
       function()
         local popup_id = detour.Detour()
         if popup_id then
-          require('lspsaga.finder'):new({'ref', '++float'})
+          require('lspsaga.finder'):new({ 'ref', '++float' })
           features.ShowPathInTitle(popup_id)
         end
       end,
@@ -39,7 +39,7 @@ function M.get()
       function()
         local popup_id = detour.Detour()
         if popup_id then
-          require('lspsaga.finder'):new({'imp', '++float'})
+          require('lspsaga.finder'):new({ 'imp', '++float' })
           features.ShowPathInTitle(popup_id)
         end
       end,
@@ -105,9 +105,9 @@ function M.get()
       end,
       desc = 'Outgoing Calls [co]',
     },
-    { 'K', vim.lsp.buf.hover, desc = 'Hover Documentation <K>' },
-    { 'gK', vim.lsp.buf.signature_help, desc = 'Signature Documentation <gK>', has = 'signatureHelp' },
-    { '<C-k>', vim.lsp.buf.signature_help, mode = 'i', desc = 'Signature Help <C-k>', has = 'signatureHelp' },
+    { 'K',     vim.lsp.buf.hover,          desc = 'Hover Documentation <K>' },
+    { 'gK',    vim.lsp.buf.signature_help, desc = 'Signature Documentation <gK>', has = 'signatureHelp' },
+    { '<C-k>', vim.lsp.buf.signature_help, mode = 'i',                            desc = 'Signature Help <C-k>', has = 'signatureHelp' },
     {
       '<leader>ca',
       '<cmd>Lspsaga code_action<cr>',
