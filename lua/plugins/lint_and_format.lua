@@ -55,8 +55,8 @@ return {
     cmd = 'ConformInfo',
     -- stylua: ignore
     keys = {
-      { '<leader>cF', function() require('conform').format { formatters = { 'injected' } } end, mode = { 'n', 'v' }, desc = 'Format Injected Langs [cF]' },
       { '<leader>cf', function() require('conform').format { } end, mode = { 'n', 'v' }, desc = 'Format [cf]' },
+      { '<leader>cF', function() require('conform').format { formatters = { 'injected' } } end, mode = { 'n', 'v' }, desc = 'Format Injected Langs [cF]' },
     },
     config = function()
       require('conform').setup {
@@ -64,40 +64,19 @@ return {
         formatters_by_ft = {
           lua = { 'stylua' },
           -- Conform will run multiple formatters sequentially
-          go = { 'goimports', 'gofmt' },
+          -- go = { 'goimports', 'gofmt' },
           -- Use a sub-list to run only the first available formatter
-          javascript = { { 'prettierd', 'prettier' } },
+          -- javascript = { { 'prettierd', 'prettier' } },
           -- You can use a function here to determine the formatters dynamically
-          python = function(bufnr)
-            if require('conform').get_formatter_info('ruff_format', bufnr).available then
-              return { 'ruff_format' }
-            else
-              return { 'isort', 'black' }
-            end
-          end,
           -- Use the "*" filetype to run formatters on all filetypes.
           ['*'] = { 'codespell' },
           -- Use the "_" filetype to run formatters on filetypes that don't
           -- have other formatters configured.
           ['_'] = { 'trim_whitespace' },
         },
-        -- If this is set, Conform will run the formatter on save.
-        -- It will pass the table to conform.format().
-        -- This can also be a function that returns the table.
-        format_on_save = {
-          -- I recommend these options. See :help conform.format for details.
-          lsp_fallback = true,
-          timeout_ms = 500,
-        },
-        -- If this is set, Conform will run the formatter asynchronously after save.
-        -- It will pass the table to conform.format().
-        -- This can also be a function that returns the table.
-        format_after_save = {
-          lsp_fallback = true,
-        },
-        -- Conform will notify you when a formatter errors
+        format_on_save = nil,
+        format_after_save = nil,
         notify_on_error = true,
-        -- Custom formatters and overrides for built-in formatters
         formatters = {},
       }
     end,
