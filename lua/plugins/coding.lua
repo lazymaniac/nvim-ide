@@ -253,8 +253,7 @@ return {
       for char, desc in pairs(all_targets) do
         mappings['<leader>']['S']['a'][char] = { name = desc }
         for ichar, target in pairs(abbreviated_and_grammar_targets) do
-          mappings['<leader>']['S']['a'][char][ichar] = { "<CMD>call feedkeys('ysa" .. char .. ichar .. "')<CR>", 'ysa' ..
-          char .. ichar .. target }
+          mappings['<leader>']['S']['a'][char][ichar] = { "<CMD>call feedkeys('ysa" .. char .. ichar .. "')<CR>", 'ysa' .. char .. ichar .. target }
         end
       end
       -- inner mappings
@@ -262,8 +261,7 @@ return {
       for char, desc in pairs(all_targets) do
         mappings['<leader>']['S']['i'][char] = { name = desc }
         for ichar, target in pairs(all_targets) do
-          mappings['<leader>']['S']['i'][char][ichar] = { "<CMD>call feedkeys('ysi" .. char .. ichar .. "')<CR>", 'ysi' ..
-          char .. ichar .. target }
+          mappings['<leader>']['S']['i'][char][ichar] = { "<CMD>call feedkeys('ysi" .. char .. ichar .. "')<CR>", 'ysi' .. char .. ichar .. target }
         end
       end
       -- change mappings
@@ -272,8 +270,7 @@ return {
         mappings['<leader>']['S']['c'][char] = { name = desc }
         for ichar, target in pairs(all_targets) do
           -- FIXME: escape ''s
-          mappings['<leader>']['S']['c'][char][ichar] = { "<CMD>call feedkeys('cs" .. char .. ichar .. "')<CR>", 'cs' ..
-          char .. ichar .. target }
+          mappings['<leader>']['S']['c'][char][ichar] = { "<CMD>call feedkeys('cs" .. char .. ichar .. "')<CR>", 'cs' .. char .. ichar .. target }
         end
       end
       -- delete mappings
@@ -405,6 +402,7 @@ return {
     'kawre/leetcode.nvim',
     branch = 'master',
     build = ':TSUpdate html',
+    cmd = 'Leet'
     dependencies = {
       'nvim-telescope/telescope.nvim',
       'nvim-lua/plenary.nvim',
@@ -414,7 +412,60 @@ return {
       'nvim-tree/nvim-web-devicons',
     },
     opts = {
-      -- TODO: finish config.
+      arg = 'leetcode.nvim',
+      lang = 'java',
+      cn = { -- leetcode.cn
+        enabled = false, ---@type boolean
+        translator = true, ---@type boolean
+        translate_problems = true, ---@type boolean
+      },
+      storage = {
+        home = vim.fn.stdpath 'data' .. '/leetcode',
+        cache = vim.fn.stdpath 'cache' .. '/leetcode',
+      },
+      plugins = {
+        non_standalone = false,
+      },
+      logging = true,
+      injector = {},
+      cache = {
+        update_interval = 60 * 60 * 24 * 7,
+      },
+      console = {
+        open_on_runcode = true,
+        dir = 'row',
+        size = {
+          width = '90%',
+          height = '75%',
+        },
+        result = {
+          size = '60%',
+        },
+        testcase = {
+          virt_text = true,
+          size = '40%',
+        },
+      },
+      description = {
+        position = 'left',
+        width = '40%',
+        show_stats = true,
+      },
+      hooks = {
+        ['enter'] = {},
+        ['question_enter'] = {},
+        ['leave'] = {},
+      },
+      keys = {
+        toggle = { 'q' },
+        confirm = { '<CR>' },
+        reset_testcases = 'r',
+        use_testcase = 'U',
+        focus_testcases = 'H',
+        focus_result = 'L',
+      },
+      theme = {},
+      image_support = false,
     },
   },
 }

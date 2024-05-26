@@ -739,6 +739,7 @@ return {
             { icon = ' ', desc = 'Projects', action = 'Telescope projects', key = 'p' },
             { icon = '󱎸 ', desc = 'Find Text', action = 'Telescope live_grep', key = 's' },
             { icon = ' ', desc = 'Config Files', action = [[lua require("util").telescope.config_files()()]], key = 'c' },
+            { icon = ' ', desc = 'Leetcode', action = 'Leet', key = 'L'},
             { icon = ' ', desc = 'Lazy', action = 'Lazy update', key = 'l' },
             { icon = '󱊓 ', desc = 'Mason', action = 'Mason', key = 'm' },
             { icon = ' ', desc = 'Theme', action = 'Telescope colorscheme', key = 't' },
