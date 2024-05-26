@@ -28,10 +28,10 @@ require('lazy').setup {
       disabled_plugins = {
         -- "gzip",
         -- "matchit",
-        -- "netrwPlugin",
-        -- "tarPlugin",
+        "netrwPlugin",
+        "tarPlugin",
         -- "toHtml",
-        -- "tutor",
+        "tutor",
         -- "zipPlugin",
       },
     },

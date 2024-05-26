@@ -93,6 +93,7 @@ vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
   end,
 })
 
+-- Update LSP progress shown on lualine
 vim.api.nvim_create_augroup('lualine_augroup', { clear = true })
 vim.api.nvim_create_autocmd('User', {
   group = 'lualine_augroup',
