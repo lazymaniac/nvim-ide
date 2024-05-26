@@ -21,9 +21,6 @@ local defaults = {
     -- config.options can't be configured here since that's loaded before lazyvim setup
     -- if you want to disable loading options, add `package.loaded["config.options"] = true` to the top of your init.lua
   },
-  news = {
-    neovim = true,
-  },
   -- icons used by other plugins
   icons = {
     misc = {
@@ -160,7 +157,6 @@ setmetatable(M, {
     if options == nil then
       return vim.deepcopy(defaults)[key]
     end
-    ---@cast options LazyVimConfig
     return options[key]
   end,
 })
