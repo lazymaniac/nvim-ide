@@ -90,7 +90,6 @@ return {
         ['<leader>g'] = { name = '+[git]' },
         ['<leader>q'] = { name = '+[quit/session]' },
         ['<leader>s'] = { name = '+[search]' },
-        ['<leader>S'] = { name = '+[surround]' },
         ['<leader>a'] = { name = '+[terminal]' },
         ['<leader>u'] = { name = '+[ui]' },
         ['<leader>w'] = { name = '+[windows]' },
