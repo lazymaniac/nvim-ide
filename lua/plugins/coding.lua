@@ -214,6 +214,7 @@ return {
         end,
       }
       -- Setup keymappings
+      local root_key = 'S'
       local grammar_targets = {
         ['['] = '',
         [']'] = '',
@@ -242,42 +243,42 @@ return {
       abbreviated_and_grammar_targets = vim.tbl_extend('error', abbreviated_and_grammar_targets, grammar_targets, abbreviated_targets)
       local mappings = {
         ['<leader>'] = {
-          ['S'] = { name = '+[surround]' },
+          [root_key] = { name = '+[surround]' },
         },
       }
       -- around mappings
-      mappings['<leader>']['S']['a'] = { name = 'around' }
+      mappings['<leader>'][root_key]['a'] = { name = '+[around]' }
       for char, desc in pairs(all_targets) do
-        mappings['<leader>']['S']['a'][char] = { name = desc }
+        mappings['<leader>'][root_key]['a'][char] = { name = desc }
         for ichar, target in pairs(abbreviated_and_grammar_targets) do
-          mappings['<leader>']['S']['a'][char][ichar] = { '<CMD>call feedkeys("ysa\\' .. char .. '\\' .. ichar .. '")<CR>', 'ysa' .. char .. ichar .. target }
+          mappings['<leader>'][root_key]['a'][char][ichar] = { '<CMD>call feedkeys("ysa\\' .. char .. '\\' .. ichar .. '")<CR>', 'ysa' .. char .. ichar .. target }
         end
       end
       -- inner mappings
-      mappings['<leader>']['S']['i'] = { name = 'inner' }
+      mappings['<leader>'][root_key]['i'] = { name = '+[inner]' }
       for char, desc in pairs(all_targets) do
-        mappings['<leader>']['S']['i'][char] = { name = desc }
+        mappings['<leader>'][root_key]['i'][char] = { name = desc }
         for ichar, target in pairs(all_targets) do
-          mappings['<leader>']['S']['i'][char][ichar] = { '<CMD>call feedkeys("ysi\\' .. char .. '\\' .. ichar .. '")<CR>', 'ysi' .. char .. ichar .. target }
+          mappings['<leader>'][root_key]['i'][char][ichar] = { '<CMD>call feedkeys("ysi\\' .. char .. '\\' .. ichar .. '")<CR>', 'ysi' .. char .. ichar .. target }
         end
       end
       -- change mappings
-      mappings['<leader>']['S']['c'] = { name = 'change' }
+      mappings['<leader>'][root_key]['c'] = { name = '+[change]' }
       for char, desc in pairs(all_targets) do
-        mappings['<leader>']['S']['c'][char] = { name = desc }
+        mappings['<leader>'][root_key]['c'][char] = { name = desc }
         for ichar, target in pairs(all_targets) do
-          mappings['<leader>']['S']['c'][char][ichar] = { '<CMD>call feedkeys("cs\\' .. char .. '\\' .. ichar .. '")<CR>', 'cs' .. char .. ichar .. target }
+          mappings['<leader>'][root_key]['c'][char][ichar] = { '<CMD>call feedkeys("cs\\' .. char .. '\\' .. ichar .. '")<CR>', 'cs' .. char .. ichar .. target }
         end
       end
       -- delete mappings
-      mappings['<leader>']['S']['d'] = { name = 'delete' }
+      mappings['<leader>'][root_key]['d'] = { name = '+[delete]' }
       for char, target in pairs(all_targets) do
-        mappings['<leader>']['S']['d'][char] = { '<CMD>call feedkeys("ds\\' .. char .. '")<CR>', 'ds' .. char .. target }
+        mappings['<leader>'][root_key]['d'][char] = { '<CMD>call feedkeys("ds\\' .. char .. '")<CR>', 'ds' .. char .. target }
       end
       -- line mappings
-      mappings['<leader>']['S']['s'] = { name = '[s] line' }
+      mappings['<leader>'][root_key]['s'] = { name = '+[line]' }
       for char, target in pairs(all_targets) do
-        mappings['<leader>']['S']['s'][char] = { '<CMD>call feedkeys("yss\\' .. char .. '")<CR>', 'yss' .. char .. target }
+        mappings['<leader>'][root_key]['s'][char] = { '<CMD>call feedkeys("yss\\' .. char .. '")<CR>', 'yss' .. char .. target }
       end
       require('which-key').register(mappings)
     end,
