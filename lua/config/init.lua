@@ -17,7 +17,7 @@ local defaults = {
   -- load the default settings
   defaults = {
     autocmds = true, -- config.autocmds
-    keymaps = true,  -- config.keymaps
+    keymaps = true, -- config.keymaps
     -- config.options can't be configured here since that's loaded before lazyvim setup
     -- if you want to disable loading options, add `package.loaded["config.options"] = true` to the top of your init.lua
   },
@@ -92,12 +92,7 @@ local options
 
 function M.setup(opts)
   options = vim.tbl_deep_extend('force', defaults, opts or {}) or {}
-
-  -- autocmds can be loaded lazily when not opening a file
-  local lazy_autocmds = vim.fn.argc(-1) == 0
-  if not lazy_autocmds then
-    M.load 'autocmds'
-  end
+  M.load 'autocmds'
   M.load 'keymaps'
   Util.root.setup()
   Util.track 'colorscheme'
