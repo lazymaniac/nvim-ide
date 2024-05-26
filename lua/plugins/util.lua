@@ -116,6 +116,7 @@ return {
       },
     },
   },
+
   -- [[ TOYS ]] ---------------------------------------------------------------
 
   -- [wttr.nvim] - Show current weather in lualine or forecast in popup
