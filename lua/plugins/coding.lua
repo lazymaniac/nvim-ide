@@ -415,9 +415,9 @@ return {
       arg = 'leetcode.nvim',
       lang = 'java',
       cn = { -- leetcode.cn
-        enabled = false, ---@type boolean
-        translator = true, ---@type boolean
-        translate_problems = true, ---@type boolean
+        enabled = false,
+        translator = true,
+        translate_problems = true,
       },
       storage = {
         home = vim.fn.stdpath 'data' .. '/leetcode',
