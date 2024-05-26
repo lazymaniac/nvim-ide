@@ -128,7 +128,7 @@ return {
     dependencies = { 'nvim-lua/plenary.nvim', 'MunifTanjim/nui.nvim' },
     -- stylua: ignore
     keys = {
-      { '<leader>lw', function() require('wttr').get_forecast() end, desc = 'Weather Forecast [Uw]', },
+      { '<leader>lw', function() require('wttr').get_forecast() end, desc = 'Weather Forecast [lw]', },
     },
     opts = {
       location = '',

@@ -397,7 +397,7 @@ return {
   -- [leetcode.nvim] - LeetCode integration.
   -- see: `:h leetcode.nvim`
   -- link: https://github.com/kawre/leetcode.nvim
-  -- help: To authenticate login to https://www.leetcode.com and get cookie from developer tools.
+  -- help: To authenticate login to https://www.leetcode.com and get cookie using developer tools.
   {
     'kawre/leetcode.nvim',
     branch = 'master',
