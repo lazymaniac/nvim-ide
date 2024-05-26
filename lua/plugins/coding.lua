@@ -213,7 +213,7 @@ return {
           end
         end,
       }
-      -- Setup keymappings
+      -- Setup keymappings. Code borrowed from surround-ui
       local root_key = 'S'
       local grammar_targets = {
         ['['] = '',
