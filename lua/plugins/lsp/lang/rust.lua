@@ -153,7 +153,6 @@ return {
     opts = {
       smart_insert = true,
       insert_closing_quote = true,
-      avoid_prerelease = true,
       autoload = true,
       autoupdate = true,
       autoupdate_throttle = 250,
@@ -186,17 +185,6 @@ return {
           goto_item = { 'gd', 'K', '<C-LeftMouse>' },
           jump_forward = { '<c-i>' },
           jump_back = { '<c-o>', '<C-RightMouse>' },
-        },
-      },
-      src = {
-        insert_closing_quote = true,
-        text = {
-          prerelease = '  pre-release ',
-          yanked = '  yanked ',
-        },
-        coq = {
-          enabled = false,
-          name = 'Crates',
         },
       },
     },
