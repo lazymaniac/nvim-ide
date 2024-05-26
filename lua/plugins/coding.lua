@@ -1,6 +1,6 @@
 return {
 
-  -- [[ CODING HELPER ]] ---------------------------------------------------------------
+  -- [[ CODING HELPERS ]] ---------------------------------------------------------------
 
   {
     dir = '~/workspace/voyager.nvim/',
@@ -213,6 +213,7 @@ return {
           end
         end,
       }
+      -- Setup keymappings
       local grammar_targets = {
         ['['] = '',
         [']'] = '',
