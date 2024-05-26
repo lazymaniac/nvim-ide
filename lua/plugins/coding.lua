@@ -402,7 +402,7 @@ return {
     'kawre/leetcode.nvim',
     branch = 'master',
     build = ':TSUpdate html',
-    cmd = 'Leet'
+    cmd = 'Leet',
     dependencies = {
       'nvim-telescope/telescope.nvim',
       'nvim-lua/plenary.nvim',
