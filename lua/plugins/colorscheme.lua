@@ -1,5 +1,77 @@
 return {
 
+  -- [huez.nvim] - Colorscheme picker and downloader
+  -- see: `:h huez.nvim`
+  -- link: https://github.com/vague2k/huez.nvim
+  {
+    'vague2k/huez.nvim',
+    branch = 'main',
+    -- stylua: ignore
+    keys = {
+      { '<leader>uC', '<cmd>Huez<cr>', mode = { 'n' }, desc = 'Select Colorscheme' },
+      { '<leader>uS', '<cmd>HuezLive<cr>', mode = { 'n' }, desc = 'Download ColorScheme Live' },
+    },
+    -- if you want registry related features, uncomment this
+    import = 'huez-manager.import',
+    config = function()
+      require('huez').setup {
+        -- the default plugin directory
+        path = vim.fs.normalize(vim.fn.stdpath 'data' --[[@as string]]) .. '/huez',
+        -- the colorscheme Huez will fallback to incase something goes wrong
+        fallback = 'default',
+        -- a list of ugly theme that come with neovim that you probably don't want to choose from in the theme picker
+        exclude = {
+          'desert',
+          'evening',
+          'industry',
+          'koehler',
+          'morning',
+          'murphy',
+          'pablo',
+          'peachpuff',
+          'ron',
+          'shine',
+          'slate',
+          'torte',
+          'zellner',
+          'blue',
+          'darkblue',
+          'delek',
+          'quiet',
+          'elflord',
+          'habamax',
+          'lunaperche',
+          'zaibatsu',
+          'wildcharm',
+          'sorbet',
+          'vim',
+        },
+        -- configures how you want a certain picker to look.
+        picker = {
+          -- all pickers use telescope values, by default picker is anchored to the right.
+          -- you can use an out of the box layout. Options are "left", "top", "right", or "bottom" or nil
+          -- if you are using a predefined layout, any options you pass into the picker will be deep merged.
+          themes = {
+            layout = 'right',
+            opts = {},
+          },
+          favorites = {
+            layout = 'right',
+            opts = {},
+          },
+          live = {
+            layout = 'right',
+            opts = {},
+          },
+          ensured = {
+            layout = 'right',
+            opts = {},
+          },
+        },
+      }
+    end,
+  },
+
   -- catppuccin
   {
     'catppuccin/nvim',
