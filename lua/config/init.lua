@@ -13,7 +13,7 @@ local defaults = {
       vim.cmd.colorscheme 'terafox'
     end
   end, ]]
-  colorscheme = 'night-owl',
+  colorscheme = 'neofusion',
   -- load the default settings
   defaults = {
     autocmds = true, -- config.autocmds
