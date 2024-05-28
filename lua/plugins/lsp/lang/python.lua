@@ -21,7 +21,18 @@ return {
     'neovim/nvim-lspconfig',
     opts = {
       servers = {
-        basedpyright = {},
+        pyright = {
+          settings = {
+            python = {
+              analysis = {
+                autoSearchPaths = true,
+                diagnosticMode = 'openFilesOnly',
+                useLibraryCodeForTypes = true,
+              },
+            },
+          },
+        },
+        ruff = {},
         ruff_lsp = {
           keys = {
             {
