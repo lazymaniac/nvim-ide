@@ -7,7 +7,7 @@ return {
   {
     'edluffy/hologram.nvim',
     branch = 'main',
-    enabled = true,
+    enabled = false,
     opts = {
       auto_display = true,
     },
