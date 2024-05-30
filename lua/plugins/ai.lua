@@ -1,5 +1,5 @@
 local openai_model = 'gpt-4-turbo'
-local ollama_model = 'llama3:8b-instruct-q6_K' -- 8B model
+local ollama_model = 'codestral' -- 8B model
 
 local function system_prompt_expert_coder(filetype)
   return 'You’re going to act as an expert '
