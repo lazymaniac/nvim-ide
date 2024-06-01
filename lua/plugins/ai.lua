@@ -34,14 +34,13 @@ return {
     'folke/edgy.nvim',
     event = 'VeryLazy',
     branch = 'main',
-    enabled = true,
     init = function()
       vim.opt.laststatus = 3
       vim.opt.splitkeep = 'screen'
     end,
     opts = {
       right = {
-        { ft = 'codecompanion', title = 'Code Companion Chat', size = { width = 0.40 } },
+        { ft = 'codecompanion', title = 'Code Companion Chat', size = { width = 0.35 } },
       },
     },
   },
@@ -82,7 +81,6 @@ return {
             schema = {
               model = {
                 default = ollama_model,
-                -- choices = get_ollama_models(),
               },
               temperature = {
                 default = 0.8,
@@ -130,8 +128,8 @@ return {
         },
         keymaps = {
           ['<C-s>'] = 'keymaps.save', -- Save the chat buffer and trigger the API
-          ['<C-c>'] = 'keymaps.close', -- Close the chat buffer
-          ['q'] = 'keymaps.cancel_request', -- Cancel the currently streaming request
+          ['q'] = 'keymaps.close', -- Close the chat buffer
+          ['<C-c>'] = 'keymaps.cancel_request', -- Cancel the currently streaming request
           ['gc'] = 'keymaps.clear', -- Clear the contents of the chat
           ['ga'] = 'keymaps.codeblock', -- Insert a codeblock into the chat
           ['gs'] = 'keymaps.save_chat', -- Save the current chat
