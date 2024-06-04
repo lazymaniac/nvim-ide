@@ -4,6 +4,9 @@ return {
 
   {
     dir = '~/workspace/voyager.nvim/',
+    keys = {
+      { '<leader>V', '<cmd>VoyagerOpen<cr>', mode = { 'n' }, desc = 'Open Voyager' },
+    },
   },
 
   -- [lspsaga.nvim] - Improves LSP experience in neovim.
@@ -251,7 +254,8 @@ return {
       for char, desc in pairs(all_targets) do
         mappings['<leader>'][root_key]['a'][char] = { name = desc }
         for ichar, target in pairs(abbreviated_and_grammar_targets) do
-          mappings['<leader>'][root_key]['a'][char][ichar] = { '<CMD>call feedkeys("ysa\\' .. char .. '\\' .. ichar .. '")<CR>', 'ysa' .. char .. ichar .. target }
+          mappings['<leader>'][root_key]['a'][char][ichar] =
+            { '<CMD>call feedkeys("ysa\\' .. char .. '\\' .. ichar .. '")<CR>', 'ysa' .. char .. ichar .. target }
         end
       end
       -- inner mappings
@@ -259,7 +263,8 @@ return {
       for char, desc in pairs(all_targets) do
         mappings['<leader>'][root_key]['i'][char] = { name = desc }
         for ichar, target in pairs(all_targets) do
-          mappings['<leader>'][root_key]['i'][char][ichar] = { '<CMD>call feedkeys("ysi\\' .. char .. '\\' .. ichar .. '")<CR>', 'ysi' .. char .. ichar .. target }
+          mappings['<leader>'][root_key]['i'][char][ichar] =
+            { '<CMD>call feedkeys("ysi\\' .. char .. '\\' .. ichar .. '")<CR>', 'ysi' .. char .. ichar .. target }
         end
       end
       -- change mappings
@@ -267,7 +272,8 @@ return {
       for char, desc in pairs(all_targets) do
         mappings['<leader>'][root_key]['c'][char] = { name = desc }
         for ichar, target in pairs(all_targets) do
-          mappings['<leader>'][root_key]['c'][char][ichar] = { '<CMD>call feedkeys("cs\\' .. char .. '\\' .. ichar .. '")<CR>', 'cs' .. char .. ichar .. target }
+          mappings['<leader>'][root_key]['c'][char][ichar] =
+            { '<CMD>call feedkeys("cs\\' .. char .. '\\' .. ichar .. '")<CR>', 'cs' .. char .. ichar .. target }
         end
       end
       -- delete mappings
