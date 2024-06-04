@@ -6,8 +6,8 @@ return {
   {
     'h4ckm1n-dev/kube-utils-nvim',
     branch = 'main',
+    event = 'VeryLazy',
     config = function()
-      require('init').setup()
       local helm_mappings = {
         l = {
           k = {
