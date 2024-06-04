@@ -1,6 +1,6 @@
 return {
 
-  -- [kube-utils-nvim] - Provides intehration with kubernetes and help
+  -- [kube-utils-nvim] - Provides intehration with kubernetes and helm
   -- see: `:h kube-utils-nvim`
   -- link: https://github.com/h4ckm1n-dev/kube-utils-nvim
   {
@@ -28,6 +28,26 @@ return {
       }
       local wk = require 'which-key'
       wk.register(helm_mappings, { prefix = '<leader>' })
+    end,
+  },
+
+  -- [kubectl.nvim] - Manage kubernetes clusert from neovim
+  -- see: `:h kubectl.nvim`
+  -- link: https://github.com/ramilito/kubectl.nvim
+  {
+    'ramilito/kubectl.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    keys = {
+      {
+        '<leader>lc',
+        function()
+          require('kubectl').open()
+        end,
+        desc = 'Kubectl [lc]',
+      },
+    },
+    config = function()
+      require('kubectl').setup()
     end,
   },
 }
