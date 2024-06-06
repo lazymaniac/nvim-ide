@@ -32,8 +32,7 @@ return {
             },
           },
         },
-        ruff = {},
-        ruff_lsp = {
+        ruff = {
           keys = {
             {
               '<leader>cz',
@@ -54,7 +53,7 @@ return {
       setup = {
         ruff_lsp = function()
           require('util').lsp.on_attach(function(client, _)
-            if client.name == 'ruff_lsp' then
+            if client.name == 'ruff' then
               -- Disable hover in favor of Pyright
               client.server_capabilities.hoverProvider = false
             end

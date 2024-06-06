@@ -11,7 +11,7 @@ function M.get()
     return M._keys
   end
   M._keys = {
-    { '<leader>li', '<cmd>LspInfo<cr>',                        desc = 'Lsp Info [li]' },
+    { '<leader>li', '<cmd>LspInfo<cr>', desc = 'Lsp Info [li]' },
     {
       'gd',
       function()
@@ -19,6 +19,9 @@ function M.get()
         if popup_id then
           require('lspsaga.definition'):init(1, 2, {})
           features.ShowPathInTitle(popup_id)
+          vim.keymap.set('n', 'q', function()
+            vim.cmd 'close'
+          end, { desc = 'Close window [q]' })
         end
       end,
       desc = 'Goto Definition <gd>',
@@ -28,8 +31,11 @@ function M.get()
       function()
         local popup_id = detour.Detour()
         if popup_id then
-          require('lspsaga.finder'):new({ 'ref', '++float' })
+          require('lspsaga.finder'):new { 'ref', '++float' }
           features.ShowPathInTitle(popup_id)
+          vim.keymap.set('n', 'q', function()
+            vim.cmd 'close'
+          end, { desc = 'Close window [q]' })
         end
       end,
       desc = 'Goto References <gr>',
@@ -39,8 +45,11 @@ function M.get()
       function()
         local popup_id = detour.Detour()
         if popup_id then
-          require('lspsaga.finder'):new({ 'imp', '++float' })
+          require('lspsaga.finder'):new { 'imp', '++float' }
           features.ShowPathInTitle(popup_id)
+          vim.keymap.set('n', 'q', function()
+            vim.cmd 'close'
+          end, { desc = 'Close window [q]' })
         end
       end,
       desc = 'Goto Implementation <gI>',
@@ -52,6 +61,9 @@ function M.get()
         if popup_id then
           require('lspsaga.definition'):init(2, 2, {})
           features.ShowPathInTitle(popup_id)
+          vim.keymap.set('n', 'q', function()
+            vim.cmd 'close'
+          end, { desc = 'Close window [q]' })
         end
       end,
       desc = 'Goto Type Definition <gy>',
@@ -65,6 +77,9 @@ function M.get()
           vim.bo.bufhidden = 'delete'
           telescope.lsp_workspace_symbols {}
           features.ShowPathInTitle(popup_id)
+          vim.keymap.set('n', 'q', function()
+            vim.cmd 'close'
+          end, { desc = 'Close window [q]' })
         end
       end,
       desc = 'Workspace Symbols [cw]',
@@ -77,6 +92,9 @@ function M.get()
           vim.bo.bufhidden = 'delete'
           telescope.lsp_dynamic_workspace_symbols {}
           features.ShowPathInTitle(popup_id)
+          vim.keymap.set('n', 'q', function()
+            vim.cmd 'close'
+          end, { desc = 'Close window [q]' })
         end
       end,
       desc = 'Dynamic Workspace Symbols [cW]',
@@ -89,6 +107,9 @@ function M.get()
           vim.bo.bufhidden = 'delete'
           require('lspsaga.callhierarchy'):send_method(2, { '++float' })
           features.ShowPathInTitle(popup_id)
+          vim.keymap.set('n', 'q', function()
+            vim.cmd 'close'
+          end, { desc = 'Close window [q]' })
         end
       end,
       desc = 'Incoming Calls [ci]',
@@ -101,13 +122,16 @@ function M.get()
           vim.bo.bufhidden = 'delete'
           require('lspsaga.callhierarchy'):send_method(3, { '++float' })
           features.ShowPathInTitle(popup_id)
+          vim.keymap.set('n', 'q', function()
+            vim.cmd 'close'
+          end, { desc = 'Close window [q]' })
         end
       end,
       desc = 'Outgoing Calls [co]',
     },
-    { 'K',     vim.lsp.buf.hover,          desc = 'Hover Documentation <K>' },
-    { 'gK',    vim.lsp.buf.signature_help, desc = 'Signature Documentation <gK>', has = 'signatureHelp' },
-    { '<C-k>', vim.lsp.buf.signature_help, mode = 'i',                            desc = 'Signature Help <C-k>', has = 'signatureHelp' },
+    { 'K', vim.lsp.buf.hover, desc = 'Hover Documentation <K>' },
+    { 'gK', vim.lsp.buf.signature_help, desc = 'Signature Documentation <gK>', has = 'signatureHelp' },
+    { '<C-k>', vim.lsp.buf.signature_help, mode = 'i', desc = 'Signature Help <C-k>', has = 'signatureHelp' },
     {
       '<leader>ca',
       '<cmd>Lspsaga code_action<cr>',
