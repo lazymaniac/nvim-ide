@@ -43,11 +43,11 @@ return {
             end
           end
           require('neo-tree.command').execute {
-            action = 'focus',          -- OPTIONAL, this is the default value
-            source = 'filesystem',     -- OPTIONAL, this is the default value
-            position = 'float',        -- OPTIONAL, this is the default value
+            action = 'focus', -- OPTIONAL, this is the default value
+            source = 'filesystem', -- OPTIONAL, this is the default value
+            position = 'float', -- OPTIONAL, this is the default value
             reveal_file = reveal_file, -- path to file or folder to reveal
-            reveal_force_cwd = true,   -- change cwd without asking if needed
+            reveal_force_cwd = true, -- change cwd without asking if needed
             dir = Util.root(),
           }
         end,
@@ -97,7 +97,7 @@ return {
       enable_diagnostics = true,
       open_files_do_not_replace_types = { 'terminal', 'Trouble', 'trouble', 'qf', 'Outline' },
       sort_case_insensitive = false, -- used when sorting files and directories in the tree
-      sort_function = nil,           -- use a custom function for sorting files and directories in the tree
+      sort_function = nil, -- use a custom function for sorting files and directories in the tree
       -- sort_function = function (a,b)
       --       if a.type == b.type then
       --           return a.path > b.path
@@ -190,7 +190,7 @@ return {
         statusline = false,
         sources = {
           { source = 'filesystem', display_name = ' Files ' },
-          { source = 'remote',     display_name = ' Network ' },
+          { source = 'remote', display_name = ' Network ' },
         },
       },
       window = {
@@ -281,11 +281,11 @@ return {
           },
         },
         follow_current_file = {
-          enabled = true,                       -- This will find and focus the file in the active buffer every time
+          enabled = true, -- This will find and focus the file in the active buffer every time
           --               -- the current file is changed while the tree is open.
-          leave_dirs_open = true,               -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
+          leave_dirs_open = true, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
         },
-        group_empty_dirs = true,                -- when true, empty folders will be grouped together
+        group_empty_dirs = true, -- when true, empty folders will be grouped together
         hijack_netrw_behavior = 'open_default', -- netrw disabled, opening a directory opens neo-tree
         -- in whatever position is specified in window.position
         -- "open_current",  -- netrw disabled, opening a directory opens within the
@@ -339,7 +339,7 @@ return {
       local events = require 'neo-tree.events'
       opts.event_handlers = opts.event_handlers or {}
       vim.list_extend(opts.event_handlers, {
-        { event = events.FILE_MOVED,   handler = on_move },
+        { event = events.FILE_MOVED, handler = on_move },
         { event = events.FILE_RENAMED, handler = on_move },
       })
       require('neo-tree').setup(opts)
@@ -379,6 +379,35 @@ return {
         },
         -- how long to wait (in milliseconds) for file rename information before cancelling
         timeout_ms = 10000,
+      }
+    end,
+  },
+
+  -- [simplyfile.nvim] - Files Explorer
+  -- see: `:h plugin name`
+  -- link: https://github.com/Rizwanelansyah/simplyfile.nvim?tab=readme-ov-file
+  {
+    'Rizwanelansyah/simplyfile.nvim',
+    event = 'VeryLazy',
+    branch = 'main',
+    config = function()
+      require('simplyfile').setup {
+        border = {
+          left = 'rounded',
+          main = 'double',
+          right = 'rounded',
+        },
+        derfault_keymaps = true,
+        keymaps = {
+          --- your custom keymaps
+          --- {dir} have following field
+          --- name: name of file/folder
+          --- absolute: absolute path of file/folder
+          --- icon: the nerd fonts icon
+          --- hl: highlight group name for icon
+          --- filetype: type of file
+          --- is_folder: folder or not
+        },
       }
     end,
   },

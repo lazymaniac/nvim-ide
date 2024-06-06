@@ -31,9 +31,9 @@ return {
     branch = 'main',
     dependencies = { 'nvim-lua/plenary.nvim' },
     keys = {
-      { '<leader>lrr', '<cmd>lua require("rest-nvim").run()<cr>',     mode = { 'n', 'v' }, desc = 'Call REST [lrr]' },
+      { '<leader>lrr', '<cmd>lua require("rest-nvim").run()<cr>', mode = { 'n', 'v' }, desc = 'Call REST [lrr]' },
       { '<leader>lrp', '<cmd>lua require("rest-nvim").run(true)<cr>', mode = { 'n', 'v' }, desc = 'Call REST Preview [lrp]' },
-      { '<leader>lrl', '<cmd>lua require("rest-nvim").last()<cr>',    mode = { 'n', 'v' }, desc = 'Call REST Last [lrl]' },
+      { '<leader>lrl', '<cmd>lua require("rest-nvim").last()<cr>', mode = { 'n', 'v' }, desc = 'Call REST Last [lrl]' },
     },
     config = function()
       require('rest-nvim').setup {
@@ -66,7 +66,7 @@ return {
               enable = true,
               ---@see https://curl.se/libcurl/c/curl_easy_getinfo.html
               stats = {
-                { 'total_time',      title = 'Time taken:' },
+                { 'total_time', title = 'Time taken:' },
                 { 'size_download_t', title = 'Download size:' },
               },
             },
@@ -77,21 +77,21 @@ return {
                   return body, { found = false, name = 'tidy' }
                 end
                 local fmt_body = vim.fn
-                    .system({
-                      'tidy',
-                      '-i',
-                      '-q',
-                      '--tidy-mark',
-                      'no',
-                      '--show-body-only',
-                      'auto',
-                      '--show-errors',
-                      '0',
-                      '--show-warnings',
-                      '0',
-                      '-',
-                    }, body)
-                    :gsub('\n$', '')
+                  .system({
+                    'tidy',
+                    '-i',
+                    '-q',
+                    '--tidy-mark',
+                    'no',
+                    '--show-body-only',
+                    'auto',
+                    '--show-errors',
+                    '0',
+                    '--show-warnings',
+                    '0',
+                    '-',
+                  }, body)
+                  :gsub('\n$', '')
 
                 return fmt_body, { found = true, name = 'tidy' }
               end,
