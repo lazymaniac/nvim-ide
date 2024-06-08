@@ -235,22 +235,6 @@ return {
   },
 
   {
-    'scottmckendry/cyberdream.nvim',
-    branch = 'main',
-    lazy = false,
-    priority = 1000,
-    config = function()
-      require('cyberdream').setup {
-        transparent = true,
-        italic_comments = true,
-        hide_fillchars = true,
-        borderless_telescope = false,
-        terminal_colors = true,
-      }
-    end,
-  },
-
-  {
     'diegoulloao/neofusion.nvim',
     priority = 1000,
     config = true,
