@@ -7,6 +7,12 @@ return {
     keys = {
       { '<leader>V', '<cmd>VoyagerOpen<cr>', mode = { 'n' }, desc = 'Open Voyager' },
     },
+    dependencies = {
+      'grapp-dev/nui-components.nvim',
+      dependencies = {
+        'MunifTanjim/nui.nvim',
+      },
+    },
   },
 
   -- [lspsaga.nvim] - Improves LSP experience in neovim.

@@ -216,32 +216,29 @@ return {
     end,
   },
 
-  -- [neodev.nvim] - Loads all plugins into Lua LSP.
-  -- see: `:h neodev.nvim`
-  -- link: https://github.com/folke/neodev.nvim
   {
-    'folke/neodev.nvim',
-    branch = 'main',
-    event = 'VeryLazy',
+    'folke/lazydev.nvim',
+    ft = 'lua', -- only load on lua files
     opts = {
       library = {
-        enabled = true, -- when not enabled, neodev will not change any settings to the LSP server
-        -- these settings will be used for your Neovim config directory
-        runtime = true, -- runtime path
-        types = true, -- full signature, docs and completion of vim.api, vim.treesitter, vim.lsp and others
-        plugins = true, -- installed opt or start plugins in packpath
-        -- you can also specify the list of plugins to make available as a workspace library
-        -- plugins = { "nvim-treesitter", "plenary.nvim", "telescope.nvim" },
+        -- See the configuration section for more details
+        -- Load luvit types when the `vim.uv` word is found
+        { path = 'luvit-meta/library', words = { 'vim%.uv' } },
       },
-      setup_jsonls = true, -- configures jsonls to provide completion for project specific .luarc.json files
-      -- With lspconfig, Neodev will automatically setup your lua-language-server
-      -- If you disable this, then you have to set {before_init=require("neodev.lsp").before_init}
-      -- in your lsp start options
-      lspconfig = true,
-      -- much faster, but needs a recent built of lua-language-server
-      -- needs lua-language-server >= 3.6.0
-      pathStrict = true,
     },
+  },
+
+  { 'Bilal2453/luvit-meta', lazy = true }, -- optional `vim.uv` typings
+
+  { -- optional completion source for require statements and module annotations
+    'hrsh7th/nvim-cmp',
+    opts = function(_, opts)
+      opts.sources = opts.sources or {}
+      table.insert(opts.sources, {
+        name = 'lazydev',
+        group_index = 0, -- set group index to 0 to skip loading LuaLS completions
+      })
+    end,
   },
 
   -- [lsplinks.nvim] - Open code docs in browser
