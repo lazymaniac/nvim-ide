@@ -46,6 +46,7 @@ return {
       { '<leader>sW',      Util.telescope('grep_string', { cwd = false, word_match = '-w', layout_strategy = 'vertical' }),                                         desc = 'Word (cwd) [sW]' },
       { '<leader>sw',      Util.telescope('grep_string', { layout_strategy = 'vertical' }),                                  mode = 'v',                            desc = 'Selection (root dir) [sw]' },
       { '<leader>sW',      Util.telescope('grep_string', { cwd = false, layout_strategy = 'vertical' }),                     mode = 'v',                            desc = 'Selection (cwd) [sW]' },
+      { '<leader>uC',      Util.telescope('colorscheme', { enable_preview = true, layout_strategy = 'vertical' }),                                                  desc = 'Colorscheme with preview [uC]' },
       { '<leader>ss',      function() require('telescope.builtin').lsp_document_symbols { layout_strategy = 'vertical' } end,                                       desc = 'Goto Symbol [ss]' },
       { '<leader>sS',      function() require('telescope.builtin').lsp_dynamic_workspace_symbols { layout_strategy = 'vertical' } end,                              desc = 'Goto Symbol (Workspace) [sS]' },
       { '<leader>sP',      function() require('telescope.builtin').find_files { cwd = require('lazy.core.config').options.root, layout_strategy = 'vertical' } end, desc = 'Search Plugin File [sP]' },
@@ -201,13 +202,13 @@ return {
           egrepify = {
             -- intersect tokens in prompt ala "str1.*str2" that ONLY matches
             -- if str1 and str2 are consecutively in line with anything in between (wildcard)
-            AND = true,                   -- default
-            permutations = false,         -- opt-in to imply AND & match all permutations of prompt tokens
-            lnum = true,                  -- default, not required
-            lnum_hl = 'EgrepifyLnum',     -- default, not required, links to `Constant`
-            col = false,                  -- default, not required
-            col_hl = 'EgrepifyCol',       -- default, not required, links to `Constant`
-            title = true,                 -- default, not required, show filename as title rather than inline
+            AND = true, -- default
+            permutations = false, -- opt-in to imply AND & match all permutations of prompt tokens
+            lnum = true, -- default, not required
+            lnum_hl = 'EgrepifyLnum', -- default, not required, links to `Constant`
+            col = false, -- default, not required
+            col_hl = 'EgrepifyCol', -- default, not required, links to `Constant`
+            title = true, -- default, not required, show filename as title rather than inline
             filename_hl = 'EgrepifyFile', -- default, not required, links to `Title`
             -- suffix = long line, see screenshot
             -- EXAMPLE ON HOW TO ADD PREFIX!
@@ -236,10 +237,10 @@ return {
             },
           },
           fzf = {
-            fuzzy = true,                   -- false will only do exact matching
+            fuzzy = true, -- false will only do exact matching
             override_generic_sorter = true, -- override the generic sorter
-            override_file_sorter = true,    -- override the file sorter
-            case_mode = 'smart_case',       -- or "ignore_case" or "respect_case"
+            override_file_sorter = true, -- override the file sorter
+            case_mode = 'smart_case', -- or "ignore_case" or "respect_case"
           },
           lazy = {
             -- Optional theme (the extension doesn't set a default theme)
@@ -384,8 +385,7 @@ return {
     'nvim-telescope/telescope-fzf-native.nvim',
     branch = 'main',
     dependencies = { 'nvim-telescope/telescope.nvim' },
-    build =
-    'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build',
+    build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build',
     config = function()
       ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'fzf'

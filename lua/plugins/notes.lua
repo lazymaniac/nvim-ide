@@ -9,7 +9,7 @@ return {
     'vhyrro/luarocks.nvim',
     branch = 'main',
     priority = 1000, -- We'd like this plugin to load first out of the rest
-    config = true,   -- This automatically runs `require("luarocks-nvim").setup()`
+    config = true, -- This automatically runs `require("luarocks-nvim").setup()`
     opts = {
       rocks = { 'lua-curl', 'nvim-nio', 'mimetypes', 'xml2lua' },
     },
@@ -45,9 +45,9 @@ return {
     config = function()
       require('neorg').setup {
         load = {
-          ['core.defaults'] = {},  -- Loads default behaviour
+          ['core.defaults'] = {}, -- Loads default behaviour
           ['core.concealer'] = {}, -- Adds pretty icons to your documents
-          ['core.dirman'] = {      -- Manages Neorg workspaces
+          ['core.dirman'] = { -- Manages Neorg workspaces
             config = {
               default_workspace = 'notes',
               workspaces = {
@@ -77,7 +77,8 @@ return {
               zen_mode = 'zen-mode',
             },
           },
-          -- ['core.ui.calendar'] = {},
+          ['core.ui.calendar'] = {},
+          ['core.summary'] = {},
         },
       }
     end,

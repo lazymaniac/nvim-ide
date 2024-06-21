@@ -383,32 +383,4 @@ return {
     end,
   },
 
-  -- [simplyfile.nvim] - Files Explorer
-  -- see: `:h plugin name`
-  -- link: https://github.com/Rizwanelansyah/simplyfile.nvim?tab=readme-ov-file
-  {
-    'Rizwanelansyah/simplyfile.nvim',
-    event = 'VeryLazy',
-    branch = 'main',
-    config = function()
-      require('simplyfile').setup {
-        border = {
-          left = 'rounded',
-          main = 'double',
-          right = 'rounded',
-        },
-        derfault_keymaps = true,
-        keymaps = {
-          --- your custom keymaps
-          --- {dir} have following field
-          --- name: name of file/folder
-          --- absolute: absolute path of file/folder
-          --- icon: the nerd fonts icon
-          --- hl: highlight group name for icon
-          --- filetype: type of file
-          --- is_folder: folder or not
-        },
-      }
-    end,
-  },
 }
