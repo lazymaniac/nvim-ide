@@ -703,7 +703,20 @@ return {
   -- [nvim-web-devicons] - Package of dev icons
   -- link: https://github.com/nvim-tree/nvim-web-devicons
   { 'nvim-tree/nvim-web-devicons', branch = 'master' },
-
+  {
+    'echasnovski/mini.icons',
+    opts = {},
+    lazy = true,
+    specs = {
+      { 'nvim-tree/nvim-web-devicons', enabled = false, optional = true },
+    },
+    init = function()
+      package.preload['nvim-web-devicons'] = function()
+        require('mini.icons').mock_nvim_web_devicons()
+        return package.loaded['nvim-web-devicons']
+      end
+    end,
+  },
   -- [nui.nvim] - UI components like popups.
   -- see: `:h nui`
   -- link: https://github.com/MunifTanjim/nui.nvim

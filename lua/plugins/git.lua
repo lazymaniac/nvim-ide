@@ -9,7 +9,6 @@ return {
   -- link: https://github.com/lewis6991/gitsigns.nvim
   {
     'lewis6991/gitsigns.nvim',
-    branch = 'main',
     event = 'VeryLazy',
     config = function(_, opts)
       require('gitsigns').setup(opts)

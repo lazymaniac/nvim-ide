@@ -7,46 +7,46 @@ return {
   -- link: https://github.com/hrsh7th/nvim-cmp
   {
     'hrsh7th/nvim-cmp',
-    branch = 'main',
+    -- branch = 'main',
     event = 'InsertEnter',
     dependencies = {
       -- [cmp-nvim-lsp] - Add lsp completion to cmp-nvim.
       -- see: `:h cmp-nvim-lsp`
       -- link: https://github.com/hrsh7th/cmp-nvim-lsp
-      { 'hrsh7th/cmp-nvim-lsp', branch = 'main' },
+      { 'hrsh7th/cmp-nvim-lsp', --[[ branch = 'main' ]] },
       -- [cmp-nvim-lsp-signature-help] - Displays functions signature.
       -- see: `:h cmp-nvim-lsp-signature-help`
       -- link: https://github.com/hrsh7th/cmp-nvim-lsp-signature-help
-      { 'hrsh7th/cmp-nvim-lsp-signature-help', branch = 'main' },
+      { 'hrsh7th/cmp-nvim-lsp-signature-help', --[[ branch = 'main' ]] },
       -- [cmp-buffer] - Adds buffer content to autocompletion.
       -- see: `:h cmp-buffer`
       -- link: https://github.com/hrsh7th/cmp-buffer
-      { 'hrsh7th/cmp-buffer', branch = 'main' },
+      { 'hrsh7th/cmp-buffer', --[[ branch = 'main' ]] },
       -- [cmp-path] - Add system file tree autocompletion.
       -- see: `:h cmp-path`
       -- link: https://github.com/hrsh7th/cmp-path
-      { 'hrsh7th/cmp-path', branch = 'main' },
+      { 'hrsh7th/cmp-path', --[[ branch = 'main' ]] },
       -- [cmp-calc] - Add result of calculations to autocompletion.
       -- see: `:h cmp-calc`
       -- link: https://github.com/hrsh7th/cmp-calc
-      { 'hrsh7th/cmp-calc', branch = 'main' },
+      { 'hrsh7th/cmp-calc', --[[ branch = 'main' ]] },
       -- [cmp-spell] - Add correct spelling to autocompletion.
       -- see: `:h cmp-spell`
       -- link: https://github.com/f3fora/cmp-spell
-      { 'f3fora/cmp-spell', branch = 'master' },
-      { 'L3MON4D3/LuaSnip', branch = 'master' },
+      { 'f3fora/cmp-spell', --[[ branch = 'master' ]] },
+      { 'L3MON4D3/LuaSnip', --[[ branch = 'master' ]] },
       -- [cmp_luasnip] - Connect luasnip with nvim-cmp.
       -- see: `:h cmp_luasnip`
       -- link: https://github.com/saadparwaiz1/cmp_luasnip
-      { 'saadparwaiz1/cmp_luasnip', branch = 'master' },
-      { 'rafamadriz/friendly-snippets', branch = 'main' },
-      { 'rcarriga/cmp-dap', branch = 'master' },
+      { 'saadparwaiz1/cmp_luasnip', --[[ branch = 'master' ]] },
+      { 'rafamadriz/friendly-snippets', --[[ branch = 'main' ]] },
+      { 'rcarriga/cmp-dap', --[[ branch = 'master' ]] },
       -- [cmp-npm] - Add npm packages and versions to autocompletion.
       -- see: `:h cmp-npm`
       -- link: https://github.com/David-Kunz/cmp-npm
       {
         'David-Kunz/cmp-npm',
-        branch = 'main',
+        -- branch = 'main',
         dependencies = { 'nvim-lua/plenary.nvim' },
         ft = 'json',
         config = function()
@@ -284,7 +284,7 @@ return {
   -- link: https://github.com/rcarriga/cmp-dap
   {
     'rcarriga/cmp-dap',
-    branch = 'master',
+    -- branch = 'master',
     event = 'VeryLazy',
     config = function()
       require('cmp').setup {

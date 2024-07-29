@@ -9,31 +9,27 @@ return {
     event = 'VeryLazy',
     config = function()
       local helm_mappings = {
-        l = {
-          k = {
-            name = '+[kubernetes]',
-            d = { '<cmd>HelmDeployFromBuffer<CR>', 'Helm Deploy Buffer to Context' },
-            r = { '<cmd>RemoveDeployment<CR>', 'Helm Remove Deployment From Buffer' },
-            T = { '<cmd>HelmDryRun<CR>', 'Helm DryRun Buffer' },
-            a = { '<cmd>KubectlApplyFromBuffer<CR>', 'Kubectl Apply From Buffer' },
-            D = { '<cmd>DeleteNamespace<CR>', 'Kubectl Delete Namespace' },
-            u = { '<cmd>HelmDependencyUpdateFromBuffer<CR>', 'Helm Dependency Update' },
-            b = { '<cmd>HelmDependencyBuildFromBuffer<CR>', 'Helm Dependency Build' },
-            t = { '<cmd>HelmTemplateFromBuffer<CR>', 'Helm Template From Buffer' },
-            K = { '<cmd>OpenK9sSplit<CR>', 'Split View K9s' },
-            k = { '<cmd>OpenK9s<CR>', 'Open K9s' },
-            l = { '<cmd>ToggleYamlHelm<CR>', 'Toggle YAML/Helm' },
-          },
-        },
+        { '<leader>lk', group = '[kubernetes]' },
+        { '<leader>lkD', '<cmd>DeleteNamespace<CR>', desc = 'Kubectl Delete Namespace' },
+        { '<leader>lkK', '<cmd>OpenK9sSplit<CR>', desc = 'Split View K9s' },
+        { '<leader>lkT', '<cmd>HelmDryRun<CR>', desc = 'Helm DryRun Buffer' },
+        { '<leader>lka', '<cmd>KubectlApplyFromBuffer<CR>', desc = 'Kubectl Apply From Buffer' },
+        { '<leader>lkb', '<cmd>HelmDependencyBuildFromBuffer<CR>', desc = 'Helm Dependency Build' },
+        { '<leader>lkd', '<cmd>HelmDeployFromBuffer<CR>', desc = 'Helm Deploy Buffer to Context' },
+        { '<leader>lkk', '<cmd>OpenK9s<CR>', desc = 'Open K9s' },
+        { '<leader>lkl', '<cmd>ToggleYamlHelm<CR>', desc = 'Toggle YAML/Helm' },
+        { '<leader>lkr', '<cmd>RemoveDeployment<CR>', desc = 'Helm Remove Deployment From Buffer' },
+        { '<leader>lkt', '<cmd>HelmTemplateFromBuffer<CR>', desc = 'Helm Template From Buffer' },
+        { '<leader>lku', '<cmd>HelmDependencyUpdateFromBuffer<CR>', desc = 'Helm Dependency Update' },
       }
       local wk = require 'which-key'
-      wk.register(helm_mappings, { prefix = '<leader>' })
+      wk.add(helm_mappings)
     end,
   },
 
   -- [kubectl.nvim] - Manage kubernetes clusert from neovim
   -- see: `:h kubectl.nvim`
-  -- link: https://github.com/ramilito/kubectl.nvim
+  -- link: link-to-repo
   {
     'ramilito/kubectl.nvim',
     dependencies = { 'nvim-lua/plenary.nvim' },

@@ -10,96 +10,149 @@ return {
     branch = 'main',
     event = 'VeryLazy',
     opts = {
-      plugins = {
-        spelling = {
-          enabled = true,   -- Enabling this will show WhichKey when pressing z= to select spelling suggestion
-          suggestions = 20, -- How many suggestions should be shown in the list?
+      ---@type false | "classic" | "modern" | "helix"
+      preset = 'modern',
+      -- Delay before showing the popup. Can be a number or a function that returns a number.
+      ---@type number | fun(ctx: { keys: string, mode: string, plugin?: string }):number
+      delay = 200,
+      ---@param mapping wk.Mapping
+      filter = function(mapping)
+        -- example to exclude mappings without a description
+        -- return mapping.desc and mapping.desc ~= ""
+        return true
+      end,
+      --- You can add any mappings here, or use `require('which-key').add()` later
+      ---@type wk.Spec
+      spec = {},
+      -- show a warning when issues were detected with your mappings
+      notify = false,
+      -- Enable/disable WhichKey for certain mapping modes
+      modes = {
+        n = true, -- Normal mode
+        i = true, -- Insert mode
+        x = true, -- Visual mode
+        s = true, -- Select mode
+        o = true, -- Operator pending mode
+        t = true, -- Terminal mode
+        c = true, -- Command mode
+        -- Start hidden and wait for a key to be pressed before showing the popup
+        -- Only used by enabled xo mapping modes.
+        -- Set to false to show the popup immediately (after the delay)
+        defer = {
+          ['<C-V>'] = true,
+          V = true,
         },
-        marks = true,       -- Show a list of marks on ' and `
-        registers = true,   -- Shows registers on " in NORMAL or <C-r> in INSERT mode
       },
-      -- The presets plugin, adds help for bunch of default keybindings in Neovim
-      -- No actual keybindings are created
-      presets = {
-        oprators = true,     -- Adds help for operators like d, y, ... and registers them for motion / text completion
-        motions = true,      -- Adds help for motions
-        text_objects = true, -- Adds help for text objects triggered after entering an operator
-        windows = true,      -- Help for windows. Default bindings on <C-w>
-        nav = true,          -- Misc bindings to work with windows
-        z = true,            -- Bindings for folds, spelling and other prefixed with z
-        g = true,            -- Bindings for prefixed with g
+      plugins = {
+        marks = true, -- shows a list of your marks on ' and `
+        registers = true, -- shows your registers on " in NORMAL or <C-r> in INSERT mode
+        -- the presets plugin, adds help for a bunch of default keybindings in Neovim
+        -- No actual key bindings are created
+        spelling = {
+          enabled = true, -- enabling this will show WhichKey when pressing z= to select spelling suggestions
+          suggestions = 20, -- how many suggestions should be shown in the list?
+        },
+        presets = {
+          operators = true, -- adds help for operators like d, y, ...
+          motions = true, -- adds help for motions
+          text_objects = true, -- help for text objects triggered after entering an operator
+          windows = true, -- default bindings on <c-w>
+          nav = true, -- misc bindings to work with windows
+          z = true, -- bindings for folds, spelling and others prefixed with z
+          g = true, -- bindings for prefixed with g
+        },
       },
-      -- Add operators that will trigger motion and text objects completion.
-      -- To enable all native operators, set the preset / operators plugin
-      -- above
-      operators = { gc = 'Comments' },
-      key_labels = {
-        -- Override the label used to display some keys. It doesn't effect
-        -- WK in any other way
-        -- For example:
-        ['<space>'] = 'SPC',
-        -- ["<CR>"] = "RET",
-        ['<TAB>'] = 'TAB',
-        ['<tab>'] = 'TAB',
-      },
-      icons = {
-        breadcrumb = '»', -- symbol used in the command line area that shows your active key combo
-        separator = '➜', -- symbol used between a key and it's label
-        group = '+', -- symbol prepended to a group
-      },
-      popup_mappings = {
-        scroll_down = '<c-d>', -- binding to scroll down inside the popup
-        scroll_up = '<c-u>',   -- binding to scroll up inside the popup
-      },
-      window = {
-        border = 'rounded',       -- none, single, double, shadow, rounded
-        position = 'bottom',      -- bottom, top
-        margin = { 1, 0, 1, 0 },  -- extra window margin [top, right, bottom, left]
-        padding = { 1, 1, 1, 1 }, -- extra window padding [top, right, bottom, left]
-        winblend = 0,
+      ---@type wk.Win.opts
+      win = {
+        -- don't allow the popup to overlap with the cursor
+        no_overlap = true,
+        -- width = 1,
+        -- height = { min = 4, max = 25 },
+        -- col = 0,
+        -- row = math.huge,
+        -- border = "none",
+        padding = { 1, 2 }, -- extra window padding [top/bottom, right/left]
+        title = true,
+        title_pos = 'center',
+        zindex = 1000,
+        -- Additional vim.wo and vim.bo options
+        bo = {},
+        wo = {
+          -- winblend = 10, -- value between 0-100 0 for fully opaque and 100 for fully transparent
+        },
       },
       layout = {
-        height = { min = 4, max = 25 }, -- min and max height of the columns
-        width = { min = 20, max = 50 }, -- min and max width of the columns
-        spacing = 2,                    -- spacing between columns
-        align = 'left',                 -- align columns left, center or right
+        width = { min = 20 }, -- min and max width of the columns
+        spacing = 3, -- spacing between columns
+        align = 'left', -- align columns left, center or right
       },
-      ignore_missing = false,
-      hidden = { '<silent>', '<cmd>', '<Cmd>', '<CR>', 'call', 'lua', '^:', '^ ' }, -- hide mapping boilerplate
-      show_help = true,                                                             -- show help message on the command line when the popup is visible
-      triggers = 'auto',                                                            -- automatically setup triggers
-      -- triggers = {"<leader>"} -- or specify a list manually
-      triggers_blacklist = {
-        -- list of mode / prefixes that should never be hooked by WhichKey
-        -- this is mostly relevant for key maps that start with a native binding
-        -- most people should not need to change this
-        i = { 'j', 'k' },
-        v = { 'j', 'k' },
+      keys = {
+        scroll_down = '<c-d>', -- binding to scroll down inside the popup
+        scroll_up = '<c-u>', -- binding to scroll up inside the popup
       },
-      defaults = {
-        mode = { 'n', 'v' },
-        ['g'] = { name = '+[goto]' },
-        ['gs'] = { name = '+[surround]' },
-        [']'] = { name = '+[next]' },
-        ['['] = { name = '+[prev]' },
-        ['<leader><tab>'] = { name = '+[tabs]' },
-        ['<leader>b'] = { name = '+[buffer]' },
-        ['<leader>c'] = { name = '+[code]' },
-        ['<leader>d'] = { name = '+[debug]' },
-        ['<leader>f'] = { name = '+[file/find]' },
-        ['<leader>g'] = { name = '+[git]' },
-        ['<leader>q'] = { name = '+[quit/session]' },
-        ['<leader>s'] = { name = '+[search]' },
-        ['<leader>a'] = { name = '+[terminal]' },
-        ['<leader>u'] = { name = '+[ui]' },
-        ['<leader>w'] = { name = '+[windows]' },
-        ['<leader>x'] = { name = '+[diagnostics/quickfix]' },
+      ---@type (string|wk.Sorter)[]
+      --- Mappings are sorted using configured sorters and natural sort of the keys
+      --- Available sorters:
+      --- * local: buffer-local mappings first
+      --- * order: order of the items (Used by plugins like marks / registers)
+      --- * group: groups last
+      --- * alphanum: alpha-numerical first
+      --- * mod: special modifier keys last
+      --- * manual: the order the mappings were added
+      --- * case: lower-case first
+      sort = { 'local', 'order', 'group', 'alphanum', 'mod' },
+      ---@type number|fun(node: wk.Node):boolean?
+      expand = 0, -- expand groups when <= n mappings
+      -- expand = function(node)
+      --   return not node.desc -- expand all nodes without a description
+      -- end,
+      ---@type table<string, ({[1]:string, [2]:string}|fun(str:string):string)[]>
+      replace = {
+        key = {
+          function(key)
+            return require('which-key.view').format(key)
+          end,
+          -- { "<Space>", "SPC" },
+        },
+        desc = {
+          { '<Plug>%((.*)%)', '%1' },
+          { '^%+', '' },
+          { '<[cC]md>', '' },
+          { '<[cC][rR]>', '' },
+          { '<[sS]ilent>', '' },
+          { '^lua%s+', '' },
+          { '^call%s+', '' },
+          { '^:%s*', '' },
+        },
       },
+      show_help = true, -- show a help message in the command line for using WhichKey
+      show_keys = true, -- show the currently pressed key and its label as a message in the command line
+      -- Which-key automatically sets up triggers for your mappings.
+      -- But you can disable this and setup the triggers yourself.
+      -- Be aware, that triggers are not needed for visual and operator pending mode.
+      triggers = true, -- automatically setup triggers
+      debug = false, -- enable wk.log in the current directory
     },
     config = function(_, opts)
       local wk = require 'which-key'
       wk.setup(opts)
-      wk.register(opts.defaults)
+      local defaults = {
+        { ']', group = '+[next]' },
+        { '[', group = '+[prev]' },
+        { '<leader><tab>', group = '+[tabs]' },
+        { '<leader>b', group = '+[buffer]' },
+        { '<leader>c', group = '+[code]' },
+        { '<leader>d', group = '+[debug]' },
+        { '<leader>f', group = '+[file/find]' },
+        { '<leader>g', group = '+[git]' },
+        { '<leader>q', group = '+[quit/session]' },
+        { '<leader>s', group = '+[search]' },
+        { '<leader>a', group = '+[terminal]' },
+        { '<leader>u', group = '+[ui]' },
+        { '<leader>w', group = '+[windows]' },
+        { '<leader>x', group = '+[diagnostics/quickfix]' },
+      }
+      wk.add(defaults)
     end,
   },
 
@@ -198,35 +251,35 @@ return {
       action_keys = { -- key mappings for actions in the trouble list
         -- map to {} to remove a mapping, for example:
         -- close = {},
-        close = 'q',                                                                        -- close the list
-        cancel = '<esc>',                                                                   -- cancel the preview and get back to your last window / buffer / cursor
-        refresh = 'r',                                                                      -- manually refresh
-        jump = { '<cr>', '<tab>', '<2-leftmouse>' },                                        -- jump to the diagnostic or open / close folds
-        open_split = { '<c-x>' },                                                           -- open buffer in new split
-        open_vsplit = { '<c-v>' },                                                          -- open buffer in new vsplit
-        open_tab = { '<c-t>' },                                                             -- open buffer in new tab
-        jump_close = { 'o' },                                                               -- jump to the diagnostic and close the list
-        toggle_mode = 'm',                                                                  -- toggle between "workspace" and "document" diagnostics mode
-        switch_severity = 's',                                                              -- switch "diagnostics" severity filter level to HINT / INFO / WARN / ERROR
-        toggle_preview = 'P',                                                               -- toggle auto_preview
-        hover = 'K',                                                                        -- opens a small popup with the full multiline message
-        preview = 'p',                                                                      -- preview the diagnostic location
-        open_code_href = 'c',                                                               -- if present, open a URI with more information about the diagnostic error
-        close_folds = { 'zM', 'zm' },                                                       -- close all folds
-        open_folds = { 'zR', 'zr' },                                                        -- open all folds
-        toggle_fold = { 'zA', 'za' },                                                       -- toggle fold of current file
-        previous = 'k',                                                                     -- previous item
-        next = 'j',                                                                         -- next item
-        help = '?',                                                                         -- help menu
+        close = 'q', -- close the list
+        cancel = '<esc>', -- cancel the preview and get back to your last window / buffer / cursor
+        refresh = 'r', -- manually refresh
+        jump = { '<cr>', '<tab>', '<2-leftmouse>' }, -- jump to the diagnostic or open / close folds
+        open_split = { '<c-x>' }, -- open buffer in new split
+        open_vsplit = { '<c-v>' }, -- open buffer in new vsplit
+        open_tab = { '<c-t>' }, -- open buffer in new tab
+        jump_close = { 'o' }, -- jump to the diagnostic and close the list
+        toggle_mode = 'm', -- toggle between "workspace" and "document" diagnostics mode
+        switch_severity = 's', -- switch "diagnostics" severity filter level to HINT / INFO / WARN / ERROR
+        toggle_preview = 'P', -- toggle auto_preview
+        hover = 'K', -- opens a small popup with the full multiline message
+        preview = 'p', -- preview the diagnostic location
+        open_code_href = 'c', -- if present, open a URI with more information about the diagnostic error
+        close_folds = { 'zM', 'zm' }, -- close all folds
+        open_folds = { 'zR', 'zr' }, -- open all folds
+        toggle_fold = { 'zA', 'za' }, -- toggle fold of current file
+        previous = 'k', -- previous item
+        next = 'j', -- next item
+        help = '?', -- help menu
       },
-      multiline = true,                                                                     -- render multi-line messages
-      indent_lines = true,                                                                  -- add an indent guide below the fold icons
-      win_config = { border = 'rounded' },                                                  -- window configuration for floating windows. See |nvim_open_win()|.
-      auto_open = false,                                                                    -- automatically open the list when you have diagnostics
-      auto_close = true,                                                                    -- automatically close the list when you have no diagnostics
-      auto_preview = true,                                                                  -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
-      auto_fold = true,                                                                     -- automatically fold a file trouble list at creation
-      auto_jump = { 'lsp_definitions' },                                                    -- for the given modes, automatically jump if there is only a single result
+      multiline = true, -- render multi-line messages
+      indent_lines = true, -- add an indent guide below the fold icons
+      win_config = { border = 'rounded' }, -- window configuration for floating windows. See |nvim_open_win()|.
+      auto_open = false, -- automatically open the list when you have diagnostics
+      auto_close = true, -- automatically close the list when you have no diagnostics
+      auto_preview = true, -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
+      auto_fold = true, -- automatically fold a file trouble list at creation
+      auto_jump = { 'lsp_definitions' }, -- for the given modes, automatically jump if there is only a single result
       include_declaration = { 'lsp_references', 'lsp_implementations', 'lsp_definitions' }, -- for the given modes, include the declaration of the current symbol in the results
       signs = {
         -- icons / text used for a diagnostic
@@ -239,10 +292,10 @@ return {
       use_diagnostic_signs = true, -- enabling this will use the signs defined in your lsp client
     },
     keys = {
-      { '<leader>xx', '<cmd>TroubleToggle document_diagnostics<cr>',  desc = 'Document Diagnostics [xx]' },
+      { '<leader>xx', '<cmd>TroubleToggle document_diagnostics<cr>', desc = 'Document Diagnostics [xx]' },
       { '<leader>xX', '<cmd>TroubleToggle workspace_diagnostics<cr>', desc = 'Workspace Diagnostics [xX]' },
-      { '<leader>xL', '<cmd>TroubleToggle loclist<cr>',               desc = 'Location List [xL]' },
-      { '<leader>xQ', '<cmd>TroubleToggle quickfix<cr>',              desc = 'Quickfix List [xQ]' },
+      { '<leader>xL', '<cmd>TroubleToggle loclist<cr>', desc = 'Location List [xL]' },
+      { '<leader>xQ', '<cmd>TroubleToggle quickfix<cr>', desc = 'Quickfix List [xQ]' },
       {
         '[q',
         function()
@@ -425,7 +478,7 @@ return {
         -- If you disable this you can still open hover_symbol using your keymap
         -- below.
         open_hover_on_preview = true,
-        width = 120,    -- Percentage or integer of columns
+        width = 120, -- Percentage or integer of columns
         min_width = 80, -- This is the number of columns
         -- Whether width is relative to the total width of nvim.
         -- When relative_width = true, this means take 50% of the total
@@ -600,7 +653,7 @@ return {
         },
         telescope = {
           use_default_mappings = true, -- if default mappings should be used
-          mappings = nil,              -- nil to use default mappings or no mappings (see `use_default_mappings`)
+          mappings = nil, -- nil to use default mappings or no mappings (see `use_default_mappings`)
         },
       },
       system_clipboard = {
@@ -662,7 +715,7 @@ return {
     'anuvyklack/windows.nvim',
     branch = 'main',
     dependencies = {
-      { 'anuvyklack/middleclass',    branch = 'master' },
+      { 'anuvyklack/middleclass', branch = 'master' },
       { 'anuvyklack/animation.nvim', branch = 'main' },
     },
     -- stylua: ignore
@@ -684,17 +737,41 @@ return {
   -- link: https://github.com/max397574/better-escape.nvim
   {
     'max397574/better-escape.nvim',
-    branch = 'master',
     config = function()
       require('better_escape').setup {
-        mapping = { 'jk', 'jj' },   -- a table with mappings to use
-        timeout = vim.o.timeoutlen, -- the time in which the keys must be hit in ms. Use option timeoutlen by default
-        clear_empty_lines = false,  -- clear line after escaping if there is only whitespace
-        keys = '<Esc>',             -- keys used for escaping, if it is a function will use the result everytime
-        -- example(recommended)
-        -- keys = function()
-        --   return vim.api.nvim_win_get_cursor(0)[2] > 1 and '<esc>l' or '<esc>'
-        -- end,
+        timeout = vim.o.timeoutlen,
+        default_mappings = true,
+        mappings = {
+          i = {
+            j = {
+              -- These can all also be functions
+              k = '<Esc>',
+              j = '<Esc>',
+            },
+          },
+          c = {
+            j = {
+              k = '<Esc>',
+              j = '<Esc>',
+            },
+          },
+          t = {
+            j = {
+              k = '<Esc>',
+              j = '<Esc>',
+            },
+          },
+          v = {
+            j = {
+              k = '<Esc>',
+            },
+          },
+          s = {
+            j = {
+              k = '<Esc>',
+            },
+          },
+        },
       }
     end,
   },
@@ -710,15 +787,15 @@ return {
         show = true,
         show_in_active_only = false,
         set_highlights = true,
-        folds = 1000,                -- handle folds, set to number to disable folds if no. of lines in buffer exceeds this
-        max_lines = false,           -- disables if no. of lines in buffer exceeds this
+        folds = 1000, -- handle folds, set to number to disable folds if no. of lines in buffer exceeds this
+        max_lines = false, -- disables if no. of lines in buffer exceeds this
         hide_if_all_visible = false, -- Hides everything if all lines are visible
         throttle_ms = 100,
         handle = {
           text = ' ',
-          blend = 30,                 -- Integer between 0 and 100. 0 for fully opaque and 100 to full transparent. Defaults to 30.
+          blend = 30, -- Integer between 0 and 100. 0 for fully opaque and 100 to full transparent. Defaults to 30.
           color = nil,
-          color_nr = nil,             -- cterm
+          color_nr = nil, -- cterm
           highlight = 'CursorColumn',
           hide_if_all_visible = true, -- Hides handle if all lines are visible
         },
@@ -755,8 +832,8 @@ return {
           diagnostic = true,
           gitsigns = true, -- Requires gitsigns
           handle = true,
-          search = true,   -- Requires hlslens
-          ale = false,     -- Requires ALE
+          search = true, -- Requires hlslens
+          ale = false, -- Requires ALE
         },
       }
     end,
@@ -770,9 +847,9 @@ return {
     branch = 'main',
     init = function()
       require('bigfile').setup {
-        filesize = 2,      -- size of the file in MiB, the plugin round file sizes to the closest MiB
+        filesize = 2, -- size of the file in MiB, the plugin round file sizes to the closest MiB
         pattern = { '*' }, -- autocmd pattern
-        features = {       -- features to disable
+        features = { -- features to disable
           'indent_blankline',
           'illuminate',
           'lsp',
