@@ -519,7 +519,7 @@ Use Markdown formatting and include the programming language name at the start o
               layout = 'vertical', -- float|vertical|horizontal|buffer
               border = 'single',
               height = 0.8,
-              width = 0.45,
+              width = 0.4,
               relative = 'editor',
               opts = {
                 breakindent = true,
