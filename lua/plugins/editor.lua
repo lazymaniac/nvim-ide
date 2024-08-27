@@ -27,21 +27,8 @@ return {
       -- show a warning when issues were detected with your mappings
       notify = false,
       -- Enable/disable WhichKey for certain mapping modes
-      modes = {
-        n = true, -- Normal mode
-        i = true, -- Insert mode
-        x = true, -- Visual mode
-        s = true, -- Select mode
-        o = true, -- Operator pending mode
-        t = true, -- Terminal mode
-        c = true, -- Command mode
-        -- Start hidden and wait for a key to be pressed before showing the popup
-        -- Only used by enabled xo mapping modes.
-        -- Set to false to show the popup immediately (after the delay)
-        defer = {
-          ['<C-V>'] = true,
-          V = true,
-        },
+      triggers = {
+        { '<auto>', mode = 'nxsot' },
       },
       plugins = {
         marks = true, -- shows a list of your marks on ' and `
@@ -127,10 +114,6 @@ return {
       },
       show_help = true, -- show a help message in the command line for using WhichKey
       show_keys = true, -- show the currently pressed key and its label as a message in the command line
-      -- Which-key automatically sets up triggers for your mappings.
-      -- But you can disable this and setup the triggers yourself.
-      -- Be aware, that triggers are not needed for visual and operator pending mode.
-      triggers = true, -- automatically setup triggers
       debug = false, -- enable wk.log in the current directory
     },
     config = function(_, opts)
