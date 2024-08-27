@@ -91,7 +91,7 @@ return {
     keys = {
       { '<leader>lh', '<cmd>lua require("precognition").toggle()<cr>', mode = { 'n', 'v' }, desc = 'Show movement hints' },
     },
-    config = {
+    opts = {
       startVisible = true,
       showBlankVirtLine = true,
       highlightColor = "Comment",
