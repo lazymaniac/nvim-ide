@@ -382,6 +382,86 @@ return {
             size = 0.4,
           },
         },
+        references_prev = {
+          mode = 'lsp_references',
+          focus = true,
+          preview = {
+            type = 'split',
+            relative = 'win',
+            position = 'right',
+            size = 0.5,
+          },
+        },
+        definition_prev = {
+          mode = 'lsp_definitions',
+          focus = true,
+          preview = {
+            type = 'split',
+            relative = 'win',
+            position = 'right',
+            size = 0.5,
+          },
+        },
+        declaration_prev = {
+          mode = 'lsp_declarations',
+          focus = true,
+          preview = {
+            type = 'split',
+            relative = 'win',
+            position = 'right',
+            size = 0.5,
+          },
+        },
+        type_definition_prev = {
+          mode = 'lsp_type_definitions',
+          focus = true,
+          preview = {
+            type = 'split',
+            relative = 'win',
+            position = 'right',
+            size = 0.5,
+          },
+        },
+        implementations_prev = {
+          mode = 'lsp_implementations',
+          focus = true,
+          preview = {
+            type = 'split',
+            relative = 'win',
+            position = 'right',
+            size = 0.5,
+          },
+        },
+        command_prev = {
+          mode = 'lsp_command',
+          focus = true,
+          preview = {
+            type = 'split',
+            relative = 'win',
+            position = 'right',
+            size = 0.5,
+          },
+        },
+        incoming_calls_prev = {
+          mode = 'lsp_incoming_calls',
+          focus = true,
+          preview = {
+            type = 'split',
+            relative = 'win',
+            position = 'right',
+            size = 0.5,
+          },
+        },
+        outgoing_calls_prev = {
+          mode = 'lsp_outgoing_calls',
+          focus = true,
+          preview = {
+            type = 'split',
+            relative = 'win',
+            position = 'right',
+            size = 0.5,
+          },
+        },
         -- sources define their own modes, which you can use directly,
         -- or override like in the example below
         lsp_references = {
