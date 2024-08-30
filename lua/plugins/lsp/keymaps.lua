@@ -14,61 +14,25 @@ function M.get()
     { '<leader>li', '<cmd>LspInfo<cr>', desc = 'Lsp Info [li]' },
     {
       'gd',
-      function()
-        local popup_id = detour.Detour()
-        if popup_id then
-          require('lspsaga.definition'):init(1, 2, {})
-          features.ShowPathInTitle(popup_id)
-          vim.keymap.set('n', 'q', function()
-            vim.cmd 'close'
-          end, { desc = 'Close window [q]' })
-        end
-      end,
+      '<cmd>Trouble definition_prev<cr>',
       desc = 'Goto Definition <gd>',
     },
     {
       'gr',
-      function()
-        local popup_id = detour.Detour()
-        if popup_id then
-          require('lspsaga.finder'):new { 'ref', '++float' }
-          features.ShowPathInTitle(popup_id)
-          vim.keymap.set('n', 'q', function()
-            vim.cmd 'close'
-          end, { desc = 'Close window [q]' })
-        end
-      end,
+      '<cmd>Trouble references_prev<cr>',
       desc = 'Goto References <gr>',
     },
     {
       'gI',
-      function()
-        local popup_id = detour.Detour()
-        if popup_id then
-          require('lspsaga.finder'):new { 'imp', '++float' }
-          features.ShowPathInTitle(popup_id)
-          vim.keymap.set('n', 'q', function()
-            vim.cmd 'close'
-          end, { desc = 'Close window [q]' })
-        end
-      end,
+      '<cmd>Trouble implementations_prev<cr>',
       desc = 'Goto Implementation <gI>',
     },
     {
       'gD',
-      function()
-        local popup_id = detour.Detour()
-        if popup_id then
-          require('lspsaga.definition'):init(2, 2, {})
-          features.ShowPathInTitle(popup_id)
-          vim.keymap.set('n', 'q', function()
-            vim.cmd 'close'
-          end, { desc = 'Close window [q]' })
-        end
-      end,
+      '<cmd>Trouble type_definition_prev<cr>',
       desc = 'Goto Type Definition <gy>',
     },
-    { '<leader>cs', '<cmd>Telescope lsp_document_symbols<cr>', desc = 'Document Symbols [cs]' },
+    { '<leader>cs', '<cmd>Trouble symbols toggle<cr>', desc = 'Document Symbols [cs]' },
     {
       '<leader>cw',
       function()
@@ -101,32 +65,12 @@ function M.get()
     },
     {
       '<leader>ci',
-      function()
-        local popup_id = detour.Detour()
-        if popup_id then
-          vim.bo.bufhidden = 'delete'
-          require('lspsaga.callhierarchy'):send_method(2, { '++float' })
-          features.ShowPathInTitle(popup_id)
-          vim.keymap.set('n', 'q', function()
-            vim.cmd 'close'
-          end, { desc = 'Close window [q]' })
-        end
-      end,
+      '<cmd>Trouble incoming_calls_perv<cr>',
       desc = 'Incoming Calls [ci]',
     },
     {
       '<leader>co',
-      function()
-        local popup_id = detour.Detour()
-        if popup_id then
-          vim.bo.bufhidden = 'delete'
-          require('lspsaga.callhierarchy'):send_method(3, { '++float' })
-          features.ShowPathInTitle(popup_id)
-          vim.keymap.set('n', 'q', function()
-            vim.cmd 'close'
-          end, { desc = 'Close window [q]' })
-        end
-      end,
+      '<cmd> Trouble outgoing_calls_prev<cr>',
       desc = 'Outgoing Calls [co]',
     },
     { 'K', vim.lsp.buf.hover, desc = 'Hover Documentation <K>' },
