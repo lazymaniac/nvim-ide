@@ -33,7 +33,15 @@ return {
         adapters = {
           anthropic = 'anthropic',
           gemini = 'gemini',
-          ollama = 'ollama',
+          ollama = function()
+            return require('codecompanion.adapters').extend('ollama', {
+              schema = {
+                model = {
+                  default = 'llama3.1:latest',
+                },
+              },
+            })
+          end,
           openai = 'openai',
         },
         strategies = {
