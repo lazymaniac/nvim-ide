@@ -12,7 +12,8 @@ return {
   },
 
   -- [[ AI ]] ---------------------------------------------------------------
-
+  { 'tzachar/cmp-ai', dependencies = 'nvim-lua/plenary.nvim' },
+  { 'hrsh7th/nvim-cmp', dependencies = { 'tzachar/cmp-ai' } },
   -- [codecompanion.nvim] - Integrates LLMs with neovim
   -- see: `:h codecompanion.nvim`
   -- link: https://github.com/olimorris/codecompanion.nvim
@@ -242,7 +243,7 @@ Answer the user's questions with the tool's output.]],
           },
         },
         -- DEFAULT PROMPTS ----------------------------------------------------------
-        default_prompts = {
+        pre_defined_prompts = {
           ['Custom Prompt'] = {
             strategy = 'inline',
             description = 'Prompt the LLM from Neovim',

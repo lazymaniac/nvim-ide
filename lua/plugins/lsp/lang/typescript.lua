@@ -16,42 +16,7 @@ return {
     opts = {
       -- make sure mason installs the server
       servers = {
-        tsserver = {
-          keys = {
-            {
-              '<leader>cz',
-              function()
-                vim.lsp.buf.code_action {
-                  apply = true,
-                  context = {
-                    only = { 'source.organizeImports' },
-                    diagnostics = {},
-                  },
-                }
-              end,
-              desc = 'Organize Imports [cz]',
-            },
-            {
-              '<leader>cq',
-              function()
-                vim.lsp.buf.code_action {
-                  apply = true,
-                  context = {
-                    only = { 'source.organizeImports' },
-                    diagnostics = {},
-                  },
-                }
-              end,
-              desc = 'Remove Unused Imports [cq]',
-            },
-          },
-          ---@diagnostic disable-next-line: missing-fields
-          settings = {
-            completions = {
-              completeFunctionCalls = true,
-            },
-          },
-        },
+        ts_ls = {},
       },
     },
   },

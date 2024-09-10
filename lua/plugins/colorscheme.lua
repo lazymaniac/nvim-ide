@@ -190,4 +190,8 @@ return {
       transparent_mode = false,
     },
   },
+
+  {
+    'atmosuwiryo/vim-winteriscoming',
+  },
 }
