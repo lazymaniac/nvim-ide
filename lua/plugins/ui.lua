@@ -1077,6 +1077,10 @@ return {
       }
     end,
   },
+
+  -- [helpview.nvim] - Format and colorize help files
+  -- see: `:h helpview.nvim`
+  -- link: https://github.com/OXY2DEV/helpview.nvim
   {
     'OXY2DEV/helpview.nvim',
     lazy = false,
