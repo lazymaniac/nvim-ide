@@ -12,8 +12,7 @@ return {
   },
 
   -- [[ AI ]] ---------------------------------------------------------------
-  { 'tzachar/cmp-ai', dependencies = 'nvim-lua/plenary.nvim' },
-  { 'hrsh7th/nvim-cmp', dependencies = { 'tzachar/cmp-ai' } },
+
   -- [codecompanion.nvim] - Integrates LLMs with neovim
   -- see: `:h codecompanion.nvim`
   -- link: https://github.com/olimorris/codecompanion.nvim

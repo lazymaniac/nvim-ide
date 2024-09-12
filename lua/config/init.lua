@@ -13,7 +13,7 @@ local defaults = {
       vim.cmd.colorscheme 'terafox'
     end
   end, ]]
-  colorscheme = 'WinterIsComing-dark-blue-color-theme',
+  colorscheme = 'terafox',
   -- load the default settings
   defaults = {
     autocmds = true, -- config.autocmds
