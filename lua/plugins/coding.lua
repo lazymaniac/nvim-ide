@@ -15,72 +15,99 @@ return {
     },
   },
 
-  -- [tiny-code-action.nvim] - Code action plugin
-  -- see: `:h tiny-code-action.nvim`
-  -- link: https://github.com/rachartier/tiny-code-action.nvim
+  -- [lspsaga.nvim] - Improves LSP experience in neovim.
+  -- see: `:h lspsaga.nvim`
+  -- link: https://github.com/nvimdev/lspsaga.nvim
   {
-    'rachartier/tiny-code-action.nvim',
+    'nvimdev/lspsaga.nvim',
+    branch = 'main',
     dependencies = {
-      { 'nvim-lua/plenary.nvim' },
-      { 'nvim-telescope/telescope.nvim' },
+      'nvim-treesitter/nvim-treesitter',
+      'nvim-tree/nvim-web-devicons',
     },
-    event = 'LspAttach',
     config = function()
-      require('tiny-code-action').setup {
-        --- The backend to use, currently only "vim", "delta" and "difftastic" are supported
-        backend = 'vim',
-        backend_opts = {
-          delta = {
-            -- Header from delta can be quite large.
-            -- You can remove them by setting this to the number of lines to remove
-            header_lines_to_remove = 4,
-            -- The arguments to pass to delta
-            -- If you have a custom configuration file, you can set the path to it like so:
-            -- args = {
-            --     "--config" .. os.getenv("HOME") .. "/.config/delta/config.yml",
-            -- }
-            args = {
-              '--line-numbers',
-            },
-          },
-          difftastic = {
-            -- Header from delta can be quite large.
-            -- You can remove them by setting this to the number of lines to remove
-            header_lines_to_remove = 1,
-            -- The arguments to pass to difftastic
-            args = {
-              '--color=always',
-              '--display=inline',
-              '--syntax-highlight=on',
-            },
+      require('lspsaga').setup {
+        code_action = {
+          num_shortcut = false,
+          show_server_name = true,
+          extend_gitsigns = false,
+          only_in_cursor = false,
+          max_height = 0.2,
+          keys = {
+            quit = 'q',
+            exec = '<CR>',
           },
         },
-        telescope_opts = {
-          layout_strategy = 'vertical',
-          layout_config = {
-            width = 0.7,
-            height = 0.9,
-            preview_cutoff = 1,
-            preview_height = function(_, _, max_lines)
-              local h = math.floor(max_lines * 0.5)
-              return math.max(h, 10)
-            end,
+        lightbulb = {
+          enable = true,
+          sign = false,
+          debounce = 0,
+          sign_priority = 40,
+          virtual_text = true,
+          enable_in_insert = false,
+        },
+        scroll_preview = {
+          scroll_down = '<C-f>',
+          scroll_up = '<C-b>',
+        },
+        request_timeout = 2000,
+        finder = {
+          max_height = 0.6,
+          left_width = 0.3,
+          methods = {},
+          default = 'ref+imp',
+          layout = 'float',
+          silent = false,
+          filter = {},
+          fname_sub = nil,
+          sp_inexist = false,
+          sp_global = false,
+          ly_botright = false,
+          keys = {
+            shuttle = '[w',
+            toggle_or_open = 'o',
+            vsplit = 's',
+            split = 'i',
+            tabe = 't',
+            tabnew = 'r',
+            quit = 'q',
+            close = '<C-c>k',
           },
         },
-        -- The icons to use for the code actions
-        -- You can add your own icons, you just need to set the exact action's kind of the code action
-        -- You can set the highlight like so: { link = "DiagnosticError" } or  like nvim_set_hl ({ fg ..., bg..., bold..., ...})
-        signs = {
-          quickfix = { '󰁨', { link = 'DiagnosticInfo' } },
-          others = { '?', { link = 'DiagnosticWarning' } },
-          refactor = { '', { link = 'DiagnosticWarning' } },
-          ['refactor.move'] = { '󰪹', { link = 'DiagnosticInfo' } },
-          ['refactor.extract'] = { '', { link = 'DiagnosticError' } },
-          ['source.organizeImports'] = { '', { link = 'TelescopeResultVariable' } },
-          ['source.fixAll'] = { '', { link = 'TelescopeResultVariable' } },
-          ['source'] = { '', { link = 'DiagnosticError' } },
-          ['rename'] = { '󰑕', { link = 'DiagnosticWarning' } },
-          ['codeAction'] = { '', { link = 'DiagnosticError' } },
+        symbol_in_winbar = {
+          enable = false,
+          separator = ' › ',
+          hide_keyword = true,
+          ignore_patterns = nil,
+          show_file = false,
+          folder_level = 1,
+          color_mode = true,
+          dely = 300,
+        },
+        callhierarchy = {
+          layout = 'float',
+          left_width = 0.2,
+          keys = {
+            edit = 'o',
+            vsplit = 's',
+            split = 'i',
+            tabe = 't',
+            close = '<C-c>k',
+            quit = 'q',
+            shuttle = '[w',
+            toggle_or_req = 'u',
+          },
+        },
+        implement = {
+          enable = true,
+          sign = true,
+          lang = {},
+          virtual_text = true,
+          priority = 100,
+        },
+        beacon = {
+          enable = true,
+          frequency = 7,
         },
       }
     end,

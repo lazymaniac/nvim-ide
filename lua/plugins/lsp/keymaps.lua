@@ -78,9 +78,7 @@ function M.get()
     { '<C-k>', vim.lsp.buf.signature_help, mode = 'i', desc = 'Signature Help <C-k>', has = 'signatureHelp' },
     {
       '<leader>ca',
-      function()
-        require('tiny-code-action').code_action()
-      end,
+      '<cmd>Lspsaga code_action<cr>',
       desc = 'Code Action [ca]',
       mode = { 'n', 'v' },
     },
