@@ -14,7 +14,6 @@ return {
     cmd = 'Telescope',
     -- stylua: ignore
     keys = {
-      { '<leader>,',       '<cmd>Telescope buffers sort_mru=true sort_lastused=true layout_strategy=vertical<cr>',                                                  desc = 'Switch Buffer [,]' },
       { '<leader>:',       '<cmd>Telescope command_history layout_strategy=vertical<cr>',                                                                           desc = 'Command History [:]' },
       { '<leader><space>', Util.telescope('files', { layout_strategy = 'vertical' }),                                                                               desc = 'Find Files (root dir) [SPC]' },
       -- find
