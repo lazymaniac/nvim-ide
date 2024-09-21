@@ -12,7 +12,7 @@ return {
     event = { 'VeryLazy' },
     keys = {
       { '<c-space>', desc = 'Increment selection <C-SPC>' },
-      { '<bs>',      desc = 'Decrement selection <BS>',   mode = 'x' },
+      { '<bs>', desc = 'Decrement selection <BS>', mode = 'x' },
     },
     init = function(plugin)
       -- PERF: add nvim-treesitter queries to the rtp and it's custom query predicates early
@@ -59,6 +59,7 @@ return {
         'vimdoc',
         'yaml',
         'dap_repl',
+        'http',
       },
       auto_install = true,
       incremental_selection = {

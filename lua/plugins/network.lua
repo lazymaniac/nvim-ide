@@ -23,91 +23,81 @@ return {
     },
   },
 
-  -- [rest.nvim] - Call rest calls defined in files
-  -- see: `:h rest.nvim`
-  -- link: https://github.com/rest-nvim/rest.nvim
+  -- [kulala.nvim] - REST Client interface
+  -- see: `:h kulala.nvim`
+  -- link: https://github.com/mistweaverco/kulala.nvim
   {
-    'rest-nvim/rest.nvim',
-    branch = 'main',
-    dependencies = { 'nvim-lua/plenary.nvim' },
-    keys = {
-      { '<leader>lrr', '<cmd>lua require("rest-nvim").run()<cr>', mode = { 'n', 'v' }, desc = 'Call REST [lrr]' },
-      { '<leader>lrp', '<cmd>lua require("rest-nvim").run(true)<cr>', mode = { 'n', 'v' }, desc = 'Call REST Preview [lrp]' },
-      { '<leader>lrl', '<cmd>lua require("rest-nvim").last()<cr>', mode = { 'n', 'v' }, desc = 'Call REST Last [lrl]' },
+    'mistweaverco/kulala.nvim',
+    opts = {
+      curl_path = 'curl',
+      split_direction = 'vertical',
+      -- default_view, body or headers or headers_body
+      default_view = 'headers_body',
+      -- dev, test, prod, can be anything
+      -- see: https://learn.microsoft.com/en-us/aspnet/core/test/http-files?view=aspnetcore-8.0#environment-files
+      default_env = 'dev',
+      -- enable/disable debug mode
+      debug = false,
+      -- default formatters/pathresolver for different content types
+      contenttypes = {
+        ['application/json'] = {
+          ft = 'json',
+          formatter = { 'jq', '.' },
+        },
+        ['application/xml'] = {
+          ft = 'xml',
+          formatter = { 'xmllint', '--format', '-' },
+          pathresolver = { 'xmllint', '--xpath', '{{path}}', '-' },
+        },
+        ['text/html'] = {
+          ft = 'html',
+          formatter = { 'xmllint', '--format', '--html', '-' },
+          pathresolver = {},
+        },
+      },
+      -- can be used to show loading, done and error icons in inlay hints
+      -- possible values: "on_request", "above_request", "below_request", or nil to disable
+      -- If "above_request" or "below_request" is used, the icons will be shown above or below the request line
+      -- Make sure to have a line above or below the request line to show the icons
+      show_icons = 'on_request',
+      -- default icons
+      icons = {
+        inlay = {
+          loading = '⏳',
+          done = '✅',
+          error = '❌',
+        },
+        lualine = '🐼',
+      },
+      -- additional cURL options
+      -- see: https://curl.se/docs/manpage.html
+      additional_curl_options = {},
+      -- scratchpad default contents
+      scratchpad_default_contents = {
+        '@MY_TOKEN_NAME=my_token_value',
+        '',
+        '# @name scratchpad',
+        'POST https://httpbin.org/post HTTP/1.1',
+        'accept: application/json',
+        'content-type: application/json',
+        '',
+        '{',
+        '  "foo": "bar"',
+        '}',
+      },
+      -- enable winbar
+      winbar = true,
+      -- Specify the panes to be displayed by default
+      -- Current available pane contains { "body", "headers", "headers_body", "script_output" },
+      default_winbar_panes = { 'body', 'headers', 'headers_body' },
+      -- enable reading vscode rest client environment variables
+      vscode_rest_client_environmentvars = false,
+      -- disable the vim.print output of the scripts
+      -- they will be still written to disk, but not printed immediately
+      disable_script_print_output = false,
+      -- set scope for environment and request variables
+      -- possible values: b = buffer, g = global
+      environment_scope = 'b',
     },
-    config = function()
-      require('rest-nvim').setup {
-        client = 'curl',
-        env_file = '.env',
-        env_pattern = '\\.env$',
-        env_edit_command = 'tabedit',
-        encode_url = true,
-        skip_ssl_verification = false,
-        custom_dynamic_variables = {},
-        logs = {
-          level = 'info',
-          save = true,
-        },
-        result = {
-          split = {
-            horizontal = false,
-            in_place = false,
-            stay_in_current_window_after_split = true,
-          },
-          behavior = {
-            decode_url = true,
-            show_info = {
-              url = true,
-              headers = true,
-              http_info = true,
-              curl_command = true,
-            },
-            statistics = {
-              enable = true,
-              ---@see https://curl.se/libcurl/c/curl_easy_getinfo.html
-              stats = {
-                { 'total_time', title = 'Time taken:' },
-                { 'size_download_t', title = 'Download size:' },
-              },
-            },
-            formatters = {
-              json = 'jq',
-              html = function(body)
-                if vim.fn.executable 'tidy' == 0 then
-                  return body, { found = false, name = 'tidy' }
-                end
-                local fmt_body = vim.fn
-                  .system({
-                    'tidy',
-                    '-i',
-                    '-q',
-                    '--tidy-mark',
-                    'no',
-                    '--show-body-only',
-                    'auto',
-                    '--show-errors',
-                    '0',
-                    '--show-warnings',
-                    '0',
-                    '-',
-                  }, body)
-                  :gsub('\n$', '')
-
-                return fmt_body, { found = true, name = 'tidy' }
-              end,
-            },
-          },
-          keybinds = {
-            buffer_local = true,
-            prev = 'H',
-            next = 'L',
-          },
-        },
-        highlight = {
-          enable = true,
-          timeout = 750,
-        },
-      }
-    end,
   },
 }
