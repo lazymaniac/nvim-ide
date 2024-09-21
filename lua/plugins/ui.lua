@@ -1088,4 +1088,18 @@ return {
       'nvim-treesitter/nvim-treesitter',
     },
   },
+
+
+  -- [markview.nvim] - Markdown previever
+  -- see: `:h markview.nvim`
+  -- link: https://github.com/OXY2DEV/markview.nvim
+  {
+    'OXY2DEV/markview.nvim',
+    lazy = false, -- Recommended
+    ft = {"markdown", "norg"},
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter',
+      'nvim-tree/nvim-web-devicons',
+    },
+  },
 }
