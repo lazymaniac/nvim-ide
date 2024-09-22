@@ -28,6 +28,18 @@ return {
   -- link: https://github.com/mistweaverco/kulala.nvim
   {
     'mistweaverco/kulala.nvim',
+    event = 'VeryLazy',
+    ft = 'http',
+    -- stylua: ignore
+    keys = {
+      { '<leader>lrr', '<cmd>lua require("kulala").run()<cr>', mode = { 'n' }, desc = 'Execute the request', },
+      { '[', '<cmd>lua require("kulala").jump_prev()<cr>', mode = { 'n' }, desc = 'Jump to the previous request', },
+      { ']', '<cmd>lua require("kulala").jump_next()<cr>', mode = { 'n' }, desc = 'Jump to the next request', },
+      { '<leader>lri', '<cmd>lua require("kulala").inspect()<cr>', mode = { 'n' }, desc = 'Inspect current request', },
+      { '<leader>lrt', '<cmd>lua require("kulala").toggle_view()<cr>', mode = { 'n' }, desc = 'Toggle between body and headers', },
+      { '<leader>lrc', '<cmd>lua require("kulala").copy()<cr>', mode = { 'n' }, desc = 'Copy current request as cURL command', },
+      { '<leader>lrp', '<cmd>lua require("kulala").from_curl()<cr>', mode = { 'n' }, desc = 'Paste cURL command as request', },
+    },
     opts = {
       curl_path = 'curl',
       split_direction = 'vertical',
@@ -99,5 +111,12 @@ return {
       -- possible values: b = buffer, g = global
       environment_scope = 'b',
     },
+    config = function()
+      vim.filetype.add {
+        extension = {
+          ['http'] = 'http',
+        },
+      }
+    end,
   },
 }
