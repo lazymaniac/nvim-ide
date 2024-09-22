@@ -32,13 +32,20 @@ return {
     ft = 'http',
     -- stylua: ignore
     keys = {
-      { '<leader>lrr', '<cmd>lua require("kulala").run()<cr>', mode = { 'n' }, desc = 'Execute the request', },
       { '[', '<cmd>lua require("kulala").jump_prev()<cr>', mode = { 'n' }, desc = 'Jump to the previous request', },
       { ']', '<cmd>lua require("kulala").jump_next()<cr>', mode = { 'n' }, desc = 'Jump to the next request', },
+      { '<leader>lrr', '<cmd>lua require("kulala").run()<cr>', mode = { 'n' }, desc = 'Execute the request', },
       { '<leader>lri', '<cmd>lua require("kulala").inspect()<cr>', mode = { 'n' }, desc = 'Inspect current request', },
       { '<leader>lrt', '<cmd>lua require("kulala").toggle_view()<cr>', mode = { 'n' }, desc = 'Toggle between body and headers', },
       { '<leader>lrc', '<cmd>lua require("kulala").copy()<cr>', mode = { 'n' }, desc = 'Copy current request as cURL command', },
       { '<leader>lrp', '<cmd>lua require("kulala").from_curl()<cr>', mode = { 'n' }, desc = 'Paste cURL command as request', },
+      { '<leader>lra', '<cmd>lua require("kulala").run_all()<cr>', mode = { 'n' }, desc = 'Run all requests in the buffer', },
+      { '<leader>lre', '<cmd>lua require("kulala").replay()<cr>', mode = { 'n' }, desc = 'Replay last request', },
+      { '<leader>lrS', '<cmd>lua require("kulala").show_stats()<cr>', mode = { 'n' }, desc = 'Show statistics of last request', },
+      { '<leader>lrs', '<cmd>lua require("kulala").scratchpad()<cr>', mode = { 'n' }, desc = 'Open scratchpad buffer', },
+      { '<leader>lrq', '<cmd>lua require("kulala").close()<cr>', mode = { 'n' }, desc = 'Close view', },
+      { '<leader>lrf', '<cmd>lua require("kulala").search()<cr>', mode = { 'n' }, desc = 'Look for http or rest files', },
+      { '<leader>lrg', '<cmd>lua require("kulala").download_graphql_schema()<cr>', mode = { 'n' }, desc = 'Download GraphQL schema', },
     },
     opts = {
       curl_path = 'curl',
