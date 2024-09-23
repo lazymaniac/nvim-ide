@@ -43,6 +43,12 @@ return {
       { '<leader>nft', '<cmd>Telescope neorg find_project_tasks<cr>',     mode = { 'n', 'v' }, desc = 'Find Project Tasks [nft]', },
     },
     config = function()
+      local wk = require 'which-key'
+      local defaults = {
+        { '<leader>n', group = '+[notes]' },
+        { '<leader>nf', group = '+[find/insert]' },
+      }
+      wk.add(defaults)
       require('neorg').setup {
         load = {
           ['core.defaults'] = {}, -- Loads default behaviour
@@ -99,17 +105,5 @@ return {
       require('orgcheckbox').setup { lhs = '<leader>oT' }
     end,
     ft = { 'org' },
-  },
-
-  -- Add which-key group for notes
-  {
-    'folke/which-key.nvim',
-    optional = true,
-    opts = {
-      defaults = {
-        ['<leader>n'] = { name = '+[notes]' },
-        ['<leader>nf'] = { name = '+[find/insert]' },
-      },
-    },
   },
 }

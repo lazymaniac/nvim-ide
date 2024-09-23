@@ -13,23 +13,12 @@ return {
     -- config = true,
   },
 
-  {
-    'folke/which-key.nvim',
-    event = 'VeryLazy',
-    opts = {
-      defaults = {
-        ['<leader>lr'] = { name = '+[rest]' },
-      },
-    },
-  },
-
   -- [kulala.nvim] - REST Client interface
   -- see: `:h kulala.nvim`
   -- link: https://github.com/mistweaverco/kulala.nvim
   {
     'mistweaverco/kulala.nvim',
     event = 'VeryLazy',
-    ft = 'http',
     -- stylua: ignore
     keys = {
       { '[', '<cmd>lua require("kulala").jump_prev()<cr>', mode = { 'n' }, desc = 'Jump to the previous request', },
@@ -121,6 +110,11 @@ return {
       environment_scope = 'b',
     },
     config = function()
+      local wk = require 'which-key'
+      local defaults = {
+        { '<leader>lr', group = '+[rest]' },
+      }
+      wk.add(defaults)
       vim.filetype.add {
         extension = {
           ['http'] = 'http',

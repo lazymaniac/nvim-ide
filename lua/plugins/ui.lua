@@ -470,18 +470,6 @@ return {
     end,
   },
 
-  -- [which-key.nvim] -  Displays a popup with possible key bindings of the command you started typing
-  -- see: `:h which-key`
-  {
-    'folke/which-key.nvim',
-    optional = true,
-    opts = function(_, opts)
-      if require('util').has 'noice.nvim' then
-        opts.defaults['<leader>sn'] = { name = '+[noice]' }
-      end
-    end,
-  },
-
   -- [noice.nvim] - Highly experimental plugin that completely replaces the UI for messages, cmdline and the popupmenu.
   -- see: `:h noice`
   -- link: https://github.com/folke/noice.nvim
@@ -502,6 +490,13 @@ return {
       { '<c-b>',       function() if not require('noice.lsp').scroll(-4) then return '<c-b>' end end, silent = true,                     expr = true,                           desc = 'Scroll backward <c-b>', mode = { 'i', 'n', 's' }, },
     },
     config = function()
+      local wk = require 'which-key'
+      if require('util').has 'noice.nvim' then
+        local defaults = {
+          { '<leader>sn', group = '+[noice]' },
+        }
+        wk.add(defaults)
+      end
       require('noice').setup {
         cmdline = {
           enabled = true, -- enables the Noice cmdline UI
@@ -1089,14 +1084,13 @@ return {
     },
   },
 
-
   -- [markview.nvim] - Markdown previever
   -- see: `:h markview.nvim`
   -- link: https://github.com/OXY2DEV/markview.nvim
   {
     'OXY2DEV/markview.nvim',
     lazy = false, -- Recommended
-    ft = {"markdown", "norg"},
+    ft = { 'markdown', 'norg' },
     dependencies = {
       'nvim-treesitter/nvim-treesitter',
       'nvim-tree/nvim-web-devicons',

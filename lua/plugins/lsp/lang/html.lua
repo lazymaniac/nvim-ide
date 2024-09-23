@@ -36,17 +36,6 @@ return {
     },
   },
 
-  {
-    'folke/which-key.nvim',
-    event = 'VeryLazy',
-    opts = {
-      defaults = {
-        ['<leader>l'] = { name = '+[utils]' },
-        ['<leader>lc'] = { name = '+[color]' },
-      },
-    },
-  },
-
   -- [ccc.nvim] - Color picker in Nvim
   -- see: `:h ccc.nvim`
   -- link: https://github.com/uga-rosa/ccc.nvim
@@ -56,9 +45,16 @@ return {
     opts = {},
     cmd = { 'CccPick', 'CccConvert', 'CccHighlighterEnable', 'CccHighlighterDisable', 'CccHighlighterToggle' },
     keys = {
-      { '<leader>lcp', '<cmd>CccPick<cr>',              desc = 'Pick [lcp]' },
-      { '<leader>lcc', '<cmd>CccConvert<cr>',           desc = 'Convert [lcc]' },
+      { '<leader>lcp', '<cmd>CccPick<cr>', desc = 'Pick [lcp]' },
+      { '<leader>lcc', '<cmd>CccConvert<cr>', desc = 'Convert [lcc]' },
       { '<leader>lch', '<cmd>CccHighlighterToggle<cr>', desc = 'Toggle Highlighter [lch]' },
     },
+    config = function()
+      local wk = require 'which-key'
+      local defaults = {
+        { '<leader>lc', group = '+[color]' },
+      }
+      wk.add(defaults)
+    end,
   },
 }

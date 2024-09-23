@@ -53,17 +53,6 @@ return {
 
   -- [[ CODE RUNNERS ]] ---------------------------------------------------------------
 
-  -- Add which-key group for code runners
-  {
-    'folke/which-key.nvim',
-    opts = {
-      defaults = {
-        ['<leader>r'] = { name = '+[run]' },
-        ['<leader>j'] = { name = '+[jupyter]' },
-      },
-    },
-  },
-
   -- [sniprun] - Execute part of code or whole file.
   -- see: `:h sniprun`
   -- link: https://github.com/michaelb/sniprun
@@ -81,6 +70,12 @@ return {
       { '<leader>rf', '<cmd>%SnipRun<cr>', mode = { 'n', 'v' }, desc = 'Run current file [rf]' },
     },
     config = function()
+      local wk = require 'which-key'
+      local defaults = {
+        { '<leader>r', group = '+[run]' },
+        { '<leader>j', group = '+[jupyter]' },
+      }
+      wk.add(defaults)
       require('sniprun').setup {
         selected_interpreters = {}, --# use those instead of the default for the current filetype
         repl_enable = {},           --# enable REPL-like behavior for the given interpreters

@@ -140,6 +140,7 @@ return {
         { '<leader>u', group = '+[ui]' },
         { '<leader>w', group = '+[windows]' },
         { '<leader>x', group = '+[diagnostics/quickfix]' },
+        { '<leader>l', group = '+[utils]' },
       }
       wk.add(defaults)
     end,
