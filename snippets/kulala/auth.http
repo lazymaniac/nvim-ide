@@ -1,0 +1,75 @@
+
+# Authentication
+
+# Basic authentication
+
+GET https://www/api HTTP/1.1
+Authorization: Basic TXlVc2VyOlByaXZhdGU=
+
+###
+
+GET https://www/api HTTP/1.1
+Authorization: Basic {{Username}}:{{Password}}
+
+###
+
+GET https://www/api HTTP/1.1
+Authorization: Basic {{Username}} {{Password}}
+
+###
+
+# Digest authentication
+
+GET https://www/api HTTP/1.1
+Authorization: Basic {{Username}}:{{Password}}
+
+###
+
+GET https://www/api HTTP/1.1
+Authorization: Basic {{Username}} {{Password}}
+
+###
+
+# NTLM authentication
+
+GET https://www/api HTTP/1.1
+Authorization: Basic {{Username}}:{{Password}}
+
+###
+
+GET https://www/api HTTP/1.1
+Authorization: Basic {{Username}} {{Password}}
+
+###
+
+# Negotiate
+
+GET https://www/api HTTP/1.1
+Authorization: Negotiate
+
+###
+
+# Bearer token
+
+# Sending the credentials to obtain token
+# @name login
+POST {{loginURL}} HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+client_id={{ClientId}}&client_secret={{ClientSecret}}&grant_type=client_credentials&scope={{Scope}}
+
+###
+
+# Access the token
+
+GET {{apiURL}}/items HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{login.response.body.$.access_token}}
+
+###
+
+# AWS Signature 4
+
+GET {{apiUrl}}/ HTTP/1.1
+Authorization: AWS <access-key-id> <secret-access-key> token:<aws-session-token> region:<region> service:<service>
