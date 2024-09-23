@@ -1,16 +1,6 @@
 return {
 
   -- [[ TEST RUNNERS ]] ---------------------------------------------------------------
-  -- Default test tree for which-key
-  {
-    'folke/which-key.nvim',
-    optional = true,
-    opts = {
-      defaults = {
-        ['<leader>t'] = { name = '+[test]' },
-      },
-    },
-  },
 
   -- [neotest] - Test runner. List tests available in project
   -- see: `:h neotest`
@@ -31,6 +21,11 @@ return {
       { '<leader>tS', function() require('neotest').run.stop() end,                                      desc = 'Stop [ts]', },
     },
     config = function()
+      local wk = require 'which-key'
+      local defaults = {
+        { '<leader>t', group = '+[test]' },
+      }
+      wk.add(defaults)
       local opts = {
         adapters = {
           ['neotest-java'] = { ignore_wrapper = false },

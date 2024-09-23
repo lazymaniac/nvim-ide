@@ -1,16 +1,5 @@
 return {
 
-  -- Add which-key group for AI
-  {
-    'folke/which-key.nvim',
-    optional = true,
-    opts = {
-      defaults = {
-        ['<leader>z'] = { name = '+[AI]' },
-      },
-    },
-  },
-
   -- [[ AI ]] ---------------------------------------------------------------
 
   -- [codecompanion.nvim] - Integrates LLMs with neovim
@@ -18,6 +7,7 @@ return {
   -- link: https://github.com/olimorris/codecompanion.nvim
   {
     'olimorris/codecompanion.nvim',
+    event = 'VeryLazy',
     branch = 'main',
     dependencies = { 'nvim-lua/plenary.nvim', 'nvim-treesitter/nvim-treesitter', 'nvim-telescope/telescope.nvim', 'stevearc/dressing.nvim' },
     -- stylua: ignore
@@ -29,6 +19,11 @@ return {
       { '<leader>zp', '<cmd>CodeCompanionAdd<cr>',         mode = { 'v' },      desc = 'Paste Selected to Chat [zp]' },
     },
     config = function()
+      local wk = require 'which-key'
+      local defaults = {
+        { '<leader>z', group = '+[AI]' },
+      }
+      wk.add(defaults)
       require('codecompanion').setup {
         adapters = {
           anthropic = 'anthropic',

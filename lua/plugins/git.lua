@@ -11,6 +11,12 @@ return {
     'lewis6991/gitsigns.nvim',
     event = 'VeryLazy',
     config = function(_, opts)
+      local wk = require 'which-key'
+      local defaults = {
+        { '<leader>gb', group = '+[buffer]' },
+        { '<leader>gbt', group = '+[toggle]' },
+      }
+      wk.add(defaults)
       require('gitsigns').setup(opts)
       require('scrollbar.handlers.gitsigns').setup()
     end,
@@ -101,18 +107,6 @@ return {
         map('n', '<leader>gbtd', gs.toggle_deleted, 'Toggle git show deleted [gbtd]')
         map('n', '<leader>gbts', gs.toggle_signs, 'Toggle signs [gbts]')
       end,
-    },
-  },
-
-  -- Add gitsigns group to which-key
-  {
-    'folke/which-key.nvim',
-    optional = true,
-    opts = {
-      defaults = {
-        ['<leader>gb'] = { name = '+[buffer]' },
-        ['<leader>gbt'] = { name = '+[toggle]' },
-      },
     },
   },
 
@@ -286,6 +280,14 @@ return {
       require('gitlab.server').build(true)
     end, -- Builds the Go binary
     config = function(_, opts)
+      local wk = require 'which-key'
+      local defaults = {
+        { '<leader>gl', group = '+[gitlab]' },
+        { '<leader>glP', group = '+[people]' },
+        { '<leader>glPa', group = '+[assignee]' },
+        { '<leader>glPr', group = '+[reviewer]' },
+      }
+      wk.add(defaults)
       require('dressing').setup {
         input = {
           enabled = true,
@@ -293,20 +295,6 @@ return {
       }
       require('gitlab').setup(opts)
     end,
-  },
-
-  -- add which_key groups for gitlab
-  {
-    'folke/which-key.nvim',
-    optional = true,
-    opts = {
-      defaults = {
-        ['<leader>gl'] = { name = '+[gitlab]' },
-        ['<leader>glP'] = { name = '+[people]' },
-        ['<leader>glPa'] = { name = '+[assignee]' },
-        ['<leader>glPr'] = { name = '+[reviewer]' },
-      },
-    },
   },
 
   -- Ensure GH tool is installed
