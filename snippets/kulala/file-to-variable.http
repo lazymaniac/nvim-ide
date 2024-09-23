@@ -1,0 +1,23 @@
+# Create a file with the .http extension and write your JSON request in it.
+# Then, use the @file-to-variable directive to specify the variable name that you want to use in the request.
+
+POST https://httpbin.org/post HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+# @file-to-variable TEST_INCLUDE ./test-include.json
+
+{
+  "test-include": {{TEST_INCLUDE}}
+}
+
+###
+
+# test-include.json
+{
+  "foo": "bar",
+  "baz": {
+    "qux": "quux"
+  }
+}
+
+
