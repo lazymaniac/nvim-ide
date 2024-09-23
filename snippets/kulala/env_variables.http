@@ -1,9 +1,0 @@
-# Refer http-client.env.json file to get the schema for env variable definition.
-
-POST https://httpbin.org/post HTTP/1.1
-Content-Type: application/json
-Authorization: Bearer {{API_KEY}}
-
-{
-  "name": "John"
-}

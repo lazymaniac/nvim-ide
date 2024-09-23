@@ -21,8 +21,6 @@ return {
     event = 'VeryLazy',
     -- stylua: ignore
     keys = {
-      { '[', '<cmd>lua require("kulala").jump_prev()<cr>', mode = { 'n' }, desc = 'Jump to the previous request', },
-      { ']', '<cmd>lua require("kulala").jump_next()<cr>', mode = { 'n' }, desc = 'Jump to the next request', },
       { '<leader>lrr', '<cmd>lua require("kulala").run()<cr>', mode = { 'n' }, desc = 'Execute the request', },
       { '<leader>lri', '<cmd>lua require("kulala").inspect()<cr>', mode = { 'n' }, desc = 'Inspect current request', },
       { '<leader>lrt', '<cmd>lua require("kulala").toggle_view()<cr>', mode = { 'n' }, desc = 'Toggle between body and headers', },
@@ -36,7 +34,7 @@ return {
       { '<leader>lrq', '<cmd>lua require("kulala").close()<cr>', mode = { 'n' }, desc = 'Close view', },
       { '<leader>lrf', '<cmd>lua require("kulala").search()<cr>', mode = { 'n' }, desc = 'Look for http or rest files', },
       { '<leader>lrg', '<cmd>lua require("kulala").download_graphql_schema()<cr>', mode = { 'n' }, desc = 'Download GraphQL schema', },
-      { '<leader>lrh', ':vsplit ~/.config/nvim/snippets/.http<cr>:setlocal nomodifiable<CR>', mode = { 'n' }, desc = 'Open snippets file', },
+      { '<leader>lrC', ':vsplit ~/.config/nvim/help/kulala-cheat-sheet.md<cr>:setlocal nomodifiable<CR>', mode = { 'n' }, desc = 'Cheat sheet', },
     },
     opts = {
       curl_path = 'curl',
