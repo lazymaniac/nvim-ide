@@ -32,7 +32,7 @@ return {
       { '<leader>sC',      '<cmd>Telescope commands layout_strategy=vertical<cr>',                                                                                  desc = 'Commands [sC]' },
       { '<leader>sd',      '<cmd>Telescope diagnostics bufnr=0 layout_strategy=vertical<cr>',                                                                       desc = 'Document Diagnostics [sd]' },
       { '<leader>sD',      '<cmd>Telescope diagnostics layout_strategy=vertical<cr>',                                                                               desc = 'Workspace Diagnostics [sD]' },
-      { '<leader>sg',      Util.telescope('live_grep', { layout_strategy = 'vertical' }),                                                                           desc = 'Grep (root dir) [sg]' },
+      { '<leader>/',       Util.telescope('live_grep', { layout_strategy = 'vertical' }),                                                                           desc = 'Grep (root dir) [sg]' },
       { '<leader>sG',      Util.telescope('live_grep', { cwd = false, layout_strategy = 'vertical' }),                                                              desc = 'Grep (cwd) [sG]' },
       { '<leader>sh',      '<cmd>Telescope help_tags layout_strategy=vertical<cr>',                                                                                 desc = 'Help Pages [sh]' },
       { '<leader>sH',      '<cmd>Telescope highlights layout_strategy=vertical<cr>',                                                                                desc = 'Search Highlight Groups [sH]' },
@@ -68,7 +68,6 @@ return {
         local line = action_state.get_current_line()
         Util.telescope('find_files', { hidden = true, default_text = line })()
       end
-      local egrep_actions = require 'telescope._extensions.egrepify.actions'
       return {
         defaults = {
           sorting_strategy = 'ascending',
@@ -198,43 +197,6 @@ return {
           },
         },
         extensions = {
-          egrepify = {
-            -- intersect tokens in prompt ala "str1.*str2" that ONLY matches
-            -- if str1 and str2 are consecutively in line with anything in between (wildcard)
-            AND = true, -- default
-            permutations = false, -- opt-in to imply AND & match all permutations of prompt tokens
-            lnum = true, -- default, not required
-            lnum_hl = 'EgrepifyLnum', -- default, not required, links to `Constant`
-            col = false, -- default, not required
-            col_hl = 'EgrepifyCol', -- default, not required, links to `Constant`
-            title = true, -- default, not required, show filename as title rather than inline
-            filename_hl = 'EgrepifyFile', -- default, not required, links to `Title`
-            -- suffix = long line, see screenshot
-            -- EXAMPLE ON HOW TO ADD PREFIX!
-            prefixes = {
-              -- ADDED ! to invert matches
-              -- example prompt: ! sorter
-              -- matches all lines that do not comprise sorter
-              -- rg --invert-match -- sorter
-              ['!'] = {
-                flag = 'invert-match',
-              },
-              -- HOW TO OPT OUT OF PREFIX
-              -- ^ is not a default prefix and safe example
-              ['^'] = false,
-            },
-            -- default mappings
-            mappings = {
-              i = {
-                -- toggle prefixes, prefixes is default
-                ['<C-z>'] = egrep_actions.toggle_prefixes,
-                -- toggle AND, AND is default, AND matches tokens and any chars in between
-                ['<C-a>'] = egrep_actions.toggle_and,
-                -- toggle permutations, permutations of tokens is opt-in
-                ['<C-r>'] = egrep_actions.toggle_permutations,
-              },
-            },
-          },
           fzf = {
             fuzzy = true, -- false will only do exact matching
             override_generic_sorter = true, -- override the generic sorter
@@ -307,24 +269,6 @@ return {
     end,
   },
 
-  -- [telescope-tabs] - Tabs selector with telescope
-  -- see: `:h telescope-tabs`
-  -- link: https://github.com/LukasPietzschmann/telescope-tabs
-  {
-    'LukasPietzschmann/telescope-tabs',
-    branch = 'master',
-    dependencies = { 'nvim-telescope/telescope.nvim' },
-    -- stylua: ignore
-    keys = {
-      { '<leader><tab>s', '<cmd>Telescope telescope-tabs list_tabs<cr>', mode = { 'n', 'v' }, desc = 'List Tabs [<tab>s]' },
-    },
-    config = function()
-      ---@diagnostic disable-next-line: undefined-field
-      require('telescope').load_extension 'telescope-tabs'
-      require('telescope-tabs').setup {}
-    end,
-  },
-
   -- [telescope-undo] - Search undo history with telescope.
   -- see: `:h telescope-undo`
   -- link: https://github.com/debugloop/telescope-undo.nvim
@@ -339,23 +283,6 @@ return {
     config = function()
       ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'undo'
-    end,
-  },
-
-  -- [telescope-egrepify] - Enhanced grepping in Telescope
-  -- see: `:h telescope-egrepify`
-  -- link: https://github.com/fdschmidt93/telescope-egrepify.nvim
-  {
-    'fdschmidt93/telescope-egrepify.nvim',
-    branch = 'master',
-    dependencies = { 'nvim-telescope/telescope.nvim', 'nvim-lua/plenary.nvim' },
-    -- stylua: ignore
-    keys = {
-      { '<leader>/', '<cmd>Telescope egrepify<cr>', mode = { 'n', 'v' }, desc = 'Enhanced Grep [/]', },
-    },
-    config = function()
-      ---@diagnostic disable-next-line: undefined-field
-      require('telescope').load_extension 'egrepify'
     end,
   },
 
