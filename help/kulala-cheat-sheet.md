@@ -34,6 +34,7 @@
   - [Basic document variables](#basic-document-variables)
   - [Prompt variables](#prompt-variables)
 <!--toc:end-->
+
 # Authentication
 
 In general, you can use the Authorization header to send an authentication token to the server. The content of the header depends on the type of authentication you are using.

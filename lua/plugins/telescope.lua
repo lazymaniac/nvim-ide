@@ -25,7 +25,7 @@ return {
       { '<leader>gc',      '<cmd>Telescope git_commits layout_strategy=vertical<CR>',                                                                               desc = 'Git Commits [gc]' },
       { '<leader>gs',      '<cmd>Telescope git_status layout_strategy=vertical<CR>',                                                                                desc = 'Git Status [gd]' },
       -- search
-      { '<leader>s"',      '<cmd>Telescope registers layout_strategy=vertical<cr>',                                                                                 desc = 'Registers [s"]' },
+      { '<leader>p',       '<cmd>Telescope registers layout_strategy=vertical<cr>',                                                                                 desc = 'Registers [s"]' },
       { '<leader>sa',      '<cmd>Telescope autocommands layout_strategy=vertical<cr>',                                                                              desc = 'Auto Commands [sa]' },
       { '<leader>sb',      '<cmd>Telescope current_buffer_fuzzy_find layout_strategy=vertical<cr>',                                                                 desc = 'Fzf Buffer [sb]' },
       { '<leader>sc',      '<cmd>Telescope command_history layout_strategy=vertical<cr>',                                                                           desc = 'Command History [sc]' },
@@ -36,7 +36,7 @@ return {
       { '<leader>sG',      Util.telescope('live_grep', { cwd = false, layout_strategy = 'vertical' }),                                                              desc = 'Grep (cwd) [sG]' },
       { '<leader>sh',      '<cmd>Telescope help_tags layout_strategy=vertical<cr>',                                                                                 desc = 'Help Pages [sh]' },
       { '<leader>sH',      '<cmd>Telescope highlights layout_strategy=vertical<cr>',                                                                                desc = 'Search Highlight Groups [sH]' },
-      { '<leader>sk',      '<cmd>Telescope keymaps layout_strategy=vertical<cr>',                                                                                   desc = 'Key Maps [sk]' },
+      { '<leader>.',       '<cmd>Telescope keymaps layout_strategy=vertical<cr>',                                                                                   desc = 'Key Maps [sk]' },
       { '<leader>sM',      '<cmd>Telescope man_pages layout_strategy=vertical<cr>',                                                                                 desc = 'Man Pages [sM]' },
       { '<leader>sm',      '<cmd>Telescope marks layout_strategy=vertical<cr>',                                                                                     desc = 'Jump to Mark [sm]' },
       { '<leader>so',      '<cmd>Telescope vim_options layout_strategy=vertical<cr>',                                                                               desc = 'Options [so]' },
@@ -460,43 +460,6 @@ return {
     config = function()
       ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'luasnip'
-    end,
-  },
-
-  -- [commander.nvim] - Telecope picker for available command/shortcuts.
-  -- see: `:h commander.nvim`
-  -- link: https://github.com/FeiyouG/commander.nvim
-  {
-    'FeiyouG/commander.nvim',
-    branch = 'main',
-    dependencies = { 'nvim-telescope/telescope.nvim' },
-    keys = {
-      { '<leader>.', '<CMD>Telescope commander<CR>', mode = 'n', desc = 'Commander [.]' },
-    },
-    config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      require('commander').setup {
-        components = {
-          'DESC',
-          'KEYS',
-          'CAT',
-        },
-        sort_by = {
-          'DESC',
-          'KEYS',
-          'CAT',
-          'CMD',
-        },
-        integration = {
-          telescope = {
-            enable = true,
-          },
-          lazy = {
-            enable = true,
-            set_plugin_name_as_cat = true,
-          },
-        },
-      }
     end,
   },
 

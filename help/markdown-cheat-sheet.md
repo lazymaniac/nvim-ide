@@ -1,4 +1,32 @@
+
 # Markdown Cheat Sheet
+
+<!--toc:start-->
+- [Markdown Cheat Sheet](#markdown-cheat-sheet)
+  - [Basic Syntax](#basic-syntax)
+    - [Heading](#heading)
+    - [Bold](#bold)
+    - [Italic](#italic)
+    - [Blockquote](#blockquote)
+    - [Ordered List](#ordered-list)
+    - [Unordered List](#unordered-list)
+    - [Code](#code)
+    - [Horizontal Rule](#horizontal-rule)
+    - [Link](#link)
+    - [Image](#image)
+  - [Extended Syntax](#extended-syntax)
+    - [Table](#table)
+    - [Fenced Code Block](#fenced-code-block)
+    - [Footnote](#footnote)
+    - [Heading ID](#heading-id)
+    - [Definition List](#definition-list)
+    - [Strikethrough](#strikethrough)
+    - [Task List](#task-list)
+    - [Emoji](#emoji)
+    - [Highlight](#highlight)
+    - [Subscript](#subscript)
+    - [Superscript](#superscript)
+<!--toc:end-->
 
 ## Basic Syntax
 
