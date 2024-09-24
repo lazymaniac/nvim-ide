@@ -1,15 +1,45 @@
-# Kulala Cheat Sheet
-
-
-
----
-
-## Authentication
+<!--toc:start-->
+- [Authentication](#authentication)
+  - [Basic Authentication](#basic-authentication)
+  - [Digest Authentication](#digest-authentication)
+  - [NTLM Authentication](#ntlm-authentication)
+  - [Negotiate](#negotiate)
+  - [Bearer Token](#bearer-token)
+  - [AWS Signature V4](#aws-signature-v4)
+- [DotEnv and HTTP client environment variables support](#dotenv-and-http-client-environment-variables-support)
+  - [http-client.env.json](#http-clientenvjson)
+    - [Default http headers](#default-http-headers)
+  - [DotEnv](#dotenv)
+- [Request Variables](#request-variables)
+  - [Request Variable Reference Syntax](#request-variable-reference-syntax)
+  - [Special case for cookies](#special-case-for-cookies)
+  - [Example request variable](#example-request-variable)
+- [Dynamically setting environment variables based on response JSON](#dynamically-setting-environment-variables-based-on-response-json)
+  - [With built-in parser](#with-built-in-parser)
+  - [With external command](#with-external-command)
+- [Dynamically setting environment variables based on headers](#dynamically-setting-environment-variables-based-on-headers)
+  - [Example dynamic variables](#example-dynamic-variables)
+- [File to variable](#file-to-variable)
+- [Redirect the response](#redirect-the-response)
+  - [Don't overwrite file](#dont-overwrite-file)
+  - [Overwrite file](#overwrite-file)
+- [GraphQL](#graphql)
+  - [With variables](#with-variables)
+  - [Without variables](#without-variables)
+- [Magic Variables](#magic-variables)
+- [Sending Form Data](#sending-form-data)
+  - [Sending multipart form data](#sending-multipart-form-data)
+- [Using Environment Variables](#using-environment-variables)
+- [Using Variables](#using-variables)
+  - [Basic document variables](#basic-document-variables)
+  - [Prompt variables](#prompt-variables)
+<!--toc:end-->
+# Authentication
 
 In general, you can use the Authorization header to send an authentication token to the server. The content of the header depends on the type of authentication you are using.
 
 
-### Basic Authentication
+## Basic Authentication
 
 Basic authentication needs a Base64 encoded string of username:password as the value of the Authorization header.
 
@@ -37,7 +67,7 @@ Authorization: Basic {{Username}} {{Password}}
 ```
 
 
-### Digest Authentication
+## Digest Authentication
 
 Digest is implemented the same way as Basic authentication.
 
@@ -56,7 +86,7 @@ Authorization: Basic {{Username}} {{Password}}
 ```
 
 
-### NTLM Authentication
+## NTLM Authentication
 
 For NTLM authentication, you need to provide the username and password the same way:
 
@@ -73,7 +103,7 @@ Authorization: Basic {{Username}} {{Password}}
 ```
 
 
-### Negotiate
+## Negotiate
 
 This is a SPNEGO-based implementation, which doesn't need username and password, but uses the default credentials.
 
@@ -83,7 +113,7 @@ Authorization: Negotiate
 ```
 
 
-### Bearer Token
+## Bearer Token
 
 For a Bearer Token you need to send your credentials to an authentication endpoint and receive a token in return.
 
@@ -118,7 +148,7 @@ Authorization: Bearer {{login.response.body.$.access_token}}
 ```
 
 
-### AWS Signature V4
+## AWS Signature V4
 
 Amazon Web Services (AWS) Signature version 4 is a protocol for authenticating requests to AWS services.
 AWS Signature version 4 authenticates requests to AWS services. To use it you need to set the Authorization header schema to AWS and provide your AWS credentials separated by spaces:
@@ -140,7 +170,7 @@ Authorization: AWS <access-key-id> <secret-access-key> token:<aws-session-token>
 ---
 
 
-## DotEnv and HTTP client environment variables support
+# DotEnv and HTTP client environment variables support
 
 Kulala supports environment variables in .http files.
 It allows you to define environment variables in a .env file or in a http-client.env.json file (preferred) and reference them in your HTTP requests.
@@ -157,7 +187,7 @@ The order of the environment variables resolution is as follows:
 DotEnv is still supported, but it's not recommended, because it's not as flexible as the http-client.env.json file.
 
 
-### http-client.env.json
+## http-client.env.json
 
 You can also define environment variables via the http-client.env.json file.
 
@@ -203,7 +233,7 @@ Authorization: Bearer {{API_KEY}}
 ```
 
 
-#### Default http headers
+### Default http headers
 
 You can define default HTTP headers in the http-client.env.json file.
 
@@ -235,7 +265,7 @@ Authorization: Bearer {{API_KEY}}
 ```
 
 
-### DotEnv
+## DotEnv
 
 You can create a .env file in the root of your .http files directory and define environment variables in it.
 The file should look like this:
@@ -261,7 +291,7 @@ Authorization: Bearer {{API_KEY}}
 ---
 
 
-## Request Variables
+# Request Variables
 
 The definition syntax of request variables is just like a single-line comment, and follows # @name REQUEST_NAME just as metadata.
 
@@ -283,7 +313,7 @@ Other requests can use THIS_IS_AN_EXAMPLE_REQUEST_NAME as an identifier to refer
 The reference syntax of a request variable is a bit more complex than other kinds of custom variables.
 
 
-### Request Variable Reference Syntax
+## Request Variable Reference Syntax
 
 The request variable reference syntax follows
 
@@ -296,7 +326,7 @@ You have two reference part choices of the response or request: body and headers
 For body part, you can use JSONPath and XPath to extract specific property or attribute.
 
 
-### Special case for cookies
+## Special case for cookies
 
 The response cookies can be referenced by
 ```text
@@ -326,7 +356,7 @@ Content-Type: application/json
 >GET https://github.com HTTP/1.1
 >```
 
-### Example request variable
+## Example request variable
 if a JSON response returns body {"id": "mock"}, you can set the JSONPath part to $.id to reference the id.
 For headers part, you can specify the header name to extract the header value.
 The header name is case-sensitive for response part, and all lower-cased for request part.
@@ -370,13 +400,13 @@ Content-Type: application/json
 ---
 
 
-## Dynamically setting environment variables based on response JSON
+# Dynamically setting environment variables based on response JSON
 
 You can set environment variables based on the response JSON of a HTTP request.
 Create a file with the .http extension and write your HTTP requests in it.
 
 
-### With built-in parser
+## With built-in parser
 
 If the response is a uncomplicated JSON object, you can set environment variables using the request variables feature.
 
@@ -407,7 +437,7 @@ Authorization: Bearer {{REQUEST_ONE.response.body.$.json.token}}
 ```
 
 
-### With external command
+## With external command
 
 If the response is a complex JSON object, you can use the @env-stdin-cmd directive to set environment variables using an external command (e.g., jq).
 JSON Web Tokens (JWT) are a common example where the response JSON is complex.
@@ -444,12 +474,12 @@ Accept: application/json
 ---
 
 
-## Dynamically setting environment variables based on headers
+# Dynamically setting environment variables based on headers
 You can set environment variables based on the headers of a HTTP request.
 Create a file with the .http extension and write your HTTP requests in it.
 
 
-### Example dynamic variables
+## Example dynamic variables
 
 The headers of the first request can be obtained and used in the second request.
 In this example, the Content-Type and Date headers are received in the first request.
@@ -481,7 +511,7 @@ Accept: application/json
 ---
 
 
-## File to variable
+# File to variable
 
 You can use the @file-to-variable directive to read the content of a file and assign it to a variable.
 Create a file with the .http extension and write your JSON request in it.
@@ -515,12 +545,12 @@ The TEST_INCLUDE variable will be replaced with the content of the test-include.
 ---
 
 
-## Redirect the response
+# Redirect the response
 
 You can redirect the response to a file.
 
 
-### Don't overwrite file
+## Don't overwrite file
 
 By using the >> operator followed by the file name, the response will be saved to the file.
 If the file already exists, a warning will be displayed, and the file won't be overwritten.
@@ -539,7 +569,7 @@ Content-Type: application/json
 ```
 
 
-### Overwrite file
+## Overwrite file
 
 To overwrite the file, use the >>! operator.
 
@@ -559,13 +589,13 @@ Content-Type: application/json
 ---
 
 
-## GraphQL
+# GraphQL
 
 You can use the @graphql directive to send GraphQL requests.
 Create a file with the .http extension and write your GraphQL requests in it.
 
 
-### With variables
+## With variables
 
 ```http
 POST https://swapi-graphql.netlify.app/.netlify/functions/index HTTP/1.1
@@ -581,7 +611,7 @@ query Person($id: ID) {
 { "id": 1 }
 ```
 
-### Without variables
+## Without variables
 
 ```http
 POST https://swapi-graphql.netlify.app/.netlify/functions/index HTTP/1.1
@@ -612,7 +642,7 @@ query Query {
 ---
 
 
-## Magic Variables
+# Magic Variables
 
 There is a predefined set of magic variables that you can use in your HTTP requests.
 They all start with a $ sign.
@@ -643,7 +673,8 @@ Accept: application/json
 ---
 
 
-## Sending Form Data
+# Sending Form Data
+
 You can send form data in Kulala by using the application/x-www-form-urlencoded content type.
 Create a file with the .http extension and write your HTTP requests in it.
 
@@ -659,7 +690,9 @@ name={{name}}&
 age={{age}}
 ```
 
-### Sending multipart form data
+
+## Sending multipart form data
+
 You can send multipart form data in Kulala by using the multipart/form-data content type.
 
 ```http
@@ -696,7 +729,7 @@ Content-Disposition: form-data; name="h"
 ---
 
 
-## Using Environment Variables
+# Using Environment Variables
 
 You can use environment variables in your HTTP requests.
 
@@ -717,12 +750,12 @@ Accept: application/json
 ---
 
 
-## Using Variables
+# Using Variables
 
 You can use variables in your HTTP requests.
 
 
-### Basic document variables
+## Basic document variables
 
 Create a file with the .http extension and write your HTTP requests in it.
 
@@ -743,7 +776,7 @@ Accept: application/json
 These variables are available in all requests in the file.
 
 
-### Prompt variables
+## Prompt variables
 
 You can also use prompt variables. These are variables that you can set when you run the request.
 
@@ -756,5 +789,4 @@ Accept: application/json
 When you run this request, you will be prompted to enter a value for pokemon.
 
 These variables are available for the current request and all subsequent requests in the file.
-
 
