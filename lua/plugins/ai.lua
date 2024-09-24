@@ -237,7 +237,7 @@ Answer the user's questions with the tool's output.]],
           },
         },
         -- DEFAULT PROMPTS ----------------------------------------------------------
-        pre_defined_prompts = {
+        prompts_library = {
           ['Custom Prompt'] = {
             strategy = 'inline',
             description = 'Prompt the LLM from Neovim',
