@@ -12,13 +12,14 @@ return {
     dependencies = { 'nvim-lua/plenary.nvim', 'nvim-treesitter/nvim-treesitter', 'stevearc/overseer.nvim', 'nvim-neotest/nvim-nio' },
     -- stylua: ignore
     keys = {
-      { '<leader>tt', function() require('neotest').run.run(vim.fn.expand '%') end,                      desc = 'Run File [tt]', },
-      { '<leader>tT', function() require('neotest').run.run(vim.loop.cwd()) end,                         desc = 'Run All Test Files [tT]', },
-      { '<leader>tr', function() require('neotest').run.run() end,                                       desc = 'Run Nearest [tr]', },
-      { '<leader>ts', function() require('neotest').summary.toggle() end,                                desc = 'Toggle Summary [ts]', },
+      { '<leader>tt', function() require('neotest').run.run(vim.fn.expand '%') end, desc = 'Run File [tt]', },
+      { '<leader>tT', function() require('neotest').run.run(vim.loop.cwd()) end, desc = 'Run All Test Files [tT]', },
+      { '<leader>tr', function() require('neotest').run.run() end, desc = 'Run Nearest [tr]', },
+      { '<leader>tR', function() require("neotest").run.run_last() end, desc = 'Rerun last [tR]', },
+      { '<leader>ts', function() require('neotest').summary.toggle() end, desc = 'Toggle Summary [ts]', },
       { '<leader>to', function() require('neotest').output.open { enter = true, auto_close = true } end, desc = 'Show Output [to]', },
-      { '<leader>tO', function() require('neotest').output_panel.toggle() end,                           desc = 'Toggle Output Panel [tO]', },
-      { '<leader>tS', function() require('neotest').run.stop() end,                                      desc = 'Stop [ts]', },
+      { '<leader>tO', function() require('neotest').output_panel.toggle() end, desc = 'Toggle Output Panel [tO]', },
+      { '<leader>tS', function() require('neotest').run.stop() end, desc = 'Stop [ts]', },
     },
     config = function()
       local wk = require 'which-key'
@@ -34,7 +35,7 @@ return {
           ['neotest-python'] = {},
         },
         benchmark = {
-          enabled = true,
+          enabled = false,
         },
         consumers = {
           overseer = require 'neotest.consumers.overseer',
