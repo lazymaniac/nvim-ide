@@ -75,9 +75,8 @@ return {
     dependencies = { 'mfussenegger/nvim-dap', 'nvim-neotest/nvim-nio' },
     -- stylua: ignore
     keys = {
-      { '<leader>du', function() require('dapui').toggle { layout = 1, reset = true } end, desc = 'Dap Tools [du]' },
-      { '<leader>dU', function() require('dapui').toggle { layout = 2, reset = true } end, desc = 'Dap Console [du]' },
-      { '<leader>de', function() require('dapui').eval() end,                              desc = 'Eval [de]',       mode = { 'n', 'v' } },
+      { '<leader>du', function() require('dapui').toggle() end, desc = 'Dap Tools [du]' },
+      { '<leader>de', function() require('dapui').eval() end, desc = 'Eval [de]', mode = { 'n', 'v' } },
       {
         '<leader>df',
         function()
