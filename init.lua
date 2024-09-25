@@ -7,7 +7,7 @@ if ok then
 end
 
 if vim.g.neovide then
-  vim.o.guifont = 'VictorMono Nerd Font:h12'
+  vim.o.guifont = 'VictorMono Nerd Font:h10'
   vim.g.neovide_remember_window_size = true
   vim.api.nvim_set_keymap('n', '<F11>', ':let g:neovide_fullscreen = !g:neovide_fullscreen<CR>', {})
   vim.g.neovide_floating_blur_amount_x = 3.0
