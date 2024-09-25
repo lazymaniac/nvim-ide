@@ -134,16 +134,6 @@ return {
     end,
   },
 
-  -- [auto-indent.nvim] - Auto move cursor to match indentation
-  -- see: `:h auto-indent.nvim`
-  -- link: https://github.com/VidocqH/auto-indent.nvim
-  {
-    'vidocqh/auto-indent.nvim',
-    branch = 'main',
-    event = 'VeryLazy',
-    opts = {},
-  },
-
   -- [hlargs.nvim] - Highlight function arguments
   -- see: `:h hlargs.nvim`
   -- link: https://github.com/m-demare/hlargs.nvim
@@ -272,26 +262,25 @@ return {
     end,
   },
 
-  -- [nvim-hlslens] - Highlights matched search, jump between matched instances.
-  -- see: `:h nvim-hlslens`
-  -- link: https://github.com/kevinhwang91/nvim-hlslens
+  -- [guess-indent.nvim] - Plugin to guess proper indentation level.
+  -- see: `:h guess-indent.nvim`
+  -- link: https://github.com/NMAC427/guess-indent.nvim
   {
-    'kevinhwang91/nvim-hlslens',
+    'nmac427/guess-indent.nvim',
+    branch = 'main',
+    config = function()
+      require('guess-indent').setup {}
+    end,
+  },
+
+  -- [auto-indent.nvim] - Auto move cursor to match indentation
+  -- see: `:h auto-indent.nvim`
+  -- link: https://github.com/VidocqH/auto-indent.nvim
+  {
+    'vidocqh/auto-indent.nvim',
     branch = 'main',
     event = 'VeryLazy',
-    config = function()
-      require('hlslens').setup {
-        build_position_cb = function(plist, _, _, _)
-          require('scrollbar.handlers.search').handler.show(plist.start_pos)
-        end,
-      }
-      vim.cmd [[
-        augroup scrollbar_search_hide
-            autocmd!
-            autocmd CmdlineLeave : lua require('scrollbar.handlers.search').handler.hide()
-        augroup END
-    ]]
-    end,
+    opts = {},
   },
 
   -- [mini.indentscope] - Visual guide for indentations.

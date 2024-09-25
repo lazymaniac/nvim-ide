@@ -50,4 +50,25 @@ return {
       }
     end,
   },
+
+  -- [todo-comments.nvim] - Finds and lists all of the TODO, HACK, BUG, etc comment
+  -- in your project and loads them into a browsable list.
+  -- see: `:h todo-comments`
+  -- link: https://github.com/folke/todo-comments.nvim
+  {
+    'folke/todo-comments.nvim',
+    branch = 'main',
+    cmd = { 'TodoTrouble', 'TodoTelescope' },
+    event = 'VeryLazy',
+    config = true,
+    -- stylua: ignore
+    keys = {
+      { ']t',         function() require('todo-comments').jump_next() end, desc = 'Next todo comment <]t>' },
+      { '[t',         function() require('todo-comments').jump_prev() end, desc = 'Previous [t]odo comment <[t>' },
+      { '<leader>xt', '<cmd>TodoTrouble<cr>',                              desc = 'List Todo [xt]' },
+      { '<leader>xT', '<cmd>TodoTrouble keywords=TODO,FIX,FIXME<cr>',      desc = 'List Todo/Fix/Fixme [xT]' },
+      { '<leader>st', '<cmd>TodoTelescope<cr>',                            desc = 'Search Todo [sT]' },
+      { '<leader>sT', '<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>',    desc = 'Search Todo/Fix/Fixme [sT]' },
+    },
+  },
 }
