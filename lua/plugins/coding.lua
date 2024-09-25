@@ -50,7 +50,7 @@ return {
           scroll_down = '<C-f>',
           scroll_up = '<C-b>',
         },
-        request_timeout = 2000,
+        request_timeout = 3000,
         finder = {
           max_height = 0.6,
           left_width = 0.3,
@@ -153,30 +153,6 @@ return {
     event = 'VeryLazy',
     config = function()
       require('hlargs').setup()
-    end,
-  },
-
-  -- [Hypersonic.nvim] - Regex writing and testing
-  -- see: `:h Hypersonic.nvim`
-  -- link: https://github.com/tomiis4/hypersonic.nvim
-  {
-    'tomiis4/Hypersonic.nvim',
-    branch = 'main',
-    event = 'CmdlineEnter',
-    cmd = 'Hypersonic',
-    -- stylua: ignore
-    keys = {
-      { '<leader>cE', '<cmd>Hypersonic<cr>', desc = 'Regex explain [cE]' },
-    },
-    config = function()
-      require('hypersonic').setup {
-        border = 'rounded',
-        winblend = 0,
-        add_padding = true,
-        hl_group = 'Keyword',
-        wrapping = '"',
-        enable_cmdline = true,
-      }
     end,
   },
 
