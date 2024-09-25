@@ -183,7 +183,6 @@ return {
       commands = {},
       sources = {
         'filesystem',
-        'netman.ui.neo-tree',
       },
       source_selector = {
         winbar = false,
@@ -382,5 +381,4 @@ return {
       }
     end,
   },
-
 }

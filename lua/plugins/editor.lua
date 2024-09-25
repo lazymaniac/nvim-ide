@@ -515,48 +515,7 @@ return {
     },
   },
 
-  -- [todo-comments.nvim] - Finds and lists all of the TODO, HACK, BUG, etc comment
-  -- in your project and loads them into a browsable list.
-  -- see: `:h todo-comments`
-  -- link: https://github.com/folke/todo-comments.nvim
-  {
-    'folke/todo-comments.nvim',
-    branch = 'main',
-    cmd = { 'TodoTrouble', 'TodoTelescope' },
-    event = 'VeryLazy',
-    config = true,
-    -- stylua: ignore
-    keys = {
-      { ']t',         function() require('todo-comments').jump_next() end, desc = 'Next todo comment <]t>' },
-      { '[t',         function() require('todo-comments').jump_prev() end, desc = 'Previous [t]odo comment <[t>' },
-      { '<leader>xt', '<cmd>TodoTrouble<cr>',                              desc = 'List Todo [xt]' },
-      { '<leader>xT', '<cmd>TodoTrouble keywords=TODO,FIX,FIXME<cr>',      desc = 'List Todo/Fix/Fixme [xT]' },
-      { '<leader>st', '<cmd>TodoTelescope<cr>',                            desc = 'Search Todo [sT]' },
-      { '<leader>sT', '<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>',    desc = 'Search Todo/Fix/Fixme [sT]' },
-    },
-  },
-
   -- [[ BUFFER UTILS ]] ---------------------------------------------------------------
-
-  -- [detour.nvim] - Open current buffer in popup
-  -- see: `:h detour.nvim`
-  -- link: https://github.com/carbon-steel/detour.nvim
-  {
-    'carbon-steel/detour.nvim',
-    branch = 'main',
-    event = 'VeryLazy',
-  },
-
-  -- [guess-indent.nvim] - Plugin to guess proper indentation level.
-  -- see: `:h guess-indent.nvim`
-  -- link: https://github.com/NMAC427/guess-indent.nvim
-  {
-    'nmac427/guess-indent.nvim',
-    branch = 'main',
-    config = function()
-      require('guess-indent').setup {}
-    end,
-  },
 
   -- [windows.nvim] - Plugin for maximizing windows
   -- see: `:h windows.nvim`
@@ -626,64 +585,46 @@ return {
     end,
   },
 
-  -- [nvim-scrollbar] - Scorllbar with git and lsp integration
-  -- see: `:h nvim-scrollbar`
-  -- link: https://github.com/petertriho/nvim-scrollbar
+  -- [neominimap.nvim] - Code minimap
+  -- see: `:h neominimap.nvim`
+  -- link: https://github.com/Isrothy/neominimap.nvim
   {
-    'petertriho/nvim-scrollbar',
-    branch = 'main',
-    config = function()
-      require('scrollbar').setup {
-        show = true,
-        show_in_active_only = false,
-        set_highlights = true,
-        folds = 1000, -- handle folds, set to number to disable folds if no. of lines in buffer exceeds this
-        max_lines = false, -- disables if no. of lines in buffer exceeds this
-        hide_if_all_visible = false, -- Hides everything if all lines are visible
-        throttle_ms = 100,
-        handle = {
-          text = ' ',
-          blend = 30, -- Integer between 0 and 100. 0 for fully opaque and 100 to full transparent. Defaults to 30.
-          color = nil,
-          color_nr = nil, -- cterm
-          highlight = 'CursorColumn',
-          hide_if_all_visible = true, -- Hides handle if all lines are visible
+    'Isrothy/neominimap.nvim',
+    version = 'v3.*.*',
+    enabled = true,
+    lazy = false,
+    keys = {
+      -- Global Minimap Controls
+      { '<leader>wM', '<cmd>Neominimap toggle<cr>', desc = 'Toggle global minimap' },
+      -- Window-Specific Minimap Controls
+      { '<leader>wW', '<cmd>Neominimap winToggle<cr>', desc = 'Toggle minimap for current window' },
+      -- Buffer-Specific Minimap Controls
+      { '<leader>wb', '<cmd>Neominimap bufToggle<cr>', desc = 'Toggle minimap for current buffer' },
+    },
+    init = function()
+      vim.opt.wrap = false
+      vim.opt.sidescrolloff = 36 -- Set a large value
+      vim.g.neominimap = {
+        auto_enable = true,
+        x_multiplier = 8,
+        y_multiplier = 1,
+        layout = 'float',
+        split = {
+          minimap_width = 10,
+          fix_width = false,
+          direction = 'right',
+          close_if_last_window = false,
         },
-        excluded_buftypes = {
-          'terminal',
-        },
-        excluded_filetypes = {
-          'cmp_docs',
-          'cmp_menu',
-          'noice',
-          'prompt',
-          'TelescopePrompt',
-        },
-        autocmd = {
-          render = {
-            'BufWinEnter',
-            'TabEnter',
-            'TermEnter',
-            'WinEnter',
-            'CmdwinLeave',
-            'TextChanged',
-            'VimResized',
-            'WinScrolled',
+        float = {
+          minimap_width = 10,
+          max_minimap_height = nil,
+          margin = {
+            right = 0,
+            top = 0,
+            bottom = 0,
           },
-          clear = {
-            'BufWinLeave',
-            'TabLeave',
-            'TermLeave',
-            'WinLeave',
-          },
-        },
-        handlers = {
-          cursor = true,
-          diagnostic = true,
-          gitsigns = true, -- Requires gitsigns
-          handle = true,
-          search = true, -- Requires hlslens
-          ale = false, -- Requires ALE
+          z_index = 1,
+          window_border = 'single',
         },
       }
     end,
@@ -875,5 +816,17 @@ return {
       -- Can be any of "default" (sort buffers by their number) or "last" (sort buffers by last accessed)
       sort = 'last',
     },
+  },
+
+  -- [nvim-hlslens] - Highlights matched search, jump between matched instances.
+  -- see: `:h nvim-hlslens`
+  -- link: https://github.com/kevinhwang91/nvim-hlslens
+  {
+    'kevinhwang91/nvim-hlslens',
+    branch = 'main',
+    event = 'VeryLazy',
+    config = function()
+      require('hlslens').setup {}
+    end,
   },
 }

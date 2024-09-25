@@ -1,5 +1,3 @@
-local detour = require 'detour'
-local features = require 'detour.features'
 local telescope = require 'telescope.builtin'
 
 local M = {}
@@ -36,30 +34,14 @@ function M.get()
     {
       '<leader>cw',
       function()
-        local popup_id = detour.Detour()
-        if popup_id then
-          vim.bo.bufhidden = 'delete'
           telescope.lsp_workspace_symbols {}
-          features.ShowPathInTitle(popup_id)
-          vim.keymap.set('n', 'q', function()
-            vim.cmd 'close'
-          end, { desc = 'Close window [q]' })
-        end
       end,
       desc = 'Workspace Symbols [cw]',
     },
     {
       '<leader>cW',
       function()
-        local popup_id = detour.Detour()
-        if popup_id then
-          vim.bo.bufhidden = 'delete'
           telescope.lsp_dynamic_workspace_symbols {}
-          features.ShowPathInTitle(popup_id)
-          vim.keymap.set('n', 'q', function()
-            vim.cmd 'close'
-          end, { desc = 'Close window [q]' })
-        end
       end,
       desc = 'Dynamic Workspace Symbols [cW]',
     },

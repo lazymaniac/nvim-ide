@@ -18,7 +18,6 @@ return {
       }
       wk.add(defaults)
       require('gitsigns').setup(opts)
-      require('scrollbar.handlers.gitsigns').setup()
     end,
     opts = {
       signs = {
