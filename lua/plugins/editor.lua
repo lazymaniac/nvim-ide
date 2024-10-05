@@ -231,8 +231,8 @@ return {
       { '<leader>xX', '<cmd>Trouble diagnostics toggle filter.buf=0<cr>', desc = 'Buffer Diagnostics [xX]' },
       { '<leader>xL', '<cmd>Trouble loclist toggle<cr>', desc = 'Location List [xL]' },
       { '<leader>xQ', '<cmd>Trouble qflist toggle<cr>', desc = 'Quickfix List [xQ]' },
-      { '<leader>o', '<cmd>Trouble lsp_document_symbols toggle win.relative=win win.position=right<cr>', desc = "Toggle symbols [xs]" },
-      { '<leader>xl', '<cmd>Trouble lsp toggle win.relative=win win.position=right<cr>', desc = 'Toggle LSP [xl]' },
+      { '<leader>o', '<cmd>Trouble lsp_document_symbols toggle<cr>', desc = 'Toggle symbols [xs]' },
+      { '<leader>xl', '<cmd>Trouble lsp toggle<cr>', desc = 'Toggle LSP [xl]' },
       {
         '[q',
         function()
@@ -263,7 +263,7 @@ return {
       },
     },
     opts = {
-      auto_close = false, -- auto close when there are no items
+      auto_close = true, -- auto close when there are no items
       auto_open = false, -- auto open when there are items
       auto_preview = true, -- automatically open preview when on an item
       auto_refresh = true, -- auto refresh when open
@@ -278,16 +278,23 @@ return {
       warn_no_results = true, -- show a warning when there are no results
       open_no_results = false, -- open the trouble window when there are no results
       ---@type trouble.Window.opts
-      win = {}, -- window options for the results window. Can be a split or a floating window.
+      win = {
+        type = 'float',
+        relative = 'editor', -- "editor" | "win" | "cursor" cursor is only valid for float
+        position = { 0.1, 0.5 },
+        size = { width = 0.8, height = 0.2 },
+        focusable = true,
+        border = 'rounded',
+      }, -- window options for the results window. Can be a split or a floating window.
       -- Window options for the preview window. Can be a split, floating window,
       -- or `main` to show the preview in the main editor window.
       ---@type trouble.Window.opts
       preview = {
-        type = 'main',
-        -- when a buffer is not yet loaded, the preview window will be created
-        -- in a scratch buffer with only syntax highlighting enabled.
-        -- Set to false, if you want the preview to always be a real loaded buffer.
-        scratch = true,
+        type = 'float',
+        position = { 0.4, 0.0 },
+        size = { width = 0.8, height = 0.6 },
+        relative = 'cursor',
+        border = 'rounded',
       },
       -- Throttle/Debounce settings. Should usually not be changed.
       ---@type table<string, number|{ms:number, debounce?:boolean}>
@@ -375,92 +382,66 @@ return {
           },
         },
         diagnostics_prev = {
+          focus = true,
           mode = 'diagnostics',
           preview = {
-            type = 'split',
-            relative = 'win',
-            position = 'right',
-            size = 0.4,
+            type = 'float',
           },
         },
         references_prev = {
           mode = 'lsp_references',
           focus = true,
           preview = {
-            type = 'split',
-            relative = 'win',
-            position = 'right',
-            size = 0.5,
+            type = 'float',
           },
         },
         definition_prev = {
           mode = 'lsp_definitions',
           focus = true,
           preview = {
-            type = 'split',
-            relative = 'win',
-            position = 'right',
-            size = 0.5,
+            type = 'float',
           },
         },
         declaration_prev = {
           mode = 'lsp_declarations',
           focus = true,
           preview = {
-            type = 'split',
-            relative = 'win',
-            position = 'right',
-            size = 0.5,
+            type = 'float',
           },
         },
         type_definition_prev = {
           mode = 'lsp_type_definitions',
           focus = true,
           preview = {
-            type = 'split',
-            relative = 'win',
-            position = 'right',
-            size = 0.5,
+            type = 'float',
           },
         },
         implementations_prev = {
           mode = 'lsp_implementations',
           focus = true,
           preview = {
-            type = 'split',
-            relative = 'win',
-            position = 'right',
-            size = 0.5,
+            type = 'float',
           },
         },
         command_prev = {
           mode = 'lsp_command',
           focus = true,
           preview = {
-            type = 'split',
-            relative = 'win',
-            position = 'right',
-            size = 0.5,
+            type = 'float',
           },
         },
         incoming_calls_prev = {
           mode = 'lsp_incoming_calls',
           focus = true,
           preview = {
-            type = 'split',
-            relative = 'win',
-            position = 'right',
-            size = 0.5,
+            type = 'float',
           },
         },
         outgoing_calls_prev = {
           mode = 'lsp_outgoing_calls',
           focus = true,
           preview = {
-            type = 'split',
-            relative = 'win',
-            position = 'right',
-            size = 0.5,
+            type = 'float',
           },
         },
         -- sources define their own modes, which you can use directly,
