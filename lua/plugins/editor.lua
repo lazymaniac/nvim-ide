@@ -4,6 +4,30 @@ vim.api.nvim_create_autocmd('QuickFixCmdPost', {
   end,
 })
 
+local float_win = function(title)
+  ---@type trouble.Window.opts
+  return {
+    type = 'float',
+    title = title,
+    relative = 'editor', -- "editor" | "win" | "cursor" cursor is only valid for float
+    position = { 0.1, 0.5 },
+    size = { width = 0.8, height = 0.2 },
+    focusable = true,
+    border = 'rounded',
+  }
+end
+
+-- Window options for the preview window. Can be a split, floating window,
+-- or `main` to show the preview in the main editor window.
+---@type trouble.Window.opts
+local float_preview = {
+  type = 'float',
+  position = { 0.4, 0.0 },
+  size = { width = 0.8, height = 0.6 },
+  relative = 'cursor',
+  border = 'rounded',
+}
+
 return {
 
   -- [[ KEYMAPS ]] ---------------------------------------------------------------
@@ -227,12 +251,12 @@ return {
     event = 'VeryLazy',
     cmd = { 'Trouble' },
     keys = {
-      { '<leader>xx', '<cmd>Trouble diagnostics toggle<cr>', desc = 'Diagnostics [xx]' },
-      { '<leader>xX', '<cmd>Trouble diagnostics toggle filter.buf=0<cr>', desc = 'Buffer Diagnostics [xX]' },
+      { '<leader>xx', '<cmd>Trouble diagnostics_prev toggle<cr>', desc = 'Diagnostics [xx]' },
+      { '<leader>xX', '<cmd>Trouble diagnostics_prev toggle filter.buf=0<cr>', desc = 'Buffer Diagnostics [xX]' },
       { '<leader>xL', '<cmd>Trouble loclist toggle<cr>', desc = 'Location List [xL]' },
       { '<leader>xQ', '<cmd>Trouble qflist toggle<cr>', desc = 'Quickfix List [xQ]' },
-      { '<leader>o', '<cmd>Trouble lsp_document_symbols toggle<cr>', desc = 'Toggle symbols [xs]' },
-      { '<leader>xl', '<cmd>Trouble lsp toggle<cr>', desc = 'Toggle LSP [xl]' },
+      { '<leader>o', '<cmd>Trouble lsp_document_symbols_prev toggle win.position=right win.size=0.3<cr>', desc = 'Toggle symbols [xs]' },
+      { '<leader>xl', '<cmd>Trouble lsp_prev toggle<cr>', desc = 'Toggle LSP [xl]' },
       {
         '[q',
         function()
@@ -278,23 +302,16 @@ return {
       warn_no_results = true, -- show a warning when there are no results
       open_no_results = false, -- open the trouble window when there are no results
       ---@type trouble.Window.opts
-      win = {
-        type = 'float',
-        relative = 'editor', -- "editor" | "win" | "cursor" cursor is only valid for float
-        position = { 0.1, 0.5 },
-        size = { width = 0.8, height = 0.2 },
-        focusable = true,
-        border = 'rounded',
-      }, -- window options for the results window. Can be a split or a floating window.
+      win = {}, -- window options for the results window. Can be a split or a floating window.
       -- Window options for the preview window. Can be a split, floating window,
       -- or `main` to show the preview in the main editor window.
       ---@type trouble.Window.opts
       preview = {
-        type = 'float',
-        position = { 0.4, 0.0 },
-        size = { width = 0.8, height = 0.6 },
-        relative = 'cursor',
-        border = 'rounded',
+        type = 'main',
+        -- when a buffer is not yet loaded, the preview window will be created
+        -- in a scratch buffer with only syntax highlighting enabled.
+        -- Set to false, if you want the preview to always be a real loaded buffer.
+        scratch = true,
       },
       -- Throttle/Debounce settings. Should usually not be changed.
       ---@type table<string, number|{ms:number, debounce?:boolean}>
@@ -384,65 +401,66 @@ return {
         diagnostics_prev = {
           focus = true,
           mode = 'diagnostics',
-          preview = {
-            type = 'float',
-          },
+          win = float_win 'Diagnostics', -- window options for the results window. Can be a split or a floating window.
+          preview = float_preview,
         },
         references_prev = {
           mode = 'lsp_references',
           focus = true,
-          preview = {
-            type = 'float',
-          },
+          win = float_win 'References', -- window options for the results window. Can be a split or a floating window.
+          preview = float_preview,
         },
         definition_prev = {
           mode = 'lsp_definitions',
           focus = true,
-          preview = {
-            type = 'float',
-          },
+          win = float_win 'Definitions',
+          preview = float_preview,
         },
         declaration_prev = {
           mode = 'lsp_declarations',
           focus = true,
-          preview = {
-            type = 'float',
-          },
+          win = float_win 'Declaration',
+          preview = float_preview,
         },
         type_definition_prev = {
           mode = 'lsp_type_definitions',
           focus = true,
-          preview = {
-            type = 'float',
-          },
+          win = float_win 'Type Definition',
+          preview = float_preview,
         },
         implementations_prev = {
           mode = 'lsp_implementations',
           focus = true,
-          preview = {
-            type = 'float',
-          },
+          win = float_win 'Implementations',
+          preview = float_preview,
         },
         command_prev = {
           mode = 'lsp_command',
           focus = true,
-          preview = {
-            type = 'float',
-          },
+          win = float_win 'LSP Command',
+          preview = float_preview,
         },
         incoming_calls_prev = {
           mode = 'lsp_incoming_calls',
           focus = true,
-          preview = {
-            type = 'float',
-          },
+          win = float_win 'Incoming Calls',
+          preview = float_preview,
         },
         outgoing_calls_prev = {
           mode = 'lsp_outgoing_calls',
           focus = true,
-          preview = {
-            type = 'float',
-          },
+          win = float_win 'Outgoing calls',
+          preview = float_preview,
+        },
+        lsp_document_symbols_prev = {
+          mode = 'lsp_document_symbols',
+          focus = true,
+        },
+        lsp_prev = {
+          mode = 'lsp',
+          focus = true,
+          win = float_win 'LSP References / Declarations / ...',
+          preview = float_preview,
         },
         -- sources define their own modes, which you can use directly,
         -- or override like in the example below
