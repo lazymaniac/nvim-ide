@@ -30,6 +30,16 @@ return {
   },
 
   {
+    'nvim-neotest/neotest',
+    dependencies = { 'codymikol/neotest-kotlin' },
+    opts = {
+      adapters = {
+        require 'codymikol/neotest-kotlin',
+      },
+    },
+  },
+
+  {
     'mfussenegger/nvim-dap',
     opts = {
       setup = {
