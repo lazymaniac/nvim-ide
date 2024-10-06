@@ -56,16 +56,21 @@ return {
           options = {},
         },
         icons = {
-          expanded = '',
-          child_prefix = '',
-          child_indent = '',
-          final_child_prefix = '',
-          non_collapsible = '',
-          collapsed = '',
-          passed = '',
-          running = '',
-          failed = '',
-          unknown = '',
+          child_indent = '│',
+          child_prefix = '├',
+          collapsed = '─',
+          expanded = '╮',
+          failed = '',
+          final_child_indent = ' ',
+          final_child_prefix = '╰',
+          non_collapsible = '─',
+          notify = '',
+          passed = '',
+          running = '',
+          running_animated = { '/', '|', '\\', '-', '/', '|', '\\', '-' },
+          skipped = '',
+          unknown = '',
+          watching = '',
         },
         jump = {
           enabled = true,
@@ -94,7 +99,7 @@ return {
           enabled = true,
         },
         running = {
-          concurrent = true,
+          concurrent = false,
         },
         state = {
           enabled = true,
@@ -139,15 +144,6 @@ return {
         },
         watch = {
           enabled = true,
-          symbol_queries = {
-            elixir = '<function 1>',
-            go =
-            '        ;query\n        ;Captures imported types\n        (qualified_type name: (type_identifier) @symbol)\n        ;Captures package-local and built-in types\n        (type_identifier)@symbol\n        ;Captures imported function calls and variables/constants\n        (selector_expression field: (field_identifier) @symbol)\n        ;Captures package-local functions calls\n        (call_expression function: (identifier) @symbol)\n      ',
-            lua =
-            '        ;query\n        ;Captures module names in require calls\n        (function_call\n          name: ((identifier) @function (#eq? @function "require"))\n          arguments: (arguments (string) @symbol))\n      ',
-            python =
-            "        ;query\n        ;Captures imports and modules they're imported from\n        (import_from_statement (_ (identifier) @symbol))\n        (import_statement (_ (identifier) @symbol))\n      ",
-          },
         },
       }
       local neotest_ns = vim.api.nvim_create_namespace 'neotest'
