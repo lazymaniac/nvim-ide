@@ -65,12 +65,18 @@ return {
 
   {
     'nvim-neotest/neotest',
-    dependencies = { 'nvim-neotest/neotest-python' },
+    dependencies = { 'nvim-neotest/neotest-python', 'thenbe/neotest-playwright' },
     opts = {
       adapters = {
         ['neotest-python'] = {
           runner = 'pytest',
           python = '.venv/bin/python',
+        },
+        require('neotest-playwright').adapter {
+          options = {
+            persist_project_selection = true,
+            enable_dynamic_test_discovery = true,
+          },
         },
       },
     },
