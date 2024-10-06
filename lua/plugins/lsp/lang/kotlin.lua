@@ -34,7 +34,7 @@ return {
     dependencies = { 'codymikol/neotest-kotlin' },
     opts = {
       adapters = {
-        require 'codymikol/neotest-kotlin',
+        ['neotest-kotlin'] = {},
       },
     },
   },
