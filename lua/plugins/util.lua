@@ -89,7 +89,7 @@ return {
     'tris203/precognition.nvim',
     branch = 'main',
     keys = {
-      { '<leader>lh', '<cmd>lua require("precognition").toggle()<cr>', mode = { 'n', 'v' }, desc = 'Show movement hints' },
+      { '<leader>lh', '<cmd>lua require("precognition").toggle()<cr>', mode = { 'n', 'v' }, desc = 'Show movement hints [lh]' },
     },
     opts = {
       startVisible = true,
@@ -158,6 +158,6 @@ return {
     -- or 'nvim-telescope/telescope.nvim'
     dependencies = 'ibhagwan/fzf-lua',
     keys = {
-      { '<leader>lH', '<cmd>HTTPCodes<cr>', desc = "HTTP Codes" } },
+      { '<leader>lH', '<cmd>HTTPCodes<cr>', desc = "HTTP Codes [lH]" } },
   },
 }
