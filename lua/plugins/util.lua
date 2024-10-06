@@ -33,7 +33,7 @@ return {
     opts = {
       dir = vim.fn.expand(vim.fn.stdpath 'state' .. '/sessions/'), -- directory where session files are saved
       options = vim.opt.sessionoptions:get(),
-      save_empty = false,                                          -- don't save if there are no open file buffers
+      save_empty = false, -- don't save if there are no open file buffers
     },
   },
 
@@ -94,25 +94,25 @@ return {
     opts = {
       startVisible = true,
       showBlankVirtLine = true,
-      highlightColor = "Comment",
+      highlightColor = 'Comment',
       hints = {
-           Caret = { text = "^", prio = 2 },
-           Dollar = { text = "$", prio = 1 },
-           MatchingPair = { text = "%", prio = 5 },
-           Zero = { text = "0", prio = 1 },
-           w = { text = "w", prio = 10 },
-           b = { text = "b", prio = 9 },
-           e = { text = "e", prio = 8 },
-           W = { text = "W", prio = 7 },
-           B = { text = "B", prio = 6 },
-           E = { text = "E", prio = 5 },
+        Caret = { text = '^', prio = 2 },
+        Dollar = { text = '$', prio = 1 },
+        MatchingPair = { text = '%', prio = 5 },
+        Zero = { text = '0', prio = 1 },
+        w = { text = 'w', prio = 10 },
+        b = { text = 'b', prio = 9 },
+        e = { text = 'e', prio = 8 },
+        W = { text = 'W', prio = 7 },
+        B = { text = 'B', prio = 6 },
+        E = { text = 'E', prio = 5 },
       },
       gutterHints = {
-          -- prio is not currently used for gutter hints
-          G = { text = "G", prio = 1 },
-          gg = { text = "gg", prio = 1 },
-          PrevParagraph = { text = "{", prio = 1 },
-          NextParagraph = { text = "}", prio = 1 },
+        -- prio is not currently used for gutter hints
+        G = { text = 'G', prio = 1 },
+        gg = { text = 'gg', prio = 1 },
+        PrevParagraph = { text = '{', prio = 1 },
+        NextParagraph = { text = '}', prio = 1 },
       },
     },
   },
@@ -147,5 +147,17 @@ return {
     branch = 'main',
     event = 'VeryLazy',
     cmd = { 'Oogway' },
+  },
+
+  -- [http-codes.nvim] - Preview http codes
+  -- see: `:h http-codes`
+  -- link: https://github.com/barrett-ruth/http-codes.nvim?tab=readme-ov-file
+  {
+    'barrett-ruth/http-codes.nvim',
+    config = true,
+    -- or 'nvim-telescope/telescope.nvim'
+    dependencies = 'ibhagwan/fzf-lua',
+    keys = {
+      { '<leader>lH', '<cmd>HTTPCodes<cr>', desc = "HTTP Codes" } },
   },
 }
