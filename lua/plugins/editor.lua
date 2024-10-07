@@ -307,17 +307,29 @@ return {
       vim.opt.sidescrolloff = 36 -- Set a large value
       vim.g.neominimap = {
         auto_enable = true,
-        x_multiplier = 8,
+        exclude_filetypes = {
+          'help', 'dashboard'
+        },
+        exclude_buftypes = {
+          'nofile',
+          'nowrite',
+          'quickfix',
+          'terminal',
+          'prompt',
+        },
+        x_multiplier = 4,
         y_multiplier = 1,
+        --- Either `split` or `float`
         layout = 'float',
         split = {
-          minimap_width = 9,
+          minimap_width = 8,
           fix_width = false,
           direction = 'right',
           close_if_last_window = false,
         },
         float = {
-          minimap_width = 9,
+          minimap_width = 10,
+          --- If set to nil, there is no maximum height restriction
           max_minimap_height = nil,
           margin = {
             right = 0,
@@ -325,7 +337,63 @@ return {
             bottom = 0,
           },
           z_index = 1,
-          window_border = 'single',
+          --- Accepts all usual border style options (e.g., "single", "double")
+          window_border = 'rounded',
+        },
+        delay = 200,
+        -- Sync the cursor position with the minimap
+        sync_cursor = true,
+        click = {
+          enabled = false,
+          auto_switch_focus = true,
+        },
+        diagnostic = {
+          enabled = true,
+          severity = vim.diagnostic.severity.WARN,
+          mode = 'line',
+          priority = {
+            ERROR = 100,
+            WARN = 90,
+            INFO = 80,
+            HINT = 70,
+          },
+          icon = {
+            ERROR = '󰅚 ',
+            WARN = '󰀪 ',
+            INFO = '󰌶 ',
+            HINT = ' ',
+          },
+        },
+        git = {
+          enabled = true,
+          mode = 'sign',
+          priority = 6,
+          icon = {
+            add = '+ ',
+            change = '~ ',
+            delete = '- ',
+          },
+        },
+        search = {
+          enabled = false,
+          mode = 'line',
+          priority = 20,
+          icon = '󰱽 ',
+        },
+        treesitter = {
+          enabled = true,
+          priority = 200,
+        },
+        mark = {
+          enabled = false,
+          mode = 'icon',
+          priority = 10,
+          key = 'm',
+          show_builtins = false,
+        },
+        fold = {
+          -- Considering fold when rendering minimap
+          enabled = true,
         },
       }
     end,
