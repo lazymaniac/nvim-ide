@@ -26,13 +26,19 @@ return {
       wk.add(defaults)
       require('codecompanion').setup {
         adapters = {
-          anthropic = 'anthropic',
+          anthropic = function()
+            return require('codecompanion.adapters').extend('anthropic', {
+              env = {
+                api_key = 'cmd:echo $ANTHROPIC_API_KEY',
+              },
+            })
+          end,
           gemini = 'gemini',
           ollama = function()
             return require('codecompanion.adapters').extend('ollama', {
               schema = {
                 model = {
-                  default = 'llama3.1:latest',
+                  default = 'qwen2.5-coder:7b-instruct-q8_0',
                 },
               },
             })
