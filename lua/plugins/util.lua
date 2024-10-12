@@ -69,17 +69,20 @@ return {
     },
   },
 
-  -- [screenkey.nvim] - Show currently pressed keys in popup
-  -- see: `:h screenkey.nvim`
-  -- link: https://github.com/NStefan002/screenkey.nvim
+  -- [showkeys] - Keys screencaster
+  -- see: `:h showkeys`
+  -- link: https://github.com/NvChad/showkeys
   {
-    'NStefan002/screenkey.nvim',
+    'nvchad/showkeys',
+    cmd = 'ShowkeysToggle',
     keys = {
-      { '<leader>lk', '<cmd>Screenkey<cr>', mode = { 'n', 'v' }, desc = 'Show pressed keys' },
+      {
+        '<leader>lK',
+        '<cmd>ShowkeysToggle<cr>',
+        mode = { 'n' },
+        desc = 'Keys Screencast',
+      },
     },
-    cmd = 'Screenkey',
-    version = '*',
-    config = true,
   },
 
   -- [precognition.nvim] - Show hint with available movements.
@@ -158,6 +161,7 @@ return {
     -- or 'nvim-telescope/telescope.nvim'
     dependencies = 'ibhagwan/fzf-lua',
     keys = {
-      { '<leader>lH', '<cmd>HTTPCodes<cr>', desc = "HTTP Codes [lH]" } },
+      { '<leader>lH', '<cmd>HTTPCodes<cr>', desc = 'HTTP Codes [lH]' },
+    },
   },
 }
