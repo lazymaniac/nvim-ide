@@ -21,7 +21,7 @@ return {
       { '<leader>lrq', '<cmd>lua require("kulala").close()<cr>', mode = { 'n' }, desc = 'Close view', },
       { '<leader>lrf', '<cmd>lua require("kulala").search()<cr>', mode = { 'n' }, desc = 'Look for http or rest files', },
       { '<leader>lrg', '<cmd>lua require("kulala").download_graphql_schema()<cr>', mode = { 'n' }, desc = 'Download GraphQL schema', },
-      { '<leader>lrh', ':vsplit ~/.config/nvim/help/kulala-cheat-sheet.md<cr>:setlocal nomodifiable<CR>', mode = { 'n' }, desc = 'Cheat sheet', },
+      { '<leader>lrh', ':vsplit ~/.config/nvim/help/kulala-cheat-sheet.md<cr>:setlocal nomodifiable<CR>', mode = { 'n' }, desc = 'Kulala Help', },
     },
     opts = {
       curl_path = 'curl',
