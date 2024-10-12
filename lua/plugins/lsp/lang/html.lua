@@ -36,25 +36,36 @@ return {
     },
   },
 
-  -- [ccc.nvim] - Color picker in Nvim
-  -- see: `:h ccc.nvim`
-  -- link: https://github.com/uga-rosa/ccc.nvim
+  -- [volt] - Reactive ui for neovim
+  -- see: `:h volt`
+  -- link: https://github.com/NvChad/volt
+  { 'nvchad/volt', lazy = true },
+
+  -- [minty] - Reacive color picker
+  -- see: `:h minty`
+  -- link: https://github.com/NvChad/minty
   {
-    'uga-rosa/ccc.nvim',
-    branch = 'main',
-    opts = {},
-    cmd = { 'CccPick', 'CccConvert', 'CccHighlighterEnable', 'CccHighlighterDisable', 'CccHighlighterToggle' },
+    'nvchad/minty',
     keys = {
-      { '<leader>lcp', '<cmd>CccPick<cr>', desc = 'Pick [lcp]' },
-      { '<leader>lcc', '<cmd>CccConvert<cr>', desc = 'Convert [lcc]' },
-      { '<leader>lch', '<cmd>CccHighlighterToggle<cr>', desc = 'Toggle Highlighter [lch]' },
+      {
+        '<leader>lcs',
+        '<cmd>Shades<cr>',
+        mode = { 'n' },
+        desc = 'Pick Color Shades',
+      },
+      {
+        '<leader>lcc',
+        '<cmd>Huefy<cr>',
+        mode = { 'n' },
+        desc = 'Pick Color',
+      },
     },
-    config = function()
-      local wk = require 'which-key'
-      local defaults = {
-        { '<leader>lc', group = '+[color]' },
-      }
-      wk.add(defaults)
-    end,
+    event = 'VeryLazy',
+    cmd = { 'Shades', 'Huefy' },
+    opts = {
+      huefy = {
+        border = false,
+      },
+    },
   },
 }
