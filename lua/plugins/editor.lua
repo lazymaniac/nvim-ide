@@ -308,7 +308,7 @@ return {
       vim.g.neominimap = {
         auto_enable = true,
         exclude_filetypes = {
-          'help', 'dashboard'
+          'help', 'dashboard', 'markdown', 'norg'
         },
         exclude_buftypes = {
           'nofile',
