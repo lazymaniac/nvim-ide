@@ -46,7 +46,7 @@ return {
         strategies = {
           -- CHAT STRATEGY ----------------------------------------------------------
           chat = {
-            adapter = 'anthropic',
+            adapter = 'ollama',
             roles = {
               llm = 'Agent', -- The markdown header content for the LLM's responses
               user = 'Me', -- The markdown header for your questions
@@ -54,11 +54,11 @@ return {
           },
           -- INLINE STRATEGY --------------------------------------------------------
           inline = {
-            adapter = 'anthropic',
+            adapter = 'ollama',
           },
           -- AGENT STRATEGY ---------------------------------------------------------
           agent = {
-            adapter = 'anthropic',
+            adapter = 'ollama',
           },
         },
         -- DISPLAY OPTIONS ----------------------------------------------------------
