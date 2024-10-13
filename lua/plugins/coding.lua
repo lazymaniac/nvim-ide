@@ -32,8 +32,7 @@ return {
         },
         title = 'Select code action:',
       },
-      priority = {
-      },
+      priority = {},
       register_ui_select = true,
     },
   },
@@ -184,17 +183,6 @@ return {
         mappings['<leader>'][root_key]['s'][char] = { '<CMD>call feedkeys("yss\\' .. char .. '")<CR>', 'yss' .. char .. target }
       end
       require('which-key').register(mappings)
-    end,
-  },
-
-  -- [guess-indent.nvim] - Plugin to guess proper indentation level.
-  -- see: `:h guess-indent.nvim`
-  -- link: https://github.com/NMAC427/guess-indent.nvim
-  {
-    'nmac427/guess-indent.nvim',
-    branch = 'main',
-    config = function()
-      require('guess-indent').setup {}
     end,
   },
 
