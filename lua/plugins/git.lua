@@ -143,7 +143,7 @@ return {
     'harrisoncramer/gitlab.nvim',
     branch = 'main',
     event = 'VeryLazy',
-    dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim', 'sindrets/diffview.nvim', 'stevearc/dressing.nvim', 'nvim-tree/nvim-web-devicons' },
+    dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim', 'sindrets/diffview.nvim', 'stevearc/dressing.nvim' },
     -- stylua: ignore
     keys = {
       { '<leader>glr',   function() require('gitlab').review() end,                                  mode = { 'n' }, desc = 'Gitlab review [glr]' },
@@ -421,7 +421,7 @@ return {
     'pwntester/octo.nvim',
     branch = 'master',
     cmd = 'Octo',
-    dependencies = { 'nvim-lua/plenary.nvim', 'nvim-telescope/telescope.nvim', 'nvim-tree/nvim-web-devicons' },
+    dependencies = { 'nvim-lua/plenary.nvim', 'nvim-telescope/telescope.nvim' },
     -- stylua: ignore
     keys = {
       { '<leader>gi', '<cmd>Octo<cr>', desc = 'Github [gi]' },

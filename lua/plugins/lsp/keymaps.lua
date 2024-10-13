@@ -34,14 +34,14 @@ function M.get()
     {
       '<leader>cw',
       function()
-          telescope.lsp_workspace_symbols {}
+        telescope.lsp_workspace_symbols {}
       end,
       desc = 'Workspace Symbols [cw]',
     },
     {
       '<leader>cW',
       function()
-          telescope.lsp_dynamic_workspace_symbols {}
+        telescope.lsp_dynamic_workspace_symbols {}
       end,
       desc = 'Dynamic Workspace Symbols [cW]',
     },
@@ -60,25 +60,23 @@ function M.get()
     { '<C-k>', vim.lsp.buf.signature_help, mode = 'i', desc = 'Signature Help <C-k>', has = 'signatureHelp' },
     {
       '<leader>ca',
-      '<cmd>Lspsaga code_action<cr>',
+      '<cmd>lua require("fastaction").code_action()<cr>',
       desc = 'Code Action [ca]',
-      mode = { 'n', 'v' },
+      mode = { 'n' },
+    },
+    {
+      '<leader>ca',
+      '<esc><cmd>lua require("fastaction").range_code_action()<CR>',
+      desc = 'Code Action [ca]',
+      mode = { 'v' },
+    },
+    {
+      '<leader>cr',
+      '<cmd>lua require "nvchad.lsp.renamer"()<cr>',
+      desc = 'Rename [cr]',
+      mode = { 'n' },
     },
   }
-  if require('util').has 'inc-rename.nvim' then
-    M._keys[#M._keys + 1] = {
-      '<leader>cr',
-      function()
-        local inc_rename = require 'inc_rename'
-        return ':' .. inc_rename.config.cmd_name .. ' ' .. vim.fn.expand '<cword>'
-      end,
-      expr = true,
-      desc = 'Code Rename [cr]',
-      has = 'rename',
-    }
-  else
-    M._keys[#M._keys + 1] = { '<leader>cr', vim.lsp.buf.rename, desc = 'Code Rename [cr]', has = 'rename' }
-  end
   return M._keys
 end
 

@@ -254,13 +254,4 @@ return {
     end,
   },
 
-  -- [lsp-progress.nvim] - Show LSP notifications in lualine
-  -- see: `:h lsp-progress.nvim`
-  -- link: https://github.com/linrongbin16/lsp-progress.nvim
-  {
-    'linrongbin16/lsp-progress.nvim',
-    config = function()
-      require('lsp-progress').setup()
-    end,
-  },
 }

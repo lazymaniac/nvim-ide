@@ -15,102 +15,27 @@ return {
     },
   },
 
-  -- [lspsaga.nvim] - Improves LSP experience in neovim.
-  -- see: `:h lspsaga.nvim`
-  -- link: https://github.com/nvimdev/lspsaga.nvim
   {
-    'nvimdev/lspsaga.nvim',
-    branch = 'main',
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter',
-      'nvim-tree/nvim-web-devicons',
+    'Chaitanyabsprip/fastaction.nvim',
+    opts = {
+      dismiss_keys = { 'j', 'k', '<c-c>', 'q' },
+      override_function = function(_) end,
+      keys = 'qwertyuiopasdfghlzxcvbnm',
+      popup = {
+        border = 'rounded',
+        hide_cursor = true,
+        highlight = {
+          divider = 'FloatBorder',
+          key = 'MoreMsg',
+          title = 'Title',
+          window = 'NormalFloat',
+        },
+        title = 'Select code action:',
+      },
+      priority = {
+      },
+      register_ui_select = true,
     },
-    config = function()
-      require('lspsaga').setup {
-        code_action = {
-          num_shortcut = false,
-          show_server_name = true,
-          extend_gitsigns = false,
-          only_in_cursor = false,
-          max_height = 0.2,
-          keys = {
-            quit = 'q',
-            exec = '<CR>',
-          },
-        },
-        lightbulb = {
-          enable = true,
-          sign = false,
-          debounce = 0,
-          sign_priority = 40,
-          virtual_text = true,
-          enable_in_insert = false,
-        },
-        scroll_preview = {
-          scroll_down = '<C-f>',
-          scroll_up = '<C-b>',
-        },
-        request_timeout = 3000,
-        finder = {
-          max_height = 0.6,
-          left_width = 0.3,
-          methods = {},
-          default = 'ref+imp',
-          layout = 'float',
-          silent = false,
-          filter = {},
-          fname_sub = nil,
-          sp_inexist = false,
-          sp_global = false,
-          ly_botright = false,
-          keys = {
-            shuttle = '[w',
-            toggle_or_open = 'o',
-            vsplit = 's',
-            split = 'i',
-            tabe = 't',
-            tabnew = 'r',
-            quit = 'q',
-            close = '<C-c>k',
-          },
-        },
-        symbol_in_winbar = {
-          enable = false,
-          separator = ' › ',
-          hide_keyword = true,
-          ignore_patterns = nil,
-          show_file = false,
-          folder_level = 1,
-          color_mode = true,
-          dely = 300,
-        },
-        callhierarchy = {
-          layout = 'float',
-          left_width = 0.2,
-          keys = {
-            edit = 'o',
-            vsplit = 's',
-            split = 'i',
-            tabe = 't',
-            close = '<C-c>k',
-            quit = 'q',
-            shuttle = '[w',
-            toggle_or_req = 'u',
-          },
-        },
-        implement = {
-          enable = true,
-          sign = true,
-          lang = {},
-          virtual_text = true,
-          priority = 100,
-        },
-        beacon = {
-          enable = true,
-          frequency = 7,
-        },
-      }
-    end,
   },
 
   -- [boole.nvim] - Allows to flip opposite values, or quickly increase or decrease numbers.
@@ -338,7 +263,6 @@ return {
           'lazy',
           'mason',
           'notify',
-          'toggleterm',
         },
         callback = function()
           vim.b.miniindentscope_disable = true
@@ -384,7 +308,6 @@ return {
       'MunifTanjim/nui.nvim',
       'nvim-treesitter/nvim-treesitter',
       'rcarriga/nvim-notify',
-      'nvim-tree/nvim-web-devicons',
     },
     opts = {
       arg = 'leetcode.nvim',

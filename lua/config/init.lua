@@ -3,17 +3,6 @@ local Util = require 'util'
 local M = {}
 
 local defaults = {
-  -- colorscheme can be a string like `catppuccin` or a function that will load the colorscheme
-  ---@type string|fun()
-  --[[ colorscheme = function()
-    local hr = tonumber(os.date('%H', os.time()))
-    if hr > 8 and hr < 20 then -- day
-      vim.cmd.colorscheme 'dayfox'
-    else -- night
-      vim.cmd.colorscheme 'terafox'
-    end
-  end, ]]
-  colorscheme = 'terafox',
   -- load the default settings
   defaults = {
     autocmds = true, -- config.autocmds
@@ -95,21 +84,6 @@ function M.setup(opts)
   M.load 'autocmds'
   M.load 'keymaps'
   Util.root.setup()
-  Util.track 'colorscheme'
-  Util.try(function()
-    if type(M.colorscheme) == 'function' then
-      M.colorscheme()
-    else
-      vim.cmd.colorscheme(M.colorscheme)
-    end
-  end, {
-    msg = 'Could not load your colorscheme',
-    on_error = function(msg)
-      Util.error(msg)
-      vim.cmd.colorscheme 'tokyonight'
-    end,
-  })
-  Util.track()
 end
 
 function M.load(name)
