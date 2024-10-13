@@ -188,7 +188,6 @@ return {
         statusline = false,
         sources = {
           { source = 'filesystem', display_name = ' Files ' },
-          { source = 'remote', display_name = ' Network ' },
         },
       },
       window = {
