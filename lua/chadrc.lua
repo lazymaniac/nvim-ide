@@ -11,13 +11,15 @@ return {
 
   ui = {
     cmp = {
+      icons_left = true, -- only for non-atom styles!
       lspkind_text = true,
-      style = 'atom_colored', -- default/flat_light/flat_dark/atom/atom_colored
+      style = 'default', -- default/flat_light/flat_dark/atom/atom_colored
       format_colors = {
         tailwind = true,
+        icon = '󱓻',
       },
     },
-    telescope = { style = 'borderless' }, -- borderless / bordered
+    telescope = { style = 'bordered' }, -- borderless / bordered
     statusline = {
       theme = 'default', -- default/vscode/vscode_colored/minimal
       -- default/round/block/arrow separators work only for default statusline theme
@@ -44,10 +46,10 @@ return {
     },
   },
   nvdash = {
-    load_on_startup = true,
+    load_on_startup = false,
   },
   term = {
-    winopts = { number = false },
+    winopts = { number = false, relativenumber = false },
     sizes = { sp = 0.3, vsp = 0.2, ['bo sp'] = 0.3, ['bo vsp'] = 0.2 },
     float = {
       relative = 'editor',
