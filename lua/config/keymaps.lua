@@ -11,6 +11,14 @@ local map = Util.safe_keymap_set
 --   term_mode = "t",
 --   command_mode = "c",
 
+-- Insert mode movements
+map('i', '<C-b>', '<ESC>^i', { desc = 'move beginning of line' })
+map('i', '<C-e>', '<End>', { desc = 'move end of line' })
+map('i', '<C-h>', '<Left>', { desc = 'move left' })
+map('i', '<C-l>', '<Right>', { desc = 'move right' })
+map('i', '<C-j>', '<Down>', { desc = 'move down' })
+map('i', '<C-k>', '<Up>', { desc = 'move up' })
+
 -- better up/down
 map({ 'n', 'x' }, 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 map({ 'n', 'x' }, '<Down>', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
@@ -71,22 +79,22 @@ function _G.set_terminal_keymaps()
 end
 
 vim.cmd 'autocmd! TermOpen term://* lua set_terminal_keymaps()'
-map('n', '<leader>an', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "node", cmd = "node"}<cr>', { desc = 'Node [an]' })
-map('n', '<leader>au', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "ncdu", cmd = "ncdu"}<cr>', { desc = 'ncdu [au]' })
-map('n', '<leader>ab', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "btop", cmd = "btop --utf-force"}<cr>', { desc = 'btop [ab]' })
-map('n', '<leader>ap', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "python", cmd = "python"}<cr>', { desc = 'Python [ap]' })
-map('n', '<leader>ad', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "lazydocker", cmd = "lazydocker"}<cr>', { desc = 'Lazydocker [ad]' })
-map('n', '<leader>as', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "lazysql", cmd = "lazysql"}<cr>', { desc = 'Lazysql [as]' })
-map('n', '<leader>ag', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "lazygit", cmd = "lazygit"}<cr>', { desc = 'Lazygit [ag]' })
-map('n', '<leader>af', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "fl1", cmd = "onefetch"}<cr>', { desc = 'Floating Terminal [af]' })
-map('n', '<C-\\>', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "fl1", cmd = "onefetch"}<cr>', { desc = 'Floating Terminal [af]' })
-map('n', '<leader>av', '<cmd>lua require("nvchad.term").toggle {pos = "spv", id = "spv1", cmd = "onefetch"}<cr>', { desc = 'Vertical Split Terminal [av]' })
-map('n', '<leader>ah', '<cmd>lua require("nvchad.term").toggle {pos = "sp", id = "fl1", cmd = "onefetch"}<cr>', { desc = 'Horizontal Split Terminal [ah]' })
-map('n', '<leader>a1', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "fl1", cmd = "onefetch"}<cr>', { desc = 'Terminal 1 [a1]' })
-map('n', '<leader>a2', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "fl2", cmd = "onefetch"}<cr>', { desc = 'Terminal 2 [a1]' })
-map('n', '<leader>a3', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "fl3", cmd = "onefetch"}<cr>', { desc = 'Terminal 3 [a1]' })
-map('n', '<leader>a4', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "fl4", cmd = "onefetch"}<cr>', { desc = 'Terminal 4 [a1]' })
-map('n', '<leader>a5', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "fl5", cmd = "onefetch"}<cr>', { desc = 'Terminal 5 [a1]' })
+map({ 'n', 't' }, '<leader>an', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "node", cmd = "node"}<cr>', { desc = 'Node [an]' })
+map({ 'n', 't' }, '<leader>au', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "ncdu", cmd = "ncdu"}<cr>', { desc = 'ncdu [au]' })
+map({ 'n', 't' }, '<leader>ab', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "btop", cmd = "btop --utf-force"}<cr>', { desc = 'btop [ab]' })
+map({ 'n', 't' }, '<leader>ap', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "python", cmd = "python"}<cr>', { desc = 'Python [ap]' })
+map({ 'n', 't' }, '<leader>ad', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "lazydocker", cmd = "lazydocker"}<cr>', { desc = 'Lazydocker [ad]' })
+map({ 'n', 't' }, '<leader>as', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "lazysql", cmd = "lazysql"}<cr>', { desc = 'Lazysql [as]' })
+map({ 'n', 't' }, '<leader>ag', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "lazygit", cmd = "lazygit"}<cr>', { desc = 'Lazygit [ag]' })
+map({ 'n', 't' }, '<leader>af', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "fl1", cmd = "onefetch"}<cr>', { desc = 'Floating Terminal [af]' })
+map({ 'n', 't' }, '<C-\\>', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "fl1", cmd = "onefetch"}<cr>', { desc = 'Floating Terminal [af]' })
+map({ 'n', 't' }, '<leader>av', '<cmd>lua require("nvchad.term").toggle {pos = "vsp", id = "spv1", cmd = "onefetch"}<cr>', { desc = 'Vertical Split Terminal [av]' })
+map({ 'n', 't' }, '<leader>ah', '<cmd>lua require("nvchad.term").toggle {pos = "sp", id = "fl1", cmd = "onefetch"}<cr>', { desc = 'Horizontal Split Terminal [ah]' })
+map({ 'n', 't' }, '<leader>a1', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "fl1", cmd = "onefetch"}<cr>', { desc = 'Terminal 1 [a1]' })
+map({ 'n', 't' }, '<leader>a2', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "fl2", cmd = "onefetch"}<cr>', { desc = 'Terminal 2 [a1]' })
+map({ 'n', 't' }, '<leader>a3', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "fl3", cmd = "onefetch"}<cr>', { desc = 'Terminal 3 [a1]' })
+map({ 'n', 't' }, '<leader>a4', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "fl4", cmd = "onefetch"}<cr>', { desc = 'Terminal 4 [a1]' })
+map({ 'n', 't' }, '<leader>a5', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "fl5", cmd = "onefetch"}<cr>', { desc = 'Terminal 5 [a1]' })
 --
 -- Clear search with <esc>
 map({ 'i', 'n' }, '<esc>', '<cmd>noh<cr><esc>', { desc = 'Escape and clear hlsearch <esc>' })
