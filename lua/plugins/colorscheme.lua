@@ -1,5 +1,13 @@
 return {
 
+  {
+    'nvchad/base46',
+    lazy = true,
+    build = function()
+      require('base46').load_all_highlights()
+    end,
+  },
+
   -- catppuccin
   {
     'catppuccin/nvim',
@@ -41,7 +49,6 @@ return {
         color_overrides = {},
         integrations = {
           aerial = true,
-          bufferline = true,
           alpha = true,
           cmp = true,
           dashboard = true,

@@ -38,20 +38,62 @@ map('v', '<A-j>', ":m '>+1<cr>gv=gv", { desc = 'Move down <A-j>' })
 map('v', '<A-k>', ":m '<-2<cr>gv=gv", { desc = 'Move up <A-k>' })
 
 -- Buffers
-map('n', '<S-h>', '<cmd>bprevious<cr>', { desc = 'Prev buffer <S-h>' })
-map('n', '<S-l>', '<cmd>bnext<cr>', { desc = 'Next buffer <S-l>' })
-map('n', '[b', '<cmd>bprevious<cr>', { desc = 'Prev buffer <[b>' })
-map('n', ']b', '<cmd>bnext<cr>', { desc = 'Next buffer <]b>' })
+map('n', '<S-h>', '<cmd>lua require("nvchad.tabufline").prev()<cr>', { desc = 'Prev buffer <S-h>' })
+map('n', '<S-l>', '<cmd>lua require("nvchad.tabufline").next()<cr>', { desc = 'Next buffer <S-l>' })
+map('n', '[b', '<cmd>lua require("nvchad.tabufline").prev()<cr>', { desc = 'Prev buffer <[b>' })
+map('n', ']b', '<cmd>lua require("nvchad.tabufline").next()<cr>', { desc = 'Next buffer <]b>' })
 map('n', '<leader>bb', '<cmd>e #<cr>', { desc = 'Switch to Other Buffer [bb]' })
 map('n', '<leader>`', '<cmd>e #<cr>', { desc = 'Switch to Other Buffer [`]' })
+map('n', '<leader>bd', '<cmd>lua require("nvchad.tabufline").close_buffer()<cr>', { desc = 'Close buffer [bd]' })
+map('n', '<leader>bo', '<cmd>lua require("nvchad.tabufline").closeAllBufs(false)<cr>', { desc = 'Close other buffers [bo]' })
+map('n', '<leader>bc', '<cmd>lua require("nvchad.tabufline").closeAllBufs(true)<cr>', { desc = 'Close all buffers [bc]' })
+map('n', '<leader>bl', '<cmd>lua require("nvchad.tabufline").closeBufs_at_direction("left") <cr>', { desc = 'Close all buffers to the left [bl]' })
+map('n', '<leader>br', '<cmd>lua require("nvchad.tabufline").closeBufs_at_direction("right") <cr>', { desc = 'Close all buffers to the right [bl]' })
+map('n', '<leader>bL', '<cmd>lua require("nvchad.tabufline").move_buf(-1)<cr>', { desc = 'Move buffer to the left [bL]' })
+map('n', '<leader>bR', '<cmd>lua require("nvchad.tabufline").move_buf(1)<cr>', { desc = 'Move buffer to the right [bR]' })
 
+for i = 1, 9, 1 do
+  map('n', string.format('<A-%s>', i), function()
+    vim.api.nvim_set_current_buf(vim.t.bufs[i])
+  end, { desc = string.format('Open buffer %s', i) })
+end
+
+-- Terminals
+function _G.set_terminal_keymaps()
+  local opts = { buffer = 0 }
+  -- vim.keymap.set('t', '<esc>', [[<C-\><C-n>]], opts)
+  vim.keymap.set('t', 'jk', [[<C-\><C-n>]], opts)
+  vim.keymap.set('t', '<C-h>', [[<Cmd>wincmd h<CR>]], opts)
+  vim.keymap.set('t', '<C-j>', [[<Cmd>wincmd j<CR>]], opts)
+  vim.keymap.set('t', '<C-k>', [[<Cmd>wincmd k<CR>]], opts)
+  vim.keymap.set('t', '<C-l>', [[<Cmd>wincmd l<CR>]], opts)
+  vim.keymap.set('t', '<C-w>', [[<C-\><C-n><C-w>]], opts)
+end
+
+vim.cmd 'autocmd! TermOpen term://* lua set_terminal_keymaps()'
+map('n', '<leader>an', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "node", cmd = "node"}<cr>', { desc = 'Node [an]' })
+map('n', '<leader>au', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "ncdu", cmd = "ncdu"}<cr>', { desc = 'ncdu [au]' })
+map('n', '<leader>ab', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "btop", cmd = "btop --utf-force"}<cr>', { desc = 'btop [ab]' })
+map('n', '<leader>ap', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "python", cmd = "python"}<cr>', { desc = 'Python [ap]' })
+map('n', '<leader>ad', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "lazydocker", cmd = "lazydocker"}<cr>', { desc = 'Lazydocker [ad]' })
+map('n', '<leader>as', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "lazysql", cmd = "lazysql"}<cr>', { desc = 'Lazysql [as]' })
+map('n', '<leader>ag', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "lazygit", cmd = "lazygit"}<cr>', { desc = 'Lazygit [ag]' })
+map('n', '<leader>af', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "fl1", cmd = "onefetch"}<cr>', { desc = 'Floating Terminal [af]' })
+map('n', '<C-\\>', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "fl1", cmd = "onefetch"}<cr>', { desc = 'Floating Terminal [af]' })
+map('n', '<leader>av', '<cmd>lua require("nvchad.term").toggle {pos = "spv", id = "spv1", cmd = "onefetch"}<cr>', { desc = 'Vertical Split Terminal [av]' })
+map('n', '<leader>ah', '<cmd>lua require("nvchad.term").toggle {pos = "sp", id = "fl1", cmd = "onefetch"}<cr>', { desc = 'Horizontal Split Terminal [ah]' })
+map('n', '<leader>a1', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "fl1", cmd = "onefetch"}<cr>', { desc = 'Terminal 1 [a1]' })
+map('n', '<leader>a2', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "fl2", cmd = "onefetch"}<cr>', { desc = 'Terminal 2 [a1]' })
+map('n', '<leader>a3', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "fl3", cmd = "onefetch"}<cr>', { desc = 'Terminal 3 [a1]' })
+map('n', '<leader>a4', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "fl4", cmd = "onefetch"}<cr>', { desc = 'Terminal 4 [a1]' })
+map('n', '<leader>a5', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "fl5", cmd = "onefetch"}<cr>', { desc = 'Terminal 5 [a1]' })
+--
 -- Clear search with <esc>
 map({ 'i', 'n' }, '<esc>', '<cmd>noh<cr><esc>', { desc = 'Escape and clear hlsearch <esc>' })
 
 -- Clear search, diff update and redraw
 -- taken from runtime/lua/_editor.lua
-map('n', '<leader>ur', '<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>',
-  { desc = 'Redraw / clear hlsearch / diff update <C-L><CR>' })
+map('n', '<leader>ur', '<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>', { desc = 'Redraw / clear hlsearch / diff update <C-L><CR>' })
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
 map('n', 'n', "'Nn'[v:searchforward].'zv'", { expr = true, desc = 'Next search result <n>' })
@@ -107,8 +149,8 @@ map('n', '[w', diagnostic_goto(false, 'WARN'), { desc = 'Prev Warning <[w>' })
 
 -- toggle options
 -- stylua: ignore
-map('n', '<leader>ub', function() Util.toggle('background', false, { 'light', 'dark' }) end,
-  { desc = 'Toggle Background [ub]' })
+map('n', '<leader>ut', function() require("base46").toggle_theme() end,
+  { desc = 'Toggle Theme [ut]' })
 -- stylua: ignore
 map('n', '<leader>uf', function() Util.format.toggle() end, { desc = 'Toggle auto format (global) [uf]' })
 -- stylua: ignore

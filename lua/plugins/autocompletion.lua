@@ -14,10 +14,6 @@ return {
       -- see: `:h cmp-nvim-lsp`
       -- link: https://github.com/hrsh7th/cmp-nvim-lsp
       { 'hrsh7th/cmp-nvim-lsp', --[[ branch = 'main' ]] },
-      -- [cmp-nvim-lsp-signature-help] - Displays functions signature.
-      -- see: `:h cmp-nvim-lsp-signature-help`
-      -- link: https://github.com/hrsh7th/cmp-nvim-lsp-signature-help
-      { 'hrsh7th/cmp-nvim-lsp-signature-help', --[[ branch = 'main' ]] },
       -- [cmp-buffer] - Adds buffer content to autocompletion.
       -- see: `:h cmp-buffer`
       -- link: https://github.com/hrsh7th/cmp-buffer
@@ -149,7 +145,6 @@ return {
         sources = cmp.config.sources {
           { name = 'otter', keyword_length = 1, group_index = 1 },
           { name = 'nvim_lsp', keyword_length = 0, group_index = 1 },
-          { name = 'nvim_lsp_signature_help', keyword_length = 0, group_index = 1 },
           { name = 'pandoc_references', keyword_length = 1, group_index = 1 },
           { name = 'luasnip', keyword_length = 1, group_index = 2 },
           { name = 'friendly-snippets', keyword_length = 1, group_index = 2 },
