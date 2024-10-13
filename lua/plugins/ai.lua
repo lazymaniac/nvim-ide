@@ -33,7 +33,6 @@ return {
               },
             })
           end,
-          gemini = 'gemini',
           ollama = function()
             return require('codecompanion.adapters').extend('ollama', {
               schema = {
@@ -43,173 +42,25 @@ return {
               },
             })
           end,
-          openai = 'openai',
         },
         strategies = {
           -- CHAT STRATEGY ----------------------------------------------------------
           chat = {
             adapter = 'ollama',
             roles = {
-              llm = 'CodeCompanion', -- The markdown header content for the LLM's responses
+              llm = 'Agent', -- The markdown header content for the LLM's responses
               user = 'Me', -- The markdown header for your questions
-            },
-            variables = {
-              ['buffer'] = {
-                callback = 'helpers.variables.buffer',
-                description = 'Share the current buffer with the LLM',
-                opts = {
-                  contains_code = true,
-                  has_params = true,
-                },
-              },
-              ['buffers'] = {
-                callback = 'helpers.variables.buffers',
-                description = 'Share all current open buffers with the LLM',
-                opts = {
-                  contains_code = true,
-                },
-              },
-              ['editor'] = {
-                callback = 'helpers.variables.editor',
-                description = 'Share the code that you see in Neovim',
-                opts = {
-                  contains_code = true,
-                },
-              },
-              ['lsp'] = {
-                callback = 'helpers.variables.lsp',
-                contains_code = true,
-                description = 'Share LSP information and code for the current buffer',
-              },
-            },
-            keymaps = {
-              options = {
-                modes = {
-                  n = '?',
-                },
-                callback = 'keymaps.options',
-                description = 'Options',
-                hide = true,
-              },
-              send = {
-                modes = {
-                  n = { '<CR>', '<C-s>' },
-                  i = '<C-s>',
-                },
-                index = 1,
-                callback = 'keymaps.send',
-                description = 'Send',
-              },
-              close = {
-                modes = {
-                  n = '<C-c>',
-                  i = '<C-c>',
-                },
-                index = 2,
-                callback = 'keymaps.close',
-                description = 'Close Chat',
-              },
-              stop = {
-                modes = {
-                  n = 'q',
-                },
-                index = 3,
-                callback = 'keymaps.stop',
-                description = 'Stop Request',
-              },
-              clear = {
-                modes = {
-                  n = 'gx',
-                },
-                index = 4,
-                callback = 'keymaps.clear',
-                description = 'Clear Chat',
-              },
-              codeblock = {
-                modes = {
-                  n = 'gc',
-                },
-                index = 6,
-                callback = 'keymaps.codeblock',
-                description = 'Insert Codeblock',
-              },
-              next_chat = {
-                modes = {
-                  n = '}',
-                },
-                index = 8,
-                callback = 'keymaps.next_chat',
-                description = 'Next Chat',
-              },
-              previous_chat = {
-                modes = {
-                  n = '{',
-                },
-                index = 9,
-                callback = 'keymaps.previous_chat',
-                description = 'Previous Chat',
-              },
-              next_header = {
-                modes = {
-                  n = ']',
-                },
-                index = 10,
-                callback = 'keymaps.next_header',
-                description = 'Next Header',
-              },
-              previous_header = {
-                modes = {
-                  n = '[',
-                },
-                index = 11,
-                callback = 'keymaps.previous_header',
-                description = 'Previous Header',
-              },
-              change_adapter = {
-                modes = {
-                  n = 'ga',
-                },
-                index = 12,
-                callback = 'keymaps.change_adapter',
-                description = 'Change adapter',
-              },
-              debug = {
-                modes = {
-                  n = 'gd',
-                },
-                index = 13,
-                callback = 'keymaps.debug',
-                description = 'View debug info',
-              },
             },
           },
           -- INLINE STRATEGY --------------------------------------------------------
           inline = {
             adapter = 'ollama',
-            keymaps = {
-              accept_change = {
-                modes = {
-                  n = 'ga',
-                },
-                index = 1,
-                callback = 'keymaps.accept_change',
-                description = 'Accept change',
-              },
-              reject_change = {
-                modes = {
-                  n = 'gr',
-                },
-                index = 2,
-                callback = 'keymaps.reject_change',
-                description = 'Reject change',
-              },
-            },
             prompts = {
               -- The prompt to send to the LLM when a user initiates the inline strategy and it needs to convert to a chat
               inline_to_chat = function(context)
                 return 'I want you to act as an expert and senior developer in the '
                   .. context.filetype
-                  .. ' language. I will ask you questions, perhaps giving you code examples, and I want you to advise me with explanations and code where neccessary.'
+                  .. ' language. I will ask you questions, perhaps giving you code examples, and I want you to advise me with explanations and code where necessary.'
               end,
             },
           },
@@ -217,18 +68,6 @@ return {
           agent = {
             adapter = 'ollama',
             tools = {
-              ['code_runner'] = {
-                callback = 'tools.code_runner',
-                description = 'Run code generated by the LLM',
-              },
-              ['rag'] = {
-                callback = 'tools.rag',
-                description = 'Supplement the LLM with real-time info from the internet',
-              },
-              ['buffer_editor'] = {
-                callback = 'tools.buffer_editor',
-                description = 'Edit code in a Neovim buffer',
-              },
               opts = {
                 auto_submit_errors = false,
                 auto_submit_success = true,
@@ -247,12 +86,6 @@ Answer the user's questions with the tool's output.]],
           ['Custom Prompt'] = {
             strategy = 'inline',
             description = 'Prompt the LLM from Neovim',
-            opts = {
-              index = 3,
-              default_prompt = true,
-              mapping = '<LocalLeader>cc',
-              user_prompt = true,
-            },
             prompts = {
               {
                 role = 'system',
@@ -273,16 +106,6 @@ Answer the user's questions with the tool's output.]],
           ['Explain'] = {
             strategy = 'chat',
             description = 'Explain how code in a buffer works',
-            opts = {
-              index = 4,
-              default_prompt = true,
-              mapping = '<LocalLeader>ce',
-              modes = { 'v' },
-              slash_cmd = 'explain',
-              auto_submit = true,
-              user_prompt = false,
-              stop_context_insertion = true,
-            },
             prompts = {
               {
                 role = 'system',
@@ -308,16 +131,6 @@ Answer the user's questions with the tool's output.]],
           ['Unit Tests'] = {
             strategy = 'chat',
             description = 'Generate unit tests for the selected code',
-            opts = {
-              index = 5,
-              default_prompt = true,
-              mapping = '<LocalLeader>ct',
-              modes = { 'v' },
-              slash_cmd = 'tests',
-              auto_submit = true,
-              user_prompt = false,
-              stop_context_insertion = true,
-            },
             prompts = {
               {
                 role = 'system',
@@ -347,16 +160,6 @@ Answer the user's questions with the tool's output.]],
           ['Fix code'] = {
             strategy = 'chat',
             description = 'Fix the selected code',
-            opts = {
-              index = 6,
-              default_prompt = true,
-              mapping = '<LocalLeader>cf',
-              modes = { 'v' },
-              slash_cmd = 'fix',
-              auto_submit = true,
-              user_prompt = false,
-              stop_context_insertion = true,
-            },
             prompts = {
               {
                 role = 'system',
@@ -390,16 +193,6 @@ Use Markdown formatting and include the programming language name at the start o
           ['Buffer selection'] = {
             strategy = 'inline',
             description = 'Send the current buffer to the LLM as part of an inline prompt',
-            opts = {
-              index = 7,
-              modes = { 'v' },
-              default_prompt = true,
-              mapping = '<LocalLeader>cb',
-              slash_cmd = 'buffer',
-              auto_submit = true,
-              user_prompt = true,
-              stop_context_insertion = true,
-            },
             prompts = {
               {
                 role = 'system',
@@ -441,16 +234,6 @@ Use Markdown formatting and include the programming language name at the start o
           ['Explain LSP Diagnostics'] = {
             strategy = 'chat',
             description = 'Explain the LSP diagnostics for the selected code',
-            opts = {
-              index = 8,
-              default_prompt = true,
-              mapping = '<LocalLeader>cl',
-              modes = { 'v' },
-              slash_cmd = 'lsp',
-              auto_submit = true,
-              user_prompt = false,
-              stop_context_insertion = true,
-            },
             prompts = {
               {
                 role = 'system',
@@ -496,13 +279,6 @@ Use Markdown formatting and include the programming language name at the start o
           ['Generate a Commit Message'] = {
             strategy = 'chat',
             description = 'Generate a commit message',
-            opts = {
-              index = 9,
-              default_prompt = true,
-              mapping = '<LocalLeader>cm',
-              slash_cmd = 'commit',
-              auto_submit = true,
-            },
             prompts = {
               {
                 role = '${user}',
