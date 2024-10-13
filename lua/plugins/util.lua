@@ -91,13 +91,14 @@ return {
   {
     'tris203/precognition.nvim',
     branch = 'main',
+    event = 'VeryLazy',
     keys = {
       { '<leader>lh', '<cmd>lua require("precognition").toggle()<cr>', mode = { 'n', 'v' }, desc = 'Show movement hints [lh]' },
     },
     opts = {
       startVisible = true,
       showBlankVirtLine = true,
-      highlightColor = 'Comment',
+      highlightColor = { link = 'Comment' },
       hints = {
         Caret = { text = '^', prio = 2 },
         Dollar = { text = '$', prio = 1 },
@@ -111,11 +112,13 @@ return {
         E = { text = 'E', prio = 5 },
       },
       gutterHints = {
-        -- prio is not currently used for gutter hints
-        G = { text = 'G', prio = 1 },
-        gg = { text = 'gg', prio = 1 },
-        PrevParagraph = { text = '{', prio = 1 },
-        NextParagraph = { text = '}', prio = 1 },
+        G = { text = 'G', prio = 10 },
+        gg = { text = 'gg', prio = 9 },
+        PrevParagraph = { text = '{', prio = 8 },
+        NextParagraph = { text = '}', prio = 8 },
+      },
+      disabled_fts = {
+        'startify',
       },
     },
   },
