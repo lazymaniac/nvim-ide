@@ -306,7 +306,7 @@ return {
             ['<c-x>'] = 'clear_filter',
             ['[g'] = 'prev_git_modified',
             [']g'] = 'next_git_modified',
-            ['o'] = { 'show_help', nowait = false, config = { title = 'Order by', prefix_key = 'o' } },
+            ['o'] = 'system_open',
             ['oc'] = { 'order_by_created', nowait = false },
             ['od'] = { 'order_by_diagnostics', nowait = false },
             ['og'] = { 'order_by_git_status', nowait = false },
@@ -322,7 +322,26 @@ return {
             ['<C-p>'] = 'move_cursor_up',
           },
         },
-        commands = {}, -- Add a custom command or override a global one using the same function name
+        commands = {
+          system_open = function(state)
+            local node = state.tree:get_node()
+            local path = node:get_id()
+            -- macOs: open file in default application in the background.
+            vim.fn.jobstart({ 'xdg-open', '-g', path }, { detach = true })
+            -- Linux: open file in default application
+            vim.fn.jobstart({ 'xdg-open', path }, { detach = true })
+
+            -- Windows: Without removing the file from the path, it opens in code.exe instead of explorer.exe
+            local p
+            local lastSlashIndex = path:match '^.+()\\[^\\]*$' -- Match the last slash and everything before it
+            if lastSlashIndex then
+              p = path:sub(1, lastSlashIndex - 1) -- Extract substring before the last slash
+            else
+              p = path -- If no slash found, return original path
+            end
+            vim.cmd('silent !start explorer ' .. p)
+          end,
+        }, -- Add a custom command or override a global one using the same function name
       },
       remote = {
         window = {
