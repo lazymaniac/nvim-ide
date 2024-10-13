@@ -60,12 +60,6 @@ map('n', '<leader>br', '<cmd>lua require("nvchad.tabufline").closeBufs_at_direct
 map('n', '<leader>bL', '<cmd>lua require("nvchad.tabufline").move_buf(-1)<cr>', { desc = 'Move buffer to the left [bL]' })
 map('n', '<leader>bR', '<cmd>lua require("nvchad.tabufline").move_buf(1)<cr>', { desc = 'Move buffer to the right [bR]' })
 
-for i = 1, 9, 1 do
-  map('n', string.format('<A-%s>', i), function()
-    vim.api.nvim_set_current_buf(vim.t.bufs[i])
-  end, { desc = string.format('Open buffer %s', i) })
-end
-
 -- Terminals
 function _G.set_terminal_keymaps()
   local opts = { buffer = 0 }
