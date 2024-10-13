@@ -196,7 +196,8 @@ map('n', '<leader>|', '<C-W>v', { desc = 'Window Split Right [|]', remap = true 
 -- tabs
 map('n', '<leader><tab>l', '<cmd>tablast<cr>', { desc = 'Last Tab [<tab>l]' })
 map('n', '<leader><tab>f', '<cmd>tabfirst<cr>', { desc = 'First Tab [<tab>f]' })
-map('n', '<leader><tab><tab>', '<cmd>tabnew<cr>', { desc = 'New Tab [<tab><tab>]' })
+map('n', '<leader><tab>n', '<cmd>tabnew<cr>', { desc = 'New Tab [<tab><tab>]' })
+map('n', '<leader><tab><tab>', '<cmd>tabnext<cr>', { desc = 'Next Tab [<tab><tab>]' })
 map('n', '<leader><tab>]', '<cmd>tabnext<cr>', { desc = 'Next Tab [<tab>]]' })
 map('n', '<leader><tab>d', '<cmd>tabclose<cr>', { desc = 'Delete Tab [<tab>d]' })
 map('n', '<leader><tab>[', '<cmd>tabprevious<cr>', { desc = 'Previous Tab [<tab>[]' })
