@@ -286,8 +286,8 @@ return {
           'terminal',
           'prompt',
         },
-        x_multiplier = 4,
-        y_multiplier = 1,
+        x_multiplier = 12,
+        y_multiplier = 2,
         --- Either `split` or `float`
         layout = 'float',
         split = {
