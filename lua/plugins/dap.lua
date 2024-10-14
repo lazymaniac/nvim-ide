@@ -41,7 +41,7 @@ return {
       { '<leader>dp', function() require('dap').pause() end,                        desc = 'Pause [dp]' },
       { '<leader>dr', function() require('dap').repl.toggle() end,                  desc = 'Toggle REPL [dr]' },
       { '<leader>ds', function() require('dap').session() end,                      desc = 'Session [ds]' },
-      { '<leader>dt', function() require('dap').terminate() end,                    desc = 'Terminate [dt]' },
+      { '<leader>dq', function() require('dap').terminate() end,                    desc = 'Terminate [dq]' },
       { '<leader>dw', function() require('dap.ui.widgets').hover() end,             desc = 'Widgets [dw]' },
     },
     config = function()

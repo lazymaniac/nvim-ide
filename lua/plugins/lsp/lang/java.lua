@@ -39,11 +39,11 @@ local jdtls_settings = {
         {
           name = 'JavaSE-17',
           path = '~/.sdkman/candidates/java/17.0.10-tem/',
-          default = true,
         },
         {
           name = 'JavaSE-21',
           path = '~/.sdkman/candidates/java/21.0.2-tem/',
+          default = true,
         },
       },
       updateBuildConfiguration = 'interactive',
@@ -51,7 +51,7 @@ local jdtls_settings = {
     jdt = {
       ls = {
         vmargs =
-        '-javaagent:/home/seba/.local/share/nvim/mason/packages/jdtls/lombok.jar -XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:enable',
+        '-javaagent:/home/seba/.local/share/nvim/mason/packages/jdtls/lombok.jar -XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx4G -Xms100m -Xlog:enable',
         protobufSupport = {
           enabled = true,
         },
@@ -103,7 +103,7 @@ local jdtls_settings = {
       enabled = 'auto',
     },
     typeHierarchy = {
-      lazyLoad = true,
+      lazyLoad = false,
     },
     progressReports = {
       enabled = true,
@@ -154,7 +154,7 @@ local jdtls_settings = {
     },
     codeAction = {
       sortMembers = {
-        avoidVolatileChanges = true,
+        avoidVolatileChanges = false,
       },
     },
     completion = {
@@ -174,12 +174,15 @@ local jdtls_settings = {
         'java.util.Objects.requireNonNull',
         'java.util.Objects.requireNonNullElse',
         'org.mockito.Mockito.*',
+        'org.mockito.BDDMockito.*',
+        'org.instancio.Instancio.*',
+        'org.instancio.Select.*'
       },
       filteredTypes = { 'java.awt.*', 'com.sun.*', 'sun.*', 'jdk.*', 'org.graalvm.*', 'io.micrometer.shaded.*' },
       guessMethodArguments = 'auto',
-      importOrder = { '#', 'java', 'javax', 'org', 'com', '' },
+      importOrder = { '', 'javax', 'java', '#' },
       matchCase = 'firstLetter',
-      maxResults = 50,
+      maxResults = 100,
       postfix = {
         enabled = true,
       },
@@ -395,7 +398,7 @@ return {
           local jdtls_dir = mason_registry.get_package('jdtls'):get_install_path()
           local lombok_path = jdtls_dir .. '/lombok.jar'
           local lombok_agent_param = '--jvm-arg=-javaagent:' .. lombok_path
-          local xmx_param = '--jvm-arg=-Xmx2g'
+          local xmx_param = '--jvm-arg=-Xmx4g'
           local project_name = opts.project_name(root_dir)
           local cmd = vim.deepcopy(opts.cmd)
           if project_name then
@@ -493,7 +496,7 @@ return {
               ['<leader>cxc'] = { require('jdtls').extract_constant, 'Extract Constant [cxc]' },
               ['<leader>cg'] = { name = '+[goto]' },
               ['<leader>cgs'] = { require('jdtls').super_implementation, 'Goto Super [cgs]' },
-              ['<leader>cgS'] = { require('jdtls.tests').goto_subjects, 'Goto Subjects [cgS]' },
+              ['<leader>cgt'] = { require('jdtls.tests').goto_subjects, 'Goto Test Class [cgt]' },
               ['<leader>ct'] = { require('jdtls.tests').generate, 'Generate Test Class [ct]' },
               ['<leader>cz'] = { require('jdtls').organize_imports, 'Organize Imports [cz]' },
               ['<leader>cc'] = { require('jdtls').compile, 'Compile Code [cc]' },
@@ -529,10 +532,10 @@ return {
                 -- custom keymaps for Java test runner (not yet compatible with neotest)
                 wk.register({
                   ['<leader>t'] = { name = '+[test]' },
-                  ['<leader>tt'] = { require('jdtls.dap').test_class, 'Test Class [tt]' },
-                  ['<leader>tr'] = { require('jdtls.dap').test_nearest_method, 'Test Nearest Method [tr]' },
-                  ['<leader>tp'] = { require('jdtls.dap').pick_test, 'Pick Test [tp]' },
-                  ['<leader>dm'] = { require('jdtls.dap').fetch_main_configs, 'Fetch Main Class [dm]' },
+                  ['<leader>dT'] = { require('jdtls.dap').test_class, 'Debug Test Class [tt]' },
+                  ['<leader>dt'] = { require('jdtls.dap').test_nearest_method, 'Debug Nearest Test Method [tr]' },
+                  ['<leader>dP'] = { require('jdtls.dap').pick_test, 'Pick Test and Debug [tp]' },
+                  ['<leader>dM'] = { require('jdtls.dap').fetch_main_configs, 'Fetch Main Class [dM]' },
                 }, { mode = 'n', buffer = args.buf })
               end
             end
