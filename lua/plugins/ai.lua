@@ -30,7 +30,7 @@ local config = {
             default = 'qwen2.5-coder:7b-instruct-q8_0',
           },
           num_ctx = {
-            default = 16384,
+            default = 8192,
           },
           temperature = {
             default = 0.9,

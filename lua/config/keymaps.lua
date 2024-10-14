@@ -80,6 +80,7 @@ map({ 'n', 't' }, '<A-s>', '<cmd>lua require("nvchad.term").toggle {pos = "bo sp
 map({ 'n', 't' }, '<A-g>', '<cmd>lua require("nvchad.term").toggle {pos = "bo sp", id = "lazygit", cmd = "lazygit", size=0.7}<cr>', { desc = 'Lazygit [ag]' })
 map({ 'n', 't' }, '<A-n>', '<cmd>lua require("nvchad.term").toggle {pos = "sp", id = "node", cmd = "node"}<cr>', { desc = 'Node [an]' })
 map({ 'n', 't' }, '<A-p>', '<cmd>lua require("nvchad.term").toggle {pos = "sp", id = "python", cmd = "python"}<cr>', { desc = 'Python [ap]' })
+map({ 'n', 't' }, '<A-v>', '<cmd>lua require("nvchad.term").toggle {pos = "sp", id = "jshell", cmd = "jshell"}<cr>', { desc = 'JShell [av]' })
 map({ 'n', 't' }, '<A-f>', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "fl0", cmd = "onefetch"}<cr>', { desc = 'Floating Terminal [af]' })
 map({ 'n', 't' }, '<A-\\>', '<cmd>lua require("nvchad.term").toggle {pos = "sp", id = "fl1", cmd = "onefetch"}<cr>', { desc = 'Terminal [af]' })
 map({ 'n', 't' }, '<A-h>', '<cmd>lua require("nvchad.term").toggle {pos = "spv", id = "fl2", cmd = "onefetch"}<cr>', { desc = 'Vertical Split Terminal [ah]' })
