@@ -327,11 +327,7 @@ return {
     dependencies = { 'nvim-telescope/telescope.nvim' },
     -- stylua: ignore
     keys = {
-      { '<leader>dm', '<cmd>Telescope dap commands<cr>',         desc = 'DAP Commands [dm]' },
       { '<leader>dn', '<cmd>Telescope dap configurations<cr>',   desc = 'DAP Configurations [dn]' },
-      { '<leader>dF', '<cmd>Telescope dap frames<cr>',           desc = 'DAP Frames [dF]' },
-      { '<leader>dB', '<cmd>Telescope dap list_breakpoints<cr>', desc = 'DAP List Breakpoints [dB]' },
-      { '<leader>dV', '<cmd>Telescope dap variables<cr>',        desc = 'DAP Variables [dV]' },
     },
     config = function()
       ---@diagnostic disable-next-line: undefined-field
