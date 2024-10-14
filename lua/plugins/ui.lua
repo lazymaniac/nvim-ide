@@ -463,7 +463,7 @@ return {
             { icon = ' ', desc = 'Leetcode', action = 'Leet', key = 'L' },
             { icon = ' ', desc = 'Lazy', action = 'Lazy update', key = 'l' },
             { icon = '󱊓 ', desc = 'Mason', action = 'Mason', key = 'm' },
-            { icon = ' ', desc = 'Theme', action = 'Telescope colorscheme', key = 't' },
+            { icon = ' ', desc = 'Theme', action = 'Telescope themes', key = 't' },
             { icon = ' ', desc = 'Check Health', action = 'checkhealth', key = 'h' },
           },
           packages = { enabled = true },
