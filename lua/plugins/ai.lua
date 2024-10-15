@@ -268,7 +268,7 @@ local config = {
         -- The prompt to send to the LLM when a user initiates the inline strategy and it needs to convert to a chat
         inline_to_chat = function(context)
           return fmt(
-            [[I want you to act as an expert and senior developer in the %s language. I will ask you questions, perhaps giving you code examples, and I want you to advise me with explanations and code where neccessary.]],
+            [[I want you to act as an expert and senior developer in the %s language. I will ask you questions, perhaps giving you code examples, and I want you to advise me with explanations and code where necessary.]],
             context.filetype
           )
         end,
