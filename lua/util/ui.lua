@@ -5,7 +5,7 @@ function M.get_signs(buf, lnum)
 
   if vim.fn.has 'nvim-0.10' == 0 then
     for _, sign in ipairs(vim.fn.sign_getplaced(buf, { group = '*', lnum = lnum })[1].signs) do
-      local ret = vim.fn.sign_getdefined(sign.name)[1] --[[@as Sign]]
+      local ret = vim.fn.sign_getdefined(sign.name)[1]
       if ret then
         ret.priority = sign.priority
         signs[#signs + 1] = ret
