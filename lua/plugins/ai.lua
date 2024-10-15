@@ -11,7 +11,7 @@ local config = {
     anthropic = function()
       return require('codecompanion.adapters').extend('anthropic', {
         env = {
-          api_key = 'cmd:cat .anthropic',
+          api_key = 'cmd:cat ~/.anthropic',
         },
         schema = {
           max_tokens = {
@@ -19,6 +19,18 @@ local config = {
           },
           temperature = {
             default = 0.2,
+          },
+        },
+      })
+    end,
+    openai = function()
+      return require('codecompanion.adapters').extend('openai', {
+        env = {
+          api_key = 'cmd:cat ~/.gpt',
+        },
+        schema = {
+          max_tokens = {
+            default = 8192,
           },
         },
       })
