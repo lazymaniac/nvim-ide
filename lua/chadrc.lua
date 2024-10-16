@@ -50,7 +50,7 @@ return {
   },
   term = {
     winopts = { number = false, relativenumber = false },
-    sizes = { sp = 0.3, vsp = 0.3, ['bo sp'] = 0.3, ['bo vsp'] = 0.3 },
+    sizes = { sp = 0.45, vsp = 0.45, ['bo sp'] = 0.45, ['bo vsp'] = 0.45 },
     float = {
       relative = 'editor',
       row = 0.05,
