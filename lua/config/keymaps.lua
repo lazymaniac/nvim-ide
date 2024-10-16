@@ -74,10 +74,10 @@ end
 
 vim.cmd 'autocmd! TermOpen term://* lua set_terminal_keymaps()'
 map({ 'n', 't' }, '<A-b>', '<cmd>lua require("nvchad.term").toggle {pos = "float", id = "btop", cmd = "btop --utf-force"}<cr>', { desc = 'btop [ab]' })
-map({ 'n', 't' }, '<A-u>', '<cmd>lua require("nvchad.term").toggle {pos = "bo sp", id = "ncdu", cmd = "ncdu", size=0.7}<cr>', { desc = 'ncdu [au]' })
-map({ 'n', 't' }, '<A-d>', '<cmd>lua require("nvchad.term").toggle {pos = "bo sp", id = "lazydocker", cmd = "lazydocker", size=0.7}<cr>', { desc = 'Lazydocker [ad]' })
-map({ 'n', 't' }, '<A-s>', '<cmd>lua require("nvchad.term").toggle {pos = "bo sp", id = "lazysql", cmd = "lazysql", size=0.7}<cr>', { desc = 'Lazysql [as]' })
-map({ 'n', 't' }, '<A-g>', '<cmd>lua require("nvchad.term").toggle {pos = "bo sp", id = "lazygit", cmd = "lazygit", size=0.7}<cr>', { desc = 'Lazygit [ag]' })
+map({ 'n', 't' }, '<A-u>', '<cmd>lua require("nvchad.term").toggle {pos = "sp", id = "ncdu", cmd = "ncdu", size=0.7}<cr>', { desc = 'ncdu [au]' })
+map({ 'n', 't' }, '<A-d>', '<cmd>lua require("nvchad.term").toggle {pos = "sp", id = "lazydocker", cmd = "lazydocker", size=0.7}<cr>', { desc = 'Lazydocker [ad]' })
+map({ 'n', 't' }, '<A-s>', '<cmd>lua require("nvchad.term").toggle {pos = "sp", id = "lazysql", cmd = "lazysql", size=0.7}<cr>', { desc = 'Lazysql [as]' })
+map({ 'n', 't' }, '<A-g>', '<cmd>lua require("nvchad.term").toggle {pos = "sp", id = "lazygit", cmd = "lazygit", size=0.7}<cr>', { desc = 'Lazygit [ag]' })
 map({ 'n', 't' }, '<A-n>', '<cmd>lua require("nvchad.term").toggle {pos = "sp", id = "node", cmd = "node"}<cr>', { desc = 'Node [an]' })
 map({ 'n', 't' }, '<A-p>', '<cmd>lua require("nvchad.term").toggle {pos = "sp", id = "python", cmd = "python"}<cr>', { desc = 'Python [ap]' })
 map({ 'n', 't' }, '<A-v>', '<cmd>lua require("nvchad.term").toggle {pos = "sp", id = "jshell", cmd = "jshell"}<cr>', { desc = 'JShell [av]' })
