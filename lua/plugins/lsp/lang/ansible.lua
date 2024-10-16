@@ -30,7 +30,7 @@ return {
     branch = 'main',
     keys = {
       {
-        '<leader>tr',
+        '<leader>cR',
         function()
           require('ansible').run()
         end,
