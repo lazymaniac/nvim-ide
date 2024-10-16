@@ -56,7 +56,7 @@ local config = {
     chat = {
       adapter = 'ollama',
       roles = {
-        llm = 'CodeCompanion', -- The markdown header content for the LLM's responses
+        llm = 'Agent', -- The markdown header content for the LLM's responses
         user = 'Me', -- The markdown header for your questions
       },
       variables = {
@@ -82,6 +82,13 @@ local config = {
             contains_code = true,
           },
         },
+        ['files'] = {
+          callback = nil,
+          description = 'Share project files tracked in git repository',
+          opts = {
+             contains_code = false,
+          }
+        }
       },
       slash_commands = {
         ['buffer'] = {

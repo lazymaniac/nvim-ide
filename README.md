@@ -83,6 +83,9 @@ pipx install poetry
 # Install jupyter notebooks.
 pipx install notebook
 
+# Install cargo update extension. Usage cargo install-update -a
+cargo install cargo-update
+
 # Install one fetch
 cargo install onefetch
 
