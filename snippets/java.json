@@ -1,1 +1,18 @@
-{}
+{
+  "test-method": {
+    "body" : [
+      "@Test",
+      "void ${1:name}() throws Exception {",
+      "    // GIVEN",
+      "",
+      "",
+      "    // WHEN",
+      "",
+      "",
+      "    // THEN",
+      "",
+      "",
+      "}"
+    ]
+  }
+}
