@@ -2,7 +2,7 @@ local Util = require 'util'
 
 local M = {}
 
-local defaults = {
+local options = {
   -- load the default settings
   defaults = {
     autocmds = true, -- config.autocmds
@@ -77,10 +77,7 @@ local defaults = {
   },
 }
 
-local options
-
 function M.setup(opts)
-  options = vim.tbl_deep_extend('force', defaults, opts or {}) or {}
   M.load 'autocmds'
   M.load 'keymaps'
   Util.root.setup()
