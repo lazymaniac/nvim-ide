@@ -297,7 +297,7 @@ return {
           close_if_last_window = false,
         },
         float = {
-          minimap_width = 10,
+          minimap_width = 8,
           --- If set to nil, there is no maximum height restriction
           max_minimap_height = nil,
           margin = {

@@ -37,11 +37,9 @@ return {
           ['neotest-python'] = {},
         },
         benchmark = {
-          enabled = false,
+          enabled = true,
         },
-        consumers = {
-          overseer = require 'neotest.consumers.overseer',
-        },
+        consumers = {},
         default_strategy = 'integrated',
         diagnostic = {
           enabled = true,
@@ -56,6 +54,26 @@ return {
           max_height = 0.8,
           max_width = 0.8,
           options = {},
+        },
+        highlights = {
+          adapter_name = 'NeotestAdapterName',
+          border = 'NeotestBorder',
+          dir = 'NeotestDir',
+          expand_marker = 'NeotestExpandMarker',
+          failed = 'NeotestFailed',
+          file = 'NeotestFile',
+          focused = 'NeotestFocused',
+          indent = 'NeotestIndent',
+          marked = 'NeotestMarked',
+          namespace = 'NeotestNamespace',
+          passed = 'NeotestPassed',
+          running = 'NeotestRunning',
+          select_win = 'NeotestWinSelect',
+          skipped = 'NeotestSkipped',
+          target = 'NeotestTarget',
+          test = 'NeotestTest',
+          unknown = 'NeotestUnknown',
+          watching = 'NeotestWatching',
         },
         icons = {
           child_indent = '│',
@@ -89,19 +107,13 @@ return {
         projects = {},
         quickfix = {
           enabled = true,
-          open = function()
-            if require('util').has 'trouble.nvim' then
-              require('trouble').open { mode = 'quickfix', focus = false }
-            else
-              vim.cmd 'copen'
-            end
-          end,
+          open = true,
         },
         run = {
           enabled = true,
         },
         running = {
-          concurrent = false,
+          concurrent = true,
         },
         state = {
           enabled = true,
@@ -109,7 +121,7 @@ return {
         status = {
           enabled = true,
           signs = true,
-          virtual_text = true,
+          virtual_text = false,
         },
         strategies = {
           integrated = {
@@ -119,6 +131,7 @@ return {
         },
         summary = {
           animated = true,
+          count = true,
           enabled = true,
           expand_errors = true,
           follow = true,
@@ -130,6 +143,7 @@ return {
             debug_marked = 'D',
             expand = { '<CR>', '<2-LeftMouse>' },
             expand_all = 'e',
+            help = '?',
             jumpto = 'i',
             mark = 'm',
             next_failed = 'J',
@@ -146,6 +160,18 @@ return {
         },
         watch = {
           enabled = true,
+          symbol_queries = {
+            go = '        ;query\n        ;Captures imported types\n        (qualified_type name: (type_identifier) @symbol)\n        ;Captures package-local and built-in types\n        (type_identifier)@symbol\n        ;Captures imported function calls and variables/constants\n        (selector_expression field: (field_identifier) @symbol)\n        ;Captures package-local functions calls\n        (call_expression function: (identifier) @symbol)\n      ',
+            haskell = '        ;query\n        ;explicit import\n        ((import_item [(variable)]) @symbol)\n        ;symbols that may be imported implicitly\n        ((type) @symbol)\n        (qualified_variable (variable) @symbol)\n        (exp_apply (exp_name (variable) @symbol))\n        ((constructor) @symbol)\n        ((operator) @symbol)\n      ',
+            java = '        ;query\n        ;captures imported classes\n        (import_declaration\n            (scoped_identifier name: ((identifier) @symbol))\n        )\n      ',
+            javascript = '  ;query\n  ;Captures named imports\n  (import_specifier name: (identifier) @symbol)\n  ;Captures default import\n  (import_clause (identifier) @symbol)\n  ;Capture require statements\n  (variable_declarator \n  name: (identifier) @symbol\n  value: (call_expression (identifier) @function  (#eq? @function "require")))\n  ;Capture namespace imports\n  (namespace_import (identifier) @symbol)\n',
+            lua = '        ;query\n        ;Captures module names in require calls\n        (function_call\n          name: ((identifier) @function (#eq? @function "require"))\n          arguments: (arguments (string) @symbol))\n      ',
+            python = "        ;query\n        ;Captures imports and modules they're imported from\n        (import_from_statement (_ (identifier) @symbol))\n        (import_statement (_ (identifier) @symbol))\n      ",
+            ruby = '        ;query\n        ;rspec - class name\n        (call\n          method: (identifier) @_ (#match? @_ "^(describe|context)")\n          arguments: (argument_list (constant) @symbol )\n        )\n\n        ;rspec - namespaced class name\n        (call\n          method: (identifier)\n          arguments: (argument_list\n            (scope_resolution\n              name: (constant) @symbol))\n        )\n      ',
+            rust = '        ;query\n        ;submodule import\n        (mod_item\n          name: (identifier) @symbol)\n        ;single import\n        (use_declaration\n          argument: (scoped_identifier\n            name: (identifier) @symbol))\n        ;import list\n        (use_declaration\n          argument: (scoped_use_list\n            list: (use_list\n                [(scoped_identifier\n                   path: (identifier)\n                   name: (identifier) @symbol)\n                 ((identifier) @symbol)])))\n        ;wildcard import\n        (use_declaration\n          argument: (scoped_use_list\n            path: (identifier)\n            [(use_list\n              [(scoped_identifier\n                path: (identifier)\n                name: (identifier) @symbol)\n                ((identifier) @symbol)\n              ])]))\n      ',
+            tsx = '  ;query\n  ;Captures named imports\n  (import_specifier name: (identifier) @symbol)\n  ;Captures default import\n  (import_clause (identifier) @symbol)\n  ;Capture require statements\n  (variable_declarator \n  name: (identifier) @symbol\n  value: (call_expression (identifier) @function  (#eq? @function "require")))\n  ;Capture namespace imports\n  (namespace_import (identifier) @symbol)\n',
+            typescript = '  ;query\n  ;Captures named imports\n  (import_specifier name: (identifier) @symbol)\n  ;Captures default import\n  (import_clause (identifier) @symbol)\n  ;Capture require statements\n  (variable_declarator \n  name: (identifier) @symbol\n  value: (call_expression (identifier) @function  (#eq? @function "require")))\n  ;Capture namespace imports\n  (namespace_import (identifier) @symbol)\n',
+          },
         },
       }
       local neotest_ns = vim.api.nvim_create_namespace 'neotest'
