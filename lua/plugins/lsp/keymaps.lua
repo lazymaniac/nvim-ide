@@ -12,24 +12,52 @@ function M.get()
     { '<leader>li', '<cmd>LspInfo<cr>', desc = 'Lsp Info [li]' },
     {
       'gd',
-      '<cmd>Trouble definition_prev<cr>',
+      function()
+        require('lspsaga.definition'):init(1, 2, {})
+      end,
       desc = 'Goto Definition <gd>',
     },
     {
       'gr',
-      '<cmd>Trouble references_prev<cr>',
+      function()
+        require('lspsaga.finder'):new { 'ref', '++float' }
+      end,
       desc = 'Goto References <gr>',
     },
     {
       'gI',
-      '<cmd>Trouble implementations_prev<cr>',
+      function()
+        require('lspsaga.finder'):new { 'imp', '++float' }
+      end,
       desc = 'Goto Implementation <gI>',
     },
     {
       'gD',
-      '<cmd>Trouble type_definition_prev<cr>',
+      function()
+        require('lspsaga.definition'):init(2, 2, {})
+      end,
       desc = 'Goto Type Definition <gy>',
     },
+    -- {
+    --   'gd',
+    --   '<cmd>Trouble definition_prev<cr>',
+    --   desc = 'Goto Definition <gd>',
+    -- },
+    -- {
+    --   'gr',
+    --   '<cmd>Trouble references_prev<cr>',
+    --   desc = 'Goto References <gr>',
+    -- },
+    -- {
+    --   'gI',
+    --   '<cmd>Trouble implementations_prev<cr>',
+    --   desc = 'Goto Implementation <gI>',
+    -- },
+    -- {
+    --   'gD',
+    --   '<cmd>Trouble type_definition_prev<cr>',
+    --   desc = 'Goto Type Definition <gy>',
+    -- },
     { '<leader>cs', '<cmd>Trouble symbols toggle<cr>', desc = 'Document Symbols [cs]' },
     {
       '<leader>cw',
@@ -47,29 +75,49 @@ function M.get()
     },
     {
       '<leader>ci',
-      '<cmd>Trouble incoming_calls_perv<cr>',
+      function()
+        require('lspsaga.callhierarchy'):send_method(2, { '++float' })
+      end,
       desc = 'Incoming Calls [ci]',
     },
     {
       '<leader>co',
-      '<cmd> Trouble outgoing_calls_prev<cr>',
+      function()
+        require('lspsaga.callhierarchy'):send_method(3, { '++float' })
+      end,
       desc = 'Outgoing Calls [co]',
     },
+    -- {
+    --   '<leader>ci',
+    --   '<cmd>Trouble incoming_calls_perv<cr>',
+    --   desc = 'Incoming Calls [ci]',
+    -- },
+    -- {
+    --   '<leader>co',
+    --   '<cmd> Trouble outgoing_calls_prev<cr>',
+    --   desc = 'Outgoing Calls [co]',
+    -- },
     { 'K', vim.lsp.buf.hover, desc = 'Hover Documentation <K>' },
     { 'gK', vim.lsp.buf.signature_help, desc = 'Signature Documentation <gK>', has = 'signatureHelp' },
     { '<C-k>', vim.lsp.buf.signature_help, mode = 'i', desc = 'Signature Help <C-k>', has = 'signatureHelp' },
     {
       '<leader>ca',
-      '<cmd>lua require("fastaction").code_action()<cr>',
+      '<cmd>Lspsaga code_action<cr>',
       desc = 'Code Action [ca]',
-      mode = { 'n' },
+      mode = { 'n', 'v' },
     },
-    {
-      '<leader>ca',
-      '<esc><cmd>lua require("fastaction").range_code_action()<CR>',
-      desc = 'Code Action [ca]',
-      mode = { 'v' },
-    },
+    -- {
+    --   '<leader>ca',
+    --   '<cmd>lua require("fastaction").code_action()<cr>',
+    --   desc = 'Code Action [ca]',
+    --   mode = { 'n' },
+    -- },
+    -- {
+    --   '<leader>ca',
+    --   '<esc><cmd>lua require("fastaction").range_code_action()<CR>',
+    --   desc = 'Code Action [ca]',
+    --   mode = { 'v' },
+    -- },
     {
       '<leader>cr',
       '<cmd>lua require "nvchad.lsp.renamer"()<cr>',
