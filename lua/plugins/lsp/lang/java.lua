@@ -30,19 +30,19 @@ local jdtls_settings = {
       runtimes = {
         {
           name = 'JavaSE-1.8',
-          path = '~/.sdkman/candidates/java/8.0.402-tem/',
+          path = '~/.sdkman/candidates/java/8.0.432-tem/',
         },
         {
           name = 'JavaSE-11',
-          path = '~/.sdkman/candidates/java/11.0.22-tem/',
+          path = '~/.sdkman/candidates/java/11.0.25-tem/',
         },
         {
           name = 'JavaSE-17',
-          path = '~/.sdkman/candidates/java/17.0.10-tem/',
+          path = '~/.sdkman/candidates/java/17.0.13-tem/',
         },
         {
           name = 'JavaSE-21',
-          path = '~/.sdkman/candidates/java/21.0.2-tem/',
+          path = '~/.sdkman/candidates/java/21.0.5-tem/',
           default = true,
         },
       },
