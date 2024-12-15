@@ -9,6 +9,9 @@ return {
       dashboard = { enabled = false },
       indent = { enabled = true },
       input = { enabled = true },
+      lazygit = {
+        configure = true,
+      },
       notifier = { enabled = true },
       quickfile = { enabled = true },
       scroll = { enabled = true },
