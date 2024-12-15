@@ -52,13 +52,6 @@ map('n', '[b', '<cmd>lua require("nvchad.tabufline").prev()<cr>', { desc = 'Prev
 map('n', ']b', '<cmd>lua require("nvchad.tabufline").next()<cr>', { desc = 'Next buffer <]b>' })
 map('n', '<leader>bb', '<cmd>e #<cr>', { desc = 'Switch to Other Buffer [bb]' })
 map('n', '<leader>`', '<cmd>e #<cr>', { desc = 'Switch to Other Buffer [`]' })
-map('n', '<leader>bd', '<cmd>lua require("nvchad.tabufline").close_buffer()<cr>', { desc = 'Close buffer [bd]' })
-map('n', '<leader>bo', '<cmd>lua require("nvchad.tabufline").closeAllBufs(false)<cr>', { desc = 'Close other buffers [bo]' })
-map('n', '<leader>bc', '<cmd>lua require("nvchad.tabufline").closeAllBufs(true)<cr>', { desc = 'Close all buffers [bc]' })
-map('n', '<leader>bl', '<cmd>lua require("nvchad.tabufline").closeBufs_at_direction("left") <cr>', { desc = 'Close all buffers to the left [bl]' })
-map('n', '<leader>br', '<cmd>lua require("nvchad.tabufline").closeBufs_at_direction("right") <cr>', { desc = 'Close all buffers to the right [bl]' })
-map('n', '<leader>bL', '<cmd>lua require("nvchad.tabufline").move_buf(-1)<cr>', { desc = 'Move buffer to the left [bL]' })
-map('n', '<leader>bR', '<cmd>lua require("nvchad.tabufline").move_buf(1)<cr>', { desc = 'Move buffer to the right [bR]' })
 
 -- Terminals
 function _G.set_terminal_keymaps()
@@ -157,27 +150,6 @@ map('n', '<leader>ut', function() require("base46").toggle_theme() end,
 map('n', '<leader>uf', function() Util.format.toggle() end, { desc = 'Toggle auto format (global) [uf]' })
 -- stylua: ignore
 map('n', '<leader>uF', function() Util.format.toggle(true) end, { desc = 'Toggle auto format (buffer) [uF]' })
--- stylua: ignore
-map('n', '<leader>us', function() Util.toggle 'spell' end, { desc = 'Toggle Spelling [us]' })
--- stylua: ignore
-map('n', '<leader>uw', function() Util.toggle 'wrap' end, { desc = 'Toggle Word Wrap [uw]' })
--- stylua: ignore
-map('n', '<leader>uL', function() Util.toggle 'relativenumber' end, { desc = 'Toggle Relative Line Numbers [uL]' })
--- stylua: ignore
-map('n', '<leader>ul', function() Util.toggle.number() end, { desc = 'Toggle Line Numbers [ul]' })
--- stylua: ignore
-map('n', '<leader>ud', function() Util.toggle.diagnostics() end, { desc = 'Toggle Diagnostics [ud]' })
-local conceallevel = vim.o.conceallevel > 0 and vim.o.conceallevel or 3
--- stylua: ignore
-map('n', '<leader>uc', function() Util.toggle('conceallevel', false, { 0, conceallevel }) end,
-  { desc = 'Toggle Conceal [uc]' })
-if vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint then
-  -- stylua: ignore
-  map('n', '<leader>uh', function() Util.toggle.inlay_hints() end, { desc = 'Toggle Inlay Hints [uh]' })
-end
--- stylua: ignore
-map('n', '<leader>uT', function() if vim.b.ts_highlight then vim.treesitter.stop() else vim.treesitter.start() end end,
-  { desc = 'Toggle Treesitter Highlight [uT]' })
 
 -- quit
 map('n', '<leader>qq', '<cmd>qa<cr>', { desc = 'Quit all [qq]' })
