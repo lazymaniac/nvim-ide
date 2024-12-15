@@ -368,30 +368,6 @@ return {
     end,
   },
 
-  -- [bigfile.nvim] - Disable editor functions like lsp, treesitter when big file is loaded
-  -- see: `:h bigfile.nvim`
-  -- link: https://github.com/LunarVim/bigfile.nvim
-  {
-    'LunarVim/bigfile.nvim',
-    branch = 'main',
-    init = function()
-      require('bigfile').setup {
-        filesize = 2, -- size of the file in MiB, the plugin round file sizes to the closest MiB
-        pattern = { '*' }, -- autocmd pattern
-        features = { -- features to disable
-          'indent_blankline',
-          'illuminate',
-          'lsp',
-          'treesitter',
-          'syntax',
-          'matchparen',
-          'vimopts',
-          'filetype',
-        },
-      }
-    end,
-  },
-
   -- [vim-repeat] - Support `.` repeat in plugins.
   -- see: `:h vim-repeat`
   -- link: https://github.com/tpope/vim-repeat
