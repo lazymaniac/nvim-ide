@@ -14,6 +14,96 @@ return {
     end,
   },
 
+  -- [bufferline.nvim] - This is what powers fancy-looking tabs, which include filetype icons and close buttons.
+  -- see: `:h bufferline`
+  -- link: https://github.com/akinsho/bufferline.nvim
+  {
+    'akinsho/bufferline.nvim',
+    branch = 'main',
+    event = 'VeryLazy',
+    keys = {
+      { '<leader>bp', '<Cmd>BufferLineTogglePin<CR>', desc = 'Toggle pin [bp]' },
+      { '<leader>bP', '<Cmd>BufferLineGroupClose ungrouped<CR>', desc = 'Delete non-pinned buffers [bP]' },
+      { '<leader>bo', '<Cmd>BufferLineCloseOthers<CR>', desc = 'Delete other buffers [bo]' },
+      { '<leader>br', '<Cmd>BufferLineCloseRight<CR>', desc = 'Delete buffers to the right [br]' },
+      { '<leader>bl', '<Cmd>BufferLineCloseLeft<CR>', desc = 'Delete buffers to the left [bl]' },
+      { '<S-h>', '<cmd>BufferLineCyclePrev<cr>', desc = 'Prev buffer <S-h>' },
+      { '<S-l>', '<cmd>BufferLineCycleNext<cr>', desc = 'Next buffer <S-l>' },
+      { '[b', '<cmd>BufferLineCyclePrev<cr>', desc = 'Prev buffer <[b>' },
+      { ']b', '<cmd>BufferLineCycleNext<cr>', desc = 'Next buffer <]b>' },
+    },
+    opts = {
+      options = {
+        mode = 'buffers', -- Set to "tabs" to only show tabpages instead
+        -- style_preset = require('bufferline').style_preset.minimal, -- or style_preset.minimal
+        themable = true, --Allows highlight groups to be overridden i.e. sets highlights as default
+        numbers = 'ordinal', -- "none" | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
+        close_command = function(n)
+          require('mini.bufremove').delete(n, false)
+        end, -- can be a string | function, see "Mouse actions"
+        right_mouse_command = function(n)
+          require('mini.bufremove').delete(n, false)
+        end, -- can be a string | function, see "Mouse actions"
+        left_mouse_command = 'buffer %d', -- can be a string | function, see "Mouse actions"
+        middle_mouse_command = nil, -- can be a string | function, see "Mouse actions"
+        indicator = { style = 'icon', icon = '▎' },
+        buffer_close_icon = ' ',
+        modified_icon = '●',
+        close_icon = ' ',
+        left_trunc_marker = ' ',
+        right_trunc_marker = ' ',
+        max_name_length = 30,
+        max_prefix_length = 30, -- prefix used when a buffer is de-duplicated
+        truncate_names = true, -- Whether or not tab names should be truncated
+        tab_size = 18,
+        diagnostics = false, -- | "nvim_lsp" | "coc" | false
+        diagnostics_update_in_insert = false,
+        color_icons = true, -- Whether or not to add the filetype icon to highlights
+        show_buffer_icons = true, -- Disable filetype icons for buffers
+        show_buffer_close_icons = true,
+        show_close_icon = true,
+        show_tab_indicators = true,
+        show_duplicate_prefix = true, -- Whether to show duplicate buffer prefix
+        persist_buffer_sort = true, -- Whether or not custom sorted buffers should persist
+        move_wraps_at_ends = true, -- whether or not the move command "wraps" at the first or last position
+        -- can also be a table containing 2 custom separators
+        -- [focused and unfocused]. eg: { '|', '|' }
+        separator_style = { '|' }, -- 'slant' | 'slope' | 'thick' | 'thin' | { 'any', 'any' },
+        enforce_regular_tabs = true,
+        always_show_bufferline = false,
+        hover = {
+          enabled = true,
+          delay = 200,
+          reveal = { 'close' },
+        },
+        sort_by = nil, -- 'id' | 'extension' | 'relative_directory' | 'directory' | 'tabs' | function(buffer_a, buffer_b)
+        --   -- add custom logic
+        -- return buffer_a.modified > buffer_b.modified
+        -- end,
+        offsets = {
+          {
+            filetype = 'neo-tree',
+            text = 'Explorer',
+            highlight = 'Directory',
+            text_align = 'left',
+          },
+        },
+      },
+    },
+    config = function(_, opts)
+      require('bufferline').setup(opts)
+      -- Fix bufferline when restoring a session
+      vim.api.nvim_create_autocmd('BufAdd', {
+        callback = function()
+          vim.schedule(function()
+            ---@diagnostic disable-next-line: undefined-global
+            pcall(nvim_bufferline)
+          end)
+        end,
+      })
+    end,
+  },
+
   {
     'echasnovski/mini.icons',
     opts = {},
@@ -226,80 +316,6 @@ return {
     config = function(_, opts)
       require('window-picker').setup(opts)
     end,
-  },
-
-  -- [zen-mode.nvim] - Creates distraction free view for smooth coding
-  -- see: `:h zen-mode`
-  -- link: https://github.com/folke/zen-mode.nvim
-  {
-    'folke/zen-mode.nvim',
-    branch = 'main',
-    event = 'VeryLazy',
-    keys = {
-      { '<leader>Z', '<cmd>ZenMode<cr>', mode = { 'n' }, desc = 'Zen Mode [Z]' },
-    },
-    opts = {
-      -- your configuration comes here
-      -- or leave it empty to use the default settings
-      -- refer to the configuration section below
-      window = {
-        backdrop = 0.95, -- shade the backdrop of the Zen window. Set to 1 to keep the same as Normal
-        -- height and width can be:
-        -- * an absolute number of cells when > 1
-        -- * a percentage of the width / height of the editor when <= 1
-        -- * a function that returns the width or the height
-        width = 120, -- width of the Zen window
-        height = 1, -- height of the Zen window
-        -- by default, no options are changed for the Zen window
-        -- uncomment any of the options below, or add other vim.wo options you want to apply
-        options = {
-          -- signcolumn = "no", -- disable signcolumn
-          -- number = false, -- disable number column
-          -- relativenumber = false, -- disable relative numbers
-          -- cursorline = false, -- disable cursorline
-          -- cursorcolumn = false, -- disable cursor column
-          -- foldcolumn = "0", -- disable fold column
-          -- list = false, -- disable whitespace characters
-        },
-      },
-      plugins = {
-        -- disable some global vim options (vim.o...)
-        -- comment the lines to not apply the options
-        options = {
-          enabled = true,
-          ruler = false, -- disables the ruler text in the cmd line area
-          showcmd = false, -- disables the command in the last line of the screen
-          -- you may turn on/off statusline in zen mode by setting 'laststatus'
-          -- statusline will be shown only if 'laststatus' == 3
-          laststatus = 0, -- turn off the statusline in zen mode
-        },
-        twilight = { enabled = true }, -- enable to start Twilight when zen mode opens
-        gitsigns = { enabled = true }, -- disables git signs
-        tmux = { enabled = false }, -- disables the tmux statusline
-        -- this will change the font size on kitty when in zen mode
-        -- to make this work, you need to set the following kitty options:
-        -- - allow_remote_control socket-only
-        -- - listen_on unix:/tmp/kitty
-        kitty = {
-          enabled = false,
-          font = '+4', -- font size increment
-        },
-        -- this will change the font size on alacritty when in zen mode
-        -- requires  Alacritty Version 0.10.0 or higher
-        -- uses `alacritty msg` subcommand to change font size
-        alacritty = {
-          enabled = false,
-          font = '14', -- font size
-        },
-        -- this will change the font size on wezterm when in zen mode
-        -- See also the Plugins/Wezterm section in this projects README
-        wezterm = {
-          enabled = false,
-          -- can be either an absolute font size or the number of incremental steps
-          font = '+4', -- (10% increase per step)
-        },
-      },
-    },
   },
 
   -- [helpview.nvim] - Format and colorize help files
