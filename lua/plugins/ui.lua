@@ -81,8 +81,6 @@ return {
       { '<leader>gg', function() Snacks.lazygit() end, desc = 'Lazygit', },
       { '<leader>gl', function() Snacks.lazygit.log() end, desc = 'Lazygit Log (cwd)', },
       { '<leader>un', function() Snacks.notifier.hide() end, desc = 'Dismiss All Notifications', },
-      { ']]', function() Snacks.words.jump(vim.v.count1) end, desc = 'Next Reference', mode = { 'n', 't' }, },
-      { '[[', function() Snacks.words.jump(-vim.v.count1) end, desc = 'Prev Reference', mode = { 'n', 't' }, },
     },
     init = function()
       vim.api.nvim_create_autocmd('User', {
@@ -139,10 +137,10 @@ return {
         themable = true, --Allows highlight groups to be overridden i.e. sets highlights as default
         numbers = 'ordinal', -- "none" | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
         close_command = function(n)
-          require('mini.bufremove').delete(n, false)
+          Snacks.bufdelete.delete({buf = n})
         end, -- can be a string | function, see "Mouse actions"
         right_mouse_command = function(n)
-          require('mini.bufremove').delete(n, false)
+          Snacks.bufdelete.delete({buf = n})
         end, -- can be a string | function, see "Mouse actions"
         left_mouse_command = 'buffer %d', -- can be a string | function, see "Mouse actions"
         middle_mouse_command = nil, -- can be a string | function, see "Mouse actions"
