@@ -18,6 +18,11 @@ return {
     lazy = false,
     ---@type snacks.Config
     opts = {
+      terminal = {
+        win = {
+          position = 'float',
+        },
+      },
       bigfile = { enabled = true },
       dashboard = { enabled = false },
       indent = { enabled = true },
@@ -136,10 +141,10 @@ return {
         themable = true, --Allows highlight groups to be overridden i.e. sets highlights as default
         numbers = 'ordinal', -- "none" | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
         close_command = function(n)
-          Snacks.bufdelete.delete({buf = n})
+          Snacks.bufdelete.delete { buf = n }
         end, -- can be a string | function, see "Mouse actions"
         right_mouse_command = function(n)
-          Snacks.bufdelete.delete({buf = n})
+          Snacks.bufdelete.delete { buf = n }
         end, -- can be a string | function, see "Mouse actions"
         left_mouse_command = 'buffer %d', -- can be a string | function, see "Mouse actions"
         middle_mouse_command = nil, -- can be a string | function, see "Mouse actions"

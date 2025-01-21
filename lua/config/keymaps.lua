@@ -74,8 +74,8 @@ map({ 'n', 't' }, '<A-g>', function () Snacks.lazygit() end, { desc = 'Lazygit [
 map({ 'n', 't' }, '<A-n>', function () Snacks.terminal.toggle("node") end, { desc = 'Node [an]' })
 map({ 'n', 't' }, '<A-p>', function () Snacks.terminal.toggle("python") end, { desc = 'Python [ap]' })
 map({ 'n', 't' }, '<A-v>', function () Snacks.terminal.toggle("jshell") end, { desc = 'JShell [av]' })
-map({ 'n', 't' }, '<A-f>', function () Snacks.terminal() end, { desc = 'New Terminal [af]' })
-map({ 'n', 't' }, '<A-\\>', function () Snacks.terminal.toggle() end, { desc = 'Terminal toggle [a\\]' })
+map({ 'n', 't' }, '<A-f>', function () Snacks.terminal.open() end, { desc = 'New Terminal [af]' })
+map({ 'n', 't' }, '<A-\\>', function () Snacks.terminal.toggle() end, { desc = 'Toggle Terminal [a\\]' })
 --
 -- Clear search with <esc>
 map({ 'i', 'n' }, '<esc>', '<cmd>noh<cr><esc>', { desc = 'Escape and clear hlsearch <esc>' })
