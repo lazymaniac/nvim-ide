@@ -1,28 +1,13 @@
-
-local float_win = function(title)
-  ---@type trouble.Window.opts
-  return {
-    type = 'float',
-    title = title,
-    relative = 'editor', -- "editor" | "win" | "cursor" cursor is only valid for float
-    position = { 0.1, 0.5 },
-    size = { width = 0.8, height = 0.2 },
-    focusable = true,
-    border = 'rounded',
-  }
-end
-
 -- Window options for the preview window. Can be a split, floating window,
 -- or `main` to show the preview in the main editor window.
 ---@type trouble.Window.opts
-local float_preview = {
-  type = 'float',
-  position = { 0.4, 0.0 },
-  size = { width = 0.8, height = 0.6 },
-  relative = 'cursor',
+local split_preview = {
+  type = 'split',
+  position = 'right',
+  size = 0.5,
+  relative = 'win',
   border = 'rounded',
 }
-
 return {
 
   -- [[ DIAGNOSTICS & LSP ]] ---------------------------------------------------------------
@@ -74,17 +59,17 @@ return {
     opts = {
       auto_close = true, -- auto close when there are no items
       auto_open = false, -- auto open when there are items
-      auto_preview = false, -- automatically open preview when on an item
+      auto_preview = true, -- automatically open preview when on an item
       auto_refresh = false, -- auto refresh when open
-      auto_jump = false, -- auto jump to the item when there's only one
-      focus = false, -- Focus the window when opened
+      auto_jump = true, -- auto jump to the item when there's only one
+      focus = true, -- Focus the window when opened
       restore = true, -- restores the last location in the list when opening
-      follow = true, -- Follow the current item
+      follow = false, -- Follow the current item
       indent_guides = true, -- show indent guides
       max_items = 200, -- limit number of items that can be displayed per section
       multiline = true, -- render multi-line messages
       pinned = true, -- When pinned, the opened trouble window will be bound to the current buffer
-      warn_no_results = true, -- show a warning when there are no results
+      warn_no_results = false, -- show a warning when there are no results
       open_no_results = false, -- open the trouble window when there are no results
       ---@type trouble.Window.opts
       win = {}, -- window options for the results window. Can be a split or a floating window.
@@ -170,72 +155,50 @@ return {
       },
       ---@type table<string, trouble.Mode>
       modes = {
-        preview_float = {
-          mode = 'diagnostics',
-          preview = {
-            type = 'float',
-            relative = 'editor',
-            border = 'rounded',
-            title = 'Preview',
-            title_pos = 'center',
-            position = { 0, -2 },
-            size = { width = 0.4, height = 0.4 },
-            zindex = 200,
-          },
-        },
         diagnostics_prev = {
           focus = true,
           mode = 'diagnostics',
-          win = float_win 'Diagnostics', -- window options for the results window. Can be a split or a floating window.
-          preview = float_preview,
+          preview = split_preview,
         },
         references_prev = {
           mode = 'lsp_references',
           focus = true,
-          win = float_win 'References', -- window options for the results window. Can be a split or a floating window.
-          preview = float_preview,
+          preview = split_preview,
         },
         definition_prev = {
           mode = 'lsp_definitions',
           focus = true,
-          win = float_win 'Definitions',
-          preview = float_preview,
+          preview = split_preview,
         },
         declaration_prev = {
           mode = 'lsp_declarations',
           focus = true,
-          win = float_win 'Declaration',
-          preview = float_preview,
+          preview = split_preview,
         },
         type_definition_prev = {
           mode = 'lsp_type_definitions',
           focus = true,
-          win = float_win 'Type Definition',
-          preview = float_preview,
+          preview = split_preview,
         },
         implementations_prev = {
           mode = 'lsp_implementations',
           focus = true,
-          win = float_win 'Implementations',
-          preview = float_preview,
+          preview = split_preview,
         },
         command_prev = {
           mode = 'lsp_command',
           focus = true,
-          win = float_win 'LSP Command',
-          preview = float_preview,
+          preview = split_preview,
         },
         incoming_calls_prev = {
           mode = 'lsp_incoming_calls',
           focus = true,
-          win = float_win 'Incoming Calls',
-          preview = float_preview,
+          preview = split_preview,
         },
         outgoing_calls_prev = {
           mode = 'lsp_outgoing_calls',
           focus = true,
-          win = float_win 'Outgoing calls',
-          preview = float_preview,
+          preview = split_preview,
         },
         lsp_document_symbols_prev = {
           mode = 'lsp_document_symbols',
@@ -244,8 +207,7 @@ return {
         lsp_prev = {
           mode = 'lsp',
           focus = true,
-          win = float_win 'LSP References / Declarations / ...',
-          preview = float_preview,
+          preview = split_preview,
         },
         -- sources define their own modes, which you can use directly,
         -- or override like in the example below
@@ -268,8 +230,8 @@ return {
         symbols = {
           desc = 'document symbols',
           mode = 'lsp_document_symbols',
-          focus = false,
-          win = { position = 'right' },
+          focus = true,
+          win = { position = 'right', size = 0.25 },
           filter = {
             -- remove Package since luals uses it for control flow structures
             ['not'] = { ft = 'lua', kind = 'Package' },

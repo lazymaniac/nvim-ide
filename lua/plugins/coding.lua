@@ -37,6 +37,140 @@ return {
   },
 
   {
+    'hedyhli/outline.nvim',
+    config = function()
+      require('outline').setup {
+        outline_window = {
+          position = 'right',
+          split_command = nil,
+          width = 25,
+          relative_width = true,
+          auto_close = false,
+          auto_jump = true,
+          jump_highlight_duration = 300,
+          center_on_jump = true,
+          show_numbers = false,
+          show_relative_numbers = false,
+          wrap = false,
+          -- true/false/'focus_in_outline'/'focus_in_code'.
+          show_cursorline = true,
+          hide_cursor = true,
+          focus_on_open = true,
+          winhl = '',
+        },
+
+        outline_items = {
+          show_symbol_details = true,
+          show_symbol_lineno = true,
+          highlight_hovered_item = true,
+          auto_set_cursor = true,
+          auto_update_events = {
+            follow = { 'CursorMoved' },
+            items = { 'InsertLeave', 'WinEnter', 'BufEnter', 'BufWinEnter', 'TabEnter', 'BufWritePost' },
+          },
+        },
+        guides = {
+          enabled = true,
+          markers = {
+            bottom = '└',
+            middle = '├',
+            vertical = '│',
+          },
+        },
+        symbol_folding = {
+          autofold_depth = 1,
+          auto_unfold = {
+            hovered = true,
+            only = true,
+          },
+          markers = { '', '' },
+        },
+        preview_window = {
+          auto_preview = false,
+          open_hover_on_preview = false,
+          width = 50, -- Percentage or integer of columns
+          min_width = 50, -- Minimum number of columns
+          relative_width = true,
+          height = 50, -- Percentage or integer of lines
+          min_height = 10, -- Minimum number of lines
+          relative_height = true,
+          border = 'single',
+          winhl = 'NormalFloat:',
+          winblend = 0,
+          live = false,
+        },
+        keymaps = {
+          show_help = '?',
+          close = { '<Esc>', 'q' },
+          goto_location = '<Cr>',
+          peek_location = 'o',
+          goto_and_close = '<S-Cr>',
+          restore_location = '<C-g>',
+          hover_symbol = '<C-space>',
+          toggle_preview = 'K',
+          rename_symbol = 'r',
+          code_actions = 'a',
+          fold = 'h',
+          unfold = 'l',
+          fold_toggle = '<Tab>',
+          fold_toggle_all = '<S-Tab>',
+          fold_all = 'W',
+          unfold_all = 'E',
+          fold_reset = 'R',
+          down_and_jump = '<C-j>',
+          up_and_jump = '<C-k>',
+        },
+        providers = {
+          priority = { 'lsp', 'coc', 'markdown', 'norg', 'man' },
+          lsp = {
+            blacklist_clients = {},
+          },
+          markdown = {
+            filetypes = { 'markdown' },
+          },
+        },
+      }
+    end,
+    keys = {
+      {
+        '<leader>cs',
+        '<cmd>Outline<cr>',
+        mode = 'n',
+        desc = 'Document Symbols',
+      },
+    },
+  },
+
+  {
+    'hat0uma/csvview.nvim',
+    config = function()
+      require('csvview').setup {
+        parser = {
+          async_chunksize = 50,
+          delimiter = {
+            default = ',',
+            ft = {
+              tsv = '\t',
+            },
+          },
+          quote_char = '"',
+          comments = {
+            -- "#",
+            -- "--",
+            -- "//",
+          },
+        },
+        view = {
+          min_column_width = 5,
+          spacing = 2,
+          ---@type "highlight" | "border"
+          display_mode = 'border',
+        },
+      }
+    end,
+  },
+
+  {
     'Chaitanyabsprip/fastaction.nvim',
     opts = {
       dismiss_keys = { 'j', 'k', '<c-c>', 'q' },
