@@ -30,7 +30,6 @@ function M.get()
       '<cmd>Trouble type_definition_prev<cr>',
       desc = 'Goto Type Definition <gy>',
     },
-    { '<leader>cs', '<cmd>Trouble symbols toggle<cr>', desc = 'Document Symbols [cs]' },
     {
       '<leader>cw',
       function()
