@@ -11,26 +11,6 @@ function M.get()
   M._keys = {
     { '<leader>li', '<cmd>LspInfo<cr>', desc = 'Lsp Info [li]' },
     {
-      'gd',
-      '<cmd>Trouble definition_prev<cr>',
-      desc = 'Goto Definition <gd>',
-    },
-    {
-      'gr',
-      '<cmd>Trouble references_prev<cr>',
-      desc = 'Goto References <gr>',
-    },
-    {
-      'gI',
-      '<cmd>Trouble implementations_prev<cr>',
-      desc = 'Goto Implementation <gI>',
-    },
-    {
-      'gD',
-      '<cmd>Trouble type_definition_prev<cr>',
-      desc = 'Goto Type Definition <gy>',
-    },
-    {
       '<leader>cw',
       function()
         telescope.lsp_workspace_symbols {}
