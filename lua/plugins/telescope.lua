@@ -14,40 +14,8 @@ return {
     cmd = 'Telescope',
     -- stylua: ignore
     keys = {
-      { '<leader>:', '<cmd>Telescope command_history layout_strategy=vertical<cr>', desc = 'Command History [:]', },
-      { '<leader><space>', Util.telescope('files', { layout_strategy = 'vertical' }), desc = 'Find Files (root dir) [SPC]', },
-      -- find
-      { '<leader>fc', Util.telescope.config_files(), desc = 'Find Config File [fc]', },
-      { '<leader>ff', Util.telescope('files', { cwd = false, layout_strategy = 'vertical' }), desc = 'Find Files (cwd) [ff]', },
-      { '<leader>fr', '<cmd>Telescope oldfiles layout_strategy=vertical<cr>', desc = 'Recent [fr]', },
-      { '<leader>fR', Util.telescope('oldfiles', { cwd = vim.loop.cwd(), layout_strategy = 'vertical' }), desc = 'Recent (cwd) [fR]', },
-      -- git
-      { '<leader>gc', '<cmd>Telescope git_commits layout_strategy=vertical<CR>', desc = 'Git Commits [gc]', },
-      { '<leader>gs', '<cmd>Telescope git_status layout_strategy=vertical<CR>', desc = 'Git Status [gd]', },
       -- search
       { '<leader>p', '<cmd>Telescope registers layout_strategy=vertical<cr>', desc = 'Registers [s"]', },
-      { '<leader>sa', '<cmd>Telescope autocommands layout_strategy=vertical<cr>', desc = 'Auto Commands [sa]', },
-      { '<leader>sb', '<cmd>Telescope current_buffer_fuzzy_find layout_strategy=vertical<cr>', desc = 'Fzf Buffer [sb]', },
-      { '<leader>sc', '<cmd>Telescope command_history layout_strategy=vertical<cr>', desc = 'Command History [sc]', },
-      { '<leader>sC', '<cmd>Telescope commands layout_strategy=vertical<cr>', desc = 'Commands [sC]', },
-      { '<leader>sd', '<cmd>Telescope diagnostics bufnr=0 layout_strategy=vertical<cr>', desc = 'Document Diagnostics [sd]', },
-      { '<leader>sD', '<cmd>Telescope diagnostics layout_strategy=vertical<cr>', desc = 'Workspace Diagnostics [sD]', },
-      { '<leader>/', Util.telescope('live_grep', { layout_strategy = 'vertical' }), desc = 'Grep (root dir) [sg]', },
-      { '<leader>sG', Util.telescope('live_grep', { cwd = false, layout_strategy = 'vertical' }), desc = 'Grep (cwd) [sG]', },
-      { '<leader>sh', '<cmd>Telescope help_tags layout_strategy=vertical<cr>', desc = 'Help Pages [sh]', },
-      { '<leader>sH', '<cmd>Telescope highlights layout_strategy=vertical<cr>', desc = 'Search Highlight Groups [sH]', },
-      { '<leader>.', '<cmd>Telescope keymaps layout_strategy=vertical<cr>', desc = 'Key Maps [sk]', },
-      { '<leader>sM', '<cmd>Telescope man_pages layout_strategy=vertical<cr>', desc = 'Man Pages [sM]', },
-      { '<leader>sm', '<cmd>Telescope marks layout_strategy=vertical<cr>', desc = 'Jump to Mark [sm]', },
-      { '<leader>so', '<cmd>Telescope vim_options layout_strategy=vertical<cr>', desc = 'Options [so]', },
-      { '<leader>sR', '<cmd>Telescope resume<cr>', desc = 'Resume Last Search [sR]', },
-      { '<leader>sw', Util.telescope('grep_string', { word_match = '-w', layout_strategy = 'vertical' }), desc = 'Word (root dir) [sw]', },
-      { '<leader>sW', Util.telescope('grep_string', { cwd = false, word_match = '-w', layout_strategy = 'vertical' }), desc = 'Word (cwd) [sW]', },
-      { '<leader>sw', Util.telescope('grep_string', { layout_strategy = 'vertical' }), mode = 'v', desc = 'Selection (root dir) [sw]', },
-      { '<leader>sW', Util.telescope('grep_string', { cwd = false, layout_strategy = 'vertical' }), mode = 'v', desc = 'Selection (cwd) [sW]', },
-      { '<leader>uC', '<cmd>Telescope themes<cr>', desc = 'Colorscheme with preview [uC]', },
-      { '<leader>ss', function() require('telescope.builtin').lsp_document_symbols { layout_strategy = 'vertical' } end, desc = 'Goto Symbol [ss]', },
-      { '<leader>sS', function() require('telescope.builtin').lsp_dynamic_workspace_symbols { layout_strategy = 'vertical' } end, desc = 'Goto Symbol (Workspace) [sS]', },
       { '<leader>sP', function() require('telescope.builtin').find_files { cwd = require('lazy.core.config').options.root, layout_strategy = 'vertical' } end, desc = 'Search Plugin File [sP]', },
     },
     opts = function()
@@ -253,24 +221,6 @@ return {
     config = function()
       ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'undo'
-    end,
-  },
-
-  -- [nvim-notify] - browse notifications with telescope.
-  -- see: `:h nvim-notify`
-  -- link: https://github.com/rcarriga/nvim-notify
-  {
-    'rcarriga/nvim-notify',
-    branch = 'master',
-    dependencies = { 'nvim-telescope/telescope.nvim' },
-    -- stylua: ignore
-    keys = {
-      ---@diagnostic disable-next-line: undefined-field
-      { '<leader>sN', function() require('telescope').extensions.notify.notify() end, desc = 'Notifications [sN]' },
-    },
-    config = function()
-      ---@diagnostic disable-next-line: undefined-field
-      require('telescope').load_extension 'notify'
     end,
   },
 

@@ -32,7 +32,8 @@ sudo dnf update
 
 # Install packages
 sudo dnf copr enable atim/lazygit -y
-sudo dnf install -y kitty zsh tmux virtualenv python3-neovim python3-pip cmake fzf luarocks luajit golang ripgrep lazygit ncdu unzip zip zoxide bat eza btop lazygit fd-find libX11-devel fastfetch compat-lua-devel-5.1.5 pipx
+sudo dnf copr enable foopsss/shell-color-scripts
+sudo dnf install -y kitty zsh tmux virtualenv python3-neovim python3-pip cmake fzf luarocks luajit golang ripgrep lazygit ncdu unzip zip zoxide bat eza btop lazygit fd-find libX11-devel fastfetch compat-lua-devel-5.1.5 pipx shell-color-scripts
 sudo dnf group install -y "C Development Tools and Libraries" "Development Tools"
 
 # Install oh-my-zsh
@@ -56,10 +57,10 @@ source "$HOME/.sdkman/bin/sdkman-init.sh"
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 # Install Java versions
-sdk install java 8.0.402-tem
-sdk install java 11.0.22-tem
-sdk install java 17.0.10-tem
-sdk install java 21.0.2-tem
+sdk install java 8.0.442-tem
+sdk install java 11.0.26-tem
+sdk install java 17.0.14-tem
+sdk install java 21.0.6-tem
 sdk install gradle
 sdk install maven
 

@@ -13,8 +13,8 @@ return {
     config = function(_, opts)
       local wk = require 'which-key'
       local defaults = {
-        { '<leader>gb', group = '+[buffer]' },
-        { '<leader>gbt', group = '+[toggle]' },
+        { '<leader>gu', group = '+[buffer]' },
+        { '<leader>gut', group = '+[toggle]' },
       }
       wk.add(defaults)
       require('gitsigns').setup(opts)
@@ -87,24 +87,24 @@ return {
           return '<Ignore>'
         end, 'Jump to prev hunk <[h>')
         -- Actions
-        map({ 'n', 'v' }, '<leader>gbs', ':Gitsigns stage_hunk<CR>', 'Stage Hunk [gbs]')
-        map({ 'n', 'v' }, '<leader>gbr', ':Gitsigns reset_hunk<CR>', 'Reset Hunk [gbr]')
-        map('n', '<leader>gbS', gs.stage_buffer, 'Stage Buffer [gbS]')
-        map('n', '<leader>gbu', gs.undo_stage_hunk, 'Undo Stage Hunk [gbu]')
-        map('n', '<leader>gbR', gs.reset_buffer, 'Reset Buffer [gbR]')
-        map('n', '<leader>gbp', gs.preview_hunk_inline, 'Preview Hunk [gbp]')
-        map('n', '<leader>gbb', function()
+        map({ 'n', 'v' }, '<leader>gus', ':Gitsigns stage_hunk<CR>', 'Stage Hunk [gus]')
+        map({ 'n', 'v' }, '<leader>gur', ':Gitsigns reset_hunk<CR>', 'Reset Hunk [gur]')
+        map('n', '<leader>guS', gs.stage_buffer, 'Stage Buffer [guS]')
+        map('n', '<leader>guu', gs.undo_stage_hunk, 'Undo Stage Hunk [guu]')
+        map('n', '<leader>guR', gs.reset_buffer, 'Reset Buffer [guR]')
+        map('n', '<leader>gup', gs.preview_hunk_inline, 'Preview Hunk [gup]')
+        map('n', '<leader>gub', function()
           gs.blame_line { full = true }
-        end, 'Blame Line [gbb]')
-        map('n', '<leader>gbd', gs.diffthis, 'Diff This [gbd]')
-        map('n', '<leader>gbD', function()
+        end, 'Blame Line [gub]')
+        map('n', '<leader>gud', gs.diffthis, 'Diff This [gud]')
+        map('n', '<leader>guD', function()
           gs.diffthis '~'
-        end, 'Diff This ~ [gbD]')
+        end, 'Diff This ~ [guD]')
         map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', 'GitSigns Select Hunk <ih>')
         -- Toggles
-        map('n', '<leader>gbtb', gs.toggle_current_line_blame, 'Toggle line blame [gbtb]')
-        map('n', '<leader>gbtd', gs.toggle_deleted, 'Toggle git show deleted [gbtd]')
-        map('n', '<leader>gbts', gs.toggle_signs, 'Toggle signs [gbts]')
+        map('n', '<leader>gutb', gs.toggle_current_line_blame, 'Toggle line blame [gutb]')
+        map('n', '<leader>gutd', gs.toggle_deleted, 'Toggle git show deleted [gutd]')
+        map('n', '<leader>guts', gs.toggle_signs, 'Toggle signs [guts]')
       end,
     },
   },
