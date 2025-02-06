@@ -107,16 +107,6 @@ return {
     },
   },
 
-  -- [oogway.nvim] - Provides list of Oogway sentences and ascii prictures
-  -- see: `:h oogway`
-  -- link: https://github.com/0x5a4/oogway.nvim
-  {
-    '0x5a4/oogway.nvim',
-    branch = 'main',
-    event = 'VeryLazy',
-    cmd = { 'Oogway' },
-  },
-
   -- [http-codes.nvim] - Preview http codes
   -- see: `:h http-codes`
   -- link: https://github.com/barrett-ruth/http-codes.nvim?tab=readme-ov-file

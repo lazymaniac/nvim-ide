@@ -16,7 +16,6 @@ return {
     'folke/snacks.nvim',
     priority = 1000,
     lazy = false,
-    ---@type snacks.Config
     opts = {
       terminal = {
         win = {
@@ -25,7 +24,7 @@ return {
       },
       bigfile = { enabled = true },
       dashboard = {
-        width = 60,
+        width = 80,
         row = nil, -- dashboard position. nil for center
         col = nil, -- dashboard position. nil for center
         pane_gap = 4, -- empty columns between vertical panes
@@ -42,7 +41,9 @@ return {
             { icon = ' ', key = 'r', desc = 'Recent Files', action = ":lua Snacks.dashboard.pick('oldfiles')" },
             { icon = ' ', key = 'c', desc = 'Config', action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
             { icon = ' ', key = 's', desc = 'Restore Session', section = 'session' },
-            { icon = '󰒲 ', key = 'L', desc = 'Lazy', action = ':Lazy', enabled = package.loaded.lazy ~= nil },
+            { icon = '󰒲 ', key = 'l', desc = 'Lazy', action = ':Lazy update', enabled = package.loaded.lazy ~= nil },
+            { icon = '󱊓 ', key = 'm', desc = 'Mason', action = ':Mason', enabled = package.loaded.lazy ~= nil },
+            { icon = ' ', key = 'L', desc = 'Leetcode', action = ':Leet' },
             { icon = ' ', key = 'q', desc = 'Quit', action = ':qa' },
           },
           -- Used by the `header` section
@@ -84,7 +85,7 @@ return {
           { section = 'startup' },
         },
       },
-      explorer = { enabled = true },
+      explorer = { replace_netrw = true },
       indent = { enabled = true },
       input = { enabled = true },
       lazygit = {
@@ -569,62 +570,6 @@ return {
   -- see: `:h nui`
   -- link: https://github.com/MunifTanjim/nui.nvim
   { 'MunifTanjim/nui.nvim', branch = 'main' },
-
-  -- [dashboard-nvim] - Welcome dashboard like in other IDE
-  -- see: `:h dashboard-nvim`
-  -- link: https://github.com/nvimdev/dashboard-nvim
-  {
-    'nvimdev/dashboard-nvim',
-    branch = 'master',
-    event = 'VimEnter',
-    -- stylua: ignore
-    keys = {
-      { '<leader>D', '<cmd>Dashboard<cr>', desc = 'Dashboard [D]' },
-    },
-    opts = function()
-      local oogway = require 'oogway'
-      local opts = {
-        theme = 'hyper',
-        hide = {
-          -- this is taken care of by lualine
-          -- enabling this messes up the actual laststatus setting after loading a file
-          statusline = false,
-        },
-        config = {
-          week_header = {
-            enable = false,
-          },
-          header = vim.fn.split(oogway.what_is_your_wisdom() .. '\n\n\n\n\n\n\n', '\n'),
-          shortcut = {
-            { icon = '󱎸 ', desc = 'Find Text', action = 'Telescope live_grep', key = 's' },
-            { icon = ' ', desc = 'Config Files', action = [[lua require("util").telescope.config_files()()]], key = 'c' },
-            { icon = ' ', desc = 'Leetcode', action = 'Leet', key = 'L' },
-            { icon = ' ', desc = 'Lazy', action = 'Lazy update', key = 'l' },
-            { icon = '󱊓 ', desc = 'Mason', action = 'Mason', key = 'm' },
-            { icon = ' ', desc = 'Theme', action = 'Telescope themes', key = 't' },
-            { icon = ' ', desc = 'Check Health', action = 'checkhealth', key = 'h' },
-          },
-          packages = { enabled = true },
-          footer = function()
-            local stats = require('lazy').stats()
-            local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
-            return { '⚡ Neovim loaded ' .. stats.loaded .. '/' .. stats.count .. ' plugins in ' .. ms .. 'ms' }
-          end,
-        },
-      }
-      -- close Lazy and re-open when the dashboard is ready
-      if vim.o.filetype == 'lazy' then
-        vim.cmd.close()
-        vim.api.nvim_create_autocmd('User', {
-          pattern = 'DashboardLoaded',
-          callback = function()
-            require('lazy').show()
-          end,
-        })
-      end
-      return opts
-    end,
-  },
 
   -- [floating-help.nvim] - Vim help shown in floating popup
   -- see: 'h: floating-help'
