@@ -133,7 +133,7 @@ return {
     end,
     keys = {
       {
-        '<leader>cs',
+        '<leader>o',
         '<cmd>Outline<cr>',
         mode = 'n',
         desc = 'Document Symbols',

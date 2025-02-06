@@ -25,7 +25,6 @@ return {
       { '<leader>xX', '<cmd>Trouble diagnostics_prev toggle filter.buf=0<cr>', desc = 'Buffer Diagnostics [xX]' },
       { '<leader>xL', '<cmd>Trouble loclist toggle<cr>', desc = 'Location List [xL]' },
       { '<leader>xQ', '<cmd>Trouble qflist toggle<cr>', desc = 'Quickfix List [xQ]' },
-      { '<leader>o', '<cmd>Trouble lsp_document_symbols_prev toggle win.position=right win.size=0.3<cr>', desc = 'Toggle symbols [xs]' },
       { '<leader>xl', '<cmd>Trouble lsp_prev toggle<cr>', desc = 'Toggle LSP [xl]' },
       {
         '[q',
@@ -158,36 +157,6 @@ return {
         diagnostics_prev = {
           focus = true,
           mode = 'diagnostics',
-          preview = split_preview,
-        },
-        references_prev = {
-          mode = 'lsp_references',
-          focus = true,
-          preview = split_preview,
-        },
-        definition_prev = {
-          mode = 'lsp_definitions',
-          focus = true,
-          preview = split_preview,
-        },
-        declaration_prev = {
-          mode = 'lsp_declarations',
-          focus = true,
-          preview = split_preview,
-        },
-        type_definition_prev = {
-          mode = 'lsp_type_definitions',
-          focus = true,
-          preview = split_preview,
-        },
-        implementations_prev = {
-          mode = 'lsp_implementations',
-          focus = true,
-          preview = split_preview,
-        },
-        command_prev = {
-          mode = 'lsp_command',
-          focus = true,
           preview = split_preview,
         },
         incoming_calls_prev = {
