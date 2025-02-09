@@ -8,7 +8,7 @@ return {
     'neovim/nvim-lspconfig',
     branch = 'master',
     event = 'VeryLazy',
-    dependencies = { 'williamboman/mason.nvim', 'williamboman/mason-lspconfig.nvim' },
+    dependencies = { 'williamboman/mason.nvim', 'williamboman/mason-lspconfig.nvim', 'saghen/blink.cmp' },
     ---@class PluginLspOpts
     opts = {
       -- options for vim.diagnostic.config()
@@ -120,6 +120,7 @@ return {
         has_cmp and cmp_nvim_lsp.default_capabilities() or {},
         opts.capabilities or {}
       )
+      capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)
       local function setup(server)
         local server_opts = vim.tbl_deep_extend('force', {
           capabilities = vim.deepcopy(capabilities),

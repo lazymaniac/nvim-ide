@@ -219,6 +219,5 @@ return {
     'chrisgrieser/nvim-various-textobjs',
     branch = 'main',
     event = 'VeryLazy',
-    opts = { useDefaultKeymaps = true },
   },
 }
