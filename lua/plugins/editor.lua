@@ -141,6 +141,11 @@ return {
         { '<leader>w', group = '+[windows]' },
         { '<leader>x', group = '+[diagnostics/quickfix]' },
         { '<leader>l', group = '+[utils]' },
+        { 'g', group = '+[goto]' },
+        { 'z', group = '+[fold]' },
+        { '[', group = '+[prev]' },
+        { ']', group = '+[next]' },
+
       }
       wk.add(defaults)
     end,

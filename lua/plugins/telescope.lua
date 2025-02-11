@@ -207,23 +207,6 @@ return {
     end,
   },
 
-  -- [telescope-undo] - Search undo history with telescope.
-  -- see: `:h telescope-undo`
-  -- link: https://github.com/debugloop/telescope-undo.nvim
-  {
-    'debugloop/telescope-undo.nvim',
-    branch = 'main',
-    dependencies = { 'nvim-telescope/telescope.nvim' },
-    -- stylua: ignore
-    keys = {
-      { '<leader>su', '<cmd>Telescope undo<cr>', desc = 'Undo History [su]' },
-    },
-    config = function()
-      ---@diagnostic disable-next-line: undefined-field
-      require('telescope').load_extension 'undo'
-    end,
-  },
-
   -- [telescope-fzf-native.nvim] - Power telescope search with fzf
   -- see: `:h telescope-fzf-native.nvim`
   -- link: https://github.com/nvim-telescope/telescope-fzf-native.nvim

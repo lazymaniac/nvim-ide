@@ -194,29 +194,23 @@ return {
       }
       require('overseer').on_setup(function()
         local path = require 'plenary.path'
-
         local function find_directories_with_pom_xml()
           -- Use Neovim's globpath function to find pom.xml files in the current working directory and subdirectories
           local pomFiles = vim.fn.globpath(vim.fn.getcwd(), '**/pom.xml', false, true)
-
           local directories = {}
           for _, filePath in ipairs(pomFiles) do
             -- Extract the directory part of each file path
             local dir = vim.fn.fnamemodify(filePath, ':h')
-
             -- Check if the directory should be excluded
             if not string.find(dir, '/src') and not string.find(dir, '/target') then
               directories[dir] = true
             end
           end
-
           local dirList = vim.tbl_keys(directories)
           -- Sort the list of directories
           table.sort(dirList)
-
           return dirList
         end
-
         local function parse_maven_phases(output)
           local phases = {}
           for line in output:gmatch '([^\n]+)' do
@@ -227,7 +221,6 @@ return {
           end
           return vim.tbl_keys(phases)
         end
-
         local function parse_maven_profiles(output)
           local profiles = {}
           for line in output:gmatch '([^\n]+)' do
@@ -238,11 +231,9 @@ return {
           end
           return vim.tbl_keys(profiles)
         end
-
         local function create_file(file_path, content)
           vim.fn.writefile(vim.split(content, '\n'), file_path)
         end
-
         -- Function to run a shell command in the background
         local function run_command_in_background(cmd, callback)
           local output = {}
@@ -275,11 +266,9 @@ return {
             print 'Failed to run mvn command: Invalid arguments'
           end
         end
-
         local function load_goals(project_root)
           local goals_file_path = project_root .. '/.mvn_goals'
           local goals_file = path:new(goals_file_path)
-
           if not goals_file:exists() then
             run_command_in_background('mvn buildplan:list', function(buildplan_output)
               require 'notify' 'Loading available maven goals'
@@ -290,11 +279,9 @@ return {
             end)
           end
         end
-
         local function load_profles(project_root)
           local profiles_file_path = project_root .. '/.mvn_profiles'
           local profiles_file = path:new(profiles_file_path)
-
           if not profiles_file:exists() then
             run_command_in_background('mvn help:all-profiles', function(profiles_output)
               require 'notify' 'Loading available maven profiles'
@@ -305,21 +292,16 @@ return {
             end)
           end
         end
-
         local function load_maven_data(project_root)
           load_goals(project_root)
           load_profles(project_root)
         end
-
         local function is_pom_xml_in_cwd(project_root)
           return path:new(project_root .. '/pom.xml'):exists()
         end
-
         local cwd = vim.fn.getcwd()
-
         if is_pom_xml_in_cwd(cwd) then
           local pom_dirs = find_directories_with_pom_xml()
-
           for _, dir in ipairs(pom_dirs) do
             load_maven_data(dir)
           end
