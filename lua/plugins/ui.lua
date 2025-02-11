@@ -180,12 +180,9 @@ return {
             git_status_open = false,
             follow_file = true,
             focus = 'list',
-            auto_close = false,
+            auto_close = true,
             jump = { close = false },
             layout = { preset = 'sidebar', preview = false, layout = { position = 'right' } },
-            -- to show the explorer to the right, add the below to
-            -- your config under `opts.picker.sources.explorer`
-            -- layout = { layout = { position = "right" } },
             formatters = {
               file = { filename_only = true },
               severity = { pos = 'right' },

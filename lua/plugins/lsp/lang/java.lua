@@ -50,8 +50,7 @@ local jdtls_settings = {
     },
     jdt = {
       ls = {
-        vmargs =
-        '-javaagent:/home/seba/.local/share/nvim/mason/packages/jdtls/lombok.jar -XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx4G -Xms100m -Xlog:enable',
+        vmargs = '-javaagent:/home/seba/.local/share/nvim/mason/packages/jdtls/lombok.jar -XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx4G -Xms100m -Xlog:enable',
         protobufSupport = {
           enabled = true,
         },
@@ -176,7 +175,7 @@ local jdtls_settings = {
         'org.mockito.Mockito.*',
         'org.mockito.BDDMockito.*',
         'org.instancio.Instancio.*',
-        'org.instancio.Select.*'
+        'org.instancio.Select.*',
       },
       filteredTypes = { 'java.awt.*', 'com.sun.*', 'sun.*', 'jdk.*', 'org.graalvm.*', 'io.micrometer.shaded.*' },
       guessMethodArguments = 'auto',
@@ -333,6 +332,7 @@ return {
   -- link: https://gitlab.com/schrieveslaach/sonarlint.nvim
   {
     'https://gitlab.com/schrieveslaach/sonarlint.nvim',
+    enabled = false,
     ft = { 'java' },
     config = function()
       require('sonarlint').setup {
@@ -454,7 +454,7 @@ return {
       local function attach_jdtls()
         local extendedClientCapabilities = require('jdtls').extendedClientCapabilities
         extendedClientCapabilities.resolveAdditionalTextEditsSupport = true
-        local capabilities = require('cmp_nvim_lsp').default_capabilities()
+        local capabilities = require('blink.cmp').get_lsp_capabilities {}
         capabilities.workspace = {
           configuration = true,
         }
@@ -470,6 +470,7 @@ return {
             allow_incremental_sync = true,
           },
           settings = jdtls_settings,
+          capabilities = capabilities,
         }, opts.jdtls)
         -- Existing server will be reused if the root_dir matches.
         require('jdtls').start_or_attach(config)

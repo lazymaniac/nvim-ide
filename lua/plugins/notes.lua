@@ -21,7 +21,7 @@ return {
       luarocks_build_args = {
         '--with-lua-include=/usr/include',
       },
-      rocks = { 'lua-curl', 'nvim-nio', 'mimetypes', 'xml2lua' },
+      -- rocks = { 'lua-curl', 'nvim-nio', 'mimetypes', 'xml2lua' },
     },
   },
 
