@@ -4,51 +4,28 @@ return {
 
   -- [[ SEARCHING AND REPLACING ]] ---------------------------------------------------------------
 
-  -- [ssr.nvim] - Search and replace in-file
-  -- see: `:h ssr.nvim`
-  -- link: https://github.com/cshuaimin/ssr.nvim
+  -- search/replace in multiple files
   {
-    'cshuaimin/ssr.nvim',
-    branch = 'main',
-    event = 'VeryLazy',
-    module = 'ssr',
-    -- stylua: ignore
+    "MagicDuck/grug-far.nvim",
+    opts = { headerMaxWidth = 80 },
+    cmd = "GrugFar",
     keys = {
-      { '<leader>se', function() require('ssr').open() end, mode = { 'n', 'v' }, desc = 'Search and Replace (Buffer) [se]' },
+      {
+        "<leader>sr",
+        function()
+          local grug = require("grug-far")
+          local ext = vim.bo.buftype == "" and vim.fn.expand("%:e")
+          grug.open({
+            transient = true,
+            prefills = {
+              filesFilter = ext and ext ~= "" and "*." .. ext or nil,
+            },
+          })
+        end,
+        mode = { "n", "v" },
+        desc = "Search and Replace",
+      },
     },
-    config = function()
-      require('ssr').setup {
-        border = 'rounded',
-        min_width = 50,
-        min_height = 5,
-        max_width = 120,
-        max_height = 25,
-        adjust_window = true,
-        keymaps = {
-          close = 'q',
-          next_match = 'n',
-          prev_match = 'N',
-          replace_confirm = '<cr>',
-          replace_all = '<leader><cr>',
-        },
-      }
-    end,
-  },
-
-  -- [nvim-spectre] - Search files with replace option
-  -- see: `:h nvim-spectre`
-  -- link: https://github.com/cshuaimin/ssr.nvim
-  {
-    'nvim-pack/nvim-spectre',
-    branch = 'master',
-    event = 'VeryLazy',
-    build = false,
-    cmd = 'Spectre',
-    -- stylua: ignore
-    keys = {
-      { '<leader>sr', function() require('spectre').open() end, desc = 'Search and Replace [sr]' },
-    },
-    opts = { open_cmd = 'noswapfile vnew' },
   },
 
   -- [leap.nvim] - Jump in code with s and S keys

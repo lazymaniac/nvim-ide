@@ -1,5 +1,4 @@
 return {
-
   {
     'nvchad/base46',
     lazy = true,
