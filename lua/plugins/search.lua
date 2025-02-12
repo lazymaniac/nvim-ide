@@ -6,49 +6,45 @@ return {
 
   -- search/replace in multiple files
   {
-    "MagicDuck/grug-far.nvim",
+    'MagicDuck/grug-far.nvim',
     opts = { headerMaxWidth = 80 },
-    cmd = "GrugFar",
+    cmd = 'GrugFar',
     keys = {
       {
-        "<leader>sr",
+        '<leader>sr',
         function()
-          local grug = require("grug-far")
-          local ext = vim.bo.buftype == "" and vim.fn.expand("%:e")
-          grug.open({
+          local grug = require 'grug-far'
+          local ext = vim.bo.buftype == '' and vim.fn.expand '%:e'
+          grug.open {
             transient = true,
             prefills = {
-              filesFilter = ext and ext ~= "" and "*." .. ext or nil,
+              filesFilter = ext and ext ~= '' and '*.' .. ext or nil,
             },
-          })
+          }
         end,
-        mode = { "n", "v" },
-        desc = "Search and Replace",
+        mode = { 'n', 'v' },
+        desc = 'Search and Replace',
       },
     },
   },
 
-  -- [leap.nvim] - Jump in code with s and S keys
-  -- see: `:h leap.nvim`
-  -- link: https://github.com/ggandor/leap.nvim
+  -- Flash enhances the built-in search functionality by showing labels
+  -- at the end of each match, letting you quickly jump to a specific
+  -- location.
   {
-    'ggandor/leap.nvim',
-    branch = 'main',
+    'folke/flash.nvim',
     event = 'VeryLazy',
+    vscode = true,
+    ---@type Flash.Config
+    opts = {},
+    -- stylua: ignore
     keys = {
-      { 's',  mode = { 'n', 'x', 'o' }, desc = 'Leap forward to <s>' },
-      { 'S',  mode = { 'n', 'x', 'o' }, desc = 'Leap backward to <S>' },
-      { 'gs', mode = { 'n', 'x', 'o' }, desc = 'Leap from windows <gs>' },
+      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+      { "S", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+      { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+      { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+      { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
     },
-    config = function(_, opts)
-      local leap = require 'leap'
-      for k, v in pairs(opts) do
-        leap.opts[k] = v
-      end
-      leap.add_default_mappings(true)
-      vim.keymap.del({ 'x', 'o' }, 'x')
-      vim.keymap.del({ 'x', 'o' }, 'X')
-    end,
   },
 
   -- [improved-search] - Enhance searching with n and N keys
@@ -67,7 +63,7 @@ return {
       vim.keymap.set('n', '!', search.current_word)
       -- Search selected text in visual mode
       vim.keymap.set('x', '!', search.in_place) -- search selection without moving
-      vim.keymap.set('x', '*', search.forward)  -- search selection forward
+      vim.keymap.set('x', '*', search.forward) -- search selection forward
       vim.keymap.set('x', '#', search.backward) -- search selection backward
       -- Search by motion in place
       vim.keymap.set('n', '|', search.in_place)

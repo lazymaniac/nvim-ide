@@ -15,6 +15,22 @@ return {
     'folke/which-key.nvim',
     branch = 'main',
     event = 'VeryLazy',
+    keys = {
+      {
+        '<leader>?',
+        function()
+          require('which-key').show { global = false }
+        end,
+        desc = 'Buffer Keymaps (which-key)',
+      },
+      {
+        '<c-w><space>',
+        function()
+          require('which-key').show { keys = '<c-w>', loop = true }
+        end,
+        desc = 'Window Hydra Mode (which-key)',
+      },
+    },
     opts = {
       ---@type false | "classic" | "modern" | "helix"
       preset = 'modern',
@@ -145,7 +161,6 @@ return {
         { 'z', group = '+[fold]' },
         { '[', group = '+[prev]' },
         { ']', group = '+[next]' },
-
       }
       wk.add(defaults)
     end,
@@ -282,7 +297,10 @@ return {
       vim.g.neominimap = {
         auto_enable = true,
         exclude_filetypes = {
-          'help', 'dashboard', 'markdown', 'norg'
+          'help',
+          'dashboard',
+          'markdown',
+          'norg',
         },
         exclude_buftypes = {
           'nofile',
@@ -372,7 +390,6 @@ return {
       }
     end,
   },
-
 
   -- [vim-repeat] - Support `.` repeat in plugins.
   -- see: `:h vim-repeat`
