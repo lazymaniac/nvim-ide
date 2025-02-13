@@ -27,13 +27,15 @@ return {
 
   {
     'mfussenegger/nvim-ansible',
+    ft = {},
     branch = 'main',
     keys = {
       {
-        '<leader>cR',
+        "<leader>ta",
         function()
-          require('ansible').run()
+          require("ansible").run()
         end,
+        desc = "Ansible Run Playbook/Role",
         silent = true,
       },
     },

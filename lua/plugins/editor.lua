@@ -152,7 +152,7 @@ return {
         { '<leader>g', group = '+[git]' },
         { '<leader>q', group = '+[quit/session]' },
         { '<leader>s', group = '+[search]' },
-        { '<leader>a', group = '+[terminal]' },
+        { '<leader>a', group = '+[avante]' },
         { '<leader>u', group = '+[ui]' },
         { '<leader>w', group = '+[windows]' },
         { '<leader>x', group = '+[diagnostics/quickfix]' },
