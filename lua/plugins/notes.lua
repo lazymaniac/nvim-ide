@@ -73,7 +73,7 @@ return {
           },
           ['core.completion'] = {
             config = {
-              engine = 'nvim-cmp',
+              engine = 'blink.cmp',
               name = '[Neorg]',
             },
           },

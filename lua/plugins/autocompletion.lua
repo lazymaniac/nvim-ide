@@ -41,6 +41,9 @@ return {
       {
         'saghen/blink.compat',
         opts = {},
+        dependencies = {
+          { 'petertriho/cmp-git', opts = {} },
+        },
       },
     },
     version = '*',
