@@ -107,22 +107,17 @@ return {
   -- TODO: check new `regexp` branch
   {
     'linux-cultist/venv-selector.nvim',
-    branch = 'main',
+    branch = 'regexp',
     cmd = 'VenvSelect',
+    ft = "python",
     keys = { { '<leader>cv', '<cmd>:VenvSelect<cr>', desc = 'Select VirtualEnv [cv]' } },
-    opts = function(_, opts)
-      if require('util').has 'nvim-dap-python' then
-        opts.dap_enabled = true
-      end
-      return vim.tbl_deep_extend('force', opts, {
-        name = {
-          'venv',
-          '.venv',
-          'env',
-          '.env',
+    opts = {
+      settings = {
+        options = {
+          notify_user_on_venv_activation = true,
         },
-      })
-    end,
+      },
+    },
   },
 
 }
