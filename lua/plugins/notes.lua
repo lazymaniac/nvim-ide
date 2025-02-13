@@ -73,7 +73,6 @@ return {
           },
           ['core.completion'] = {
             config = {
-              engine = 'blink.cmp',
               name = '[Neorg]',
             },
           },
