@@ -6,7 +6,7 @@ return {
   },
 
   -- Add s-exp mappings
-  { "PaterJason/nvim-treesitter-sexp", opts = {}, event = "LazyFile" },
+  { "PaterJason/nvim-treesitter-sexp", opts = {}, },
 
   -- Colorize the output of the log buffer
   {
@@ -28,14 +28,13 @@ return {
   -- Use Clojure REPL
   {
     "Olical/conjure",
-    event = "LazyFile",
     config = function(_, _)
       require("conjure.main").main()
       require("conjure.mapping")["on-filetype"]()
     end,
     init = function()
       -- print color codes if baleia.nvim is available
-      local colorize = require("lazyvim.util").has("baleia.nvim")
+      local colorize = require("util").has("baleia.nvim")
 
       if colorize then
         vim.g["conjure#log#strip_ansi_escape_sequences_line_limit"] = 0
