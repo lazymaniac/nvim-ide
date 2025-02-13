@@ -522,8 +522,7 @@ return {
       { '<leader>ss', function() Snacks.picker.lsp_symbols() end, desc = 'LSP Symbols' },
       { '<leader>sS', function() Snacks.picker.lsp_workspace_symbols() end, desc = 'LSP Workspace Symbols' },
       -- Other
-      { '<leader>z', function() Snacks.zen() end, desc = 'Toggle Zen Mode' },
-      { '<leader>Z', function() Snacks.zen.zoom() end, desc = 'Toggle Zoom' },
+      { '<leader>Z', function() Snacks.zen() end, desc = 'Toggle Zen Mode' },
       { '<leader>.', function() Snacks.scratch() end, desc = 'Toggle Scratch Buffer' },
       { '<leader>S', function() Snacks.scratch.select() end, desc = 'Select Scratch Buffer' },
       { '<leader>sn', function() Snacks.notifier.show_history() end, desc = 'Notification History' },
