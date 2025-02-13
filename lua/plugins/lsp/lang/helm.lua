@@ -10,6 +10,11 @@ return {
   },
 
   {
+    'nvim-treesitter/nvim-treesitter',
+    opts = { ensure_installed = { 'helm' } },
+  },
+
+  {
     'neovim/nvim-lspconfig',
     opts = {
       servers = {

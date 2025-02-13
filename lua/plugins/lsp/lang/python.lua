@@ -125,12 +125,4 @@ return {
     end,
   },
 
-  {
-    'hrsh7th/nvim-cmp',
-    branch = 'main',
-    opts = function(_, opts)
-      opts.auto_brackets = opts.auto_brackets or {}
-      table.insert(opts.auto_brackets, 'python')
-    end,
-  },
 }
