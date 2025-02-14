@@ -14,10 +14,10 @@ return {
       if type(opts.ensure_installed) == 'table' then
         vim.list_extend(opts.ensure_installed, { 'angular', 'scss' })
       end
-      vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
-        pattern = { "*.component.html", "*.container.html" },
+      vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
+        pattern = { '*.component.html', '*.container.html' },
         callback = function()
-          vim.treesitter.start(nil, "angular")
+          vim.treesitter.start(nil, 'angular')
         end,
       })
     end,
@@ -39,11 +39,11 @@ return {
         angularls = {
           on_attach = function(client, bufnr)
             local wk = require 'which-key'
-            wk.register({
-              ['<leader>ct'] = { '<cmd>lua require("ng").goto_template_for_component()<cr>', 'Goto Template [ct]' },
-              ['<leader>cc'] = { '<cmd>lua require("ng").goto_component_with_template_file()<cr>', 'Goto Component [cc]' },
-              ['<leader>cb'] = { '<cmd>lua require("ng").get_template_tcb()<cr>', 'Goto Type Check Block [cb]' },
-            }, { mode = 'n', buffer = bufnr })
+            wk.add {
+              { '<leader>ct', '<cmd>lua require("ng").goto_template_for_component()<cr>', desc = 'Goto Template [ct]', mode = 'n', buffer = bufnr },
+              { '<leader>cc', '<cmd>lua require("ng").goto_component_with_template_file()<cr>', desc = 'Goto Component [cc]', mode = 'n', buffer = bufnr },
+              { '<leader>cb', '<cmd>lua require("ng").get_template_tcb()<cr>', desc = 'Goto Type Check Block [cb]', mode = 'n', buffer = bufnr },
+            }
           end,
         },
       },

@@ -53,7 +53,7 @@ return {
   -- link: https://github.com/mrcjkb/rustaceanvim
   {
     'mrcjkb/rustaceanvim',
-    branch = 'master',
+    version = '*',
     ft = { 'rust' },
     config = function()
       vim.g.rustaceanvim = {
@@ -61,35 +61,31 @@ return {
         -- tools = {},
         -- LSP configuration
         server = {
-          ---@diagnostic disable-next-line: unused-local
           on_attach = function(client, bufnr)
             local wk = require 'which-key'
-            wk.register({
-              -- stylua: ignore
-              ['<leader>ca'] = { '<cmd>RustLsp codeAction<cr>', 'Code Action [ca]' },
-              ['<leader>ce'] = { '<cmd>RustLsp externalDocs<cr>', 'External Docs [ce]' },
-              ['<leader>cp'] = { '<cmd>RustLsp rebuildProcMacros<cr>', 'Rebuild Proc Macros [cp]' },
-              ['<leader>cx'] = { '<cmd>RustLsp explainError<cr>', 'Explain Error [cx]' },
-              ['<leader>cM'] = { '<cmd>RustLsp expandMacro<cr>', 'Expand Macro [cM]' },
-              ['<leader>cg'] = { '<cmd>RustLsp crateGraph<cr>', 'Crates Graph [cg]' },
-              ['<leader>cS'] = { '<cmd>RustLsp ssr<cr>', 'SSR [cS]' },
-              ['<leader>cj'] = { '<cmd>RustLsp moveItem down<cr>', 'Move Item Down [cj]' },
-              ['<leader>ck'] = { '<cmd>RustLsp moveItem up<cr>', 'Move Item Up [ck]' },
-              ['<leader>cK'] = { '<cmd>RustLsp hover actions<cr>', 'Hover Actions [cK]' },
-              ['<leader>cO'] = { '<cmd>RustLsp openCargo<cr>', 'Open Cargo.toml [co]' },
-              ['<leader>cP'] = { '<cmd>RustLsp parentModule<cr>', 'Parent Module [cP]' },
-              ['<leader>cJ'] = { '<cmd>RustLsp joinLines<cr>', 'Join Lines [cJ]' },
-              ['<leader>ct'] = { '<cmd>RustLsp syntaxTree<cr>', 'Syntax Tree [ct]' },
-              ['<leader>dm'] = { '<cmd>RustLsp view mir<cr>', 'View MIR [dm]' },
-              ['<leader>dh'] = { '<cmd>RustLsp view hir<cr>', 'View HIR [dh]' },
-              ['<leader>dd'] = { '<cmd>RustLsp debuggables<cr>', 'Debuggables [dd]' },
-              ['<leader>dl'] = { '<cmd>RustLsp debuggables last<cr>', 'Debuggables last [dl]' },
-              ['<leader>ru'] = { '<cmd>RustLsp runnables<cr>', 'Runnables [ru]' },
-              ['<leader>rl'] = { '<cmd>RustLsp runnables last<cr>', 'Runnables last [rl]' },
-            }, { mode = 'n', buffer = bufnr })
-            wk.register({
-              ['<leader>cK'] = { '<cmd>RustLsp hover range<cr>', 'Hover Ranger [cK]' },
-            }, { mode = 'v', buffer = bufnr })
+            wk.add {
+              { '<leader>ca', '<cmd>RustLsp codeAction<cr>', desc = 'Code Action [ca]', mode = 'n', buffer = bufnr },
+              { '<leader>ce', '<cmd>RustLsp externalDocs<cr>', desc = 'External Docs [ce]', mode = 'n', buffer = bufnr },
+              { '<leader>cp', '<cmd>RustLsp rebuildProcMacros<cr>', desc = 'Rebuild Proc Macros [cp]', mode = 'n', buffer = bufnr },
+              { '<leader>cx', '<cmd>RustLsp explainError<cr>', desc = 'Explain Error [cx]', mode = 'n', buffer = bufnr },
+              { '<leader>cM', '<cmd>RustLsp expandMacro<cr>', desc = 'Expand Macro [cM]', mode = 'n', buffer = bufnr },
+              { '<leader>cg', '<cmd>RustLsp crateGraph<cr>', desc = 'Crates Graph [cg]', mode = 'n', buffer = bufnr },
+              { '<leader>cS', '<cmd>RustLsp ssr<cr>', desc = 'SSR [cS]', mode = 'n', buffer = bufnr },
+              { '<leader>cj', '<cmd>RustLsp moveItem down<cr>', desc = 'Move Item Down [cj]', mode = 'n', buffer = bufnr },
+              { '<leader>ck', '<cmd>RustLsp moveItem up<cr>', desc = 'Move Item Up [ck]', mode = 'n', buffer = bufnr },
+              { '<leader>cK', '<cmd>RustLsp hover actions<cr>', desc = 'Hover Actions [cK]', mode = 'n', buffer = bufnr },
+              { '<leader>cO', '<cmd>RustLsp openCargo<cr>', desc = 'Open Cargo.toml [co]', mode = 'n', buffer = bufnr },
+              { '<leader>cP', '<cmd>RustLsp parentModule<cr>', desc = 'Parent Module [cP]', mode = 'n', buffer = bufnr },
+              { '<leader>cJ', '<cmd>RustLsp joinLines<cr>', desc = 'Join Lines [cJ]', mode = 'n', buffer = bufnr },
+              { '<leader>ct', '<cmd>RustLsp syntaxTree<cr>', desc = 'Syntax Tree [ct]', mode = 'n', buffer = bufnr },
+              { '<leader>dm', '<cmd>RustLsp view mir<cr>', desc = 'View MIR [dm]', mode = 'n', buffer = bufnr },
+              { '<leader>dh', '<cmd>RustLsp view hir<cr>', desc = 'View HIR [dh]', mode = 'n', buffer = bufnr },
+              { '<leader>dd', '<cmd>RustLsp debuggables<cr>', desc = 'Debuggables [dd]', mode = 'n', buffer = bufnr },
+              { '<leader>dl', '<cmd>RustLsp debuggables last<cr>', desc = 'Debuggables last [dl]', mode = 'n', buffer = bufnr },
+              { '<leader>ru', '<cmd>RustLsp runnables<cr>', desc = 'Runnables [ru]', mode = 'n', buffer = bufnr },
+              { '<leader>rl', '<cmd>RustLsp runnables last<cr>', desc = 'Runnables last [rl]', mode = 'n', buffer = bufnr },
+              { '<leader>cK', '<cmd>RustLsp hover range<cr>', desc = 'Hover Ranger [cK]', mode = 'v', buffer = bufnr },
+            }
             -- you can also put keymaps in here
             vim.lsp.inlay_hint.enable(true)
           end,
@@ -128,7 +124,7 @@ return {
     'nvim-neotest/neotest',
     opts = {
       adapters = {
-        ["rustaceanvim.neotest"] = {},
+        ['rustaceanvim.neotest'] = {},
       },
     },
   },
