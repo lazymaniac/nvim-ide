@@ -726,18 +726,6 @@ return {
     end,
   },
 
-  -- [markview.nvim] - Markdown previever
-  -- see: `:h markview.nvim`
-  -- link: https://github.com/OXY2DEV/markview.nvim
-  {
-    'OXY2DEV/markview.nvim',
-    lazy = false, -- Recommended
-    ft = { 'markdown', 'norg' },
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter',
-    },
-  },
-
   {
     'sphamba/smear-cursor.nvim',
     opts = {
