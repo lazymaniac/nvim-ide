@@ -26,25 +26,6 @@ return {
     },
   },
 
-  -- [markdown-preview.nvim] - Preview markdown in bnowser.
-  -- see: `:h markdown-preview.nvim`
-  -- link: https://github.com/iamcco/markdown-preview.nvim
-  {
-    'iamcco/markdown-preview.nvim',
-    branch = 'master',
-    cmd = { 'MarkdownPreviewToggle', 'MarkdownPreview', 'MarkdownPreviewStop' },
-    build = function()
-      vim.fn['mkdp#util#install']()
-    end,
-    -- stylua: ignore
-    keys = {
-      { '<leader>cp', ft = 'markdown', '<cmd>MarkdownPreviewToggle<cr>', desc = 'Markdown Preview (Browser) [cp]' },
-    },
-    config = function()
-      vim.cmd [[do FileType]]
-    end,
-  },
-
   -- [markdown.nvim] - Tools for writing markdown
   -- see: `:h markdown.nvim`
   -- link: https://github.com/tadmccorkle/markdown.nvim
