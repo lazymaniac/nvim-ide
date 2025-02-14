@@ -66,7 +66,7 @@ return {
             local wk = require 'which-key'
             wk.register({
               -- stylua: ignore
-              ['<leader>ca'] = { function() require('actions-preview').code_actions() end, 'Code Action [ca]' },
+              ['<leader>ca'] = { '<cmd>RustLsp codeAction<cr>', 'Code Action [ca]' },
               ['<leader>ce'] = { '<cmd>RustLsp externalDocs<cr>', 'External Docs [ce]' },
               ['<leader>cp'] = { '<cmd>RustLsp rebuildProcMacros<cr>', 'Rebuild Proc Macros [cp]' },
               ['<leader>cx'] = { '<cmd>RustLsp explainError<cr>', 'Explain Error [cx]' },
@@ -126,7 +126,11 @@ return {
 
   {
     'nvim-neotest/neotest',
-    dependencies = { 'rouge8/neotest-rust' },
+    opts = {
+      adapters = {
+        ["rustaceanvim.neotest"] = {},
+      },
+    },
   },
 
   -- [crates.nvim] - Rust Crates support.
@@ -137,39 +141,16 @@ return {
     branch = 'main',
     event = { 'BufRead Cargo.toml' },
     opts = {
-      smart_insert = true,
-      insert_closing_quote = true,
-      autoload = true,
-      autoupdate = true,
-      autoupdate_throttle = 250,
-      loading_indicator = true,
-      date_format = '%Y-%m-%d',
-      thousands_separator = '.',
-      notification_title = 'Crates',
-      curl_args = { '-sL', '--retry', '1' },
-      max_parallel_requests = 80,
-      popup = {
-        autofocus = false,
-        hide_on_select = false,
-        copy_register = '"',
-        style = 'minimal',
-        border = 'none',
-        show_version_date = true,
-        show_dependency_version = true,
-        max_height = 30,
-        min_width = 20,
-        padding = 1,
-        keys = {
-          hide = { 'q', '<esc>' },
-          open_url = { '<cr>' },
-          select = { '<cr>' },
-          select_alt = { 's' },
-          toggle_feature = { '<cr>' },
-          copy_value = { 'yy' },
-          goto_item = { 'gd', 'K', '<C-LeftMouse>' },
-          jump_forward = { '<c-i>' },
-          jump_back = { '<c-o>', '<C-RightMouse>' },
+      completion = {
+        crates = {
+          enabled = true,
         },
+      },
+      lsp = {
+        enabled = true,
+        actions = true,
+        completion = true,
+        hover = true,
       },
     },
   },
