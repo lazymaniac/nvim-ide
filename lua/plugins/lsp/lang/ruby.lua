@@ -12,26 +12,26 @@ return {
       ---@type lspconfig.options
       servers = {
         ruby_lsp = {
-          enabled = lsp == 'ruby_lsp',
+          enabled = true,
         },
         solargraph = {
-          enabled = lsp == 'solargraph',
+          enabled = false,
         },
         rubocop = {
           -- If Solargraph and Rubocop are both enabled as an LSP,
           -- diagnostics will be duplicated because Solargraph
           -- already calls Rubocop if it is installed
-          enabled = formatter == 'rubocop' and lsp ~= 'solargraph',
+          enabled = true,
         },
         standardrb = {
-          enabled = formatter == 'standardrb',
+          enabled = false,
         },
       },
     },
   },
   {
     'williamboman/mason.nvim',
-    opts = { ensure_installed = { 'erb-formatter', 'erb-lint' } },
+    opts = { ensure_installed = { 'erb-formatter', 'erb-lint', 'rubocop', 'ruby-lsp', 'solargraph', 'standardrb' } },
   },
   {
     'mfussenegger/nvim-dap',
