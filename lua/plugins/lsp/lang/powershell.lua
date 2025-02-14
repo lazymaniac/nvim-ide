@@ -8,10 +8,10 @@ return {
           bundle_path = vim.fn.stdpath 'data' .. '/mason/packages/powershell-editor-services',
           on_attach = function(client, bufnr)
             local wk = require 'which-key'
-            wk.register({
-              ['<leader>ct'] = { '<cmd>lua require("powershell").toggle_term()<cr>', 'Toggle Term (PowerShell) [ct]' },
-              ['<leader>ce'] = { '<cmd>lua require("powershell").eval()<cr>', 'Eval (PowerShell) [ce]' },
-            }, { mode = { 'n', 'v' }, buffer = bufnr })
+            wk.add {
+              { '<leader>ct', '<cmd>lua require("powershell").toggle_term()<cr>', desc = 'Toggle Term (PowerShell) [ct]', mode = { 'n', 'v' }, buffer = bufnr },
+              { '<leader>ce', '<cmd>lua require("powershell").eval()<cr>', desc = 'Eval (PowerShell) [ce]', mode = { 'n', 'v' }, buffer = bufnr },
+            }
           end,
         },
       },

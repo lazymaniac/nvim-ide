@@ -49,13 +49,13 @@ return {
             dialyzerEnabled = false,
             enableTestLenses = false,
           },
-          on_attach = function(client, bufnr)
+          on_attach = function(_, bufnr)
             local wk = require 'which-key'
-            wk.register({
-              ['<leader>cm'] = { ':ElixirFromPipe<cr>', 'From Pipe [cm]' },
-              ['<leader>cO'] = { ':ElixirToPipe<cr>', 'To Pipe [co]' },
-              ['<leader>ce'] = { ':ElixirExpandMacro<cr>', 'Expand Macro [ce]' },
-            }, { mode = 'n', buffer = bufnr })
+            wk.add {
+              { '<leader>cm', ':ElixirFromPipe<cr>', desc = 'From Pipe [cm]', mode = 'n', buffer = bufnr },
+              { '<leader>cO', ':ElixirToPipe<cr>', desc = 'To Pipe [co]', mode = 'n', buffer = bufnr },
+              { '<leader>ce', ':ElixirExpandMacro<cr>', desc = 'Expand Macro [ce]', mode = 'n', buffer = bufnr },
+            }
           end,
         },
       }

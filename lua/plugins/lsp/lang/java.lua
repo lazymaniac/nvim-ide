@@ -491,39 +491,33 @@ return {
           local client = vim.lsp.get_client_by_id(args.data.client_id)
           if client and client.name == 'jdtls' then
             local wk = require 'which-key'
-            wk.register({
-              ['<leader>cx'] = { name = '+[extract]' },
-              ['<leader>cxv'] = { require('jdtls').extract_variable_all, 'Extract Variable [cxv]' },
-              ['<leader>cxc'] = { require('jdtls').extract_constant, 'Extract Constant [cxc]' },
-              ['<leader>cg'] = { name = '+[goto]' },
-              ['<leader>cgs'] = { require('jdtls').super_implementation, 'Goto Super [cgs]' },
-              ['<leader>cgt'] = { require('jdtls.tests').goto_subjects, 'Goto Test Class [cgt]' },
-              ['<leader>ct'] = { require('jdtls.tests').generate, 'Generate Test Class [ct]' },
-              ['<leader>cz'] = { require('jdtls').organize_imports, 'Organize Imports [cz]' },
-              ['<leader>cc'] = { require('jdtls').compile, 'Compile Code [cc]' },
-              ['<leader>cb'] = { require('jdtls').build_projects, 'Build Projects [cb]' },
-              ['<leader>cu'] = { require('jdtls').update_projects_config, 'Update Projects Config [cu]' },
-              ['<leader>cp'] = { require('jdtls').javap, 'Run javap [cp]' },
-              ['<leader>cj'] = { require('jdtls').jshell, 'Run jshell [cj]' },
-              ['<leader>cl'] = { require('jdtls').jol, 'Run jol [cl]' },
-              ['<leader>ce'] = { require('jdtls').set_runtime, 'Set Runtime [ce]' },
-            }, { mode = 'n', buffer = args.buf })
-            wk.register({
-              ['<leader>c'] = { name = '+[code]' },
-              ['<leader>cx'] = { name = '+[extract]' },
-              ['<leader>cxm'] = {
-                [[<ESC><CMD>lua require('jdtls').extract_method(true)<CR>]],
-                'Extract Method [cxm]',
-              },
-              ['<leader>cxv'] = {
+            wk.add {
+              { '<leader>c', name = '+[code]' },
+              { '<leader>cx', group = '+[extract]' },
+              { '<leader>cxv', require('jdtls').extract_variable_all, desc = 'Extract Variable [cxv]', mode = 'n', buffer = args.buf },
+              { '<leader>cxc', require('jdtls').extract_constant, desc = 'Extract Constant [cxc]', mode = 'n', buffer = args.buf },
+              { '<leader>cg', group = '+[goto]' },
+              { '<leader>cgs', require('jdtls').super_implementation, desc = 'Goto Super [cgs]', mode = 'n', buffer = args.buf },
+              { '<leader>cgt', require('jdtls.tests').goto_subjects, desc = 'Goto Test Class [cgt]', mode = 'n', buffer = args.buf },
+              { '<leader>ct', require('jdtls.tests').generate, desc = 'Generate Test Class [ct]', mode = 'n', buffer = args.buf },
+              { '<leader>cz', require('jdtls').organize_imports, desc = 'Organize Imports [cz]', mode = 'n', buffer = args.buf },
+              { '<leader>cc', require('jdtls').compile, desc = 'Compile Code [cc]', mode = 'n', buffer = args.buf },
+              { '<leader>cb', require('jdtls').build_projects, desc = 'Build Projects [cb]', mode = 'n', buffer = args.buf },
+              { '<leader>cu', require('jdtls').update_projects_config, desc = 'Update Projects Config [cu]', mode = 'n', buffer = args.buf },
+              { '<leader>cp', require('jdtls').javap, desc = 'Run javap [cp]', mode = 'n', buffer = args.buf },
+              { '<leader>cj', require('jdtls').jshell, desc = 'Run jshell [cj]', mode = 'n', buffer = args.buf },
+              { '<leader>cl', require('jdtls').jol, desc = 'Run jol [cl]', mode = 'n', buffer = args.buf },
+              { '<leader>ce', require('jdtls').set_runtime, desc = 'Set Runtime [ce]', mode = 'n', buffer = args.buf },
+              { '<leader>cxm', [[<ESC><CMD>lua require('jdtls').extract_method(true)<CR>]], desc = 'Extract Method [cxm]', mode = 'v', buffer = args.buf },
+              {
+                '<leader>cxv',
                 [[<ESC><CMD>lua require('jdtls').extract_variable_all(true)<CR>]],
-                'Extract Variable [cxv]',
+                desc = 'Extract Variable [cxv]',
+                mode = 'v',
+                buffer = args.buf,
               },
-              ['<leader>cxc'] = {
-                [[<ESC><CMD>lua require('jdtls').extract_constant(true)<CR>]],
-                'Extract Constant [cxc]',
-              },
-            }, { mode = 'v', buffer = args.buf })
+              { '<leader>cxc', [[<ESC><CMD>lua require('jdtls').extract_constant(true)<CR>]], desc = 'Extract Constant [cxc]', mode = 'v', buffer = args.buf },
+            }
             if opts.dap and Util.has 'nvim-dap' and mason_registry.is_installed 'java-debug-adapter' then
               -- custom init for Java debugger
               require('jdtls').setup_dap(opts.dap)
@@ -531,13 +525,13 @@ return {
               -- Java Test require Java debugger to work
               if opts.test and mason_registry.is_installed 'java-test' then
                 -- custom keymaps for Java test runner (not yet compatible with neotest)
-                wk.register({
-                  ['<leader>t'] = { name = '+[test]' },
-                  ['<leader>dT'] = { require('jdtls.dap').test_class, 'Debug Test Class [tt]' },
-                  ['<leader>dt'] = { require('jdtls.dap').test_nearest_method, 'Debug Nearest Test Method [tr]' },
-                  ['<leader>dP'] = { require('jdtls.dap').pick_test, 'Pick Test and Debug [tp]' },
-                  ['<leader>dM'] = { require('jdtls.dap').fetch_main_configs, 'Fetch Main Class [dM]' },
-                }, { mode = 'n', buffer = args.buf })
+                wk.add {
+                  { '<leader>d', group = '+[debug]' },
+                  { '<leader>dT', require('jdtls.dap').test_class, desc = 'Debug Test Class [tt]', mode = 'n', buffer = args.buf },
+                  { '<leader>dt', require('jdtls.dap').test_nearest_method, desc = 'Debug Nearest Test Method [tr]', mode = 'n', buffer = args.buf },
+                  { '<leader>dP', require('jdtls.dap').pick_test, desc = 'Pick Test and Debug [tp]', mode = 'n', buffer = args.buf },
+                  { '<leader>dM', require('jdtls.dap').fetch_main_configs, desc = 'Fetch Main Class [dM]', mode = 'n', buffer = args.buf },
+                }
               end
             end
             -- User can set additional keymaps in opts.on_attach
