@@ -61,7 +61,7 @@ return {
         outline_window = {
           position = 'right',
           split_command = nil,
-          width = 25,
+          width = 20,
           relative_width = true,
           auto_close = false,
           auto_jump = true,
