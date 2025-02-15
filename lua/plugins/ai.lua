@@ -89,14 +89,12 @@ local config = {
         },
       },
       intro_message = 'Welcome to CodeCompanion ✨! Press ? for options',
-
+      show_header_separator = false, -- Show header separators in the chat buffer? Set this to false if you're using an external markdown formatting plugin
+      show_references = true, -- Show references (from slash commands and variables) in the chat buffer?
       separator = '─', -- The separator between the different messages in the chat buffer
       show_settings = false, -- Show LLM settings at the top of the chat buffer?
       show_token_count = true, -- Show the token count for each response?
       start_in_insert_mode = false, -- Open the chat buffer in insert mode?
-      token_count = function(tokens, adapter) -- The function to display the token count
-        return ' (' .. tokens .. ' tokens)'
-      end,
     },
     diff = {
       enabled = true,
@@ -131,7 +129,7 @@ return {
     'olimorris/codecompanion.nvim',
     event = 'VeryLazy',
     branch = 'main',
-    dependencies = { 'nvim-lua/plenary.nvim', 'nvim-treesitter/nvim-treesitter', 'nvim-telescope/telescope.nvim', 'stevearc/dressing.nvim' },
+    dependencies = { 'nvim-lua/plenary.nvim', 'nvim-treesitter/nvim-treesitter' },
     -- stylua: ignore
     keys = {
       { '<leader>zi', '<cmd>CodeCompanion<cr>', mode = { 'n', 'v' }, desc = 'Inline Prompt [zi]' },
