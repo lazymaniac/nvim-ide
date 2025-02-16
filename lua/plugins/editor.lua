@@ -388,6 +388,7 @@ return {
           enabled = true,
         },
       }
+      vim.api.nvim_set_hl(0, "NeominimapBorder", { link = "SnacksNotifierBorderInfo", default = true })
     end,
   },
 
