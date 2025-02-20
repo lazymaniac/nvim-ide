@@ -109,7 +109,6 @@ return {
       sources = {
         compat = {},
         default = { 'lsp', 'path', 'snippets', 'buffer' },
-        cmdline = {},
       },
     },
     opts_extend = { 'sources.default' },
