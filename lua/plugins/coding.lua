@@ -464,4 +464,20 @@ return {
     },
   },
 
+  {
+    'caliguIa/zendiagram.nvim',
+    opts = {},
+  },
+
+  {
+    'OXY2DEV/patterns.nvim',
+    keys = {
+      {
+        '<leader>lx',
+        '<cmd>Patterns<cr>',
+        mode = { 'n', 'v' },
+        desc = 'Regex explain',
+      },
+    }
+  },
 }

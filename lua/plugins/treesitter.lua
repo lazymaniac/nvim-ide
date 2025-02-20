@@ -47,6 +47,7 @@ return {
         'query',
         'r',
         'regex',
+        'lua_patterns',
         'toml',
         'tsx',
         'typescript',
@@ -118,6 +119,15 @@ return {
       },
     },
     config = function(_, opts)
+      local parser_configs = require('nvim-treesitter.parsers').get_parser_configs()
+
+      parser_configs.lua_patterns = {
+        install_info = {
+          url = 'https://github.com/OXY2DEV/tree-sitter-lua_patterns',
+          files = { 'src/parser.c' },
+          branch = 'main',
+        },
+      }
       if type(opts.ensure_installed) == 'table' then
         ---@type table<string, boolean>
         local added = {}
