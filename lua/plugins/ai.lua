@@ -34,7 +34,7 @@ local config = {
             default = 'llama3.3:latest',
           },
           num_ctx = {
-            default = 2048,
+            default = 8192,
           },
           temperature = {
             default = 0.9,
@@ -47,14 +47,68 @@ local config = {
     -- CHAT STRATEGY ----------------------------------------------------------
     chat = {
       adapter = 'ollama',
-      roles = {
-        llm = 'Agent', -- The markdown header content for the LLM's responses
-        user = 'Me', -- The markdown header for your questions
+      slash_commands = {
+        ['git_files'] = {
+          description = 'List git files',
+          ---@param chat CodeCompanion.Chat
+          callback = function(chat)
+            local handle = io.popen 'git ls-files'
+            if handle ~= nil then
+              local result = handle:read '*a'
+              handle:close()
+              chat:add_reference({ content = result }, 'git', '<git_files>')
+            else
+              return vim.notify('No git files available', vim.log.levels.INFO, { title = 'CodeCompanion' })
+            end
+          end,
+          opts = {
+            contains_code = false,
+          },
+        },
       },
     },
     -- INLINE STRATEGY --------------------------------------------------------
     inline = {
       adapter = 'ollama',
+    },
+  },
+  prompt_library = {
+    ['Suggest Refactoring'] = {
+      strategy = 'chat',
+      description = 'Suggest refactoring for provided piece of code.',
+      opts = {
+        modes = { 'v' },
+        short_name = 'refactor',
+        auto_submit = true,
+        stop_context_insertion = true,
+        user_prompt = false,
+      },
+      prompts = {
+        {
+          role = 'system',
+          content = function(context)
+            return [[Act as a seasoned ]]
+              .. context.filetype
+              .. [[ programmer with over 20 years of commercial experience.
+Your task is to suggest refactoring of a specified piece of code to improve its efficiency,
+readability, and maintainability without altering its functionality. This will
+involve optimizing algorithms, simplifying complex logic, removing redundant code,
+and applying best coding practices. Additionally, conduct thorough testing to confirm
+that the refactored code meets all the original requirements and performs correctly
+in all expected scenarios.]]
+          end,
+        },
+        {
+          role = 'user',
+          content = function(context)
+            local text = require('codecompanion.helpers.actions').get_code(context.start_line, context.end_line)
+            return 'I have the following code:\n\n```' .. context.filetype .. '\n' .. text .. '\n```\n\n'
+          end,
+          opts = {
+            contains_code = true,
+          },
+        },
+      },
     },
   },
   -- DISPLAY OPTIONS ----------------------------------------------------------
