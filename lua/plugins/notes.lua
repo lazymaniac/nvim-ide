@@ -18,10 +18,6 @@ return {
       'pysan3/pathlib.nvim',
     },
     opts = {
-      luarocks_build_args = {
-        '--with-lua-include=/usr/include',
-      },
-      -- rocks = { 'lua-curl', 'nvim-nio', 'mimetypes', 'xml2lua' },
     },
   },
 
