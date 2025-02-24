@@ -1,3 +1,6 @@
+local content = ''
+local filetype = ''
+
 local function move_cursor_to_word(word, bufnr)
   local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, true)
   for i, line in ipairs(lines) do
@@ -87,40 +90,62 @@ local function get_definition_with_docs(bufnr, row, col)
       or type == 'function_declaration'
       or type == 'method_declaration'
       or type == 'class_declaration'
+      -- Variables and Constants
+      or type == 'variable_declaration'
+      or type == 'const_declaration'
+      or type == 'let_declaration'
+      or type == 'field_declaration'
+      or type == 'property_declaration'
       -- Rust
       or type == 'struct_item'
       or type == 'enum_item'
       or type == 'type_item'
       or type == 'trait_item'
       or type == 'impl_item'
+      or type == 'const_item'
+      or type == 'static_item'
       -- C/C++
       or type == 'struct_specifier'
       or type == 'enum_specifier'
       or type == 'type_definition'
       or type == 'namespace_definition'
+      or type == 'declaration'
       -- TypeScript/JavaScript
       or type == 'interface_declaration'
       or type == 'type_alias_declaration'
       or type == 'enum_declaration'
+      or type == 'variable_declarator'
       -- Go
       or type == 'type_declaration'
       or type == 'type_spec'
+      or type == 'var_declaration'
+      or type == 'const_declaration'
       -- Python
       or type == 'class_definition'
       or type == 'decorated_definition'
+      or type == 'global_statement'
+      or type == 'assignment'
       -- Java
       or type == 'interface_declaration'
       or type == 'annotation_type_declaration'
+      or type == 'field_declaration'
+      or type == 'enum_constant'
       -- Kotlin
       or type == 'class_declaration'
       or type == 'object_declaration'
+      or type == 'property_declaration'
+      or type == 'constant_declaration'
       -- Swift
       or type == 'protocol_declaration'
       or type == 'struct_declaration'
+      or type == 'variable_declaration'
+      or type == 'constant_declaration'
       -- PHP
       or type == 'class_declaration'
       or type == 'interface_declaration'
       or type == 'trait_declaration'
+      or type == 'property_declaration'
+      or type == 'const_declaration'
     then
       local doc_node = find_documentation_node(node)
       if doc_node then
@@ -136,7 +161,7 @@ local function get_definition_with_docs(bufnr, row, col)
   return nil
 end
 
-function call_lsp_method(bufnr, method)
+local function call_lsp_method(bufnr, method)
   local timeout_ms = 10000
   local position_params = vim.lsp.util.make_position_params()
 
@@ -177,7 +202,7 @@ function call_lsp_method(bufnr, method)
     end
   end
 
-  return extracted_code
+  return table.concat(extracted_code, '')
 end
 
 local config = {
@@ -240,10 +265,10 @@ local config = {
           ['code_crawler'] = {
             description = 'Expose LSP actions to the Agent so it can travers the code like a programmer.',
             cmds = {
-              function(self, action, input)
+              function(_, action, _)
                 move_cursor_to_word(action.symbol, action.buffer)
                 local type = action._attr.type
-                -- Dictionary mapping type values to LSP methods
+
                 local lsp_methods = {
                   get_definition = 'textDocument/definition',
                   get_references = 'textDocument/references',
@@ -253,15 +278,14 @@ local config = {
                   get_outgoing_calls = 'callHierarchy/outgoingCalls',
                 }
 
-                -- Check if the type has a corresponding LSP method
                 if lsp_methods[type] then
-                  local result = call_lsp_method(action.buffer, lsp_methods[type])
-                  vim.notify(result)
-                  return result
+                  content = call_lsp_method(action.buffer, lsp_methods[type])
+                  filetype = vim.api.nvim_get_option_value('filetype', { buf = action.buffer })
+                  vim.notify(content)
+                  return { status = 'success', msg = nil }
                 end
 
-                -- If no matching LSP method is found, return an empty table or handle it as needed
-                return {}
+                return { status = 'error', msg = 'No symbol found' }
               end,
             },
             schema = {
@@ -392,6 +416,47 @@ f) **Get Outgoing Calls Action**:
                 require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[6] } } --  Get Outgoing Calls
               )
             end,
+            output = {
+              success = function(self, action, _)
+                local type = action._attr.type
+                local symbol = action.symbol
+
+                self.chat:add_message({
+                  role = require('codecompanion.config').constants.USER_ROLE,
+                  content = string.format(
+                    [[The %s of symbol: `%s` is:
+
+```%s
+%s
+```]],
+                    string.upper(type),
+                    symbol,
+                    filetype,
+                    content
+                  ),
+                }, { visible = false })
+              end,
+              error = function(self, action, err)
+                return self.chat:add_buf_message {
+                  role = require('codecompanion.config').constants.USER_ROLE,
+                  content = string.format(
+                    [[There was an error running the %s action:
+
+```txt
+%s
+```]],
+                    string.upper(action._attr.type),
+                    err
+                  ),
+                }
+              end,
+              rejected = function(self, action)
+                return self.chat:add_buf_message {
+                  role = require('codecompanion.config').constants.USER_ROLE,
+                  content = string.format('I rejected the %s action.\n\n', string.upper(action._attr.type)),
+                }
+              end,
+            },
           },
         },
       },
@@ -427,7 +492,7 @@ f) **Get Outgoing Calls Action**:
       opts = {
         modes = { 'v' },
         short_name = 'refactor',
-        auto_submit = true,
+        auto_submit = false,
         stop_context_insertion = true,
         user_prompt = false,
       },
