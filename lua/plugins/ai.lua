@@ -263,96 +263,100 @@ local config = {
       agents = {
         tools = {
           ['code_crawler'] = {
-            description = 'Expose LSP actions to the Agent so it can travers the code like a programmer.',
-            cmds = {
-              function(_, action, _)
-                move_cursor_to_word(action.symbol, action.buffer)
-                local type = action._attr.type
+            callback = {
+              opts = {
+                user_approval = false,
+              },
+              description = 'Expose LSP actions to the Agent so it can travers the code like a programmer.',
+              cmds = {
+                function(_, action, _)
+                  move_cursor_to_word(action.symbol, action.buffer)
+                  local type = action._attr.type
 
-                local lsp_methods = {
-                  get_definition = 'textDocument/definition',
-                  get_references = 'textDocument/references',
-                  get_implementation = 'textDocument/implementation',
-                  get_type_definition = 'textDocument/typeDefinition',
-                  get_incoming_calls = 'callHierarchy/incomingCalls',
-                  get_outgoing_calls = 'callHierarchy/outgoingCalls',
-                }
+                  local lsp_methods = {
+                    get_definition = 'textDocument/definition',
+                    get_references = 'textDocument/references',
+                    get_implementation = 'textDocument/implementation',
+                    get_type_definition = 'textDocument/typeDefinition',
+                    get_incoming_calls = 'callHierarchy/incomingCalls',
+                    get_outgoing_calls = 'callHierarchy/outgoingCalls',
+                  }
 
-                if lsp_methods[type] then
-                  content = call_lsp_method(action.buffer, lsp_methods[type])
-                  filetype = vim.api.nvim_get_option_value('filetype', { buf = action.buffer })
-                  vim.notify(content)
-                  return { status = 'success', msg = nil }
-                end
+                  if lsp_methods[type] then
+                    content = call_lsp_method(action.buffer, lsp_methods[type])
+                    filetype = vim.api.nvim_get_option_value('filetype', { buf = action.buffer })
+                    vim.notify(content)
+                    return { status = 'success', msg = nil }
+                  end
 
-                return { status = 'error', msg = 'No symbol found' }
-              end,
-            },
-            schema = {
-              {
-                tool = {
-                  _attr = { name = 'code_crawler' },
-                  action = {
-                    _attr = { type = 'get_definition' },
-                    buffer = 1,
-                    symbol = '<![CDATA[UserRepository]]>',
+                  return { status = 'error', msg = 'No symbol found' }
+                end,
+              },
+              schema = {
+                {
+                  tool = {
+                    _attr = { name = 'code_crawler' },
+                    action = {
+                      _attr = { type = 'get_definition' },
+                      buffer = 1,
+                      symbol = '<![CDATA[UserRepository]]>',
+                    },
+                  },
+                },
+                {
+                  tool = {
+                    _attr = { name = 'code_crawler' },
+                    action = {
+                      _attr = { type = 'get_references' },
+                      buffer = 4,
+                      symbol = '<![CDATA[saveUser]]>',
+                    },
+                  },
+                },
+                {
+                  tool = {
+                    _attr = { name = 'code_crawler' },
+                    action = {
+                      _attr = { type = 'get_implementation' },
+                      buffer = 10,
+                      symbol = '<![CDATA[Comparable]]>',
+                    },
+                  },
+                },
+                {
+                  tool = {
+                    _attr = { name = 'code_crawler' },
+                    action = {
+                      _attr = { type = 'get_type_definition' },
+                      buffer = 14,
+                      symbol = '<![CDATA[Map]]>',
+                    },
+                  },
+                },
+                {
+                  tool = {
+                    _attr = { name = 'code_crawler' },
+                    action = {
+                      _attr = { type = 'get_incoming_calls' },
+                      buffer = 14,
+                      symbol = '<![CDATA[sortItems]]>',
+                    },
+                  },
+                },
+                {
+                  tool = {
+                    _attr = { name = 'code_crawler' },
+                    action = {
+                      _attr = { type = 'get_outgoing_calls' },
+                      buffer = 17,
+                      symbol = '<![CDATA[functionName]]>',
+                    },
                   },
                 },
               },
-              {
-                tool = {
-                  _attr = { name = 'code_crawler' },
-                  action = {
-                    _attr = { type = 'get_references' },
-                    buffer = 4,
-                    symbol = '<![CDATA[saveUser]]>',
-                  },
-                },
-              },
-              {
-                tool = {
-                  _attr = { name = 'code_crawler' },
-                  action = {
-                    _attr = { type = 'get_implementation' },
-                    buffer = 10,
-                    symbol = '<![CDATA[Comparable]]>',
-                  },
-                },
-              },
-              {
-                tool = {
-                  _attr = { name = 'code_crawler' },
-                  action = {
-                    _attr = { type = 'get_type_definition' },
-                    buffer = 14,
-                    symbol = '<![CDATA[Map]]>',
-                  },
-                },
-              },
-              {
-                tool = {
-                  _attr = { name = 'code_crawler' },
-                  action = {
-                    _attr = { type = 'get_incoming_calls' },
-                    buffer = 14,
-                    symbol = '<![CDATA[sortItems]]>',
-                  },
-                },
-              },
-              {
-                tool = {
-                  _attr = { name = 'code_crawler' },
-                  action = {
-                    _attr = { type = 'get_outgoing_calls' },
-                    buffer = 17,
-                    symbol = '<![CDATA[functionName]]>',
-                  },
-                },
-              },
-            },
-            system_prompt = function(schema)
-              return string.format(
-                [[## Code Crawler Tool (`code_crawler`) - Enhanced Guidelines
+              system_prompt = function(schema)
+                return string.format(
+                  [[## Code Crawler Tool (`code_crawler`) - Enhanced Guidelines
 
 ### Purpose:
 - Traversing the codebase like a regular programmer to find definition, references, implementation, type definition, incoming or outgoing calls of specific code symbols like classes or functions.
@@ -408,54 +412,55 @@ f) **Get Outgoing Calls Action**:
 ### Reminder:
 - Minimize extra explanations and focus on returning correct XML blocks with properly wrapped CDATA sections.
 - Always use the structure above for consistency.]],
-                require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[1] } }, -- Get Definition
-                require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[2] } }, -- Get References
-                require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[3] } }, -- Get Implementation
-                require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[4] } }, -- Get Type Definition
-                require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[5] } }, -- Get Incoming Calls
-                require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[6] } } --  Get Outgoing Calls
-              )
-            end,
-            output = {
-              success = function(self, action, _)
-                local type = action._attr.type
-                local symbol = action.symbol
+                  require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[1] } }, -- Get Definition
+                  require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[2] } }, -- Get References
+                  require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[3] } }, -- Get Implementation
+                  require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[4] } }, -- Get Type Definition
+                  require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[5] } }, -- Get Incoming Calls
+                  require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[6] } } --  Get Outgoing Calls
+                )
+              end,
+              output = {
+                success = function(self, action, _)
+                  local type = action._attr.type
+                  local symbol = action.symbol
 
-                self.chat:add_message({
-                  role = require('codecompanion.config').constants.USER_ROLE,
-                  content = string.format(
-                    [[The %s of symbol: `%s` is:
+                  self.chat:add_message({
+                    role = require('codecompanion.config').constants.USER_ROLE,
+                    content = string.format(
+                      [[The %s of symbol: `%s` is:
 
 ```%s
 %s
 ```]],
-                    string.upper(type),
-                    symbol,
-                    filetype,
-                    content
-                  ),
-                }, { visible = false })
-              end,
-              error = function(self, action, err)
-                return self.chat:add_buf_message {
-                  role = require('codecompanion.config').constants.USER_ROLE,
-                  content = string.format(
-                    [[There was an error running the %s action:
+                      string.upper(type),
+                      symbol,
+                      filetype,
+                      content
+                    ),
+                  }, { visible = false })
+                end,
+                error = function(self, action, err)
+                  return self.chat:add_buf_message {
+                    role = require('codecompanion.config').constants.USER_ROLE,
+                    content = string.format(
+                      [[There was an error running the %s action:
 
 ```txt
 %s
 ```]],
-                    string.upper(action._attr.type),
-                    err
-                  ),
-                }
-              end,
-              rejected = function(self, action)
-                return self.chat:add_buf_message {
-                  role = require('codecompanion.config').constants.USER_ROLE,
-                  content = string.format('I rejected the %s action.\n\n', string.upper(action._attr.type)),
-                }
-              end,
+                      string.upper(action._attr.type),
+                      err
+                    ),
+                  }
+                end,
+                rejected = function(self, action)
+                  return self.chat:add_buf_message {
+                    role = require('codecompanion.config').constants.USER_ROLE,
+                    content = string.format('I rejected the %s action.\n\n', string.upper(action._attr.type)),
+                  }
+                end,
+              },
             },
           },
         },
