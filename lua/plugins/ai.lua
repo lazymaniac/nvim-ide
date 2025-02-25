@@ -1,3 +1,180 @@
+local TIMEOUT_MS = 10000
+
+local DOC_NODE_TYPES = {
+  -- Single line comments
+  comment = true,
+  line_comment = true,
+  documentation_comment = true,
+  -- Multi-line comments
+  block_comment = true,
+  comment_block = true,
+  multiline_comment = true,
+  doc_comment = true,
+  documentation = true,
+  -- Special documentation formats
+  string = true, -- Python docstrings
+  heredoc = true,
+  javadoc = true,
+  attribute = true,
+  jsdoc = true,
+  phpdoc = true,
+  -- XML-style docs
+  xml_comment = true,
+  html_comment = true,
+  -- Language specific
+  roxygen_comment = true,
+  luadoc = true,
+  perldoc = true,
+}
+
+local DEFINITION_NODE_TYPES = {
+  -- Functions and Classes
+  function_definition = true,
+  method_definition = true,
+  class_definition = true,
+  function_declaration = true,
+  method_declaration = true,
+  class_declaration = true,
+  -- Variables and Constants
+  variable_declaration = true,
+  const_declaration = true,
+  let_declaration = true,
+  field_declaration = true,
+  property_declaration = true,
+  -- Language-specific definitions
+  struct_item = true,
+  enum_item = true,
+  type_item = true,
+  trait_item = true,
+  impl_item = true,
+  const_item = true,
+  static_item = true,
+  interface_declaration = true,
+  type_declaration = true,
+  decorated_definition = true,
+}
+
+-- Utility functions
+local function is_valid_buffer(bufnr)
+  return bufnr and vim.api.nvim_buf_is_valid(bufnr)
+end
+
+local function get_buffer_lines(bufnr, start_row, end_row)
+  if not is_valid_buffer(bufnr) then
+    return nil
+  end
+  return vim.api.nvim_buf_get_lines(bufnr, start_row, end_row, false)
+end
+
+local function get_node_text(bufnr, node)
+  if not (node and bufnr) then
+    return nil
+  end
+
+  local start_row, start_col, end_row, end_col = node:range()
+  local lines = get_buffer_lines(bufnr, start_row, end_row + 1)
+
+  if not lines then
+    return nil
+  end
+
+  if start_row == end_row then
+    return lines[1]:sub(start_col + 1, end_col)
+  end
+
+  lines[1] = lines[1]:sub(start_col + 1)
+  lines[#lines] = lines[#lines]:sub(1, end_col)
+  return table.concat(lines, '\n')
+end
+
+local function find_documentation_node(node)
+  if not node then
+    return nil
+  end
+
+  local prev = node:prev_sibling()
+  if prev and DOC_NODE_TYPES[prev:type()] then
+    return prev
+  end
+
+  return nil
+end
+
+local function get_definition_with_docs(bufnr, row, col)
+  if not is_valid_buffer(bufnr) then
+    return nil
+  end
+
+  local parser = vim.treesitter.get_parser(bufnr)
+  if not parser then
+    return nil
+  end
+
+  local tree = parser:parse()[1]
+  local root = tree:root()
+  local node = root:named_descendant_for_range(row, col, row, col)
+
+  while node do
+    if DEFINITION_NODE_TYPES[node:type()] then
+      local doc_node = find_documentation_node(node)
+      if doc_node then
+        local doc_text = get_node_text(bufnr, doc_node)
+        local def_text = get_node_text(bufnr, node)
+        return doc_text and def_text and (doc_text .. '\n' .. def_text)
+      end
+      return get_node_text(bufnr, node)
+    end
+    node = node:parent()
+  end
+
+  return nil
+end
+
+function call_lsp_method(bufnr, method)
+  if not (bufnr and method) then
+    return {}
+  end
+
+  local position_params = vim.lsp.util.make_position_params()
+  position_params.context = { includeDeclaration = true }
+
+  local results_by_client, err = vim.lsp.buf_request_sync(bufnr, method, position_params, TIMEOUT_MS)
+  if err then
+    vim.notify('LSP error: ' .. tostring(err), vim.log.levels.ERROR)
+    return {}
+  end
+
+  local extracted_code = {}
+
+  for _, lsp_results in pairs(results_by_client or {}) do
+    local result = lsp_results.result or {}
+
+    local function process_range(uri, range)
+      if not (uri and range) then
+        return
+      end
+
+      local target_bufnr = vim.uri_to_bufnr(uri)
+      vim.fn.bufload(target_bufnr)
+
+      local code = get_definition_with_docs(target_bufnr, range.start.line, range.start.character)
+      if code then
+        table.insert(extracted_code, code)
+      end
+    end
+
+    if result.range then
+      process_range(result.uri or result.targetUri, result.range)
+    else
+      for _, item in pairs(result) do
+        process_range(item.uri or item.targetUri, item.range or item.targetSelectionRange)
+      end
+    end
+  end
+
+  return table.concat(extracted_code, '\n\n')
+end
+
 local content = ''
 local filetype = ''
 
@@ -12,197 +189,6 @@ local function move_cursor_to_word(word, bufnr)
       break
     end
   end
-end
-
-local function get_node_text(bufnr, node)
-  local start_row, start_col, end_row, end_col = node:range()
-  if start_row == end_row then
-    local line = vim.api.nvim_buf_get_lines(bufnr, start_row, start_row + 1, false)[1]
-    return line:sub(start_col + 1, end_col)
-  end
-  local lines = vim.api.nvim_buf_get_lines(bufnr, start_row, end_row + 1, false)
-  lines[1] = lines[1]:sub(start_col + 1)
-  lines[#lines] = lines[#lines]:sub(1, end_col)
-  return table.concat(lines, '\n')
-end
-
-local function find_documentation_node(node)
-  -- Get previous siblings to check for documentation
-  local prev = node:prev_sibling()
-
-  -- Documentation node types for different languages
-  local doc_types = {
-    -- Single line comments
-    'comment',
-    'line_comment', -- JavaScript, Java, C++
-    'documentation_comment',
-
-    -- Multi-line comments
-    'block_comment', -- Many languages
-    'comment_block', -- PHP
-    'multiline_comment', -- Some parsers
-    'doc_comment', -- Rust, Java
-    'documentation', -- Some parsers
-
-    -- Special documentation formats
-    'string', -- Python docstrings
-    'heredoc', -- PHP, Ruby, Shell
-    'javadoc', -- Java specific
-    'attribute', -- C# attributes
-    'jsdoc', -- JavaScript JSDoc
-    'phpdoc', -- PHP DocBlocks
-
-    -- XML-style docs
-    'xml_comment', -- XML, HTML
-    'html_comment', -- HTML specific
-
-    -- Language specific
-    'roxygen_comment', -- R
-    'luadoc', -- Lua
-    'perldoc', -- Perl
-  }
-
-  if prev then
-    local node_type = prev:type()
-    for _, doc_type in ipairs(doc_types) do
-      if node_type == doc_type then
-        return prev
-      end
-    end
-  end
-
-  return nil
-end
-
-local function get_definition_with_docs(bufnr, row, col)
-  local parser = vim.treesitter.get_parser(bufnr)
-  local tree = parser:parse()[1]
-  local root = tree:root()
-
-  local node = root:named_descendant_for_range(row, col, row, col)
-  while node do
-    local type = node:type()
-    if
-      -- Common function/method definitions
-      type == 'function_definition'
-      or type == 'method_definition'
-      or type == 'class_definition'
-      or type == 'function_declaration'
-      or type == 'method_declaration'
-      or type == 'class_declaration'
-      -- Variables and Constants
-      or type == 'variable_declaration'
-      or type == 'const_declaration'
-      or type == 'let_declaration'
-      or type == 'field_declaration'
-      or type == 'property_declaration'
-      -- Rust
-      or type == 'struct_item'
-      or type == 'enum_item'
-      or type == 'type_item'
-      or type == 'trait_item'
-      or type == 'impl_item'
-      or type == 'const_item'
-      or type == 'static_item'
-      -- C/C++
-      or type == 'struct_specifier'
-      or type == 'enum_specifier'
-      or type == 'type_definition'
-      or type == 'namespace_definition'
-      or type == 'declaration'
-      -- TypeScript/JavaScript
-      or type == 'interface_declaration'
-      or type == 'type_alias_declaration'
-      or type == 'enum_declaration'
-      or type == 'variable_declarator'
-      -- Go
-      or type == 'type_declaration'
-      or type == 'type_spec'
-      or type == 'var_declaration'
-      or type == 'const_declaration'
-      -- Python
-      or type == 'class_definition'
-      or type == 'decorated_definition'
-      or type == 'global_statement'
-      or type == 'assignment'
-      -- Java
-      or type == 'interface_declaration'
-      or type == 'annotation_type_declaration'
-      or type == 'field_declaration'
-      or type == 'enum_constant'
-      -- Kotlin
-      or type == 'class_declaration'
-      or type == 'object_declaration'
-      or type == 'property_declaration'
-      or type == 'constant_declaration'
-      -- Swift
-      or type == 'protocol_declaration'
-      or type == 'struct_declaration'
-      or type == 'variable_declaration'
-      or type == 'constant_declaration'
-      -- PHP
-      or type == 'class_declaration'
-      or type == 'interface_declaration'
-      or type == 'trait_declaration'
-      or type == 'property_declaration'
-      or type == 'const_declaration'
-    then
-      local doc_node = find_documentation_node(node)
-      if doc_node then
-        -- Combine documentation and definition
-        local doc_text = get_node_text(bufnr, doc_node)
-        local def_text = get_node_text(bufnr, node)
-        return doc_text .. '\n' .. def_text
-      end
-      return get_node_text(bufnr, node)
-    end
-    node = node:parent()
-  end
-  return nil
-end
-
-local function call_lsp_method(bufnr, method)
-  local timeout_ms = 10000
-  local position_params = vim.lsp.util.make_position_params()
-
-  position_params.context = {
-    includeDeclaration = true,
-  }
-
-  local results_by_client, err = vim.lsp.buf_request_sync(bufnr, method, position_params, timeout_ms)
-  if err then
-    return {}
-  end
-
-  local extracted_code = {}
-  for _, lsp_results in pairs(assert(results_by_client)) do
-    local result = lsp_results.result or {}
-
-    if result.range then
-      local target_uri = result.uri or result.targetUri
-      local target_bufnr = vim.uri_to_bufnr(target_uri)
-      vim.fn.bufload(target_bufnr)
-      local code = get_definition_with_docs(target_bufnr, result.range.start.line, result.range.start.character)
-      if code then
-        table.insert(extracted_code, code)
-      end
-    else
-      for _, item in pairs(result) do
-        local target_uri = item.uri or item.targetUri
-        local target_bufnr = vim.uri_to_bufnr(target_uri)
-        vim.fn.bufload(target_bufnr)
-        local range = item.range or item.targetSelectionRange
-        if range then
-          local code = get_definition_with_docs(target_bufnr, range.start.line, range.start.character)
-          if code then
-            table.insert(extracted_code, code)
-          end
-        end
-      end
-    end
-  end
-
-  return table.concat(extracted_code, '')
 end
 
 local config = {
@@ -608,7 +594,6 @@ return {
       { '<leader>ac', '<cmd>CodeCompanionChat<cr>', mode = { 'n', 'v' }, desc = 'Open Chat [zz]' },
       { '<leader>at', '<cmd>CodeCompanionToggle<cr>', mode = { 'n', 'v' }, desc = 'Toggle Chat [zt]' },
       { '<leader>aa', '<cmd>CodeCompanionActions<cr>', mode = { 'n', 'v' }, desc = 'Actions [za]' },
-      { '<leader>ap', '<cmd>CodeCompanionAdd<cr>', mode = { 'v' }, desc = 'Paste Selected to the Chat [zp]' },
     },
     config = function()
       -- mappings group
