@@ -1,5 +1,14 @@
 local TIMEOUT_MS = 10000
 
+local lsp_methods = {
+  get_definition = 'textDocument/definition',
+  get_references = 'textDocument/references',
+  get_implementation = 'textDocument/implementation',
+  get_type_definition = 'textDocument/typeDefinition',
+  get_incoming_calls = 'callHierarchy/incomingCalls',
+  get_outgoing_calls = 'callHierarchy/outgoingCalls',
+}
+
 local DOC_NODE_TYPES = {
   -- Single line comments
   comment = true,
@@ -178,7 +187,7 @@ end
 local content = ''
 local filetype = ''
 
-local function move_cursor_to_word(word, bufnr)
+local function move_cursor_to_symbol(word, bufnr)
   local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, true)
   for i, line in ipairs(lines) do
     local col = line:find(word)
@@ -256,17 +265,8 @@ local config = {
               description = 'Expose LSP actions to the Agent so it can travers the code like a programmer.',
               cmds = {
                 function(_, action, _)
-                  move_cursor_to_word(action.symbol, action.buffer)
+                  move_cursor_to_symbol(action.symbol, action.buffer)
                   local type = action._attr.type
-
-                  local lsp_methods = {
-                    get_definition = 'textDocument/definition',
-                    get_references = 'textDocument/references',
-                    get_implementation = 'textDocument/implementation',
-                    get_type_definition = 'textDocument/typeDefinition',
-                    get_incoming_calls = 'callHierarchy/incomingCalls',
-                    get_outgoing_calls = 'callHierarchy/outgoingCalls',
-                  }
 
                   if lsp_methods[type] then
                     content = call_lsp_method(action.buffer, lsp_methods[type])
