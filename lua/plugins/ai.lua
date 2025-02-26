@@ -1,5 +1,4 @@
 local TIMEOUT_MS = 10000
-
 local lsp_methods = {
   get_definition = 'textDocument/definition',
   get_references = 'textDocument/references',
@@ -187,14 +186,16 @@ end
 local content = ''
 local filetype = ''
 
-local function move_cursor_to_symbol(word, bufnr)
+function move_cursor_to_symbol(word, bufnr)
   local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, true)
   for i, line in ipairs(lines) do
     local col = line:find(word)
     if col then
-      vim.api.nvim_win_call(vim.api.nvim_get_current_win(), function()
+      local win_ids = vim.fn.win_findbuf(bufnr)
+      if #win_ids > 0 then
+        vim.api.nvim_set_current_win(win_ids[1])
         vim.api.nvim_win_set_cursor(0, { i, col - 1 })
-      end)
+      end
       break
     end
   end
@@ -259,18 +260,22 @@ local config = {
         tools = {
           ['code_crawler'] = {
             callback = {
+              name = 'code_crawler',
               opts = {
                 user_approval = false,
               },
               description = 'Expose LSP actions to the Agent so it can travers the code like a programmer.',
               cmds = {
                 function(_, action, _)
-                  move_cursor_to_symbol(action.symbol, action.buffer)
+                  local symbol = action.symbol
+                  local bufnr = tonumber(action.buffer)
                   local type = action._attr.type
 
+                  move_cursor_to_symbol(symbol, bufnr)
+
                   if lsp_methods[type] then
-                    content = call_lsp_method(action.buffer, lsp_methods[type])
-                    filetype = vim.api.nvim_get_option_value('filetype', { buf = action.buffer })
+                    content = call_lsp_method(bufnr, lsp_methods[type])
+                    filetype = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
                     vim.notify(content)
                     return { status = 'success', msg = nil }
                   end
@@ -424,7 +429,7 @@ f) **Get Outgoing Calls Action**:
                       filetype,
                       content
                     ),
-                  }, { visible = false })
+                  }, { visible = true })
                 end,
                 error = function(self, action, err)
                   return self.chat:add_buf_message {
