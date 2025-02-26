@@ -1,11 +1,12 @@
 local TIMEOUT_MS = 10000
+local content = ''
+local filetype = ''
+local codecompanion_winid = -1
+
 local lsp_methods = {
   get_definition = 'textDocument/definition',
   get_references = 'textDocument/references',
   get_implementation = 'textDocument/implementation',
-  get_type_definition = 'textDocument/typeDefinition',
-  get_incoming_calls = 'callHierarchy/incomingCalls',
-  get_outgoing_calls = 'callHierarchy/outgoingCalls',
 }
 
 local DOC_NODE_TYPES = {
@@ -138,13 +139,13 @@ local function get_definition_with_docs(bufnr, row, col)
   return nil
 end
 
-function call_lsp_method(bufnr, method)
+local function call_lsp_method(bufnr, method)
   if not (bufnr and method) then
     return {}
   end
 
   local position_params = vim.lsp.util.make_position_params()
-  position_params.context = { includeDeclaration = true }
+  position_params.context = { includeDeclaration = false }
 
   local results_by_client, err = vim.lsp.buf_request_sync(bufnr, method, position_params, TIMEOUT_MS)
   if err then
@@ -183,22 +184,31 @@ function call_lsp_method(bufnr, method)
   return table.concat(extracted_code, '\n\n')
 end
 
-local content = ''
-local filetype = ''
 
-function move_cursor_to_symbol(word, bufnr)
-  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, true)
-  for i, line in ipairs(lines) do
-    local col = line:find(word)
-    if col then
-      local win_ids = vim.fn.win_findbuf(bufnr)
-      if #win_ids > 0 then
-        vim.api.nvim_set_current_win(win_ids[1])
-        vim.api.nvim_win_set_cursor(0, { i, col - 1 })
+local function move_cursor_to_symbol(symbol)
+  local bufs = vim.api.nvim_list_bufs()
+
+  for _, bufnr in ipairs(bufs) do
+    if vim.api.nvim_buf_is_loaded(bufnr) and vim.api.nvim_get_option_value('modifiable', { buf = bufnr }) then
+      local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, true)
+
+      for i, line in ipairs(lines) do
+        local col = line:find(symbol)
+
+        if col then
+          local win_ids = vim.fn.win_findbuf(bufnr)
+          -- If there are windows displaying this buffer, set the cursor position
+          if #win_ids > 0 then
+            vim.api.nvim_set_current_win(win_ids[1])
+            vim.api.nvim_win_set_cursor(0, { i, col - 1 })
+            return bufnr
+          end
+          break
+        end
       end
-      break
     end
   end
+  return -1
 end
 
 local config = {
@@ -268,15 +278,13 @@ local config = {
               cmds = {
                 function(_, action, _)
                   local symbol = action.symbol
-                  local bufnr = tonumber(action.buffer)
                   local type = action._attr.type
 
-                  move_cursor_to_symbol(symbol, bufnr)
+                  local bufnr = move_cursor_to_symbol(symbol)
 
                   if lsp_methods[type] then
                     content = call_lsp_method(bufnr, lsp_methods[type])
                     filetype = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
-                    vim.notify(content)
                     return { status = 'success', msg = nil }
                   end
 
@@ -289,7 +297,6 @@ local config = {
                     _attr = { name = 'code_crawler' },
                     action = {
                       _attr = { type = 'get_definition' },
-                      buffer = 1,
                       symbol = '<![CDATA[UserRepository]]>',
                     },
                   },
@@ -299,7 +306,6 @@ local config = {
                     _attr = { name = 'code_crawler' },
                     action = {
                       _attr = { type = 'get_references' },
-                      buffer = 4,
                       symbol = '<![CDATA[saveUser]]>',
                     },
                   },
@@ -309,38 +315,7 @@ local config = {
                     _attr = { name = 'code_crawler' },
                     action = {
                       _attr = { type = 'get_implementation' },
-                      buffer = 10,
                       symbol = '<![CDATA[Comparable]]>',
-                    },
-                  },
-                },
-                {
-                  tool = {
-                    _attr = { name = 'code_crawler' },
-                    action = {
-                      _attr = { type = 'get_type_definition' },
-                      buffer = 14,
-                      symbol = '<![CDATA[Map]]>',
-                    },
-                  },
-                },
-                {
-                  tool = {
-                    _attr = { name = 'code_crawler' },
-                    action = {
-                      _attr = { type = 'get_incoming_calls' },
-                      buffer = 14,
-                      symbol = '<![CDATA[sortItems]]>',
-                    },
-                  },
-                },
-                {
-                  tool = {
-                    _attr = { name = 'code_crawler' },
-                    action = {
-                      _attr = { type = 'get_outgoing_calls' },
-                      buffer = 17,
-                      symbol = '<![CDATA[functionName]]>',
                     },
                   },
                 },
@@ -353,13 +328,13 @@ local config = {
 - Traversing the codebase like a regular programmer to find definition, references, implementation, type definition, incoming or outgoing calls of specific code symbols like classes or functions.
 
 ### When to Use:
-- At the start of coding task.
+- !!!At the start of coding task!!!
 - Use this tool to gather the necessary context to deeply understand the code fragment you are working on without any assumptions about meaning of some symbols.
+- !!! Call only one action per prompt !!!
 
 ### Execution Format:
 - Always return an XML markdown code block.
-- Always include the buffer number that the user has shared with you, in the `<buffer></buffer>` tag. If the user has not supplied this, prompt them for it.
-- Each code operation must:
+- Each code symbol must:
   - Be wrapped in a CDATA section to preserve special characters (CDATA sections ensure that characters like '<' and '&' are not interpreted as XML markup).
   - Follow the XML schema exactly.
 
@@ -381,21 +356,6 @@ c) **Get Implementation Action:**
 %s
 ```
 
-d) **Get Type Definition Action**:
-```xml
-%s
-```
-
-e) **Get Incoming Calls Action**:
-```xml
-%s
-```
-
-f) **Get Outgoing Calls Action**:
-```xml
-%s
-```
-
 ### Key Considerations:
 - **Safety and Accuracy:** Validate all symbols are exactly the same as in codes.
 - **CDATA Usage:** Code is wrapped in CDATA blocks to protect special characters and prevent them from being misinterpreted by XML.
@@ -405,31 +365,37 @@ f) **Get Outgoing Calls Action**:
 - Always use the structure above for consistency.]],
                   require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[1] } }, -- Get Definition
                   require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[2] } }, -- Get References
-                  require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[3] } }, -- Get Implementation
-                  require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[4] } }, -- Get Type Definition
-                  require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[5] } }, -- Get Incoming Calls
-                  require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[6] } } --  Get Outgoing Calls
+                  require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[3] } } -- Get Implementation
                 )
               end,
+              handlers = {
+                setup = function(_)
+                  -- codecompanion_winid = vim.api.nvim_win_get_number(0)
+                end,
+                on_exit = function(_)
+                  -- vim.api.nvim_set_current_win(codecompanion_winid)
+                  codecompanion_winid = -1
+                end
+              },
               output = {
                 success = function(self, action, _)
                   local type = action._attr.type
                   local symbol = action.symbol
 
-                  self.chat:add_message({
+                  return self.chat:add_buf_message({
                     role = require('codecompanion.config').constants.USER_ROLE,
                     content = string.format(
                       [[The %s of symbol: `%s` is:
 
 ```%s
 %s
-```]],
+```\n]],
                       string.upper(type),
                       symbol,
                       filetype,
                       content
                     ),
-                  }, { visible = true })
+                  })
                 end,
                 error = function(self, action, err)
                   return self.chat:add_buf_message {
