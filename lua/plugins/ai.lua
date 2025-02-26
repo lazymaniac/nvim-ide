@@ -330,7 +330,6 @@ local config = {
 ### When to Use:
 - !!!At the start of coding task!!!
 - Use this tool to gather the necessary context to deeply understand the code fragment you are working on without any assumptions about meaning of some symbols.
-- !!! Call only one action per prompt !!!
 
 ### Execution Format:
 - Always return an XML markdown code block.
