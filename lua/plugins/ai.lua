@@ -378,17 +378,7 @@ d) **Multiple Actions**: Combine actions in one response if needed:
                   require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[1] } }, -- Get Definition
                   require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[2] } }, -- Get References
                   require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[3] } }, -- Get Implementation
-                  require('codecompanion.utils.xml.xml2lua').toXml { -- Multiple actions
-                    tools = {
-                      tool = {
-                        _attr = { name = 'files' },
-                        action = {
-                          schema[#schema].action[1],
-                          schema[#schema].action[2],
-                        },
-                      },
-                    },
-                  }
+                  require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[4] } }
                 )
               end,
               handlers = {
