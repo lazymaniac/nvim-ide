@@ -184,7 +184,6 @@ local function call_lsp_method(bufnr, method)
   return table.concat(extracted_code, '\n\n')
 end
 
-
 local function move_cursor_to_symbol(symbol)
   local bufs = vim.api.nvim_list_bufs()
 
@@ -218,25 +217,12 @@ local config = {
         env = {
           api_key = 'cmd:cat ~/.anthropic',
         },
-        schema = {
-          max_tokens = {
-            default = 8192,
-          },
-          temperature = {
-            default = 0.2,
-          },
-        },
       })
     end,
     openai = function()
       return require('codecompanion.adapters').extend('openai', {
         env = {
           api_key = 'cmd:cat ~/.gpt',
-        },
-        schema = {
-          max_tokens = {
-            default = 8192,
-          },
         },
       })
     end,
@@ -329,6 +315,7 @@ local config = {
 
 ### When to Use:
 - !!!At the start of coding task!!!
+- !!!Wait for the tool response and only then start to solve the task!!!
 - Use this tool to gather the necessary context to deeply understand the code fragment you are working on without any assumptions about meaning of some symbols.
 
 ### Execution Format:
@@ -355,16 +342,34 @@ c) **Get Implementation Action:**
 %s
 ```
 
+d) **Multiple Actions**: Combine actions in one response if needed:
+
+```xml
+%s
+```
+
 ### Key Considerations:
-- **Safety and Accuracy:** Validate all symbols are exactly the same as in codes.
+- **Safety and Accuracy:** Validate all symbols are exactly the same as in code.
 - **CDATA Usage:** Code is wrapped in CDATA blocks to protect special characters and prevent them from being misinterpreted by XML.
+- **Patience:** Wait until tool provides all the data you requested before starting to solve the task.
 
 ### Reminder:
 - Minimize extra explanations and focus on returning correct XML blocks with properly wrapped CDATA sections.
 - Always use the structure above for consistency.]],
                   require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[1] } }, -- Get Definition
                   require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[2] } }, -- Get References
-                  require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[3] } } -- Get Implementation
+                  require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[3] } }, -- Get Implementation
+                  require('codecompanion.utils.xml.xml2lua').toXml { -- Multiple actions
+                    tools = {
+                      tool = {
+                        _attr = { name = 'files' },
+                        action = {
+                          schema[#schema].action[1],
+                          schema[#schema].action[2],
+                        },
+                      },
+                    },
+                  }
                 )
               end,
               handlers = {
@@ -374,14 +379,14 @@ c) **Get Implementation Action:**
                 on_exit = function(_)
                   -- vim.api.nvim_set_current_win(codecompanion_winid)
                   codecompanion_winid = -1
-                end
+                end,
               },
               output = {
                 success = function(self, action, _)
                   local type = action._attr.type
                   local symbol = action.symbol
 
-                  return self.chat:add_buf_message({
+                  return self.chat:add_buf_message {
                     role = require('codecompanion.config').constants.USER_ROLE,
                     content = string.format(
                       [[The %s of symbol: `%s` is:
@@ -394,7 +399,7 @@ c) **Get Implementation Action:**
                       filetype,
                       content
                     ),
-                  })
+                  }
                 end,
                 error = function(self, action, err)
                   return self.chat:add_buf_message {
