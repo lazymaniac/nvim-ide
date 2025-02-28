@@ -305,6 +305,25 @@ local config = {
                     },
                   },
                 },
+                {
+                  tool = {
+                    _attr = { name = 'code_crawler' },
+                    action = {
+                      {
+                        _attr = { type = 'get_definition' },
+                        symbol = '<![CDATA[UserService]]>',
+                      },
+                      {
+                        _attr = { type = 'get_definition' },
+                        symbol = '<![CDATA[refreshUser]]>',
+                      },
+                      {
+                        _attr = { type = 'get_references' },
+                        symbol = '<![CDATA[UserService]]>',
+                      },
+                    },
+                  },
+                },
               },
               system_prompt = function(schema)
                 return string.format(
