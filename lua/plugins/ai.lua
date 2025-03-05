@@ -252,82 +252,81 @@ local config = {
         end,
         user = 'Me',
       },
-      agents = {
-        tools = {
-          ['code_crawler'] = {
-            callback = {
-              name = 'code_crawler',
-              opts = {
-                user_approval = false,
+      tools = {
+        ['code_crawler'] = {
+          description = 'Expose LSP actions to the Agent so it can travers the code like a programmer.',
+          opts = {
+            user_approval = false,
+          },
+          callback = {
+            name = 'code_crawler',
+            cmds = {
+              function(_, action, _)
+                local symbol = action.symbol
+                local type = action._attr.type
+
+                local bufnr = move_cursor_to_symbol(symbol)
+
+                if lsp_methods[type] then
+                  content = call_lsp_method(bufnr, lsp_methods[type])
+                  filetype = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
+                  return { status = 'success', msg = nil }
+                end
+
+                return { status = 'error', msg = 'No symbol found' }
+              end,
+            },
+            schema = {
+              {
+                tool = {
+                  _attr = { name = 'code_crawler' },
+                  action = {
+                    _attr = { type = 'get_definition' },
+                    symbol = '<![CDATA[UserRepository]]>',
+                  },
+                },
               },
-              description = 'Expose LSP actions to the Agent so it can travers the code like a programmer.',
-              cmds = {
-                function(_, action, _)
-                  local symbol = action.symbol
-                  local type = action._attr.type
-
-                  local bufnr = move_cursor_to_symbol(symbol)
-
-                  if lsp_methods[type] then
-                    content = call_lsp_method(bufnr, lsp_methods[type])
-                    filetype = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
-                    return { status = 'success', msg = nil }
-                  end
-
-                  return { status = 'error', msg = 'No symbol found' }
-                end,
+              {
+                tool = {
+                  _attr = { name = 'code_crawler' },
+                  action = {
+                    _attr = { type = 'get_references' },
+                    symbol = '<![CDATA[saveUser]]>',
+                  },
+                },
               },
-              schema = {
-                {
-                  tool = {
-                    _attr = { name = 'code_crawler' },
-                    action = {
+              {
+                tool = {
+                  _attr = { name = 'code_crawler' },
+                  action = {
+                    _attr = { type = 'get_implementation' },
+                    symbol = '<![CDATA[Comparable]]>',
+                  },
+                },
+              },
+              {
+                tool = {
+                  _attr = { name = 'code_crawler' },
+                  action = {
+                    {
                       _attr = { type = 'get_definition' },
-                      symbol = '<![CDATA[UserRepository]]>',
+                      symbol = '<![CDATA[UserService]]>',
                     },
-                  },
-                },
-                {
-                  tool = {
-                    _attr = { name = 'code_crawler' },
-                    action = {
+                    {
+                      _attr = { type = 'get_definition' },
+                      symbol = '<![CDATA[refreshUser]]>',
+                    },
+                    {
                       _attr = { type = 'get_references' },
-                      symbol = '<![CDATA[saveUser]]>',
-                    },
-                  },
-                },
-                {
-                  tool = {
-                    _attr = { name = 'code_crawler' },
-                    action = {
-                      _attr = { type = 'get_implementation' },
-                      symbol = '<![CDATA[Comparable]]>',
-                    },
-                  },
-                },
-                {
-                  tool = {
-                    _attr = { name = 'code_crawler' },
-                    action = {
-                      {
-                        _attr = { type = 'get_definition' },
-                        symbol = '<![CDATA[UserService]]>',
-                      },
-                      {
-                        _attr = { type = 'get_definition' },
-                        symbol = '<![CDATA[refreshUser]]>',
-                      },
-                      {
-                        _attr = { type = 'get_references' },
-                        symbol = '<![CDATA[UserService]]>',
-                      },
+                      symbol = '<![CDATA[UserService]]>',
                     },
                   },
                 },
               },
-              system_prompt = function(schema)
-                return string.format(
-                  [[## Code Crawler Tool (`code_crawler`) - Enhanced Guidelines
+            },
+            system_prompt = function(schema)
+              return string.format(
+                [[## Code Crawler Tool (`code_crawler`) - Enhanced Guidelines
 
 ### Purpose:
 - Traversing the codebase like a regular programmer to find definition, references, implementation, type definition, incoming or outgoing calls of specific code symbols like classes or functions.
@@ -375,62 +374,61 @@ d) **Multiple Actions**: Combine actions in one response if needed:
 ### Reminder:
 - Minimize extra explanations and focus on returning correct XML blocks with properly wrapped CDATA sections.
 - Always use the structure above for consistency.]],
-                  require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[1] } }, -- Get Definition
-                  require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[2] } }, -- Get References
-                  require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[3] } }, -- Get Implementation
-                  require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[4] } }
-                )
+                require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[1] } }, -- Get Definition
+                require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[2] } }, -- Get References
+                require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[3] } }, -- Get Implementation
+                require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[4] } }  -- Multiple actions
+              )
+            end,
+            handlers = {
+              setup = function(_)
+                -- codecompanion_winid = vim.api.nvim_win_get_number(0)
               end,
-              handlers = {
-                setup = function(_)
-                  -- codecompanion_winid = vim.api.nvim_win_get_number(0)
-                end,
-                on_exit = function(_)
-                  -- vim.api.nvim_set_current_win(codecompanion_winid)
-                  codecompanion_winid = -1
-                end,
-              },
-              output = {
-                success = function(self, action, _)
-                  local type = action._attr.type
-                  local symbol = action.symbol
+              on_exit = function(_)
+                -- vim.api.nvim_set_current_win(codecompanion_winid)
+                codecompanion_winid = -1
+              end,
+            },
+            output = {
+              success = function(self, action, _)
+                local type = action._attr.type
+                local symbol = action.symbol
 
-                  return self.chat:add_buf_message {
-                    role = require('codecompanion.config').constants.USER_ROLE,
-                    content = string.format(
-                      [[The %s of symbol: `%s` is:
+                return self.chat:add_buf_message {
+                  role = require('codecompanion.config').constants.USER_ROLE,
+                  content = string.format(
+                    [[The %s of symbol: `%s` is:
 
 ```%s
 %s
 ```\n]],
-                      string.upper(type),
-                      symbol,
-                      filetype,
-                      content
-                    ),
-                  }
-                end,
-                error = function(self, action, err)
-                  return self.chat:add_buf_message {
-                    role = require('codecompanion.config').constants.USER_ROLE,
-                    content = string.format(
-                      [[There was an error running the %s action:
+                    string.upper(type),
+                    symbol,
+                    filetype,
+                    content
+                  ),
+                }
+              end,
+              error = function(self, action, err)
+                return self.chat:add_buf_message {
+                  role = require('codecompanion.config').constants.USER_ROLE,
+                  content = string.format(
+                    [[There was an error running the %s action:
 
 ```txt
 %s
 ```]],
-                      string.upper(action._attr.type),
-                      err
-                    ),
-                  }
-                end,
-                rejected = function(self, action)
-                  return self.chat:add_buf_message {
-                    role = require('codecompanion.config').constants.USER_ROLE,
-                    content = string.format('I rejected the %s action.\n\n', string.upper(action._attr.type)),
-                  }
-                end,
-              },
+                    string.upper(action._attr.type),
+                    err
+                  ),
+                }
+              end,
+              rejected = function(self, action)
+                return self.chat:add_buf_message {
+                  role = require('codecompanion.config').constants.USER_ROLE,
+                  content = string.format('I rejected the %s action.\n\n', string.upper(action._attr.type)),
+                }
+              end,
             },
           },
         },
@@ -476,8 +474,8 @@ d) **Multiple Actions**: Combine actions in one response if needed:
           role = 'system',
           content = function(context)
             return [[Act as a seasoned ]]
-              .. context.filetype
-              .. [[ programmer with over 20 years of commercial experience.
+                .. context.filetype
+                .. [[ programmer with over 20 years of commercial experience.
 Your task is to suggest refactoring of a specified piece of code to improve its efficiency,
 readability, and maintainability without altering its functionality. This will
 involve optimizing algorithms, simplifying complex logic, removing redundant code,
@@ -504,10 +502,10 @@ in all expected scenarios.]]
     action_palette = {
       width = 95,
       height = 10,
-      prompt = 'Prompt ', -- Prompt used for interactive LLM calls
-      provider = 'default', -- default|telescope
+      prompt = 'Prompt ',                   -- Prompt used for interactive LLM calls
+      provider = 'default',                 -- default|telescope
       opts = {
-        show_default_actions = true, -- Show the default actions in the action palette?
+        show_default_actions = true,        -- Show the default actions in the action palette?
         show_default_prompt_library = true, -- Show the default prompt library in the action palette?
       },
     },
@@ -540,8 +538,8 @@ in all expected scenarios.]]
     },
     diff = {
       enabled = true,
-      close_chat_at = 240, -- Close an open chat buffer if the total columns of your display are less than...
-      layout = 'vertical', -- vertical|horizontal split for default provider
+      close_chat_at = 240,  -- Close an open chat buffer if the total columns of your display are less than...
+      layout = 'vertical',  -- vertical|horizontal split for default provider
       opts = { 'internal', 'filler', 'closeoff', 'algorithm:patience', 'followwrap', 'linematch:120' },
       provider = 'default', -- default|mini_diff
     },
@@ -574,9 +572,9 @@ return {
     dependencies = { 'nvim-lua/plenary.nvim', 'nvim-treesitter/nvim-treesitter' },
     -- stylua: ignore
     keys = {
-      { '<leader>ai', '<cmd>CodeCompanion<cr>', mode = { 'n', 'v' }, desc = 'Inline Prompt [zi]' },
-      { '<leader>ac', '<cmd>CodeCompanionChat<cr>', mode = { 'n', 'v' }, desc = 'Open Chat [zz]' },
-      { '<leader>at', '<cmd>CodeCompanionToggle<cr>', mode = { 'n', 'v' }, desc = 'Toggle Chat [zt]' },
+      { '<leader>ai', '<cmd>CodeCompanion<cr>',        mode = { 'n', 'v' }, desc = 'Inline Prompt [zi]' },
+      { '<leader>ac', '<cmd>CodeCompanionChat<cr>',    mode = { 'n', 'v' }, desc = 'Open Chat [zz]' },
+      { '<leader>at', '<cmd>CodeCompanionToggle<cr>',  mode = { 'n', 'v' }, desc = 'Toggle Chat [zt]' },
       { '<leader>aa', '<cmd>CodeCompanionActions<cr>', mode = { 'n', 'v' }, desc = 'Actions [za]' },
     },
     config = function()
