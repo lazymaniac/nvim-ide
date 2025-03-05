@@ -56,7 +56,6 @@ map('n', '<leader>`', '<cmd>e #<cr>', { desc = 'Switch to Other Buffer [`]' })
 -- Terminals
 function _G.set_terminal_keymaps()
   local opts = { buffer = 0 }
-  -- vim.keymap.set('t', '<esc>', [[<C-\><C-n>]], opts)
   vim.keymap.set('t', 'jk', [[<C-\><C-n>]], opts)
   vim.keymap.set('t', '<C-h>', [[<Cmd>wincmd h<CR>]], opts)
   vim.keymap.set('t', '<C-j>', [[<Cmd>wincmd j<CR>]], opts)
@@ -72,7 +71,7 @@ map({ 'n', 't' }, '<A-d>', function () Snacks.terminal.toggle("lazydocker") end,
 map({ 'n', 't' }, '<A-s>', function () Snacks.terminal.toggle("lazysql") end, { desc = 'Lazysql [as]' })
 map({ 'n', 't' }, '<A-g>', function () Snacks.lazygit() end, { desc = 'Lazygit [ag]' })
 map({ 'n', 't' }, '<A-n>', function () Snacks.terminal.toggle("node") end, { desc = 'Node [an]' })
-map({ 'n', 't' }, '<A-p>', function () Snacks.terminal.toggle("python") end, { desc = 'Python [ap]' })
+map({ 'n', 't' }, '<A-p>', function () Snacks.terminal.toggle("python3") end, { desc = 'Python [ap]' })
 map({ 'n', 't' }, '<A-v>', function () Snacks.terminal.toggle("jshell") end, { desc = 'JShell [av]' })
 map({ 'n', 't' }, '<A-f>', function () Snacks.terminal.open() end, { desc = 'New Terminal [af]' })
 map({ 'n', 't' }, '<A-\\>', function () Snacks.terminal.toggle() end, { desc = 'Toggle Terminal [a\\]' })
