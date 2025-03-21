@@ -25,11 +25,8 @@ return {
       -- default/round/block/arrow separators work only for default statusline theme
       -- round and block will work for minimal theme only
       separator_style = 'arrow',
-      order = { 'mode', 'file', 'git', '%=', '%=', 'wttr', 'diagnostics', 'dap', 'lsp', 'cwd', 'cursor' },
+      order = { 'mode', 'file', 'git', '%=', '%=', 'diagnostics', 'dap', 'lsp', 'cwd', 'cursor' },
       modules = {
-        wttr = function()
-          return require('wttr').text
-        end,
         dap = function()
           if require('dap').status() ~= '' then
             return '  ' .. require('dap').status()
