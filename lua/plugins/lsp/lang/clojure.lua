@@ -28,6 +28,7 @@ return {
   -- Use Clojure REPL
   {
     "Olical/conjure",
+    ft = { "clojure", "fennel" },
     config = function(_, _)
       require("conjure.main").main()
       require("conjure.mapping")["on-filetype"]()

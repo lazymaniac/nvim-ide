@@ -5,7 +5,7 @@ return {
     hl_override = {},
     integrations = { 'dap' },
     changed_themes = {},
-    transparency = true,
+    transparency = false,
     theme_toggle = { 'kanagawa', 'everforest' },
   },
 
