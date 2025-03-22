@@ -17,21 +17,6 @@ if vim.g.neovide then
   vim.g.neovide_padding_bottom = 0
   vim.g.neovide_padding_right = 0
   vim.g.neovide_padding_left = 0
-  -- Helper function for transparency formatting
-  local alpha = function()
-    return string.format("%x", math.floor(255 * (vim.g.transparency or 0.8)))
-  end
-  -- g:neovide_opacity should be 0 if you want to unify transparency of content and title bar.
-  vim.g.neovide_opacity = 0.0
-  vim.g.transparency = 0.8
-
-  -- window blur and background color
-  vim.g.neovide_window_blurred = true
-  vim.g.neovide_background_color = "#0f1117" .. alpha()
-
-  -- floating indow blur
-  vim.g.neovide_floating_blur_amount_x = 2.0
-  vim.g.neovide_floating_blur_amount_y = 2.0
 
   -- floating window shadow
   vim.g.neovide_floating_shadow = true
@@ -40,12 +25,6 @@ if vim.g.neovide then
   vim.g.neovide_light_radius = 5
 
   vim.g.neovide_floating_corner_radius = 0.4
-
-  -- transparency
-  vim.g.neovide_opacity = 0.6
-  vim.g.neovide_normal_opacity = 0.6
-
-  vim.g.neovide_theme = 'dark'
 
   -- border
   vim.g.neovide_show_border = false
@@ -56,6 +35,7 @@ if vim.g.neovide then
   vim.g.neovide_floating_blur_amount_x = 3.0
   vim.g.neovide_floating_blur_amount_y = 3.0
   vim.g.neovide_scroll_animation_far_lines = 1
+  vim.g.neovide_input_macos_option_key_is_meta = 'only_left'
 end
 
 vim.g.base46_cache = vim.fn.stdpath 'data' .. '/base46_cache/'
