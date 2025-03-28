@@ -1,7 +1,6 @@
 local TIMEOUT_MS = 10000
 local content = ''
 local filetype = ''
-local codecompanion_winid = -1
 
 local lsp_methods = {
   get_definition = 'textDocument/definition',
@@ -87,6 +86,7 @@ local function get_node_text(bufnr, node)
   local lines = get_buffer_lines(bufnr, start_row, end_row + 1)
 
   if not lines then
+    vim.notify("symbol text range is empty.")
     return nil
   end
 
@@ -114,11 +114,13 @@ end
 
 local function get_definition_with_docs(bufnr, row, col)
   if not is_valid_buffer(bufnr) then
+    vim.notify("Invalid buffer id:" .. bufnr)
     return nil
   end
 
   local parser = vim.treesitter.get_parser(bufnr)
   if not parser then
+    vim.notify("Can't initialize tree-sitter parser for buffer id: " .. bufnr)
     return nil
   end
 
@@ -172,6 +174,8 @@ local function call_lsp_method(bufnr, method)
       local code = get_definition_with_docs(target_bufnr, range.start.line, range.start.character)
       if code then
         table.insert(extracted_code, code)
+      else
+        vim.notify("Can't extract symbol definition.")
       end
     end
 
@@ -199,7 +203,6 @@ local function move_cursor_to_symbol(symbol)
 
         if col then
           local win_ids = vim.fn.win_findbuf(bufnr)
-          -- If there are windows displaying this buffer, set the cursor position
           if #win_ids > 0 then
             vim.api.nvim_set_current_win(win_ids[1])
             vim.api.nvim_win_set_cursor(0, { i, col - 1 })
