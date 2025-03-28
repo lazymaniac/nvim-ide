@@ -332,12 +332,13 @@ local config = {
                 [[## Code Crawler Tool (`code_crawler`) - Enhanced Guidelines
 
 ### Purpose:
-- Traversing the codebase like a regular programmer to find definition, references, implementation, type definition, incoming or outgoing calls of specific code symbols like classes or functions.
+- Traversing the codebase like a regular programmer to find definition, references or implementation of specific code symbols like classes or functions.
 
 ### When to Use:
 - !!!At the start of coding task!!!
 - !!!Wait for the tool response and only then start to solve the task!!!
 - Use this tool to gather the necessary context to deeply understand the code fragment you are working on without any assumptions about meaning of some symbols.
+- Make sure the change will not break the code. Use get_references to find all usages of symbol if necessary.
 
 ### Execution Format:
 - Always return an XML markdown code block.
@@ -448,6 +449,7 @@ d) **Multiple Actions**: Combine actions in one response if needed:
               local result = handle:read '*a'
               handle:close()
               chat:add_reference({ content = result }, 'git', '<git_files>')
+              return vim.notify('Git files added to the chat.')
             else
               return vim.notify('No git files available', vim.log.levels.INFO, { title = 'CodeCompanion' })
             end
