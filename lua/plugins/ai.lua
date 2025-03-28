@@ -43,6 +43,7 @@ local DEFINITION_NODE_TYPES = {
   class_definition = true,
   function_declaration = true,
   method_declaration = true,
+  constructor_declaration = true,
   class_declaration = true,
   -- Variables and Constants
   variable_declaration = true,
@@ -50,13 +51,15 @@ local DEFINITION_NODE_TYPES = {
   let_declaration = true,
   field_declaration = true,
   property_declaration = true,
+  const_item = true,
   -- Language-specific definitions
   struct_item = true,
+  function_item = true,
+  impl_item = true,
   enum_item = true,
   type_item = true,
+  attribute_item = true,
   trait_item = true,
-  impl_item = true,
-  const_item = true,
   static_item = true,
   interface_declaration = true,
   type_declaration = true,
@@ -394,7 +397,7 @@ d) **Multiple Actions**: Combine actions in one response if needed:
                 local type = action._attr.type
                 local symbol = action.symbol
 
-                return self.chat:add_buf_message {
+                self.chat:add_buf_message {
                   role = require('codecompanion.config').constants.USER_ROLE,
                   content = string.format(
                     [[The %s of symbol: `%s` is:
@@ -408,6 +411,8 @@ d) **Multiple Actions**: Combine actions in one response if needed:
                     content
                   ),
                 }
+
+                return self.chat:submit()
               end,
               error = function(self, action, err)
                 return self.chat:add_buf_message {

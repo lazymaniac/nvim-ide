@@ -34,6 +34,7 @@ return {
   -- [[ AUTOCOMPLETION ]] ---------------------------------------------------------------
   {
     'saghen/blink.cmp',
+    build = 'cargo build --release',
     -- optional: provides snippets for the snippet source
     dependencies = {
       'rafamadriz/friendly-snippets',
@@ -45,7 +46,6 @@ return {
         },
       },
     },
-    version = '*',
     event = 'InsertEnter',
     ---@module 'blink.cmp'
     ---@type blink.cmp.Config
@@ -81,7 +81,7 @@ return {
           -- nvim-cmp style menu
           draw = {
             columns = {
-              { 'label', 'label_description', gap = 1 },
+              { 'label',     'label_description', gap = 1 },
               { 'kind_icon', 'kind' },
             },
             treesitter = { 'lsp' },
@@ -116,7 +116,8 @@ return {
       -- setup compat sources
       local enabled = opts.sources.default
       for _, source in ipairs(opts.sources.compat or {}) do
-        opts.sources.providers[source] = vim.tbl_deep_extend('force', { name = source, module = 'blink.compat.source' }, opts.sources.providers[source] or {})
+        opts.sources.providers[source] = vim.tbl_deep_extend('force', { name = source, module = 'blink.compat.source' },
+          opts.sources.providers[source] or {})
         if type(enabled) == 'table' and not vim.tbl_contains(enabled, source) then
           table.insert(enabled, source)
         end
