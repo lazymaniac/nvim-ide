@@ -387,15 +387,6 @@ d) **Multiple Actions**: Combine actions in one response if needed:
                 require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[4] } }  -- Multiple actions
               )
             end,
-            handlers = {
-              setup = function(_)
-                -- codecompanion_winid = vim.api.nvim_win_get_number(0)
-              end,
-              on_exit = function(_)
-                -- vim.api.nvim_set_current_win(codecompanion_winid)
-                codecompanion_winid = -1
-              end,
-            },
             output = {
               success = function(self, action, _)
                 local type = action._attr.type
