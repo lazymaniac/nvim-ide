@@ -120,7 +120,7 @@ local function get_definition_with_docs(bufnr, row, col)
 
   local parser = vim.treesitter.get_parser(bufnr)
   if not parser then
-    vim.notify("Can't initialize tree-sitter parser for buffer id: " .. bufnr)
+    vim.notify("Can't initialize tree-sitter parser for buffer id: " .. bufnr, vim.log.levels.ERROR)
     return nil
   end
 
@@ -175,7 +175,7 @@ local function call_lsp_method(bufnr, method)
       if code then
         table.insert(extracted_code, code)
       else
-        vim.notify("Can't extract symbol definition.")
+        vim.notify("Can't extract symbol definition.", vim.log.levels.INFO)
       end
     end
 
@@ -387,27 +387,32 @@ d) **Multiple Actions**: Combine actions in one response if needed:
                 require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[4] } }  -- Multiple actions
               )
             end,
+            handlers = {
+              on_exit = function (agent)
+                return agent.chat:submit()
+              end
+            },
             output = {
               success = function(self, action, _)
                 local type = action._attr.type
                 local symbol = action.symbol
 
-                self.chat:add_buf_message {
+                return self.chat:add_buf_message {
                   role = require('codecompanion.config').constants.USER_ROLE,
                   content = string.format(
-                    [[The %s of symbol: `%s` is:
+                    [[
 
+The %s of symbol: `%s` is:
 ```%s
 %s
-```\n]],
+```
+]],
                     string.upper(type),
                     symbol,
                     filetype,
                     content
                   ),
                 }
-
-                return self.chat:submit()
               end,
               error = function(self, action, err)
                 return self.chat:add_buf_message {
