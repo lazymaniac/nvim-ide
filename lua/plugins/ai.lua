@@ -1,41 +1,120 @@
-local TIMEOUT_MS = 10000
-local content = ''
-local filetype = ''
+-- Helper class definition
 
-local lsp_methods = {
+-- Code Editor helper
+local CodeEditor = {}
+CodeEditor.__index = CodeEditor
+
+function CodeEditor:new()
+  local instance = setmetatable({}, CodeEditor)
+  return instance
+end
+
+CodeEditor.deltas = {}
+
+function CodeEditor:add_delta(bufnr, line, delta)
+  table.insert(self.deltas, { bufnr = bufnr, line = line, delta = delta })
+end
+
+function CodeEditor:open_buffer(filename)
+  local bufnr = vim.fn.bufadd(filename)
+  vim.fn.bufload(bufnr)
+  vim.api.nvim_set_current_buf(bufnr)
+  return bufnr
+end
+
+function CodeEditor:get_bufnr_by_filename(filename)
+  local bufnr = nil
+  for _, bn in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_get_name(bn) == filename then
+      bufnr = bn
+    end
+  end
+
+  if not bufnr then
+    bufnr = self:open_buffer(filename)
+  end
+  return bufnr
+end
+
+function CodeEditor:intersect(bufnr, line)
+  local delta = 0
+  for _, v in ipairs(self.deltas) do
+    if bufnr == v.bufnr and line > v.line then
+      delta = delta + v.delta
+    end
+  end
+  return delta
+end
+
+function CodeEditor:delete(action)
+  local start_line
+  local end_line
+  start_line = tonumber(action.start_line)
+  assert(start_line, "No start line number provided by the LLM")
+  if start_line == 0 then
+    start_line = 1
+  end
+
+  end_line = tonumber(action.end_line)
+  assert(end_line, "No end line number provided by the LLM")
+  if end_line == 0 then
+    end_line = 1
+  end
+
+  local bufnr = self:get_bufnr_by_filename(action.filename)
+
+  if bufnr then
+    local delta = self:intersect(bufnr, start_line)
+
+    vim.api.nvim_buf_set_lines(bufnr, start_line + delta - 1, end_line + delta, false, {})
+    self:add_delta(bufnr, start_line, (start_line - end_line - 1))
+  else
+    vim.notify("Can't find buffer number by file name.", vim.log.levels.ERROR)
+  end
+end
+
+function CodeEditor:add(action)
+  local start_line
+  start_line = tonumber(action.start_line)
+  assert(start_line, "No line number provided by the LLM")
+  if start_line == 0 then
+    start_line = 1
+  end
+
+  local bufnr = self:get_bufnr_by_filename(action.filename)
+
+  if bufnr then
+    local delta = self:intersect(bufnr, start_line)
+
+    local lines = vim.split(action.code, "\n", { plain = true, trimempty = false })
+    vim.api.nvim_buf_set_lines(bufnr, start_line + delta - 1, start_line + delta - 1, false, lines)
+
+    self:add_delta(bufnr, start_line, tonumber(#lines))
+  else
+    vim.notify("Can't find buffer number by file name", vim.log.levels.WARN)
+  end
+end
+
+-- Code Extractor helper
+local CodeExtractor = {}
+CodeExtractor.__index = CodeExtractor
+
+function CodeExtractor:new()
+  local instance = setmetatable({}, CodeExtractor)
+  return instance
+end
+
+CodeExtractor.lsp_timeout_ms = 10000
+CodeExtractor.symbol_data = {}
+CodeExtractor.filetype = ''
+
+CodeExtractor.lsp_methods = {
   get_definition = 'textDocument/definition',
   get_references = 'textDocument/references',
   get_implementation = 'textDocument/implementation',
 }
 
-local DOC_NODE_TYPES = {
-  -- Single line comments
-  comment = true,
-  line_comment = true,
-  documentation_comment = true,
-  -- Multi-line comments
-  block_comment = true,
-  comment_block = true,
-  multiline_comment = true,
-  doc_comment = true,
-  documentation = true,
-  -- Special documentation formats
-  string = true, -- Python docstrings
-  heredoc = true,
-  javadoc = true,
-  attribute = true,
-  jsdoc = true,
-  phpdoc = true,
-  -- XML-style docs
-  xml_comment = true,
-  html_comment = true,
-  -- Language specific
-  roxygen_comment = true,
-  luadoc = true,
-  perldoc = true,
-}
-
-local DEFINITION_NODE_TYPES = {
+CodeExtractor.DEFINITION_NODE_TYPES = {
   -- Functions and Classes
   function_definition = true,
   method_definition = true,
@@ -65,55 +144,52 @@ local DEFINITION_NODE_TYPES = {
   decorated_definition = true,
 }
 
--- Utility functions
-local function is_valid_buffer(bufnr)
+function CodeExtractor:is_valid_buffer(bufnr)
   return bufnr and vim.api.nvim_buf_is_valid(bufnr)
 end
 
-local function get_buffer_lines(bufnr, start_row, end_row)
-  if not is_valid_buffer(bufnr) then
+function CodeExtractor:get_buffer_lines(bufnr, start_row, end_row)
+  if not self:is_valid_buffer(bufnr) then
+    vim.notify("Provided bufnr is invalid: " .. bufnr, vim.log.levels.WARN)
     return nil
   end
   return vim.api.nvim_buf_get_lines(bufnr, start_row, end_row, false)
 end
 
-local function get_node_text(bufnr, node)
+function CodeExtractor:get_node_data(bufnr, node)
   if not (node and bufnr) then
     return nil
   end
 
   local start_row, start_col, end_row, end_col = node:range()
-  local lines = get_buffer_lines(bufnr, start_row, end_row + 1)
+  local lines = self:get_buffer_lines(bufnr, start_row, end_row + 1)
 
   if not lines then
-    vim.notify("symbol text range is empty.")
+    vim.notify("Symbol text range is empty.", vim.log.levels.WARN)
     return nil
   end
 
+  local code_block
   if start_row == end_row then
-    return lines[1]:sub(start_col + 1, end_col)
+    code_block = lines[1]:sub(start_col + 1, end_col)
+  else
+    lines[1] = lines[1]:sub(start_col + 1)
+    lines[#lines] = lines[#lines]:sub(1, end_col)
+    code_block = table.concat(lines, '\n')
   end
 
-  lines[1] = lines[1]:sub(start_col + 1)
-  lines[#lines] = lines[#lines]:sub(1, end_col)
-  return table.concat(lines, '\n')
+  local filename = vim.api.nvim_buf_get_name(bufnr)
+
+  return {
+    code_block = code_block,
+    start_line = start_row,
+    end_line = end_row,
+    filename = filename,
+  }
 end
 
-local function find_documentation_node(node)
-  if not node then
-    return nil
-  end
-
-  local prev = node:prev_sibling()
-  if prev and DOC_NODE_TYPES[prev:type()] then
-    return prev
-  end
-
-  return nil
-end
-
-local function get_definition_with_docs(bufnr, row, col)
-  if not is_valid_buffer(bufnr) then
+function CodeExtractor:get_symbol_data(bufnr, row, col)
+  if not self:is_valid_buffer(bufnr) then
     vim.notify("Invalid buffer id:" .. bufnr)
     return nil
   end
@@ -129,14 +205,8 @@ local function get_definition_with_docs(bufnr, row, col)
   local node = root:named_descendant_for_range(row, col, row, col)
 
   while node do
-    if DEFINITION_NODE_TYPES[node:type()] then
-      local doc_node = find_documentation_node(node)
-      if doc_node then
-        local doc_text = get_node_text(bufnr, doc_node)
-        local def_text = get_node_text(bufnr, node)
-        return doc_text and def_text and (doc_text .. '\n' .. def_text)
-      end
-      return get_node_text(bufnr, node)
+    if self.DEFINITION_NODE_TYPES[node:type()] then
+      return self:get_node_data(bufnr, node)
     end
     node = node:parent()
   end
@@ -144,21 +214,21 @@ local function get_definition_with_docs(bufnr, row, col)
   return nil
 end
 
-local function call_lsp_method(bufnr, method)
+function CodeExtractor:call_lsp_method(bufnr, method)
   if not (bufnr and method) then
-    return {}
+    vim.notify("Unable to call lsp. Missing bufnr or method. buffer=" .. bufnr .. " method=" .. method,
+      vim.log.levels.WARN)
+    return
   end
 
   local position_params = vim.lsp.util.make_position_params()
   position_params.context = { includeDeclaration = false }
 
-  local results_by_client, err = vim.lsp.buf_request_sync(bufnr, method, position_params, TIMEOUT_MS)
+  local results_by_client, err = vim.lsp.buf_request_sync(bufnr, method, position_params, self.lsp_timeout_ms)
   if err then
     vim.notify('LSP error: ' .. tostring(err), vim.log.levels.ERROR)
-    return {}
+    return
   end
-
-  local extracted_code = {}
 
   for _, lsp_results in pairs(results_by_client or {}) do
     local result = lsp_results.result or {}
@@ -171,11 +241,11 @@ local function call_lsp_method(bufnr, method)
       local target_bufnr = vim.uri_to_bufnr(uri)
       vim.fn.bufload(target_bufnr)
 
-      local code = get_definition_with_docs(target_bufnr, range.start.line, range.start.character)
-      if code then
-        table.insert(extracted_code, code)
+      local data = self:get_symbol_data(target_bufnr, range.start.line, range.start.character)
+      if data then
+        table.insert(self.symbol_data, data)
       else
-        vim.notify("Can't extract symbol definition.", vim.log.levels.INFO)
+        vim.notify("Can't extract symbol data.", vim.log.levels.WARN)
       end
     end
 
@@ -187,11 +257,9 @@ local function call_lsp_method(bufnr, method)
       end
     end
   end
-
-  return table.concat(extracted_code, '\n\n')
 end
 
-local function move_cursor_to_symbol(symbol)
+function CodeExtractor:move_cursor_to_symbol(symbol)
   local bufs = vim.api.nvim_list_bufs()
 
   for _, bufnr in ipairs(bufs) do
@@ -215,6 +283,11 @@ local function move_cursor_to_symbol(symbol)
   end
   return -1
 end
+
+-- Helpers initioalization
+local code_extractor = CodeExtractor:new()
+local code_editor = CodeEditor:new()
+
 
 local config = {
   adapters = {
@@ -254,29 +327,42 @@ local config = {
       adapter = 'ollama',
       roles = {
         llm = function(adapter)
-          return adapter.formatted_name
+          return adapter.formatted_name ..
+              ' (model=' ..
+              adapter.parameters.model ..
+              ', num_ctx=' ..
+              adapter.parameters.options.num_ctx ..
+              ', temperature=' .. adapter.parameters.options.temperature .. ')'
         end,
         user = 'Me',
       },
       tools = {
-        ['code_crawler'] = {
-          description = 'Expose LSP actions to the Agent so it can travers the code like a programmer.',
+        ['code_developer'] = {
+          description = 'Act as developer by utilizing LSP methods and code modification capabilities.',
           opts = {
             user_approval = false,
           },
           callback = {
-            name = 'code_crawler',
+            name = 'code_developer',
             cmds = {
               function(_, action, _)
-                local symbol = action.symbol
                 local type = action._attr.type
+                local symbol = action.symbol
 
-                local bufnr = move_cursor_to_symbol(symbol)
-
-                if lsp_methods[type] then
-                  content = call_lsp_method(bufnr, lsp_methods[type])
-                  filetype = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
+                if (type == 'edit') then
+                  code_editor:delete(action)
+                  code_editor:add(action)
                   return { status = 'success', msg = nil }
+                else
+                  local bufnr = code_extractor:move_cursor_to_symbol(symbol)
+
+                  if code_extractor.lsp_methods[type] then
+                    code_extractor:call_lsp_method(bufnr, code_extractor.lsp_methods[type])
+                    code_extractor.filetype = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
+                    return { status = 'success', msg = nil }
+                  else
+                    vim.notify("Unsupported LSP method", vim.log.levels.WARN)
+                  end
                 end
 
                 return { status = 'error', msg = 'No symbol found' }
@@ -285,7 +371,7 @@ local config = {
             schema = {
               {
                 tool = {
-                  _attr = { name = 'code_crawler' },
+                  _attr = { name = 'code_developer' },
                   action = {
                     _attr = { type = 'get_definition' },
                     symbol = '<![CDATA[UserRepository]]>',
@@ -294,7 +380,7 @@ local config = {
               },
               {
                 tool = {
-                  _attr = { name = 'code_crawler' },
+                  _attr = { name = 'code_developer' },
                   action = {
                     _attr = { type = 'get_references' },
                     symbol = '<![CDATA[saveUser]]>',
@@ -303,7 +389,7 @@ local config = {
               },
               {
                 tool = {
-                  _attr = { name = 'code_crawler' },
+                  _attr = { name = 'code_developer' },
                   action = {
                     _attr = { type = 'get_implementation' },
                     symbol = '<![CDATA[Comparable]]>',
@@ -312,7 +398,19 @@ local config = {
               },
               {
                 tool = {
-                  _attr = { name = 'code_crawler' },
+                  _attr = { name = 'code_developer' },
+                  action = {
+                    _attr = { type = 'edit' },
+                    filename = "/nvim/lua/plugins/ai.lua",
+                    start_line = 21,
+                    end_line = 31,
+                    code = "<![CDATA[function hello_world() end]]"
+                  }
+                }
+              },
+              {
+                tool = {
+                  _attr = { name = 'code_developer' },
                   action = {
                     {
                       _attr = { type = 'get_definition' },
@@ -332,63 +430,64 @@ local config = {
             },
             system_prompt = function(schema)
               return string.format(
-                [[## Code Crawler Tool (`code_crawler`) - Enhanced Guidelines
+                [[## Code Developer Tool (`code_developer`) Guidelines
 
-### Purpose:
-- Traversing the codebase like a regular programmer to find definition, references or implementation of specific code symbols like classes or functions.
+## MANDATORY USAGE
+Use `get_definition`, `get_references` or `get_implementation` AT THE START of EVERY coding task to gather context before answering.
+Use `edit` action only when asked by user.
 
-### When to Use:
-- !!!At the start of coding task!!!
-- !!!Wait for the tool response and only then start to solve the task!!!
-- Use this tool to gather the necessary context to deeply understand the code fragment you are working on without any assumptions about meaning of some symbols.
-- Make sure the change will not break the code. Use get_references to find all usages of symbol if necessary.
+## Purpose
+Traverses the codebase to find definitions, references, or implementations of code symbols.
+OR
+Replace old code with new implementation
 
-### Execution Format:
-- Always return an XML markdown code block.
-- Each code symbol must:
-  - Be wrapped in a CDATA section to preserve special characters (CDATA sections ensure that characters like '<' and '&' are not interpreted as XML markup).
-  - Follow the XML schema exactly.
+## Execution Format
+Return XML in this format:
 
-### XML Schema:
-Each tool invocation should adhere to this structure:
-
-a) **Get Definition Action:**
+a) **Get Definition Action:** Find where symbol is defined
 ```xml
 %s
 ```
 
-b) **Get References Action:**
+b) **Get References Action:** Find all usages of symbol
 ```xml
 %s
 ```
 
-c) **Get Implementation Action:**
+c) **Get Implementation Action:** Find implementations of interfaces/abstract classes
 ```xml
 %s
 ```
 
-d) **Multiple Actions**: Combine actions in one response if needed:
+d) **Multiple Actions**: Combine actions in one response if needed
 
 ```xml
 %s
 ```
 
-### Key Considerations:
-- **Safety and Accuracy:** Validate all symbols are exactly the same as in code.
-- **CDATA Usage:** Code is wrapped in CDATA blocks to protect special characters and prevent them from being misinterpreted by XML.
-- **Patience:** Wait until tool provides all the data you requested before starting to solve the task.
+d) **Edit Action**: Replace fragment of code. Use only on user request.
 
-### Reminder:
-- Minimize extra explanations and focus on returning correct XML blocks with properly wrapped CDATA sections.
-- Always use the structure above for consistency.]],
+```xml
+%s
+```
+
+## Important
+- Always wrap symbols in CDATA sections
+- Wait for tool results before providing solutions
+- Minimize explanations about the tool itself
+]],
                 require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[1] } }, -- Get Definition
                 require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[2] } }, -- Get References
                 require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[3] } }, -- Get Implementation
-                require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[4] } }  -- Multiple actions
+                require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[5] } }, -- Multiple actions
+                require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[4] } }  -- Edit code
               )
             end,
             handlers = {
-              on_exit = function (agent)
+              on_exit = function(agent)
+                code_extractor.symbol_data = {}
+                code_extractor.filetype = ''
+                vim.notify("Symbols submitted to LLM")
                 return agent.chat:submit()
               end
             },
@@ -396,22 +495,35 @@ d) **Multiple Actions**: Combine actions in one response if needed:
               success = function(self, action, _)
                 local type = action._attr.type
                 local symbol = action.symbol
+                local buf_message_content = '';
 
-                return self.chat:add_buf_message {
-                  role = require('codecompanion.config').constants.USER_ROLE,
-                  content = string.format(
+                for _, code_block in ipairs(code_extractor.symbol_data) do
+                  buf_message_content = buf_message_content .. string.format(
                     [[
-
+---
 The %s of symbol: `%s` is:
+Filename: %s
+Start line: %s
+End line: %s
+Content:
 ```%s
 %s
 ```
+---
 ]],
                     string.upper(type),
                     symbol,
-                    filetype,
-                    content
-                  ),
+                    code_block.filename,
+                    code_block.start_line,
+                    code_block.end_line,
+                    code_extractor.filetype,
+                    code_block.code_block
+                  )
+                end
+
+                return self.chat:add_buf_message {
+                  role = require('codecompanion.config').constants.USER_ROLE,
+                  content = buf_message_content,
                 }
               end,
               error = function(self, action, err)
