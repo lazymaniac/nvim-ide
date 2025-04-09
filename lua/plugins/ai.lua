@@ -225,52 +225,74 @@ function CodeExtractor:get_symbol_data(bufnr, row, col)
   return nil
 end
 
-function CodeExtractor:call_lsp_method(bufnr, method)
+function CodeExtractor:validate_lsp_params(bufnr, method)
   if not (bufnr and method) then
     vim.notify("Unable to call lsp. Missing bufnr or method. buffer=" .. bufnr .. " method=" .. method,
       vim.log.levels.WARN)
-    return
+    return false
   end
+  return true
+end
 
+function CodeExtractor:execute_lsp_request(bufnr, method)
   local position_params = vim.lsp.util.make_position_params()
   position_params.context = { includeDeclaration = false }
 
   local results_by_client, err = vim.lsp.buf_request_sync(bufnr, method, position_params, self.lsp_timeout_ms)
   if err then
     vim.notify('LSP error: ' .. tostring(err), vim.log.levels.ERROR)
+    return nil
+  end
+  return results_by_client
+end
+
+function CodeExtractor:process_single_range(uri, range)
+  if not (uri and range) then
     return
   end
 
-  for _, lsp_results in pairs(results_by_client or {}) do
-    local result = lsp_results.result or {}
+  local target_bufnr = vim.uri_to_bufnr(uri)
+  vim.fn.bufload(target_bufnr)
 
-    local function process_range(uri, range)
-      if not (uri and range) then
-        return
-      end
+  local data = self:get_symbol_data(target_bufnr, range.start.line, range.start.character)
+  if data then
+    table.insert(self.symbol_data, data)
+  else
+    vim.notify("Can't extract symbol data.", vim.log.levels.WARN)
+  end
+end
 
-      local target_bufnr = vim.uri_to_bufnr(uri)
-      vim.fn.bufload(target_bufnr)
+function CodeExtractor:process_lsp_result(result)
+  if result.range then
+    self:process_single_range(result.uri or result.targetUri, result.range)
+    return
+  end
 
-      local data = self:get_symbol_data(target_bufnr, range.start.line, range.start.character)
-      if data then
-        table.insert(self.symbol_data, data)
-      else
-        vim.notify("Can't extract symbol data.", vim.log.levels.WARN)
-      end
-    end
+  if #result > 10 then
+    vim.notify("Too many results from symbol. Ignoring", vim.log.levels.WARN)
+    return
+  end
 
-    if result.range then
-      process_range(result.uri or result.targetUri, result.range)
-    else
-      if #result > 10 then -- skip too many results
-        vim.notify("Too many results from symbol. Ignoring", vim.log.levels.WARN)
-        return
-      end
-      for _, item in pairs(result) do
-        process_range(item.uri or item.targetUri, item.range or item.targetSelectionRange)
-      end
-    end
+  for _, item in pairs(result) do
+    self:process_single_range(
+      item.uri or item.targetUri,
+      item.range or item.targetSelectionRange
+    )
+  end
+end
+
+function CodeExtractor:call_lsp_method(bufnr, method)
+  if not self:validate_lsp_params(bufnr, method) then
+    return
+  end
+
+  local results_by_client = self:execute_lsp_request(bufnr, method)
+  if not results_by_client then
+    return
+  end
+
+  for _, lsp_results in pairs(results_by_client) do
+    self:process_lsp_result(lsp_results.result or {})
   end
 end
 
