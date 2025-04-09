@@ -1,3 +1,4 @@
+local last_action = '';
 -- Helper class definition
 
 -- Code Editor helper
@@ -16,9 +17,19 @@ function CodeEditor:add_delta(bufnr, line, delta)
 end
 
 function CodeEditor:open_buffer(filename)
+  if not filename or filename == "" then
+    vim.notify("No filename provided to open_buffer", vim.log.levels.ERROR)
+    return nil
+  end
+
+  if vim.fn.filereadable(filename) == 0 then
+    vim.notify("File is unreadable. Path: " .. filename, vim.log.levels.WARN)
+  end
+
   local bufnr = vim.fn.bufadd(filename)
   vim.fn.bufload(bufnr)
   vim.api.nvim_set_current_buf(bufnr)
+
   return bufnr
 end
 
@@ -252,6 +263,10 @@ function CodeExtractor:call_lsp_method(bufnr, method)
     if result.range then
       process_range(result.uri or result.targetUri, result.range)
     else
+      if #result > 10 then -- skip too many results
+        vim.notify("Too many results from symbol. Ignoring", vim.log.levels.WARN)
+        return
+      end
       for _, item in pairs(result) do
         process_range(item.uri or item.targetUri, item.range or item.targetSelectionRange)
       end
@@ -346,6 +361,7 @@ local config = {
             cmds = {
               function(_, action, _)
                 local type = action._attr.type
+                last_action = type
                 local symbol = action.symbol
 
                 if (type == 'edit') then
@@ -432,11 +448,11 @@ local config = {
                 [[## Code Developer Tool (`code_developer`) Guidelines
 
 ## MANDATORY USAGE
-Use `get_definition`, `get_references` or `get_implementation` AT THE START of EVERY coding task to gather context before answering.
+Use `get_definition`, `get_references` or `get_implementation` AT THE START of EVERY coding task to gather context before answering. Don't overuse these actions. Think what is needed to solve the task, don't fall into rabbit hole.
 Use `edit` action only when asked by user.
 
 ## Purpose
-Traverses the codebase to find definitions, references, or implementations of code symbols.
+Traverses the codebase to find definitions, references, or implementations of code symbols to provide error proof solution
 OR
 Replace old code with new implementation
 
@@ -486,8 +502,10 @@ d) **Edit Action**: Replace fragment of code. Use only on user request.
               on_exit = function(agent)
                 code_extractor.symbol_data = {}
                 code_extractor.filetype = ''
-                vim.notify("Symbols submitted to LLM")
-                return agent.chat:submit()
+                if last_action ~= "edit" then
+                  vim.notify("Symbols submitted to LLM")
+                  return agent.chat:submit()
+                end
               end
             },
             output = {
@@ -500,7 +518,7 @@ d) **Edit Action**: Replace fragment of code. Use only on user request.
                   buf_message_content = buf_message_content .. string.format(
                     [[
 ---
-The %s of symbol: `%s` is:
+The %s of symbol: `%s`
 Filename: %s
 Start line: %s
 End line: %s
