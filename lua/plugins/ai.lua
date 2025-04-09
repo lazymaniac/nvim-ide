@@ -182,8 +182,8 @@ function CodeExtractor:get_node_data(bufnr, node)
 
   return {
     code_block = code_block,
-    start_line = start_row,
-    end_line = end_row,
+    start_line = start_row + 1,
+    end_line = end_row + 1,
     filename = filename,
   }
 end
@@ -287,7 +287,6 @@ end
 -- Helpers initioalization
 local code_extractor = CodeExtractor:new()
 local code_editor = CodeEditor:new()
-
 
 local config = {
   adapters = {
