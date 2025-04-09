@@ -4,7 +4,8 @@ vim.api.nvim_create_autocmd('LspProgress', {
   ---@param ev {data: {client_id: integer, params: lsp.ProgressParams}}
   callback = function(ev)
     local client = vim.lsp.get_client_by_id(ev.data.client_id)
-    local value = ev.data.params.value --[[@as {percentage?: number, title?: string, message?: string, kind: "begin" | "report" | "end"}]]
+    local value = ev.data.params
+    .value --[[@as {percentage?: number, title?: string, message?: string, kind: "begin" | "report" | "end"}]]
     if not client or type(value) ~= 'table' then
       return
     end
@@ -35,7 +36,8 @@ vim.api.nvim_create_autocmd('LspProgress', {
       id = 'lsp_progress',
       title = client.name,
       opts = function(notif)
-        notif.icon = #progress[client.id] == 0 and ' ' or spinner[math.floor(vim.uv.hrtime() / (1e6 * 80)) % #spinner + 1]
+        notif.icon = #progress[client.id] == 0 and ' ' or
+        spinner[math.floor(vim.uv.hrtime() / (1e6 * 80)) % #spinner + 1]
       end,
     })
   end,
@@ -69,9 +71,9 @@ return {
       bigfile = { enabled = true },
       dashboard = {
         width = 80,
-        row = nil, -- dashboard position. nil for center
-        col = nil, -- dashboard position. nil for center
-        pane_gap = 4, -- empty columns between vertical panes
+        row = nil,                                                                   -- dashboard position. nil for center
+        col = nil,                                                                   -- dashboard position. nil for center
+        pane_gap = 4,                                                                -- empty columns between vertical panes
         autokeys = '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', -- autokey sequence
         -- These settings are used by some built-in sections
         preset = {
@@ -228,7 +230,7 @@ return {
             patterns = { '.git', '_darcs', '.hg', '.bzr', '.svn', 'package.json', 'Makefile' },
             recent = true,
             matcher = {
-              frecency = true, -- use frecency boosting
+              frecency = true,   -- use frecency boosting
               sort_empty = true, -- sort even when the filter is empty
               cwd_bonus = false,
             },
@@ -273,16 +275,16 @@ return {
         },
         ---@class snacks.picker.matcher.Config
         matcher = {
-          fuzzy = true, -- use fuzzy matching
-          smartcase = true, -- use smartcase
-          ignorecase = true, -- use ignorecase
-          sort_empty = false, -- sort results when the search string is empty
+          fuzzy = true,          -- use fuzzy matching
+          smartcase = true,      -- use smartcase
+          ignorecase = true,     -- use ignorecase
+          sort_empty = false,    -- sort results when the search string is empty
           filename_bonus = true, -- give bonus for matching file names (last part of the path)
-          file_pos = true, -- support patterns like `file:line:col` and `file:line`
+          file_pos = true,       -- support patterns like `file:line:col` and `file:line`
           -- the bonusses below, possibly require string concatenation and path normalization,
           -- so this can have a performance impact for large lists and increase memory usage
-          cwd_bonus = true, -- give bonus for matching files in the cwd
-          frecency = false, -- frecency bonus
+          cwd_bonus = true,      -- give bonus for matching files in the cwd
+          frecency = false,      -- frecency bonus
           history_bonus = false, -- give more weight to chronological order
         },
         sort = {
@@ -294,18 +296,18 @@ return {
         formatters = {
           file = {
             filename_first = true, -- display filename before the file path
-            truncate = 40, -- truncate the file path to (roughly) this length
+            truncate = 40,         -- truncate the file path to (roughly) this length
             filename_only = false, -- only show the filename
           },
           selected = {
             show_always = true, -- only show the selected column when there are multiple selections
-            unselected = true, -- use the unselected icon for unselected items
+            unselected = true,  -- use the unselected icon for unselected items
           },
           severity = {
-            icons = true, -- show severity icons
+            icons = true,  -- show severity icons
             level = false, -- show severity level
             ---@type "left"|"right"
-            pos = 'left', -- position of the diagnostics
+            pos = 'left',  -- position of the diagnostics
           },
         },
         ---@class snacks.picker.previewers.Config
@@ -315,18 +317,18 @@ return {
           },
           file = {
             max_size = 1024 * 1024, -- 1MB
-            max_line_length = 500, -- max line length
+            max_line_length = 500,  -- max line length
             ft = nil, ---@type string? filetype for highlighting. Use `nil` for auto detect
           },
           man_pager = nil, ---@type string? MANPAGER env to use for `man` preview
         },
         ---@class snacks.picker.jump.Config
         jump = {
-          jumplist = true, -- save the current position in the jumplist
-          tagstack = false, -- save the current position in the tagstack
+          jumplist = true,   -- save the current position in the jumplist
+          tagstack = false,  -- save the current position in the tagstack
           reuse_win = false, -- reuse an existing window if the buffer is already open
-          close = true, -- close the picker when jumping/editing to a location (defaults to true)
-          match = false, -- jump to the first match position. (useful for `lines`)
+          close = true,      -- close the picker when jumping/editing to a location (defaults to true)
+          match = false,     -- jump to the first match position. (useful for `lines`)
         },
         toggles = {
           follow = 'f',
@@ -474,75 +476,75 @@ return {
     -- stylua: ignore
     keys = {
       -- Top Pickers & Explorer
-      { '<leader><space>', function() Snacks.picker.smart() end, desc = 'Smart Find Files [ ]' },
-      { '<leader>,', function() Snacks.picker.buffers() end, desc = 'Buffers [,]' },
-      { '<leader>/', function() Snacks.picker.grep() end, desc = 'Grep [/]' },
-      { '<leader>:', function() Snacks.picker.command_history() end, desc = 'Command History [:]' },
-      { '<leader>e', function() Snacks.explorer() end, desc = 'File Explorer [e]' },
+      { '<leader><space>', function() Snacks.picker.smart() end,                                 desc = 'Smart Find Files [ ]' },
+      { '<leader>,',       function() Snacks.picker.buffers() end,                               desc = 'Buffers [,]' },
+      { '<leader>/',       function() Snacks.picker.grep() end,                                  desc = 'Grep [/]' },
+      { '<leader>:',       function() Snacks.picker.command_history() end,                       desc = 'Command History [:]' },
+      { '<leader>e',       function() Snacks.explorer() end,                                     desc = 'File Explorer [e]' },
       -- find
-      { '<leader>fb', function() Snacks.picker.buffers() end, desc = 'Buffers [fb]' },
-      { '<leader>fc', function() Snacks.picker.files { cwd = vim.fn.stdpath 'config' } end, desc = 'Find Config File [fc]' },
-      { '<leader>ff', function() Snacks.picker.files() end, desc = 'Find Files [ff]' },
-      { '<leader>fg', function() Snacks.picker.git_files() end, desc = 'Find Git Files [fg]' },
-      { '<leader>fp', function() Snacks.picker.projects() end, desc = 'Projects [fp]' },
-      { '<leader>fr', function() Snacks.picker.recent() end, desc = 'Recent [fr]' },
+      { '<leader>fb',      function() Snacks.picker.buffers() end,                               desc = 'Buffers [fb]' },
+      { '<leader>fc',      function() Snacks.picker.files { cwd = vim.fn.stdpath 'config' } end, desc = 'Find Config File [fc]' },
+      { '<leader>ff',      function() Snacks.picker.files() end,                                 desc = 'Find Files [ff]' },
+      { '<leader>fg',      function() Snacks.picker.git_files() end,                             desc = 'Find Git Files [fg]' },
+      { '<leader>fp',      function() Snacks.picker.projects() end,                              desc = 'Projects [fp]' },
+      { '<leader>fr',      function() Snacks.picker.recent() end,                                desc = 'Recent [fr]' },
       -- git
-      { '<leader>gb', function() Snacks.picker.git_branches() end, desc = 'Git Branches [gb]' },
-      { '<leader>gl', function() Snacks.picker.git_log() end, desc = 'Git Log [gl]' },
-      { '<leader>gL', function() Snacks.picker.git_log_line() end, desc = 'Git Log Line [gL]' },
-      { '<leader>gs', function() Snacks.picker.git_status() end, desc = 'Git Status [gs]' },
-      { '<leader>gS', function() Snacks.picker.git_stash() end, desc = 'Git Stash [gS]' },
-      { '<leader>gd', function() Snacks.picker.git_diff() end, desc = 'Git Diff (Hunks) [gd]' },
-      { '<leader>gf', function() Snacks.picker.git_log_file() end, desc = 'Git Log File [gf]' },
+      { '<leader>gb',      function() Snacks.picker.git_branches() end,                          desc = 'Git Branches [gb]' },
+      { '<leader>gl',      function() Snacks.picker.git_log() end,                               desc = 'Git Log [gl]' },
+      { '<leader>gL',      function() Snacks.picker.git_log_line() end,                          desc = 'Git Log Line [gL]' },
+      { '<leader>gs',      function() Snacks.picker.git_status() end,                            desc = 'Git Status [gs]' },
+      { '<leader>gS',      function() Snacks.picker.git_stash() end,                             desc = 'Git Stash [gS]' },
+      { '<leader>gd',      function() Snacks.picker.git_diff() end,                              desc = 'Git Diff (Hunks) [gd]' },
+      { '<leader>gf',      function() Snacks.picker.git_log_file() end,                          desc = 'Git Log File [gf]' },
       -- Grep
-      { '<leader>sb', function() Snacks.picker.lines() end, desc = 'Buffer Lines [sb]' },
-      { '<leader>sB', function() Snacks.picker.grep_buffers() end, desc = 'Grep Open Buffers [sB]' },
-      { '<leader>sg', function() Snacks.picker.grep() end, desc = 'Grep [sg]' },
-      { '<leader>sw', function() Snacks.picker.grep_word() end, desc = 'Visual selection or word [sw]', mode = { 'n', 'x' } },
+      { '<leader>sb',      function() Snacks.picker.lines() end,                                 desc = 'Buffer Lines [sb]' },
+      { '<leader>sB',      function() Snacks.picker.grep_buffers() end,                          desc = 'Grep Open Buffers [sB]' },
+      { '<leader>sg',      function() Snacks.picker.grep() end,                                  desc = 'Grep [sg]' },
+      { '<leader>sw',      function() Snacks.picker.grep_word() end,                             desc = 'Visual selection or word [sw]', mode = { 'n', 'x' } },
       -- search
-      { '<leader>p', function() Snacks.picker.registers() end, desc = 'Registers [p]' },
-      { '<leader>s/', function() Snacks.picker.search_history() end, desc = 'Search History [s/]' },
-      { '<leader>sa', function() Snacks.picker.autocmds() end, desc = 'Autocmds [sa]' },
-      { '<leader>sb', function() Snacks.picker.lines() end, desc = 'Buffer Lines [sb]' },
-      { '<leader>sc', function() Snacks.picker.command_history() end, desc = 'Command History [sc]' },
-      { '<leader>sC', function() Snacks.picker.commands() end, desc = 'Commands [sC]' },
-      { '<leader>sd', function() Snacks.picker.diagnostics() end, desc = 'Diagnostics [sd]' },
-      { '<leader>sD', function() Snacks.picker.diagnostics_buffer() end, desc = 'Buffer Diagnostics [sD]' },
-      { '<leader>sh', function() Snacks.picker.help() end, desc = 'Help Pages [sh]' },
-      { '<leader>sH', function() Snacks.picker.highlights() end, desc = 'Highlights [sH]' },
-      { '<leader>si', function() Snacks.picker.icons() end, desc = 'Icons [si]' },
-      { '<leader>sj', function() Snacks.picker.jumps() end, desc = 'Jumps [sj]' },
-      { '<leader>sk', function() Snacks.picker.keymaps() end, desc = 'Keymaps [sk]' },
-      { '<leader>sl', function() Snacks.picker.loclist() end, desc = 'Location List [sl]' },
-      { '<leader>sm', function() Snacks.picker.marks() end, desc = 'Marks [sm]' },
-      { '<leader>sM', function() Snacks.picker.man() end, desc = 'Man Pages [sM]' },
-      { '<leader>sp', function() Snacks.picker.lazy() end, desc = 'Search for Plugin Spec [sp]' },
-      { '<leader>sq', function() Snacks.picker.qflist() end, desc = 'Quickfix List [sq]' },
-      { '<leader>sR', function() Snacks.picker.resume() end, desc = 'Resume [sR]' },
-      { '<leader>su', function() Snacks.picker.undo() end, desc = 'Undo History [su]' },
-      { '<leader>uC', function() Snacks.picker.colorschemes() end, desc = 'Colorschemes [uC]' },
+      { '<leader>p',       function() Snacks.picker.registers() end,                             desc = 'Registers [p]' },
+      { '<leader>s/',      function() Snacks.picker.search_history() end,                        desc = 'Search History [s/]' },
+      { '<leader>sa',      function() Snacks.picker.autocmds() end,                              desc = 'Autocmds [sa]' },
+      { '<leader>sb',      function() Snacks.picker.lines() end,                                 desc = 'Buffer Lines [sb]' },
+      { '<leader>sc',      function() Snacks.picker.command_history() end,                       desc = 'Command History [sc]' },
+      { '<leader>sC',      function() Snacks.picker.commands() end,                              desc = 'Commands [sC]' },
+      { '<leader>sd',      function() Snacks.picker.diagnostics() end,                           desc = 'Diagnostics [sd]' },
+      { '<leader>sD',      function() Snacks.picker.diagnostics_buffer() end,                    desc = 'Buffer Diagnostics [sD]' },
+      { '<leader>sh',      function() Snacks.picker.help() end,                                  desc = 'Help Pages [sh]' },
+      { '<leader>sH',      function() Snacks.picker.highlights() end,                            desc = 'Highlights [sH]' },
+      { '<leader>si',      function() Snacks.picker.icons() end,                                 desc = 'Icons [si]' },
+      { '<leader>sj',      function() Snacks.picker.jumps() end,                                 desc = 'Jumps [sj]' },
+      { '<leader>sk',      function() Snacks.picker.keymaps() end,                               desc = 'Keymaps [sk]' },
+      { '<leader>sl',      function() Snacks.picker.loclist() end,                               desc = 'Location List [sl]' },
+      { '<leader>sm',      function() Snacks.picker.marks() end,                                 desc = 'Marks [sm]' },
+      { '<leader>sM',      function() Snacks.picker.man() end,                                   desc = 'Man Pages [sM]' },
+      { '<leader>sp',      function() Snacks.picker.lazy() end,                                  desc = 'Search for Plugin Spec [sp]' },
+      { '<leader>sq',      function() Snacks.picker.qflist() end,                                desc = 'Quickfix List [sq]' },
+      { '<leader>sR',      function() Snacks.picker.resume() end,                                desc = 'Resume [sR]' },
+      { '<leader>su',      function() Snacks.picker.undo() end,                                  desc = 'Undo History [su]' },
+      { '<leader>uC',      function() Snacks.picker.colorschemes() end,                          desc = 'Colorschemes [uC]' },
       -- LSP
-      { 'gd', function() Snacks.picker.lsp_definitions() end, desc = 'Goto Definition (gd)' },
-      { 'gD', function() Snacks.picker.lsp_declarations() end, desc = 'Goto Declaration (gD)' },
-      { 'gr', function() Snacks.picker.lsp_references() end, nowait = true, desc = 'References (gr)' },
-      { 'gI', function() Snacks.picker.lsp_implementations() end, desc = 'Goto Implementation (gI)' },
-      { 'gy', function() Snacks.picker.lsp_type_definitions() end, desc = 'Goto Type Definition (gy)' },
-      { '<leader>ss', function() Snacks.picker.lsp_symbols() end, desc = 'LSP Symbols [ss]' },
-      { '<leader>o', function() Snacks.picker.lsp_symbols() end, desc = 'LSP Symbols [o]' },
-      { '<leader>sS', function() Snacks.picker.lsp_workspace_symbols() end, desc = 'LSP Workspace Symbols [sS]' },
+      { 'gd',              function() Snacks.picker.lsp_definitions() end,                       desc = 'Goto Definition (gd)' },
+      { 'gD',              function() Snacks.picker.lsp_declarations() end,                      desc = 'Goto Declaration (gD)' },
+      { 'gr',              function() Snacks.picker.lsp_references() end,                        nowait = true,                          desc = 'References (gr)' },
+      { 'gI',              function() Snacks.picker.lsp_implementations() end,                   desc = 'Goto Implementation (gI)' },
+      { 'gy',              function() Snacks.picker.lsp_type_definitions() end,                  desc = 'Goto Type Definition (gy)' },
+      { '<leader>ss',      function() Snacks.picker.lsp_symbols() end,                           desc = 'LSP Symbols [ss]' },
+      { '<leader>o',       function() Snacks.picker.lsp_symbols() end,                           desc = 'LSP Symbols [o]' },
+      { '<leader>sS',      function() Snacks.picker.lsp_workspace_symbols() end,                 desc = 'LSP Workspace Symbols [sS]' },
       -- Other
-      { '<leader>Z', function() Snacks.zen() end, desc = 'Toggle Zen Mode [Z]' },
-      { '<leader>.', function() Snacks.scratch() end, desc = 'Toggle Scratch Buffer [.]' },
-      { '<leader>S', function() Snacks.scratch.select() end, desc = 'Select Scratch Buffer [S]' },
-      { '<leader>sn', function() Snacks.notifier.show_history() end, desc = 'Notification History [sn]' },
-      { '<leader>bd', function() Snacks.bufdelete() end, desc = 'Delete Buffer [bd]' },
-      { '<leader>fR', function() Snacks.rename.rename_file() end, desc = 'Rename File [fR]' },
-      { '<leader>gB', function() Snacks.gitbrowse() end, desc = 'Git Browse [gB]', mode = { 'n', 'v' } },
-      { '<leader>gg', function() Snacks.lazygit() end, desc = 'Lazygit [gg]' },
-      { '<leader>un', function() Snacks.notifier.hide() end, desc = 'Dismiss All Notifications [un]' },
-      { '<c-/>', function() Snacks.terminal() end, desc = 'Toggle Terminal (c-/)' },
-      { ']]', function() Snacks.words.jump(vim.v.count1) end, desc = 'Next Reference', mode = { 'n', 't' } },
-      { '[[', function() Snacks.words.jump(-vim.v.count1) end, desc = 'Prev Reference', mode = { 'n', 't' } },
+      { '<leader>Z',       function() Snacks.zen() end,                                          desc = 'Toggle Zen Mode [Z]' },
+      { '<leader>.',       function() Snacks.scratch() end,                                      desc = 'Toggle Scratch Buffer [.]' },
+      { '<leader>S',       function() Snacks.scratch.select() end,                               desc = 'Select Scratch Buffer [S]' },
+      { '<leader>sn',      function() Snacks.notifier.show_history() end,                        desc = 'Notification History [sn]' },
+      { '<leader>bd',      function() Snacks.bufdelete() end,                                    desc = 'Delete Buffer [bd]' },
+      { '<leader>fR',      function() Snacks.rename.rename_file() end,                           desc = 'Rename File [fR]' },
+      { '<leader>gB',      function() Snacks.gitbrowse() end,                                    desc = 'Git Browse [gB]',               mode = { 'n', 'v' } },
+      { '<leader>gg',      function() Snacks.lazygit() end,                                      desc = 'Lazygit [gg]' },
+      { '<leader>un',      function() Snacks.notifier.hide() end,                                desc = 'Dismiss All Notifications [un]' },
+      { '<c-/>',           function() Snacks.terminal() end,                                     desc = 'Toggle Terminal (c-/)' },
+      { ']]',              function() Snacks.words.jump(vim.v.count1) end,                       desc = 'Next Reference',                mode = { 'n', 't' } },
+      { '[[',              function() Snacks.words.jump(-vim.v.count1) end,                      desc = 'Prev Reference',                mode = { 'n', 't' } },
     },
     init = function()
       vim.api.nvim_create_autocmd('User', {
@@ -582,30 +584,30 @@ return {
     branch = 'main',
     event = 'VeryLazy',
     keys = {
-      { '<leader>bp', '<Cmd>BufferLineTogglePin<CR>', desc = 'Toggle pin [bp]' },
+      { '<leader>bp', '<Cmd>BufferLineTogglePin<CR>',            desc = 'Toggle pin [bp]' },
       { '<leader>bP', '<Cmd>BufferLineGroupClose ungrouped<CR>', desc = 'Delete non-pinned buffers [bP]' },
-      { '<leader>bo', '<Cmd>BufferLineCloseOthers<CR>', desc = 'Delete other buffers [bo]' },
-      { '<leader>br', '<Cmd>BufferLineCloseRight<CR>', desc = 'Delete buffers to the right [br]' },
-      { '<leader>bl', '<Cmd>BufferLineCloseLeft<CR>', desc = 'Delete buffers to the left [bl]' },
-      { '<S-h>', '<cmd>BufferLineCyclePrev<cr>', desc = 'Prev buffer <S-h>' },
-      { '<S-l>', '<cmd>BufferLineCycleNext<cr>', desc = 'Next buffer <S-l>' },
-      { '[b', '<cmd>BufferLineCyclePrev<cr>', desc = 'Prev buffer <[b>' },
-      { ']b', '<cmd>BufferLineCycleNext<cr>', desc = 'Next buffer <]b>' },
+      { '<leader>bo', '<Cmd>BufferLineCloseOthers<CR>',          desc = 'Delete other buffers [bo]' },
+      { '<leader>br', '<Cmd>BufferLineCloseRight<CR>',           desc = 'Delete buffers to the right [br]' },
+      { '<leader>bl', '<Cmd>BufferLineCloseLeft<CR>',            desc = 'Delete buffers to the left [bl]' },
+      { '<S-h>',      '<cmd>BufferLineCyclePrev<cr>',            desc = 'Prev buffer <S-h>' },
+      { '<S-l>',      '<cmd>BufferLineCycleNext<cr>',            desc = 'Next buffer <S-l>' },
+      { '[b',         '<cmd>BufferLineCyclePrev<cr>',            desc = 'Prev buffer <[b>' },
+      { ']b',         '<cmd>BufferLineCycleNext<cr>',            desc = 'Next buffer <]b>' },
     },
     opts = {
       options = {
-        mode = 'buffers', -- Set to "tabs" to only show tabpages instead
+        mode = 'buffers',    -- Set to "tabs" to only show tabpages instead
         -- style_preset = require('bufferline').style_preset.minimal, -- or style_preset.minimal
-        themable = true, --Allows highlight groups to be overridden i.e. sets highlights as default
+        themable = true,     --Allows highlight groups to be overridden i.e. sets highlights as default
         numbers = 'ordinal', -- "none" | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
         close_command = function(n)
           Snacks.bufdelete.delete { buf = n }
         end, -- can be a string | function, see "Mouse actions"
         right_mouse_command = function(n)
           Snacks.bufdelete.delete { buf = n }
-        end, -- can be a string | function, see "Mouse actions"
+        end,                              -- can be a string | function, see "Mouse actions"
         left_mouse_command = 'buffer %d', -- can be a string | function, see "Mouse actions"
-        middle_mouse_command = nil, -- can be a string | function, see "Mouse actions"
+        middle_mouse_command = nil,       -- can be a string | function, see "Mouse actions"
         indicator = { style = 'icon', icon = '▎' },
         buffer_close_icon = ' ',
         modified_icon = '●',
@@ -613,19 +615,19 @@ return {
         left_trunc_marker = ' ',
         right_trunc_marker = ' ',
         max_name_length = 30,
-        max_prefix_length = 30, -- prefix used when a buffer is de-duplicated
-        truncate_names = true, -- Whether or not tab names should be truncated
+        max_prefix_length = 30,   -- prefix used when a buffer is de-duplicated
+        truncate_names = true,    -- Whether or not tab names should be truncated
         tab_size = 18,
-        diagnostics = false, -- | "nvim_lsp" | "coc" | false
+        diagnostics = false,      -- | "nvim_lsp" | "coc" | false
         diagnostics_update_in_insert = false,
-        color_icons = true, -- Whether or not to add the filetype icon to highlights
+        color_icons = true,       -- Whether or not to add the filetype icon to highlights
         show_buffer_icons = true, -- Disable filetype icons for buffers
         show_buffer_close_icons = true,
         show_close_icon = true,
         show_tab_indicators = true,
         show_duplicate_prefix = true, -- Whether to show duplicate buffer prefix
-        persist_buffer_sort = true, -- Whether or not custom sorted buffers should persist
-        move_wraps_at_ends = true, -- whether or not the move command "wraps" at the first or last position
+        persist_buffer_sort = true,   -- Whether or not custom sorted buffers should persist
+        move_wraps_at_ends = true,    -- whether or not the move command "wraps" at the first or last position
         -- can also be a table containing 2 custom separators
         -- [focused and unfocused]. eg: { '|', '|' }
         separator_style = { '|' }, -- 'slant' | 'slope' | 'thick' | 'thin' | { 'any', 'any' },
@@ -690,21 +692,22 @@ return {
     event = 'VeryLazy',
     -- stylua: ignore
     keys = {
-      { '<F1>', '<cmd>FloatingHelpToggle<cr>', mode = { 'n' }, desc = 'Toggle Floating Help <F1>' },
+      { '<F1>', '<cmd>FloatingHelpToggle<cr>',                                                    mode = { 'n' }, desc = 'Toggle Floating Help <F1>' },
       { '<F5>', function() require("floating-help").open('t=help', vim.fn.expand("<cword>")) end, mode = { 'n' }, desc = 'Search cword in Help <F5>' },
-      { '<F6>', function() require("floating-help").open('t=man', vim.fn.expand("<cword>")) end, mode = { 'n' }, desc = 'Search cwrod in Man <F6>' },
+      { '<F6>', function() require("floating-help").open('t=man', vim.fn.expand("<cword>")) end,  mode = { 'n' }, desc = 'Search cwrod in Man <F6>' },
     },
     config = function()
       require('floating-help').setup {
         -- Defaults
-        width = 82, -- Whole numbers are columns/rows
-        height = 0.99, -- Decimals are a percentage of the editor
+        width = 82,     -- Whole numbers are columns/rows
+        height = 0.99,  -- Decimals are a percentage of the editor
         position = 'E', -- NW,N,NW,W,C,E,SW,S,SE (C==center)
         borderchars = { '─', '│', '─', '│', '╭', '╮', '╯', '╰' },
       }
       -- Only replace cmds, not search; only replace the first instance
       local function cmd_abbrev(abbrev, expansion)
-        local cmd = 'cabbr ' .. abbrev .. ' <c-r>=(getcmdpos() == 1 && getcmdtype() == ":" ? "' .. expansion .. '" : "' .. abbrev .. '")<CR>'
+        local cmd = 'cabbr ' ..
+        abbrev .. ' <c-r>=(getcmdpos() == 1 && getcmdtype() == ":" ? "' .. expansion .. '" : "' .. abbrev .. '")<CR>'
         vim.cmd(cmd)
       end
       -- Redirect `:h` to `:FloatingHelp`
@@ -723,30 +726,14 @@ return {
     branch = 'master',
     event = 'VeryLazy',
     opts = {
-      show_numbers = true, -- Enable 'number' for the window while peeking
-      show_cursorline = true, -- Enable 'cursorline' for the window while peeking
+      show_numbers = true,         -- Enable 'number' for the window while peeking
+      show_cursorline = true,      -- Enable 'cursorline' for the window while peeking
       hide_relativenumbers = true, -- Enable turning off 'relativenumber' for the window while peeking
-      number_only = false, -- Peek only when the command is only a number instead of when it starts with a number
-      centered_peeking = true, -- Peeked line will be centered relative to window
+      number_only = false,         -- Peek only when the command is only a number instead of when it starts with a number
+      centered_peeking = true,     -- Peeked line will be centered relative to window
     },
     config = function(_, opts)
       require('numb').setup(opts)
     end,
-  },
-
-  {
-    'sphamba/smear-cursor.nvim',
-    opts = {
-      -- Smear cursor when switching buffers or windows.
-      smear_between_buffers = true,
-      -- Smear cursor when moving within line or to neighbor lines.
-      -- Use `min_horizontal_distance_smear` and `min_vertical_distance_smear` for finer control
-      smear_between_neighbor_lines = true,
-      -- Draw the smear in buffer space instead of screen space when scrolling
-      scroll_buffer_space = true,
-      -- Set to `true` if your font supports legacy computing symbols (block unicode symbols).
-      -- Smears will blend better on all backgrounds.
-      legacy_computing_symbols_support = false,
-    },
   },
 }
