@@ -341,12 +341,7 @@ local config = {
       adapter = 'ollama',
       roles = {
         llm = function(adapter)
-          return adapter.formatted_name ..
-              ' (model=' ..
-              adapter.parameters.model ..
-              ', num_ctx=' ..
-              adapter.parameters.options.num_ctx ..
-              ', temperature=' .. adapter.parameters.options.temperature .. ')'
+          return adapter.formatted_name .. ' (model=' .. adapter.parameters.model .. ')'
         end,
         user = 'Me',
       },
