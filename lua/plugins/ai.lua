@@ -34,17 +34,12 @@ function CodeEditor:open_buffer(filename)
 end
 
 function CodeEditor:get_bufnr_by_filename(filename)
-  local bufnr = nil
   for _, bn in ipairs(vim.api.nvim_list_bufs()) do
     if vim.api.nvim_buf_get_name(bn) == filename then
-      bufnr = bn
+      return bn
     end
   end
-
-  if not bufnr then
-    bufnr = self:open_buffer(filename)
-  end
-  return bufnr
+  return self:open_buffer(filename)
 end
 
 function CodeEditor:intersect(bufnr, line)
@@ -120,9 +115,9 @@ CodeExtractor.symbol_data = {}
 CodeExtractor.filetype = ''
 
 CodeExtractor.lsp_methods = {
-  get_definition = 'textDocument/definition',
-  get_references = 'textDocument/references',
-  get_implementation = 'textDocument/implementation',
+  get_definition = vim.lsp.protocol.Methods.textDocument_definition,
+  get_references = vim.lsp.protocol.Methods.textDocument_references,
+  get_implementation = vim.lsp.protocol.Methods.textDocument_implementation,
 }
 
 CodeExtractor.DEFINITION_NODE_TYPES = {
@@ -235,8 +230,7 @@ function CodeExtractor:validate_lsp_params(bufnr, method)
 end
 
 function CodeExtractor:execute_lsp_request(bufnr, method)
-  local position_params = vim.lsp.util.make_position_params()
-  position_params.context = { includeDeclaration = false }
+  local position_params = vim.lsp.util.make_position_params(0, vim.lsp.client.offset_encoding)
 
   local results_by_client, err = vim.lsp.buf_request_sync(bufnr, method, position_params, self.lsp_timeout_ms)
   if err then
@@ -507,6 +501,7 @@ d) **Edit Action**: Replace fragment of code. Use only on user request.
 - Always wrap symbols in CDATA sections
 - Wait for tool results before providing solutions
 - Minimize explanations about the tool itself
+- When looking for symbol, pass only the name of symbol without the object. So use: `saveUsers` as symbol instead of `userRepository.saveUsers`
 ]],
                 require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[1] } }, -- Get Definition
                 require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[2] } }, -- Get References
