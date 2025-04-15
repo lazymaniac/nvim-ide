@@ -263,7 +263,7 @@ function CodeExtractor:process_lsp_result(result)
   end
 
   if #result > 10 then
-    vim.notify("Too many results from symbol. Ignoring", vim.log.levels.WARN)
+    vim.notify("Too many results for symbol. Ignoring", vim.log.levels.WARN)
     return
   end
 

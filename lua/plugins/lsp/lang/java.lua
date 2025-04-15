@@ -30,7 +30,7 @@ local jdtls_settings = {
       runtimes = {
         {
           name = 'JavaSE-1.8',
-          path = '~/.sdkman/candidates/java/8.0.442-tem/',
+          path = '~/.sdkman/candidates/java/8.0.442-amzn/',
         },
         {
           name = 'JavaSE-11',
