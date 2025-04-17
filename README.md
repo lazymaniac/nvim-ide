@@ -88,6 +88,7 @@ cargo install cargo-selector
 cargo install onefetch
 cargo install tree-sitter-cli
 cargo install oha
+cargo install --locked zellij
 
 # Install bob
 cargo install bob-nvim
