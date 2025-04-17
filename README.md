@@ -21,40 +21,25 @@
 > Backup your previous configuration (if any exists)
 
 ### System Packages
-
-Fedora script for dependencies Installation.
-
+MacOS setup script:
 ```bash
 #!/bin/bash
-# TODO Font, quarto, elixir, padas, pytorch, marplotlib, magic using lua 5.1
-# Update package lists
-sudo dnf update
+# install Homebrew
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+# Install Xcode Development Tools
+xcode-select --install
 
-# Install packages
-sudo dnf copr enable atim/lazygit -y
-sudo dnf copr enable foopsss/shell-color-scripts
-sudo dnf install -y kitty zsh tmux virtualenv python3-neovim python3-pip cmake fzf luarocks luajit golang ripgrep lazygit ncdu unzip zip zoxide bat eza btop lazygit fd-find libX11-devel fastfetch compat-lua-devel-5.1.5 pipx shell-color-scripts
-sudo dnf group install -y "C Development Tools and Libraries" "Development Tools"
+cp ~/.config/nvim/dotfiles/.zshrc ~/
+source ~/.zshrc
 
-# Install oh-my-zsh
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
-# Install zsh-autosuggestions plugin.
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-
-# Install zsh-syntax-highlighting plugin
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-
-# Install oh-my-zsh headline theme
-git clone https://github.com/moarram/headline.git "$ZSH_CUSTOM/themes/headline"
-ln -s "$ZSH_CUSTOM/themes/headline/headline.zsh-theme" "$ZSH_CUSTOM/themes/headline.zsh-theme"
+brew install lazygit virtualenv cmake fzf luarocks luajit golang ripgrep ncdu zoxide bat eza btop fd fastfetch oh-my-posh bagels podman-tui
+brew install --cask iterm2
+brew install one2nc/cloudlens/cloudlens
+brew install derailed/k9s/k9s
 
 # Install sdk-man
 curl -s "https://get.sdkman.io" | bash
 source "$HOME/.sdkman/bin/sdkman-init.sh"
-
-# Install Rust using official script
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 # Install Java versions
 sdk install java 8.0.442-tem
@@ -64,8 +49,13 @@ sdk install java 21.0.6-tem
 sdk install gradle
 sdk install maven
 
+# Install UV
+curl -LsSf https://astral.sh/uv/install.sh | sh
+# Install sql ide
+uv tool install harlequin
+
 # Install nvm
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
@@ -75,46 +65,33 @@ nvm install --lts
 
 npm install -g neovim
 
+npm install --global @perryrh0dan/taskline
+
 # Install molten deps
-pip install jupytext jupyter-client pynvim pnglatex plotly kaleido nbformat yarp
+pip install pynvim pnglatex plotly kaleido nbformat yarp
 
 # Install poetry
-pipx install poetry
+pipx install poetry jupytext jupyter-client notebook posting
 
-# Install jupyter notebooks.
-pipx install notebook
+#Install termscp
+curl --proto '=https' --tlsv1.2 -sSLf "https://git.io/JBhDb" | sh
+# Install Rust using official script
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 # Install cargo update extension. Usage cargo install-update -a
 cargo install cargo-update
-
-# Install one fetch
+cargo install cargo-selector
 cargo install onefetch
-
-# Install treesitter-cli
 cargo install tree-sitter-cli
+cargo install oha
 
 # Install bob
 cargo install bob-nvim
-bob install nightly
-bob use nightly
+bob install stable
+bob use stable
 
 # Install lazydocker
 go install github.com/jesseduffield/lazydocker@latest
-
-# Install lazysql
-go install github.com/jorgerojas26/lazysql@latest
-
-# Install magick
-sudo luarocks install magick
-
-# Install miniconda
-mkdir -p ~/miniconda3
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
-bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
-rm -rf ~/miniconda3/miniconda.sh
-~/miniconda3/bin/conda init zsh
-
-echo "Installation complete."
 ```
 
 - quarto [https://quarto.org/docs/download/]
