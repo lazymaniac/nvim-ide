@@ -28,6 +28,7 @@ MacOS setup script:
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 # Install Xcode Development Tools
 xcode-select --install
+git clone git@github.com:lazymaniac/nvim-ide.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
 
 cp ~/.config/nvim/dotfiles/.zshrc ~/
 source ~/.zshrc
@@ -53,6 +54,9 @@ sdk install maven
 curl -LsSf https://astral.sh/uv/install.sh | sh
 # Install sql ide
 uv tool install harlequin
+brew install unixodbc
+uv pip install pyodbc
+uv tool install 'harlequin[s3,mysql,odbc,databricks,bigquery]'
 
 # Install nvm
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
