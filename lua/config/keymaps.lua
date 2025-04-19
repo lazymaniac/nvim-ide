@@ -75,11 +75,10 @@ map({ 'n', 't' }, '<A-g>', function () Snacks.lazygit() end, { desc = 'Lazygit [
 map({ 'n', 't' }, '<A-n>', function () Snacks.terminal.toggle("node") end, { desc = 'Node [A-n]' })
 map({ 'n', 't' }, '<A-p>', function () Snacks.terminal.toggle("python3") end, { desc = 'Python [A-p]' })
 map({ 'n', 't' }, '<A-v>', function () Snacks.terminal.toggle("jshell") end, { desc = 'JShell [A-v]' })
-map({ 'n', 't' }, '<A-f>', function () Snacks.terminal.open() end, { desc = 'New Terminal [A-f]' })
-map({ 'n', 't' }, '<A-\\>', function () Snacks.terminal.toggle() end, { desc = 'Toggle Terminal [A-\\]' })
+map({ 'n', 't' }, '<A-f>', function () Snacks.terminal.open("zellij options --theme kanagawa") end, { desc = 'New Terminal [A-f]' })
+map({ 'n', 't' }, '<A-\\>', function () Snacks.terminal.toggle("zellij options --theme kanagawa") end, { desc = 'Toggle Terminal [A-\\]' })
 map({ 'n', 't' }, '<A-t>', function () Snacks.terminal.toggle("termscp") end, { desc = 'TermSCP [A-t]' })
 map({ 'n', 't' }, '<A-h>', function () Snacks.terminal.toggle("posting") end, { desc = 'Posting [A-h]' })
-map({ 'n', 't' }, '<A-z>', function () Snacks.terminal.toggle("zellij") end, { desc = 'Zellij [A-z]' })
 --
 -- Clear search with <esc>
 map({ 'i', 'n' }, '<esc>', '<cmd>noh<cr><esc>', { desc = 'Escape and clear hlsearch <esc>' })
