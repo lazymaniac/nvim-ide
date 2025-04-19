@@ -70,7 +70,7 @@ map({ 'n', 't' }, '<A-c>', function () Snacks.terminal.toggle("cloudlens") end, 
 map({ 'n', 't' }, '<A-u>', function () Snacks.terminal.toggle("ncdu") end, { desc = 'ncdu [A-u]' })
 map({ 'n', 't' }, '<A-d>', function () Snacks.terminal.toggle("lazydocker") end, { desc = 'Lazydocker [A-d]' })
 map({ 'n', 't' }, '<A-D>', function () Snacks.terminal.toggle("podman-tui") end, { desc = 'Podman [A-D]' })
-map({ 'n', 't' }, '<A-s>', function () Snacks.terminal.toggle("lazysql") end, { desc = 'Lazysql [A-s]' })
+map({ 'n', 't' }, '<A-s>', function () Snacks.terminal.toggle("harlequin") end, { desc = 'Harlequin [A-s]' })
 map({ 'n', 't' }, '<A-g>', function () Snacks.lazygit() end, { desc = 'Lazygit [A-g]' })
 map({ 'n', 't' }, '<A-n>', function () Snacks.terminal.toggle("node") end, { desc = 'Node [A-n]' })
 map({ 'n', 't' }, '<A-p>', function () Snacks.terminal.toggle("python3") end, { desc = 'Python [A-p]' })
