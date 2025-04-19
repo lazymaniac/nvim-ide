@@ -101,6 +101,8 @@ bob use stable
 
 # Install lazydocker
 go install github.com/jesseduffield/lazydocker@latest
+
+go install github.com/maaslalani/nap@main
 ```
 
 - quarto [https://quarto.org/docs/download/]
