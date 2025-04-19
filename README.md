@@ -57,6 +57,9 @@ uv tool install harlequin
 brew install unixodbc
 uv pip install pyodbc
 uv tool install 'harlequin[s3,mysql,odbc,databricks,bigquery]'
+uv tool install euporie
+uv pip install ipykernel
+uv run python -m ipykernel install --user
 
 # Install nvm
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
