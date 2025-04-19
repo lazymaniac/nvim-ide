@@ -80,6 +80,7 @@ map({ 'n', 't' }, '<A-\\>', function () Snacks.terminal.toggle("zellij options -
 map({ 'n', 't' }, '<A-t>', function () Snacks.terminal.toggle("termscp") end, { desc = 'TermSCP [A-t]' })
 map({ 'n', 't' }, '<A-h>', function () Snacks.terminal.toggle("posting") end, { desc = 'Posting [A-h]' })
 map({ 'n', 't' }, '<A-k>', function () Snacks.terminal.toggle("k9s") end, { desc = 'K9S [A-k]' })
+map({ 'n', 't' }, '<A-e>', function () Snacks.terminal.toggle("euporie-notebook") end, { desc = 'Euporie [A-e]' })
 --
 -- Clear search with <esc>
 map({ 'i', 'n' }, '<esc>', '<cmd>noh<cr><esc>', { desc = 'Escape and clear hlsearch <esc>' })
