@@ -33,25 +33,27 @@ git clone git@github.com:lazymaniac/nvim-ide.git "${XDG_CONFIG_HOME:-$HOME/.conf
 cp ~/.config/nvim/dotfiles/.zshrc ~/
 source ~/.zshrc
 
-brew install lazygit virtualenv cmake fzf luarocks luajit golang ripgrep ncdu zoxide bat eza btop fd fastfetch oh-my-posh bagels podman-tui
 brew install --cask iterm2
+brew install nvim lazygit lazydocker cmake fzf luarocks luajit golang ripgrep ncdu zoxide bat eza btop fd fastfetch oh-my-posh bagels podman-tui asdf
 brew install one2nc/cloudlens/cloudlens
 brew install derailed/k9s/k9s
 
-# Install sdk-man
-curl -s "https://get.sdkman.io" | bash
-source "$HOME/.sdkman/bin/sdkman-init.sh"
+asdf add plugin java
+asdf add plugin ruby
+asdf add plugin gradle
+asdf add plugin maven
+asdf add plugin nodejs
+asdf add plugin uv
 
-# Install Java versions
-sdk install java 8.0.442-tem
-sdk install java 11.0.26-tem
-sdk install java 17.0.14-tem
-sdk install java 21.0.6-tem
-sdk install gradle
-sdk install maven
+asdf install java temurin-11.0.27+6
+asdf install java temurin-17.0.15+6
+asdf install java temurin-21.0.7+6.0.LTS
+asdf install java temurin-24.0.1+9
+asdf set -u java temurin-24.0.1+9
 
-# Install UV
-curl -LsSf https://astral.sh/uv/install.sh | sh
+asdf install uv latest
+asdf set -u uv latest
+
 # Install sql ide
 uv tool install harlequin
 brew install unixodbc
@@ -61,25 +63,15 @@ uv tool install euporie
 uv pip install ipykernel
 uv run python -m ipykernel install --user
 uv tool install toolong
+uv tool install poetry
+uv tool install posting
 
-# Install nvm
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# Install node using nvm
-nvm install --lts
+asdf install nodejs latest
+asdf set -u nodejs latest
 
 npm install -g neovim
 
-npm install --global @perryrh0dan/taskline
-
-# Install molten deps
-pip install pynvim pnglatex plotly kaleido nbformat yarp
-
-# Install poetry
-pipx install poetry jupytext jupyter-client notebook posting
+npm install -g@perryrh0dan/taskline
 
 #Install termscp
 curl --proto '=https' --tlsv1.2 -sSLf "https://git.io/JBhDb" | sh
@@ -94,18 +86,8 @@ cargo install tree-sitter-cli
 cargo install oha
 cargo install --locked zellij
 
-# Install bob
-cargo install bob-nvim
-bob install stable
-bob use stable
-
-# Install lazydocker
-go install github.com/jesseduffield/lazydocker@latest
-
 go install github.com/maaslalani/nap@main
 ```
-
-- quarto [https://quarto.org/docs/download/]
 
 #### Config paths
 
