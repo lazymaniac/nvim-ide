@@ -24,17 +24,20 @@
 MacOS setup script:
 ```bash
 #!/bin/bash
+
 # install Homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
 # Install Xcode Development Tools
 xcode-select --install
+
 git clone git@github.com:lazymaniac/nvim-ide.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
 
 cp ~/.config/nvim/dotfiles/.zshrc ~/
 source ~/.zshrc
 
 brew install --cask iterm2
-brew install nvim lazygit lazydocker cmake fzf luarocks luajit golang ripgrep ncdu zoxide bat eza btop fd fastfetch oh-my-posh bagels podman-tui asdf
+brew install nvim lazygit lazydocker cmake fzf luarocks luajit golang ripgrep ncdu zoxide bat eza btop fd fastfetch oh-my-posh bagels podman-tui asdf nap
 brew install one2nc/cloudlens/cloudlens
 brew install derailed/k9s/k9s
 
@@ -85,8 +88,6 @@ cargo install onefetch
 cargo install tree-sitter-cli
 cargo install oha
 cargo install --locked zellij
-
-go install github.com/maaslalani/nap@main
 ```
 
 #### Config paths
