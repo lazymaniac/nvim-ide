@@ -29,21 +29,21 @@ local jdtls_settings = {
       },
       runtimes = {
         {
-          name = 'JavaSE-1.8',
-          path = '~/.sdkman/candidates/java/8.0.442-amzn/',
-        },
-        {
           name = 'JavaSE-11',
-          path = '~/.sdkman/candidates/java/11.0.26-tem/',
+          path = '~/.asdf/installs/java/temurin-11.0.27+6/',
         },
         {
           name = 'JavaSE-17',
-          path = '~/.sdkman/candidates/java/17.0.14-tem/',
+          path = '~/.asdf/installs/java/temurin-17.0.15+6/',
         },
         {
           name = 'JavaSE-21',
-          path = '~/.sdkman/candidates/java/21.0.6-tem/',
+          path = '~/.asdf/installs/java/temurin-21.0.7+6.0.LTS/',
           default = true,
+        },
+        {
+          name = 'JavaSE-24',
+          path = '~/.asdf/installs/java/temurin-24.0.1+9/',
         },
       },
       updateBuildConfiguration = 'interactive',
