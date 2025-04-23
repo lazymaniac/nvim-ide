@@ -1,4 +1,5 @@
 gui:
+  language: 'en'
   expandFocusedSidePanel: true
   showListFooter: false # for seeing the '6 of 20' message in list panels
   showBranchCommitHash: true # show commit hashes alongside branch names
