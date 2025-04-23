@@ -42,6 +42,7 @@ brew install one2nc/cloudlens/cloudlens
 brew install derailed/k9s/k9s
 brew install dhth/tap/omm
 brew install jesseduffield/lazynpm/lazynpm
+brew install circumflex
 
 asdf plugin add java
 asdf plugin add ruby
