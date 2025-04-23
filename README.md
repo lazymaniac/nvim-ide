@@ -37,16 +37,29 @@ cp ~/.config/nvim/dotfiles/.zshrc ~/
 source ~/.zshrc
 
 brew install --cask iterm2
-brew install nvim lazygit lazydocker cmake fzf luarocks luajit golang ripgrep ncdu zoxide bat eza btop fd fastfetch oh-my-posh bagels podman-tui asdf nap
+brew install nvim lazygit lazydocker fzf luajit ripgrep dua-cli zoxide bat eza btop fd fastfetch oh-my-posh bagels podman-tui asdf nap navi
 brew install one2nc/cloudlens/cloudlens
 brew install derailed/k9s/k9s
+brew install dhth/tap/omm
 
-asdf add plugin java
-asdf add plugin ruby
-asdf add plugin gradle
-asdf add plugin maven
-asdf add plugin nodejs
-asdf add plugin uv
+asdf plugin add java
+asdf plugin add ruby
+asdf plugin add gradle
+asdf plugin add maven
+asdf plugin add nodejs
+asdf plugin add uv
+asdf plugin add cmake
+asdf plugin add lua
+asdf plugin add golang
+
+asdf install cmake latest
+asdf set -u cmake latest
+
+asdf install lua latest
+asdf set -u lua latest
+
+asdf install golang latest
+asdf set -u golang latest
 
 asdf install java temurin-11.0.27+6
 asdf install java temurin-17.0.15+6
@@ -56,6 +69,8 @@ asdf set -u java temurin-24.0.1+9
 
 asdf install uv latest
 asdf set -u uv latest
+
+uv venv
 
 # Install sql ide
 uv tool install harlequin
@@ -74,7 +89,7 @@ asdf set -u nodejs latest
 
 npm install -g neovim
 
-npm install -g@perryrh0dan/taskline
+npm install -g @perryrh0dan/taskline
 
 #Install termscp
 curl --proto '=https' --tlsv1.2 -sSLf "https://git.io/JBhDb" | sh
