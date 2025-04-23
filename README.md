@@ -41,6 +41,7 @@ brew install nvim lazygit lazydocker fzf luajit ripgrep dua-cli zoxide bat eza b
 brew install one2nc/cloudlens/cloudlens
 brew install derailed/k9s/k9s
 brew install dhth/tap/omm
+brew install jesseduffield/lazynpm/lazynpm
 
 asdf plugin add java
 asdf plugin add ruby
