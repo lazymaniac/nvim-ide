@@ -10,7 +10,7 @@ return {
     end,
   },
 
-    -- correctly setup lspconfig
+  -- correctly setup lspconfig
   {
     "neovim/nvim-lspconfig",
     opts = {
@@ -180,7 +180,7 @@ return {
           end, "vtsls")
           -- copy typescript settings to javascript
           opts.settings.javascript =
-            vim.tbl_deep_extend("force", {}, opts.settings.typescript, opts.settings.javascript or {})
+              vim.tbl_deep_extend("force", {}, opts.settings.typescript, opts.settings.javascript or {})
         end,
       },
     },
@@ -279,7 +279,8 @@ return {
           executable = {
             command = 'node',
             args = {
-              require('mason-registry').get_package('js-debug-adapter'):get_install_path() .. '/js-debug/src/dapDebugServer.js',
+              require('mason-registry').get_package('js-debug-adapter'):get_install_path() ..
+              '/js-debug/src/dapDebugServer.js',
               '${port}',
             },
           },
@@ -306,5 +307,54 @@ return {
         end
       end
     end,
+  },
+
+  {
+    'nvim-neotest/neotest',
+    dependencies = {
+      'nvim-neotest/neotest-jest',
+      'adrigzr/neotest-mocha',
+      "marilari88/neotest-vitest",
+    },
+    opts = {
+      adapters = {
+        ['neotest-jest'] = {
+          jestCommand = "npm test --",
+          env = { CI = true },
+          cwd = function(path)
+            return vim.fn.getcwd()
+          end,
+        },
+        ['neotest-mocha'] = {
+          command = "npm test --",
+          command_args = function(context)
+            -- The context contains:
+            --   results_path: The file that json results are written to
+            --   test_name_pattern: The generated pattern for the test
+            --   path: The path to the test file
+            --
+            -- It should return a string array of arguments
+            --
+            -- Not specifying 'command_args' will use the defaults below
+            return {
+              "--full-trace",
+              "--reporter=json",
+              "--reporter-options=output=" .. context.results_path,
+              "--grep=" .. context.test_name_pattern,
+              context.path,
+            }
+          end,
+          env = { CI = true },
+          cwd = function(path)
+            return vim.fn.getcwd()
+          end,
+        },
+        ["neotest-vitest"] = {
+          filter_dir = function(name, rel_path, root)
+            return name ~= "node_modules"
+          end,
+        },
+      }
+    },
   },
 }
