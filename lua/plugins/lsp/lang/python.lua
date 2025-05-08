@@ -95,7 +95,6 @@ return {
         { "<leader>dS", function() require('dap-python').test_class() end, desc = "Debug Class [dS]", ft = "python" },
       },
       config = function()
-        local path = require('mason-registry').get_package('debugpy'):get_install_path()
         require('dap-python').setup '.venv/bin/python'
       end,
     },
