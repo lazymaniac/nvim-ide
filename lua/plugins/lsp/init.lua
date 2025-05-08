@@ -8,7 +8,7 @@ return {
     'neovim/nvim-lspconfig',
     branch = 'master',
     event = 'VeryLazy',
-    dependencies = { 'mason-org/mason.nvim', 'williamboman/mason-lspconfig.nvim', 'saghen/blink.cmp' },
+    dependencies = { 'mason-org/mason.nvim', 'mason-org/mason-lspconfig.nvim', 'saghen/blink.cmp' },
     ---@class PluginLspOpts
     opts = {
       -- options for vim.diagnostic.config()
