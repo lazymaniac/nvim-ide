@@ -394,8 +394,7 @@ return {
         cmd = { 'jdtls' },
         full_cmd = function(opts)
           local root_dir = opts.root_dir(root_markers)
-          local mason_registry = require 'mason-registry'
-          local jdtls_dir = mason_registry.get_package('jdtls'):get_install_path()
+          local jdtls_dir = vim.fn.expand("$MASON/share/jdtls")
           local lombok_path = jdtls_dir .. '/lombok.jar'
           local lombok_agent_param = '--jvm-arg=-javaagent:' .. lombok_path
           local xmx_param = '--jvm-arg=-Xmx4g'
@@ -425,22 +424,19 @@ return {
       local mason_registry = require 'mason-registry'
       local bundles = {} ---@type string[]
       if opts.dap and Util.has 'nvim-dap' and mason_registry.is_installed 'java-debug-adapter' then
-        local java_dbg_pkg = mason_registry.get_package 'java-debug-adapter'
-        local java_dbg_path = java_dbg_pkg:get_install_path()
+        local java_dbg_path = vim.fn.expand("$MASON/share/java-debug-adapter")
         local jar_patterns = {
           java_dbg_path .. '/extension/server/com.microsoft.java.debug.plugin-*.jar',
         }
         if mason_registry.is_installed 'vscode-java-decompiler' then
-          local java_decompiler_pkg = mason_registry.get_package 'vscode-java-decompiler'
-          local java_decompiler_path = java_decompiler_pkg:get_install_path()
+          local java_decompiler_path = vim.fn.expand("$MASON/share/vscode-java-decompiler")
           vim.list_extend(jar_patterns, {
             java_decompiler_path .. '/server/*.jar',
           })
         end
         -- java-test also depends on java-debug-adapter.
         if opts.test and mason_registry.is_installed 'java-test' then
-          local java_test_pkg = mason_registry.get_package 'java-test'
-          local java_test_path = java_test_pkg:get_install_path()
+          local java_test_path = vim.fn.expand("$MASON/share/java-test")
           vim.list_extend(jar_patterns, {
             java_test_path .. '/extension/server/*.jar',
           })
@@ -553,7 +549,6 @@ return {
         'mason-org/mason.nvim',
         opts = function(_, opts)
           opts.registries = {
-            -- 'github:nvim-java/mason-registry',
             'github:mason-org/mason-registry',
           }
           opts.ensure_installed = opts.ensure_installed or {}
