@@ -191,7 +191,7 @@ return {
     optional = true,
     dependencies = {
       {
-        "williamboman/mason.nvim",
+        "mason-org/mason.nvim",
         opts = function(_, opts)
           opts.ensure_installed = opts.ensure_installed or {}
           table.insert(opts.ensure_installed, "js-debug-adapter")
@@ -262,7 +262,7 @@ return {
     'mfussenegger/nvim-dap',
     dependencies = {
       {
-        'williamboman/mason.nvim',
+        'mason-org/mason.nvim',
         opts = function(_, opts)
           opts.ensure_installed = opts.ensure_installed or {}
           vim.list_extend(opts.ensure_installed, { 'js-debug-adapter', 'jq' })
@@ -320,6 +320,7 @@ return {
       adapters = {
         ['neotest-jest'] = {
           jestCommand = "npm test --",
+          jestConfigFile = "jest.config.ts",
           env = { CI = true },
           cwd = function(path)
             return vim.fn.getcwd()

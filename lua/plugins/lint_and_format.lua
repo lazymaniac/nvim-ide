@@ -7,7 +7,7 @@ return {
     'frostplexx/mason-bridge.nvim',
     branch = 'main',
     dependencies = {
-      'williamboman/mason.nvim',
+      'mason-org/mason.nvim',
     },
   },
 
@@ -51,7 +51,7 @@ return {
     'stevearc/conform.nvim',
     branch = 'master',
     event = 'VeryLazy',
-    dependencies = { 'williamboman/mason.nvim', 'frostplexx/mason-bridge.nvim' },
+    dependencies = { 'mason-org/mason.nvim', 'frostplexx/mason-bridge.nvim' },
     cmd = 'ConformInfo',
     -- stylua: ignore
     keys = {

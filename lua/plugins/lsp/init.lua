@@ -8,7 +8,7 @@ return {
     'neovim/nvim-lspconfig',
     branch = 'master',
     event = 'VeryLazy',
-    dependencies = { 'williamboman/mason.nvim', 'williamboman/mason-lspconfig.nvim', 'saghen/blink.cmp' },
+    dependencies = { 'mason-org/mason.nvim', 'williamboman/mason-lspconfig.nvim', 'saghen/blink.cmp' },
     ---@class PluginLspOpts
     opts = {
       -- options for vim.diagnostic.config()
@@ -169,9 +169,9 @@ return {
 
   -- [mason.nvim] - LSP, formatter, dap, test tools installer
   -- see: `:h mason.nvim`
-  -- link: https://github.com/williamboman/mason.nvim
+  -- link: https://github.com/mason-org/mason.nvim
   {
-    'williamboman/mason.nvim',
+    'mason-org/mason.nvim',
     -- branch = 'main',
     event = 'VeryLazy',
     cmd = 'Mason',
