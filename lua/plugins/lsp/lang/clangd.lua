@@ -1,3 +1,7 @@
+if not require('mason-registry').is_installed('codelldb') then
+  vim.cmd('MasonInstall codelldb clangd')
+end
+
 return {
 
   {
@@ -66,9 +70,7 @@ return {
               'meson.build',
               'meson_options.txt',
               'build.ninja'
-            )(fname) or require('lspconfig.util').root_pattern('compile_commands.json', 'compile_flags.txt')(fname) or require('lspconfig.util').find_git_ancestor(
-              fname
-            )
+            )(fname) or require('lspconfig.util').root_pattern('compile_commands.json', 'compile_flags.txt')(fname)
           end,
           capabilities = {
             offsetEncoding = { 'utf-16' },
@@ -100,15 +102,6 @@ return {
 
   {
     'mfussenegger/nvim-dap',
-    dependencies = {
-      'mason-org/mason.nvim',
-      optional = true,
-      opts = function(_, opts)
-        if type(opts.ensure_installed) == 'table' then
-          vim.list_extend(opts.ensure_installed, { 'codelldb' })
-        end
-      end,
-    },
     opts = function()
       local dap = require 'dap'
       if not dap.adapters['codelldb'] then
