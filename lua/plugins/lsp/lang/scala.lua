@@ -1,11 +1,4 @@
 return {
-  {
-    'nvim-treesitter/nvim-treesitter',
-    opts = function(_, opts)
-      vim.list_extend(opts.ensure_installed, { 'scala' })
-    end,
-  },
-
   -- [nvim-metals] - Scala metals tools.
   -- see: `:h nvim-metals`
   -- link: https://github.com/scalameta/nvim-metals
@@ -14,6 +7,7 @@ return {
     ft = { 'scala', 'sbt' },
     config = function() end,
   },
+
   {
     'neovim/nvim-lspconfig',
     opts = {

@@ -1,9 +1,4 @@
-if not require('mason-registry').is_installed('codelldb') then
-  vim.cmd('MasonInstall codelldb clangd')
-end
-
 return {
-
   {
     'nvim-treesitter/nvim-treesitter',
     opts = function(_, opts)

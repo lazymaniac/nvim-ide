@@ -1,78 +1,165 @@
 local Util = require 'util'
 
+local function ensure_installed(packages)
+  for _, package in ipairs(packages) do
+    if not require('mason-registry').is_installed(package) then
+      vim.cmd('MasonInstall ' .. package)
+    end
+  end
+end
+
+local packages = {
+  'stylua', -- lua
+  'hadolint', -- docker
+  'djlint', -- angular, go
+  'ansible-lint', -- ansible
+  'cmakelint', -- cmake
+  'cmakelang',
+  'codelldb', -- rust, c
+  'shellcheck', -- bash
+  'shellharden',
+  'beautysh',
+  'bash-debug-adapter',
+  'goimports', -- go
+  'gofumpt',
+  'staticcheck',
+  'trivy',
+  'delve',
+  'haskell-debug-adapter', -- haskell
+  'hlint',
+  'prettierd', -- html
+  'htmlhint',
+  'stylelint',
+  'eslint_d',
+  'java-debug-adapter', -- java
+  'checkstyle',
+  'java-test',
+  'vscode-java-decompiler',
+  'jq', -- json
+  'jsonlint',
+  'prettierd',
+  'ktlint', -- kotlin
+  'kotlin-debug-adapter',
+  'markdown-toc', -- markdown
+  'markdownlint',
+  'write-good',
+  'black', -- python
+  'pydocstyle',
+  'pylint',
+  'docformatter',
+  'debugpy',
+  'erb-formatter', -- ruby
+  'erb-lint',
+  'robocop',
+  'sqlfmt', -- sql
+  'sqlfluff',
+  'sqruff',
+  'tfsec', -- terraform
+  'trivy',
+  'chrome-debug-adapter', -- typescript
+  'firefox-debug-adapter',
+  'js-debug-adapter',
+  'node-debug2-adapter',
+  'eslint_d',
+  'yamllint', -- yaml
+  'prettierd',
+}
+
 return {
-  -- [nvim-lspconfig] - LSP integration config. Handles lsp servers initializetion.
+  --
+  -- [mason.nvim] - LSP, formatter, dap, test tools installer
+  -- see: `:h mason.nvim`
+  -- link: https://github.com/mason-org/mason.nvim
+  {
+    'mason-org/mason.nvim',
+    branch = 'main',
+    event = 'VeryLazy',
+    cmd = 'Mason',
+    build = ':MasonUpdate',
+    opts = {
+      registries = {
+        'github:mason-org/mason-registry',
+      },
+      providers = {
+        'mason.providers.registry-api',
+        'mason.providers.client',
+      },
+      ui = {
+        check_outdated_packages_on_open = true,
+        border = nil,
+        backdrop = 60,
+        width = 0.8,
+        height = 0.9,
+        icons = {
+          package_installed = '✓',
+          package_pending = '➜',
+          package_uninstalled = '✗',
+        },
+      },
+    },
+    config = function(_, opts)
+      require('mason').setup(opts)
+      ensure_installed(packages)
+    end,
+  },
+
+  {
+    'mason-org/mason-lspconfig.nvim',
+    branch = 'main',
+    opts = {
+      ensure_installed = {
+        'lua_ls',
+        'vimls',
+        'clangd',
+        'angularls',
+        'ansiblels',
+        'bashls',
+        'clojure_lsp',
+        'cmake',
+        'cucumber_language_server',
+        'dockerls',
+        'docker_compose_language_service',
+        'elixirls',
+        'gopls',
+        'gradle_ls',
+        'groovyls',
+        'hls',
+        'yamlls',
+        'helm_ls',
+        'html',
+        'emmet_ls',
+        'cssls',
+        'jdtls',
+        'sonarlint-language-server',
+        'jsonls',
+        'julials',
+        'kotlin_language_server',
+        'marksman',
+        'puppet',
+        'pyright',
+        'ruby_lsp',
+        'rubocop',
+        'rust_analyzer',
+        'taplo',
+        'sqls',
+        'svelte',
+        'terraformls',
+        'vtsls',
+        'ts_ls',
+        'volar',
+      },
+      automatic_enable = {
+        exclude = { 'rust_analyzer', 'jdtls' },
+      },
+    },
+  },
+
+  -- [nvim-lspconfig] - LSP integration config.
   -- see: `:h nvim-lspconfig`
   -- link: https://github.com/neovim/nvim-lspconfig
   {
     'neovim/nvim-lspconfig',
-    branch = 'master',
     event = 'VeryLazy',
-    dependencies = { 'mason-org/mason.nvim', 'mason-org/mason-lspconfig.nvim', 'saghen/blink.cmp' },
-    ---@class PluginLspOpts
-    opts = {
-      -- options for vim.diagnostic.config()
-      diagnostics = {
-        underline = true,
-        update_in_insert = true,
-        virtual_text = {
-          spacing = 4,
-          source = 'if_many',
-          prefix = '●',
-          -- this will set the prefix to a function that returns the diagnostics icon based on the severity
-          -- this only works on a recent 0.10.0 build. Will be set to "●" when not supported
-          -- prefix = "icons",
-        },
-        severity_sort = true,
-      },
-      -- Enable this to enable the builtin LSP inlay hints on Neovim >= 0.10.0
-      -- Be aware that you also will need to properly configure your LSP server to
-      -- provide the inlay hints.
-      inlay_hints = {
-        enabled = true,
-      },
-      -- add any global capabilities here
-      capabilities = {},
-      -- options for vim.lsp.buf.format
-      -- `bufnr` and `filter` is handled by the LazyVim formatter,
-      -- but can be also overridden when specified
-      format = {
-        formatting_options = nil,
-        timeout_ms = nil,
-      },
-      -- LSP Server Settings
-      servers = {
-        lua_ls = {
-          -- mason = false, -- set to false if you don't want this server to be installed with mason
-          -- Use this to add any additional keymaps
-          -- for specific lsp servers
-          -- keys = {},
-          settings = {
-            Lua = {
-              workspace = {
-                checkThirdParty = false,
-              },
-              completion = {
-                callSnippet = 'Replace',
-              },
-            },
-          },
-        },
-        typos_lsp = {},
-      },
-      -- you can do any additional lsp server setup here
-      -- return true if you don't want this server to be setup with lspconfig
-      setup = {
-        -- example to setup with typescript.nvim
-        -- tsserver = function(_, opts)
-        --   require("typescript").setup({ server = opts })
-        --   return true
-        -- end,
-        -- Specify * to use this function as a fallback for any server
-        -- ["*"] = function(server, opts) end,
-      },
-    },
-    ---@param opts PluginLspOpts
     config = function(_, opts)
       -- setup keymaps
       Util.lsp.on_attach(function(client, buffer)
@@ -111,31 +198,6 @@ return {
           end
       end
       vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
-      local servers = opts.servers
-      local has_cmp, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
-      local capabilities = vim.tbl_deep_extend(
-        'force',
-        {},
-        vim.lsp.protocol.make_client_capabilities(),
-        has_cmp and cmp_nvim_lsp.default_capabilities() or {},
-        opts.capabilities or {}
-      )
-      capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)
-      local function setup(server)
-        local server_opts = vim.tbl_deep_extend('force', {
-          capabilities = vim.deepcopy(capabilities),
-        }, servers[server] or {})
-        if opts.setup[server] then
-          if opts.setup[server](server, server_opts) then
-            return
-          end
-        elseif opts.setup['*'] then
-          if opts.setup['*'](server, server_opts) then
-            return
-          end
-        end
-        require('lspconfig')[server].setup(server_opts)
-      end
       -- get all the servers that are available through mason-lspconfig
       local have_mason, mlsp = pcall(require, 'mason-lspconfig')
       local all_mslp_servers = {}
@@ -167,82 +229,18 @@ return {
     end,
   },
 
-  -- [mason.nvim] - LSP, formatter, dap, test tools installer
-  -- see: `:h mason.nvim`
-  -- link: https://github.com/mason-org/mason.nvim
-  {
-    'mason-org/mason.nvim',
-    -- branch = 'main',
-    event = 'VeryLazy',
-    cmd = 'Mason',
-    build = ':MasonUpdate',
-    opts = {
-      ensure_installed = {
-        'lua-language-server',
-        'stylua',
-        'commitlint',
-      },
-      ui = {
-        border = 'rounded',
-      },
-      registries = {
-        'github:mason-org/mason-registry',
-      },
-    },
-    config = function(_, opts)
-      require('mason').setup(opts)
-      local mr = require 'mason-registry'
-      mr:on('package:install:success', function()
-        vim.defer_fn(function()
-          -- trigger FileType event to possibly load this newly installed LSP server
-          require('lazy.core.handler.event').trigger {
-            event = 'FileType',
-            buf = vim.api.nvim_get_current_buf(),
-          }
-        end, 100)
-      end)
-      local function ensure_installed()
-        for _, tool in ipairs(opts.ensure_installed) do
-          local p = mr.get_package(tool)
-          if not p:is_installed() then
-            p:install()
-          end
-        end
-      end
-      if mr.refresh then
-        mr.refresh(ensure_installed)
-      else
-        ensure_installed()
-      end
-    end,
-  },
-
   {
     'folke/lazydev.nvim',
     ft = 'lua', -- only load on lua files
     cmd = 'LazyDev',
     opts = {
       library = {
-        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+        { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
         { path = 'luvit-meta/library', words = { 'vim%.uv' } },
-        { path = "snacks.nvim", words = { "Snacks" } },
+        { path = 'snacks.nvim', words = { 'Snacks' } },
       },
     },
   },
 
   { 'Bilal2453/luvit-meta', lazy = true }, -- optional `vim.uv` typings
-
-  -- [lsplinks.nvim] - Open code docs in browser
-  -- see: `:h lsplinks.nvim`
-  -- link: https://github.com/icholy/lsplinks.nvim
-  {
-    'icholy/lsplinks.nvim',
-    branch = 'master',
-    config = function()
-      local lsplinks = require 'lsplinks'
-      lsplinks.setup()
-      vim.keymap.set('n', 'gl', lsplinks.gx)
-    end,
-  },
-
 }
