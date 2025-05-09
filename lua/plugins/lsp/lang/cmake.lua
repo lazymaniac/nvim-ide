@@ -1,12 +1,12 @@
-return {
+if not require('mason-registry').is_installed('cmakelint') then
+  vim.cmd('MasonInstall cmakelint')
+end
 
-  {
-    "mason.nvim",
-    opts = function(_, opts)
-      opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, { "cmakelang", "cmakelint" })
-    end,
-  },
+if not require('mason-registry').is_installed('cmakelang') then
+  vim.cmd('MasonInstall cmakelang')
+end
+
+return {
 
   {
     "nvim-treesitter/nvim-treesitter",
