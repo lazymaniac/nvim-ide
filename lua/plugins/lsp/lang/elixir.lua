@@ -1,13 +1,8 @@
-return {
+if not require('mason-registry').is_installed('hadolint') then
+  vim.cmd('masoninstall hadolint')
+end
 
-  {
-    'mason-org/mason.nvim',
-    opts = function(_, opts)
-      vim.list_extend(opts.ensure_installed, {
-        'elixir-ls',
-      })
-    end,
-  },
+return {
 
   {
     'nvim-treesitter/nvim-treesitter',
@@ -18,15 +13,6 @@ return {
         'eex',
       })
     end,
-  },
-
-  {
-    'neovim/nvim-lspconfig',
-    opts = {
-      servers = {
-        elixirls = {},
-      },
-    },
   },
 
   -- [elixir-tools] - Improves experience with Elixir in neovim.
