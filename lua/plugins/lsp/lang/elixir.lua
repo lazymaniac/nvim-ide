@@ -4,17 +4,6 @@ end
 
 return {
 
-  {
-    'nvim-treesitter/nvim-treesitter',
-    opts = function(_, opts)
-      vim.list_extend(opts.ensure_installed, {
-        'elixir',
-        'heex',
-        'eex',
-      })
-    end,
-  },
-
   -- [elixir-tools] - Improves experience with Elixir in neovim.
   -- see: `:h elixir-tools`
   -- link: https://github.com/elixir-tools/elixir-tools.nvim

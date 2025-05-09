@@ -1,14 +1,5 @@
 return {
 
-  {
-    'nvim-treesitter/nvim-treesitter',
-    opts = function(_, opts)
-      if type(opts.ensure_installed) == 'table' then
-        vim.list_extend(opts.ensure_installed, { 'haskell' })
-      end
-    end,
-  },
-
   -- [haskell-tools] - Extension for Haskell LSP.
   -- see: `:h haskell-tools`
   -- link: https://github.com/mrcjkb/haskell-tools.nvim
@@ -25,28 +16,6 @@ return {
         telescope.load_extension 'ht'
       end
     end,
-  },
-
-  {
-    'mason-org/mason.nvim',
-    opts = function(_, opts)
-      opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, { 'haskell-language-server' })
-    end,
-  },
-
-  {
-    'mfussenegger/nvim-dap',
-    optional = true,
-    dependencies = {
-      {
-        'mason-org/mason.nvim',
-        opts = function(_, opts)
-          opts.ensure_installed = opts.ensure_installed or {}
-          vim.list_extend(opts.ensure_installed, { 'haskell-debug-adapter' })
-        end,
-      },
-    },
   },
 
   {
@@ -92,16 +61,5 @@ return {
         telescope.load_extension 'hoogle'
       end
     end,
-  },
-
-  {
-    'neovim/nvim-lspconfig',
-    opts = {
-      setup = {
-        hls = function()
-          return true
-        end,
-      },
-    },
   },
 }

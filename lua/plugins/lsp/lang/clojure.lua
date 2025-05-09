@@ -1,10 +1,4 @@
 return {
-  -- Add Clojure & related to treesitter
-  {
-    "nvim-treesitter/nvim-treesitter",
-    opts = { ensure_installed = { "clojure" } },
-  },
-
   -- Add s-exp mappings
   { "PaterJason/nvim-treesitter-sexp", opts = {}, },
 

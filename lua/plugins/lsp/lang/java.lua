@@ -311,22 +311,6 @@ local jdtls_settings = {
 
 return {
 
-  {
-    'mason-org/mason.nvim',
-    opts = function(_, opts)
-      opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, { 'clang-format', 'trivy', 'sonarlint-language-server', 'xmlformatter' })
-    end,
-  },
-
-  {
-    'nvim-treesitter/nvim-treesitter',
-    opts = function(_, opts)
-      opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, { 'java', 'xml', 'yaml', 'properties' })
-    end,
-  },
-
   -- [sonarlint.nvim] - Sonarlint LSP
   -- see: `:h sonarlint.nvim`
   -- link: https://gitlab.com/schrieveslaach/sonarlint.nvim
@@ -349,20 +333,6 @@ return {
         },
       }
     end,
-  },
-
-  {
-    'neovim/nvim-lspconfig',
-    opts = {
-      servers = {
-        jdtls = {},
-      },
-      setup = {
-        jdtls = function()
-          return true -- avoid duplicate servers
-        end,
-      },
-    },
   },
 
   -- [nvim-jdtls] - Java LSP extension for Nvim.
@@ -540,22 +510,6 @@ return {
       -- Avoid race condition by calling attach the first time, since the autocmd won't fire.
       attach_jdtls()
     end,
-  },
-
-  {
-    'mfussenegger/nvim-dap',
-    dependencies = {
-      {
-        'mason-org/mason.nvim',
-        opts = function(_, opts)
-          opts.registries = {
-            'github:mason-org/mason-registry',
-          }
-          opts.ensure_installed = opts.ensure_installed or {}
-          vim.list_extend(opts.ensure_installed, { 'jdtls', 'java-test', 'java-debug-adapter' })
-        end,
-      },
-    },
   },
 
   {
