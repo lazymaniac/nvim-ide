@@ -1,12 +1,8 @@
-return {
+if not require('mason-registry').is_installed('shellcheck') then
+  vim.cmd('MasonInstall shellcheck shellharden beautysh bash-debug-adapter')
+end
 
-  {
-    'mason-org/mason.nvim',
-    opts = function(_, opts)
-      opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, { 'shellcheck', 'shellharden', 'beautysh' })
-    end,
-  },
+return {
 
   {
     'nvim-treesitter/nvim-treesitter',
@@ -17,25 +13,4 @@ return {
     end,
   },
 
-  {
-    'neovim/nvim-lspconfig',
-    opts = {
-      servers = {
-        bashls = {},
-      },
-    },
-  },
-
-  {
-    'mfussenegger/nvim-dap',
-    dependencies = {
-      {
-        'mason-org/mason.nvim',
-        opts = function(_, opts)
-          opts.ensure_installed = opts.ensure_installed or {}
-          vim.list_extend(opts.ensure_installed, { 'bash-debug-adapter' })
-        end,
-      },
-    },
-  },
 }
