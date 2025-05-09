@@ -1,3 +1,7 @@
+if not require('mason-registry').is_installed('ansible-lint') then
+  vim.cmd('MasonInstall ansible-lint')
+end
+
 return {
   {
     'nvim-treesitter/nvim-treesitter',
@@ -9,25 +13,8 @@ return {
   },
 
   {
-    'mason-org/mason.nvim',
-    opts = function(_, opts)
-      opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, { 'ansible-lint' })
-    end,
-  },
-
-  {
-    'neovim/nvim-lspconfig',
-    opts = {
-      servers = {
-        ansiblels = {},
-      },
-    },
-  },
-
-  {
     'mfussenegger/nvim-ansible',
-    ft = {},
+    ft = { 'ansible' },
     branch = 'main',
     keys = {
       {
