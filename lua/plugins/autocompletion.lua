@@ -45,7 +45,9 @@ return {
           { 'petertriho/cmp-git', opts = {} },
         },
       },
+      'fang2hou/blink-copilot',
     },
+
     event = 'InsertEnter',
     ---@module 'blink.cmp'
     ---@type blink.cmp.Config
@@ -81,7 +83,7 @@ return {
           -- nvim-cmp style menu
           draw = {
             columns = {
-              { 'label',     'label_description', gap = 1 },
+              { 'label', 'label_description', gap = 1 },
               { 'kind_icon', 'kind' },
             },
             treesitter = { 'lsp' },
@@ -108,7 +110,15 @@ return {
       -- elsewhere in your config, without redefining it, due to `opts_extend`
       sources = {
         compat = {},
-        default = { 'lsp', 'path', 'snippets', 'buffer' },
+        default = { 'lsp', 'path', 'snippets', 'buffer', 'copilot' },
+        providers = {
+          copilot = {
+            name = 'copilot',
+            module = 'blink-copilot',
+            score_offset = 100,
+            async = true,
+          },
+        },
       },
     },
     opts_extend = { 'sources.default' },
@@ -116,8 +126,7 @@ return {
       -- setup compat sources
       local enabled = opts.sources.default
       for _, source in ipairs(opts.sources.compat or {}) do
-        opts.sources.providers[source] = vim.tbl_deep_extend('force', { name = source, module = 'blink.compat.source' },
-          opts.sources.providers[source] or {})
+        opts.sources.providers[source] = vim.tbl_deep_extend('force', { name = source, module = 'blink.compat.source' }, opts.sources.providers[source] or {})
         if type(enabled) == 'table' and not vim.tbl_contains(enabled, source) then
           table.insert(enabled, source)
         end
