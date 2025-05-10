@@ -1,12 +1,4 @@
 return {
-  {
-    'nvim-treesitter/nvim-treesitter',
-    opts = function(_, opts)
-      if type(opts.ensure_installed) == 'table' then
-        vim.list_extend(opts.ensure_installed, { 'c', 'cpp' })
-      end
-    end,
-  },
 
   -- [clangd_extensions] - Extend native LSP functionality.
   -- see: `:h clangd_extensions`
