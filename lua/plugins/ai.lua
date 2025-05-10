@@ -735,4 +735,8 @@ return {
       require('codecompanion').setup(config)
     end,
   },
+
+  {
+    'github/copilot.vim'
+  }
 }
