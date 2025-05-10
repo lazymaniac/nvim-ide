@@ -1,4 +1,4 @@
-local last_action = '';
+local last_operation = ''
 -- Helper class definition
 
 -- Code Editor helper
@@ -17,13 +17,13 @@ function CodeEditor:add_delta(bufnr, line, delta)
 end
 
 function CodeEditor:open_buffer(filename)
-  if not filename or filename == "" then
-    vim.notify("No filename provided to open_buffer", vim.log.levels.ERROR)
+  if not filename or filename == '' then
+    vim.notify('No filename provided to open_buffer', vim.log.levels.ERROR)
     return nil
   end
 
   if vim.fn.filereadable(filename) == 0 then
-    vim.notify("File is unreadable. Path: " .. filename, vim.log.levels.WARN)
+    vim.notify('File is unreadable. Path: ' .. filename, vim.log.levels.WARN)
   end
 
   local bufnr = vim.fn.bufadd(filename)
@@ -56,13 +56,13 @@ function CodeEditor:delete(action)
   local start_line
   local end_line
   start_line = tonumber(action.start_line)
-  assert(start_line, "No start line number provided by the LLM")
+  assert(start_line, 'No start line number provided by the LLM')
   if start_line == 0 then
     start_line = 1
   end
 
   end_line = tonumber(action.end_line)
-  assert(end_line, "No end line number provided by the LLM")
+  assert(end_line, 'No end line number provided by the LLM')
   if end_line == 0 then
     end_line = 1
   end
@@ -82,7 +82,7 @@ end
 function CodeEditor:add(action)
   local start_line
   start_line = tonumber(action.start_line)
-  assert(start_line, "No line number provided by the LLM")
+  assert(start_line, 'No line number provided by the LLM')
   if start_line == 0 then
     start_line = 1
   end
@@ -92,7 +92,7 @@ function CodeEditor:add(action)
   if bufnr then
     local delta = self:intersect(bufnr, start_line)
 
-    local lines = vim.split(action.code, "\n", { plain = true, trimempty = false })
+    local lines = vim.split(action.code, '\n', { plain = true, trimempty = false })
     vim.api.nvim_buf_set_lines(bufnr, start_line + delta - 1, start_line + delta - 1, false, lines)
 
     self:add_delta(bufnr, start_line, tonumber(#lines))
@@ -156,7 +156,7 @@ end
 
 function CodeExtractor:get_buffer_lines(bufnr, start_row, end_row)
   if not self:is_valid_buffer(bufnr) then
-    vim.notify("Provided bufnr is invalid: " .. bufnr, vim.log.levels.WARN)
+    vim.notify('Provided bufnr is invalid: ' .. bufnr, vim.log.levels.WARN)
     return nil
   end
   return vim.api.nvim_buf_get_lines(bufnr, start_row, end_row, false)
@@ -171,7 +171,7 @@ function CodeExtractor:get_node_data(bufnr, node)
   local lines = self:get_buffer_lines(bufnr, start_row, end_row + 1)
 
   if not lines then
-    vim.notify("Symbol text range is empty.", vim.log.levels.WARN)
+    vim.notify('Symbol text range is empty.', vim.log.levels.WARN)
     return nil
   end
 
@@ -196,7 +196,7 @@ end
 
 function CodeExtractor:get_symbol_data(bufnr, row, col)
   if not self:is_valid_buffer(bufnr) then
-    vim.notify("Invalid buffer id:" .. bufnr)
+    vim.notify('Invalid buffer id:' .. bufnr)
     return nil
   end
 
@@ -222,8 +222,7 @@ end
 
 function CodeExtractor:validate_lsp_params(bufnr, method)
   if not (bufnr and method) then
-    vim.notify("Unable to call lsp. Missing bufnr or method. buffer=" .. bufnr .. " method=" .. method,
-      vim.log.levels.WARN)
+    vim.notify('Unable to call lsp. Missing bufnr or method. buffer=' .. bufnr .. ' method=' .. method, vim.log.levels.WARN)
     return false
   end
   return true
@@ -263,15 +262,12 @@ function CodeExtractor:process_lsp_result(result)
   end
 
   if #result > 10 then
-    vim.notify("Too many results for symbol. Ignoring", vim.log.levels.WARN)
+    vim.notify('Too many results for symbol. Ignoring', vim.log.levels.WARN)
     return
   end
 
   for _, item in pairs(result) do
-    self:process_single_range(
-      item.uri or item.targetUri,
-      item.range or item.targetSelectionRange
-    )
+    self:process_single_range(item.uri or item.targetUri, item.range or item.targetSelectionRange)
   end
 end
 
@@ -351,6 +347,33 @@ local config = {
       })
     end,
   },
+  extensions = {
+    history = {
+      enabled = true,
+      opts = {
+        keymap = 'gh',
+        auto_generate_title = true,
+        continue_last_chat = false,
+        delete_on_clearing_chat = false,
+        picker = 'snacks',
+        enable_logging = false,
+        dir_to_save = vim.fn.stdpath 'data' .. '/codecompanion-history',
+      },
+    },
+    mcphub = {
+      callback = 'mcphub.extensions.codecompanion',
+      opts = {
+        make_vars = true,
+        make_slash_commands = true,
+        show_result_in_chat = true,
+      },
+    },
+    vectorcode = {
+      opts = {
+        add_tool = true,
+      },
+    },
+  },
   strategies = {
     -- CHAT STRATEGY ----------------------------------------------------------
     chat = {
@@ -362,7 +385,7 @@ local config = {
         user = 'Me',
       },
       tools = {
-        ['code_developer'] = {
+        code_developer = {
           description = 'Act as developer by utilizing LSP methods and code modification capabilities.',
           opts = {
             user_approval = false,
@@ -370,93 +393,78 @@ local config = {
           callback = {
             name = 'code_developer',
             cmds = {
-              function(_, action, _)
-                local type = action._attr.type
-                last_action = type
-                local symbol = action.symbol
+              function(_, args, _)
+                local operation = args.operation
+                last_operation = operation
+                local symbol = args.symbol
 
-                if (type == 'edit') then
-                  code_editor:delete(action)
-                  code_editor:add(action)
-                  return { status = 'success', msg = nil }
+                if operation == 'edit' then
+                  code_editor:delete(args)
+                  code_editor:add(args)
+                  return { status = 'success', data = 'Code has beed updated' }
                 else
                   local bufnr = code_extractor:move_cursor_to_symbol(symbol)
 
-                  if code_extractor.lsp_methods[type] then
-                    code_extractor:call_lsp_method(bufnr, code_extractor.lsp_methods[type])
+                  if code_extractor.lsp_methods[operation] then
+                    code_extractor:call_lsp_method(bufnr, code_extractor.lsp_methods[operation])
                     code_extractor.filetype = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
-                    return { status = 'success', msg = nil }
+                    return { status = 'success', data = 'Tool executed successfully' }
                   else
-                    vim.notify("Unsupported LSP method", vim.log.levels.WARN)
+                    vim.notify('Unsupported LSP method', vim.log.levels.WARN)
                   end
                 end
 
-                return { status = 'error', msg = 'No symbol found' }
+                return { status = 'error', data = 'No symbol found' }
               end,
             },
             schema = {
-              {
-                tool = {
-                  _attr = { name = 'code_developer' },
-                  action = {
-                    _attr = { type = 'get_definition' },
-                    symbol = '<![CDATA[UserRepository]]>',
-                  },
-                },
-              },
-              {
-                tool = {
-                  _attr = { name = 'code_developer' },
-                  action = {
-                    _attr = { type = 'get_references' },
-                    symbol = '<![CDATA[saveUser]]>',
-                  },
-                },
-              },
-              {
-                tool = {
-                  _attr = { name = 'code_developer' },
-                  action = {
-                    _attr = { type = 'get_implementation' },
-                    symbol = '<![CDATA[Comparable]]>',
-                  },
-                },
-              },
-              {
-                tool = {
-                  _attr = { name = 'code_developer' },
-                  action = {
-                    _attr = { type = 'edit' },
-                    filename = "/nvim/lua/plugins/ai.lua",
-                    start_line = 21,
-                    end_line = 31,
-                    code = "<![CDATA[function hello_world() end]]"
-                  }
-                }
-              },
-              {
-                tool = {
-                  _attr = { name = 'code_developer' },
-                  action = {
-                    {
-                      _attr = { type = 'get_definition' },
-                      symbol = '<![CDATA[UserService]]>',
+              type = 'function',
+              ['function'] = {
+                name = 'code_developer',
+                description = 'Act as developer by utilizing LSP methods and code modification capabilities.',
+                parameters = {
+                  type = 'object',
+                  properties = {
+                    operation = {
+                      type = 'string',
+                      enum = {
+                        'get_definition',
+                        'get_references',
+                        'get_implementation',
+                        'edit',
+                      },
+                      description = 'The action to be performed by the code developer tool',
                     },
-                    {
-                      _attr = { type = 'get_definition' },
-                      symbol = '<![CDATA[refreshUser]]>',
+                    symbol = {
+                      type = 'string',
+                      description = 'The symbol to be processed by the code developer tool',
                     },
-                    {
-                      _attr = { type = 'get_references' },
-                      symbol = '<![CDATA[UserService]]>',
+                    filename = {
+                      type = 'string',
+                      description = 'The name of the file to be modified',
+                    },
+                    start_line = {
+                      type = 'integer',
+                      description = 'The starting line number of the code block to be modified',
+                    },
+                    end_line = {
+                      type = 'integer',
+                      description = 'The ending line number of the code block to be modified',
+                    },
+                    code = {
+                      type = 'string',
+                      description = 'The new code to be inserted into the file',
                     },
                   },
+                  required = {
+                    'operation',
+                  },
+                  additionalProperties = false,
                 },
+                strict = true,
               },
             },
-            system_prompt = function(schema)
-              return string.format(
-                [[## Code Developer Tool (`code_developer`) Guidelines
+            system_prompt = [[## Code Developer Tool (`code_developer`) Guidelines
 
 ## MANDATORY USAGE
 Use `get_definition`, `get_references` or `get_implementation` AT THE START of EVERY coding task to gather context before answering. Don't overuse these actions. Think what is needed to solve the task, don't fall into rabbit hole.
@@ -467,68 +475,31 @@ Traverses the codebase to find definitions, references, or implementations of co
 OR
 Replace old code with new implementation
 
-## Execution Format
-Return XML in this format:
-
-a) **Get Definition Action:** Find where symbol is defined
-```xml
-%s
-```
-
-b) **Get References Action:** Find all usages of symbol
-```xml
-%s
-```
-
-c) **Get Implementation Action:** Find implementations of interfaces/abstract classes
-```xml
-%s
-```
-
-d) **Multiple Actions**: Combine actions in one response if needed
-
-```xml
-%s
-```
-
-d) **Edit Action**: Replace fragment of code. Use only on user request.
-
-```xml
-%s
-```
-
 ## Important
-- Always wrap symbols in CDATA sections
 - Wait for tool results before providing solutions
 - Minimize explanations about the tool itself
 - When looking for symbol, pass only the name of symbol without the object. So use: `saveUsers` as symbol instead of `userRepository.saveUsers`
 ]],
-                require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[1] } }, -- Get Definition
-                require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[2] } }, -- Get References
-                require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[3] } }, -- Get Implementation
-                require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[5] } }, -- Multiple actions
-                require('codecompanion.utils.xml.xml2lua').toXml { tools = { schema[4] } }  -- Edit code
-              )
-            end,
-            handlers = {
-              on_exit = function(agent)
+            hanlers = {
+              on_exit = function(_, agent)
                 code_extractor.symbol_data = {}
                 code_extractor.filetype = ''
-                if last_action ~= "edit" then
-                  vim.notify("Symbols submitted to LLM")
+                if last_operation ~= 'edit' then
+                  vim.notify 'Symbols submitted to LLM'
                   return agent.chat:submit()
                 end
-              end
+              end,
             },
             output = {
-              success = function(self, action, _)
-                local type = action._attr.type
-                local symbol = action.symbol
-                local buf_message_content = '';
+              success = function(self, agent, cmd, stdout)
+                local type = cmd.operation
+                local symbol = cmd.symbol
+                local buf_message_content = ''
 
                 for _, code_block in ipairs(code_extractor.symbol_data) do
-                  buf_message_content = buf_message_content .. string.format(
-                    [[
+                  buf_message_content = buf_message_content
+                    .. string.format(
+                      [[
 ---
 The %s of symbol: `%s`
 Filename: %s
@@ -538,42 +509,21 @@ Content:
 ```%s
 %s
 ```
----
 ]],
-                    string.upper(type),
-                    symbol,
-                    code_block.filename,
-                    code_block.start_line,
-                    code_block.end_line,
-                    code_extractor.filetype,
-                    code_block.code_block
-                  )
+                      string.upper(type),
+                      symbol,
+                      code_block.filename,
+                      code_block.start_line,
+                      code_block.end_line,
+                      code_extractor.filetype,
+                      code_block.code_block
+                    )
                 end
 
-                return self.chat:add_buf_message {
-                  role = require('codecompanion.config').constants.USER_ROLE,
-                  content = buf_message_content,
-                }
+                return agent.chat:add_tool_output(self, buf_message_content, buf_message_content)
               end,
-              error = function(self, action, err)
-                return self.chat:add_buf_message {
-                  role = require('codecompanion.config').constants.USER_ROLE,
-                  content = string.format(
-                    [[There was an error running the %s action:
-
-```txt
-%s
-```]],
-                    string.upper(action._attr.type),
-                    err
-                  ),
-                }
-              end,
-              rejected = function(self, action)
-                return self.chat:add_buf_message {
-                  role = require('codecompanion.config').constants.USER_ROLE,
-                  content = string.format('I rejected the %s action.\n\n', string.upper(action._attr.type)),
-                }
+              error = function(self, agent, cmd, stderr, stdout)
+                return agent.chat:add_tool_output(self, tostring(stderr[1]), tostring(stderr[1]))
               end,
             },
           },
@@ -589,7 +539,7 @@ Content:
               local result = handle:read '*a'
               handle:close()
               chat:add_reference({ content = result }, 'git', '<git_files>')
-              return vim.notify('Git files added to the chat.')
+              return vim.notify 'Git files added to the chat.'
             else
               return vim.notify('No git files available', vim.log.levels.INFO, { title = 'CodeCompanion' })
             end
@@ -602,6 +552,9 @@ Content:
     },
     -- INLINE STRATEGY --------------------------------------------------------
     inline = {
+      adapter = 'ollama',
+    },
+    cmd = {
       adapter = 'ollama',
     },
   },
@@ -621,8 +574,8 @@ Content:
           role = 'system',
           content = function(context)
             return [[Act as a seasoned ]]
-                .. context.filetype
-                .. [[ programmer with over 20 years of commercial experience.
+              .. context.filetype
+              .. [[ programmer with over 20 years of commercial experience.
 Your task is to suggest refactoring of a specified piece of code to improve its efficiency,
 readability, and maintainability without altering its functionality. This will
 involve optimizing algorithms, simplifying complex logic, removing redundant code,
@@ -649,10 +602,10 @@ in all expected scenarios.]]
     action_palette = {
       width = 95,
       height = 10,
-      prompt = 'Prompt ',                   -- Prompt used for interactive LLM calls
-      provider = 'default',                 -- default|telescope
+      prompt = 'Prompt ', -- Prompt used for interactive LLM calls
+      provider = 'snacks', -- default|telescope
       opts = {
-        show_default_actions = true,        -- Show the default actions in the action palette?
+        show_default_actions = true, -- Show the default actions in the action palette?
         show_default_prompt_library = true, -- Show the default prompt library in the action palette?
       },
     },
@@ -675,7 +628,7 @@ in all expected scenarios.]]
           wrap = true,
         },
       },
-      intro_message = 'Welcome to CodeCompanion ✨! Press ? for options',
+      intro_message = 'Welcome to CodeCompanion! Press ? for options',
       show_header_separator = false, -- Show header separators in the chat buffer? Set this to false if you're using an external markdown formatting plugin
       show_references = true, -- Show references (from slash commands and variables) in the chat buffer?
       separator = '─', -- The separator between the different messages in the chat buffer
@@ -685,8 +638,8 @@ in all expected scenarios.]]
     },
     diff = {
       enabled = true,
-      close_chat_at = 240,  -- Close an open chat buffer if the total columns of your display are less than...
-      layout = 'vertical',  -- vertical|horizontal split for default provider
+      close_chat_at = 240, -- Close an open chat buffer if the total columns of your display are less than...
+      layout = 'vertical', -- vertical|horizontal split for default provider
       opts = { 'internal', 'filler', 'closeoff', 'algorithm:patience', 'followwrap', 'linematch:120' },
       provider = 'default', -- default|mini_diff
     },
@@ -716,7 +669,26 @@ return {
     'olimorris/codecompanion.nvim',
     event = 'VeryLazy',
     branch = 'main',
-    dependencies = { 'nvim-lua/plenary.nvim', 'nvim-treesitter/nvim-treesitter' },
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-treesitter/nvim-treesitter',
+      'j-hui/fidget.nvim',
+      'ravitemer/codecompanion-history.nvim', -- Save and load conversation history
+      {
+        'ravitemer/mcphub.nvim', -- Manage MCP servers
+        cmd = 'MCPHub',
+        build = 'bundled_build.lua',
+        config = {
+          use_bundled_binary = true,
+        },
+      },
+      {
+        'Davidyz/VectorCode', -- Index and search code in your repositories
+        version = '*',
+        build = 'pipx upgrade vectorcode',
+        dependencies = { 'nvim-lua/plenary.nvim' },
+      },
+    },
     -- stylua: ignore
     keys = {
       { '<leader>ai', '<cmd>CodeCompanion<cr>',        mode = { 'n', 'v' }, desc = 'Inline Prompt [zi]' },
@@ -737,6 +709,56 @@ return {
   },
 
   {
-    'github/copilot.vim'
-  }
+    'zbirenbaum/copilot.lua',
+    cmd = 'Copilot',
+    event = 'InsertEnter',
+    config = function()
+      require('copilot').setup {
+        {
+          panel = {
+            enabled = false,
+            auto_refresh = false,
+            keymap = {
+              jump_prev = '[[',
+              jump_next = ']]',
+              accept = '<CR>',
+              refresh = 'gr',
+              open = '<M-CR>',
+            },
+            layout = {
+              position = 'bottom', -- | top | left | right | horizontal | vertical
+              ratio = 0.4,
+            },
+          },
+          suggestion = {
+            enabled = false,
+            auto_trigger = false,
+            hide_during_completion = true,
+            debounce = 75,
+            trigger_on_accept = true,
+            keymap = {
+              accept = '<M-l>',
+              accept_word = false,
+              accept_line = false,
+              next = '<M-]>',
+              prev = '<M-[>',
+              dismiss = '<C-]>',
+            },
+          },
+          filetypes = {
+            yaml = false,
+            markdown = false,
+            help = false,
+            gitcommit = false,
+            gitrebase = false,
+            hgcommit = false,
+            svn = false,
+            cvs = false,
+            ['.'] = false,
+          },
+          copilot_model = '',
+        },
+      }
+    end,
+  },
 }
