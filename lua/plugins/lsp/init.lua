@@ -50,7 +50,7 @@ local packages = {
   'debugpy',
   'erb-formatter', -- ruby
   'erb-lint',
-  'robocop',
+  'rubocop',
   'sqlfmt', -- sql
   'sqlfluff',
   'sqruff',
@@ -63,6 +63,7 @@ local packages = {
   'eslint_d',
   'yamllint', -- yaml
   'prettierd',
+  'sonarlint-language-server',
 }
 
 return {
@@ -130,7 +131,6 @@ return {
         'emmet_ls',
         'cssls',
         'jdtls',
-        'sonarlint-language-server',
         'jsonls',
         'julials',
         'kotlin_language_server',
@@ -179,53 +179,7 @@ return {
         name = 'DiagnosticSign' .. name
         vim.fn.sign_define(name, { text = icon, texthl = name, numhl = '' })
       end
-      if opts.inlay_hints.enabled then
-        Util.lsp.on_attach(function(client, buffer)
-          if client.supports_method 'textDocument/inlayHint' then
-            Util.toggle.inlay_hints()
-          end
-        end)
-      end
-      if type(opts.diagnostics.virtual_text) == 'table' and opts.diagnostics.virtual_text.prefix == 'icons' then
-        opts.diagnostics.virtual_text.prefix = vim.fn.has 'nvim-0.10.0' == 0 and '●'
-          or function(diagnostic)
-            local icons = require('config').icons.diagnostics
-            for d, icon in pairs(icons) do
-              if diagnostic.severity == vim.diagnostic.severity[d:upper()] then
-                return icon
-              end
-            end
-          end
-      end
-      vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
-      -- get all the servers that are available through mason-lspconfig
-      local have_mason, mlsp = pcall(require, 'mason-lspconfig')
-      local all_mslp_servers = {}
-      if have_mason then
-        all_mslp_servers = vim.tbl_keys(require('mason-lspconfig.mappings').get_mason_map().lspconfig_to_package)
-      end
-      local ensure_installed = {} ---@type string[]
-      for server, server_opts in pairs(servers) do
-        if server_opts then
-          server_opts = server_opts == true and {} or server_opts
-          -- run manual setup if mason=false or if this is a server that cannot be installed with mason-lspconfig
-          if server_opts.mason == false or not vim.tbl_contains(all_mslp_servers, server) then
-            setup(server)
-          else
-            ensure_installed[#ensure_installed + 1] = server
-          end
-        end
-      end
-      if have_mason then
-        mlsp.setup { ensure_installed = ensure_installed, handlers = { setup } }
-      end
-      if Util.lsp.get_config 'denols' and Util.lsp.get_config 'tsserver' then
-        local is_deno = require('util').root_pattern('deno.json', 'deno.jsonc')
-        Util.lsp.disable('tsserver', is_deno)
-        Util.lsp.disable('denols', function(root_dir)
-          return not is_deno(root_dir)
-        end)
-      end
+      Util.toggle.inlay_hints()
     end,
   },
 
