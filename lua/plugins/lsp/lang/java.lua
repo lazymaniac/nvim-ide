@@ -317,7 +317,7 @@ return {
   {
     'https://gitlab.com/schrieveslaach/sonarlint.nvim',
     enabled = false,
-    ft = { 'java' },
+    ft = { 'java', 'javascript', 'typescript', 'c', 'go' },
     config = function()
       require('sonarlint').setup {
         server = {
