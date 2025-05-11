@@ -1,16 +1,5 @@
 return {
 
-  -- [mason-bridge.nvim] - Automatically add and configure linter and formatter installed by Mason.
-  -- see: `:h mason-bridge.nvim`
-  -- link: https://github.com/frostplexx/mason-bridge.nvim
-  {
-    'frostplexx/mason-bridge.nvim',
-    branch = 'main',
-    dependencies = {
-      'mason-org/mason.nvim',
-    },
-  },
-
   -- [[ LINTING ]] ---------------------------------------------------------------
 
   -- [nvim-lint] - Code linting in real-time
@@ -20,21 +9,30 @@ return {
     'mfussenegger/nvim-lint',
     branch = 'master',
     event = 'VeryLazy',
-    dependencies = {
-      'frostplexx/mason-bridge.nvim',
-    },
-    opts = {
-      -- Event to trigger linters
-      linters_by_ft = {
-        fish = { 'fish' },
+    config = function()
+      require('lint').linters_by_ft = {
+        lua = { 'luacheck', 'selene' },
+        angular = { 'djlint' },
+        ansible = { 'ansible-lint' },
+        c = { 'sonarlint-language-server' },
+        clojure = { 'clj-kondo' },
+        cmake = { 'cmakelint' },
+        elixir = { 'trivy' },
+        go = { 'golangci-lint' },
+        haskell = { 'hlint' },
+        helm = { 'kube-linter' },
+        html = { 'htmlhint', 'sonarlint-language-server' },
+        java = { 'checkstyle', 'sonarlint-language-server', 'trivy' },
+        kotlin = { 'ktlint', 'detekt' },
+        markdown = { 'markdownlint', 'write-good' },
+        python = { 'ruff', 'pylint', 'flake8', 'mypy' },
+        rust = { 'bacon' },
         -- Use the "*" filetype to run linters on all filetypes.
         -- ['*'] = { 'typos' },
         -- Use the "_" filetype to run linters on filetypes that don't have other linters configured.
         -- ['_'] = { 'fallback linter' },
-      },
-    },
-    config = function()
-      vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufReadPost', 'InsertLeave' }, {
+      }
+      vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
         callback = function()
           require('lint').try_lint()
         end,
@@ -69,10 +67,9 @@ return {
           -- javascript = { { 'prettierd', 'prettier' } },
           -- You can use a function here to determine the formatters dynamically
           -- Use the "*" filetype to run formatters on all filetypes.
-          ['*'] = { 'codespell' },
+          ['*'] = { 'codespell', 'trim_whitespace' },
           -- Use the "_" filetype to run formatters on filetypes that don't
           -- have other formatters configured.
-          ['_'] = { 'trim_whitespace' },
         },
         format_on_save = nil,
         format_after_save = nil,

@@ -64,6 +64,12 @@ local packages = {
   'yamllint', -- yaml
   'prettierd',
   'sonarlint-language-server',
+  'clj-kondo',
+  'golangci-lint',
+  'kube-linter',
+  'detekt',
+  'luacheck',
+  'selene',
 }
 
 return {
