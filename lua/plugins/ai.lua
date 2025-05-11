@@ -377,7 +377,7 @@ local config = {
   strategies = {
     -- CHAT STRATEGY ----------------------------------------------------------
     chat = {
-      adapter = 'ollama',
+      adapter = 'copilot',
       roles = {
         llm = function(adapter)
           return adapter.formatted_name .. ' (model=' .. adapter.parameters.model .. ')'
