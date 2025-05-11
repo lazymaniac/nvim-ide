@@ -52,22 +52,22 @@ function CodeEditor:intersect(bufnr, line)
   return delta
 end
 
-function CodeEditor:delete(action)
+function CodeEditor:delete(args)
   local start_line
   local end_line
-  start_line = tonumber(action.start_line)
+  start_line = tonumber(args.start_line)
   assert(start_line, 'No start line number provided by the LLM')
   if start_line == 0 then
     start_line = 1
   end
 
-  end_line = tonumber(action.end_line)
+  end_line = tonumber(args.end_line)
   assert(end_line, 'No end line number provided by the LLM')
   if end_line == 0 then
     end_line = 1
   end
 
-  local bufnr = self:get_bufnr_by_filename(action.filename)
+  local bufnr = self:get_bufnr_by_filename(args.filename)
 
   if bufnr then
     local delta = self:intersect(bufnr, start_line)
@@ -79,20 +79,20 @@ function CodeEditor:delete(action)
   end
 end
 
-function CodeEditor:add(action)
+function CodeEditor:add(args)
   local start_line
-  start_line = tonumber(action.start_line)
+  start_line = tonumber(args.start_line)
   assert(start_line, 'No line number provided by the LLM')
   if start_line == 0 then
     start_line = 1
   end
 
-  local bufnr = self:get_bufnr_by_filename(action.filename)
+  local bufnr = self:get_bufnr_by_filename(args.filename)
 
   if bufnr then
     local delta = self:intersect(bufnr, start_line)
 
-    local lines = vim.split(action.code, '\n', { plain = true, trimempty = false })
+    local lines = vim.split(args.code, '\n', { plain = true, trimempty = false })
     vim.api.nvim_buf_set_lines(bufnr, start_line + delta - 1, start_line + delta - 1, false, lines)
 
     self:add_delta(bufnr, start_line, tonumber(#lines))
@@ -478,22 +478,24 @@ Replace old code with new implementation
 ## Important
 - Wait for tool results before providing solutions
 - Minimize explanations about the tool itself
-- When looking for symbol, pass only the name of symbol without the object. So use: `saveUsers` as symbol instead of `userRepository.saveUsers`
+- When looking for symbol, pass only the name of symbol without the object. E.g. use: `saveUsers` instead of `userRepository.saveUsers`
 ]],
             hanlers = {
-              on_exit = function(_, agent)
+              on_exit = function(self, agent)
                 code_extractor.symbol_data = {}
                 code_extractor.filetype = ''
-                if last_operation ~= 'edit' then
-                  vim.notify 'Symbols submitted to LLM'
-                  return agent.chat:submit()
-                end
+                vim.notify 'Tool executed successfully'
+                return agent.chat:submit()
               end,
             },
             output = {
               success = function(self, agent, cmd, stdout)
-                local type = cmd.operation
-                local symbol = cmd.symbol
+                local operation = self.args.operation
+                if operation == 'edit' then
+                  return agent.chat:add_tool_output(self, 'Code modified', 'Code modified')
+                end
+
+                local symbol = self.args.symbol
                 local buf_message_content = ''
 
                 for _, code_block in ipairs(code_extractor.symbol_data) do
@@ -510,7 +512,7 @@ Content:
 %s
 ```
 ]],
-                      string.upper(type),
+                      string.upper(operation),
                       symbol,
                       code_block.filename,
                       code_block.start_line,
@@ -552,10 +554,10 @@ Content:
     },
     -- INLINE STRATEGY --------------------------------------------------------
     inline = {
-      adapter = 'ollama',
+      adapter = 'copilot',
     },
     cmd = {
-      adapter = 'ollama',
+      adapter = 'copilot',
     },
   },
   prompt_library = {
