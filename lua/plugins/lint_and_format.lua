@@ -22,7 +22,7 @@ return {
         haskell = { 'hlint' },
         helm = { 'kube-linter' },
         html = { 'htmlhint', 'sonarlint-language-server' },
-        java = { 'checkstyle', 'sonarlint-language-server', 'trivy' },
+        java = { 'checkstyle', 'trivy' },
         kotlin = { 'ktlint', 'detekt' },
         markdown = { 'markdownlint', 'write-good' },
         python = { 'ruff', 'pylint', 'flake8', 'mypy' },
