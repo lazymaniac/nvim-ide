@@ -152,7 +152,6 @@ return {
         'svelte',
         'terraformls',
         'vtsls',
-        'ts_ls',
         'volar',
       },
       automatic_enable = {
