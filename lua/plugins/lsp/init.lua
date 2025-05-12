@@ -118,7 +118,6 @@ return {
     opts = {
       ensure_installed = {
         'lua_ls',
-        'vimls',
         'clangd',
         'angularls',
         'ansiblels',
