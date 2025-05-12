@@ -65,7 +65,7 @@ function _G.set_terminal_keymaps()
 end
 
 vim.cmd 'autocmd! TermOpen term://* lua set_terminal_keymaps()'
-map({ 'n', 't' }, '<A-b>', function () Snacks.terminal.toggle("btop --utf-force") end, { desc = 'System Monitor TUI [A-b]' })
+map({ 'n', 't' }, '<A-b>', function () Snacks.terminal.toggle("btop") end, { desc = 'System Monitor TUI [A-b]' })
 map({ 'n', 't' }, '<A-c>', function () Snacks.terminal.toggle("nap") end, { desc = 'Code snippets TUI [A-c]' })
 map({ 'n', 't' }, '<A-d>', function () Snacks.terminal.toggle("lazydocker") end, { desc = 'Docker TUI [A-d]' })
 map({ 'n', 't' }, '<A-D>', function () Snacks.terminal.toggle("podman-tui") end, { desc = 'Podman TUI [A-D]' })
@@ -78,7 +78,6 @@ map({ 'n', 't' }, '<A-k>', function () Snacks.terminal.toggle("k9s") end, { desc
 map({ 'n', 't' }, '<A-l>', function () Snacks.terminal.toggle("cloudlens") end, { desc = 'Cloud Resources TUI [A-l]' })
 map({ 'n', 't' }, '<A-s>', function () Snacks.terminal.toggle("harlequin") end, { desc = 'Database TUI [A-s]' })
 map({ 'n', 't' }, '<A-m>', function () Snacks.terminal.toggle("omm") end, { desc = 'Task Manager TUI [A-n]' })
-map({ 'n', 't' }, '<A-n>', function () Snacks.terminal.toggle("lazynpm") end, { desc = 'NPM TUI [A-n]' })
 map({ 'n', 't' }, '<A-p>', function () Snacks.terminal.toggle("python3") end, { desc = 'Python Term [A-p]' })
 map({ 'n', 't' }, '<A-t>', function () Snacks.terminal.toggle("termscp") end, { desc = 'Network Client [A-t]' })
 map({ 'n', 't' }, '<A-u>', function () Snacks.terminal.toggle("dua i") end, { desc = 'Disk Usage TUI [A-u]' })

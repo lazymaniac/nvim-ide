@@ -12,8 +12,7 @@
 
 ## Introduction
 
-- NVIM distribution created to support my workflows. From java, go, rust to
-  jupyter notebooks.
+- NVIM distribution created to support my workflows. From java, go, rust to jupyter notebooks.
 
 ## Installation
 
@@ -41,7 +40,6 @@ brew install nvim lazygit lazydocker fzf luajit ripgrep dua-cli zoxide bat eza b
 brew install one2nc/cloudlens/cloudlens
 brew install derailed/k9s/k9s
 brew install dhth/tap/omm
-brew install jesseduffield/lazynpm/lazynpm
 brew install circumflex
 
 asdf plugin add java

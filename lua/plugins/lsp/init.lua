@@ -220,6 +220,19 @@ return {
           Lua = {},
         },
       })
+
+      vim.lsp.config('angularls', {
+        filetypes = {
+          'html',
+          'typescript',
+          'typescriptreact',
+          'typescript.tsx',
+          'javascript',
+          'javascriptreact',
+          'javascript.jsx',
+        },
+        root_markers = { 'angular.json', 'package.json', 'nx.json' },
+      })
     end,
   },
 }
