@@ -104,5 +104,12 @@ return {
   {
     'MeanderingProgrammer/render-markdown.nvim',
     ft = { 'markdown', 'codecompanion' },
+    opts = {
+      render_modes = true,
+      heading = {
+        border = true,
+        border_virtual = true,
+      },
+    },
   },
 }
