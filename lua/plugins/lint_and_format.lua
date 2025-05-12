@@ -11,28 +11,32 @@ return {
     event = 'VeryLazy',
     config = function()
       require('lint').linters_by_ft = {
-        lua = { 'luacheck', 'selene' },
+        lua = { 'selene' },
         angular = { 'djlint' },
         ansible = { 'ansible-lint' },
-        c = { 'sonarlint-language-server' },
         clojure = { 'clj-kondo' },
         cmake = { 'cmakelint' },
         elixir = { 'trivy' },
         go = { 'golangci-lint' },
         haskell = { 'hlint' },
         helm = { 'kube-linter' },
-        html = { 'htmlhint', 'sonarlint-language-server' },
+        html = { 'htmlhint' },
         java = { 'checkstyle', 'trivy' },
         kotlin = { 'ktlint', 'detekt' },
         markdown = { 'markdownlint', 'write-good' },
         python = { 'ruff', 'pylint', 'flake8', 'mypy' },
+        ruby = { 'erb-lint', 'rubocop', 'trivy' },
         rust = { 'bacon' },
+        terraform = { 'tfsec', 'trivy' },
+        tf = { 'tfsec', 'trivy' },
+        typescript = { 'eslint_d', 'trivy' },
+        yaml = { 'yamllint', 'actionlint' },
         -- Use the "*" filetype to run linters on all filetypes.
         -- ['*'] = { 'typos' },
         -- Use the "_" filetype to run linters on filetypes that don't have other linters configured.
         -- ['_'] = { 'fallback linter' },
       }
-      vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
+      vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufEnter' }, {
         callback = function()
           require('lint').try_lint()
         end,
@@ -61,6 +65,26 @@ return {
         -- Map of filetype to formatters
         formatters_by_ft = {
           lua = { 'stylua' },
+          bash = { 'beautysh', 'shellharden' },
+          css = { 'prettierd' },
+          flow = { 'prettierd' },
+          graphql = { 'prettierd' },
+          html = { 'prettierd' },
+          python = { 'black', 'docformatter' },
+          cmake = { 'cmakelang' },
+          angular = { 'djlint', 'prettierd' },
+          ruby = { 'erb-formatter', 'rubocop' },
+          go = { 'goimports', 'gofumpt' },
+          json = { 'jq', 'prettierd' },
+          javascript = { 'prettierd' },
+          less = { 'prettierd' },
+          scss = { 'prettierd' },
+          sql = { 'sqlfmt', 'sqruff' },
+          typescript = { 'prettierd' },
+          vuejs = { 'prettierd' },
+          kotlin = { 'ktlint' },
+          markdown = { 'prettierd', 'markdownlint', 'markdown-toc' },
+          yaml = { 'prettierd', 'actionlint' },
           -- Conform will run multiple formatters sequentially
           -- go = { 'goimports', 'gofmt' },
           -- Use a sub-list to run only the first available formatter

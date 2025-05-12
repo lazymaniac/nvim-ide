@@ -6,14 +6,6 @@ return {
     opts = {
       -- make sure mason installs the server
       servers = {
-        --- @deprecated -- tsserver renamed to ts_ls but not yet released, so keep this for now
-        --- the proper approach is to check the nvim-lspconfig release version when it's released to determine the server name dynamically
-        tsserver = {
-          enabled = false,
-        },
-        ts_ls = {
-          enabled = false,
-        },
         vtsls = {
           -- explicitly add default filetypes, so that we can extend
           -- them in related extras
@@ -107,16 +99,6 @@ return {
         },
       },
       setup = {
-        --- @deprecated -- tsserver renamed to ts_ls but not yet released, so keep this for now
-        --- the proper approach is to check the nvim-lspconfig release version when it's released to determine the server name dynamically
-        tsserver = function()
-          -- disable tsserver
-          return true
-        end,
-        ts_ls = function()
-          -- disable tsserver
-          return true
-        end,
         vtsls = function(_, opts)
           require('util').lsp.on_attach(function(client, buffer)
             client.commands["_typescript.moveToFileRefactoring"] = function(command, ctx)
@@ -237,55 +219,5 @@ return {
         end
       end
     end,
-  },
-
-  {
-    'nvim-neotest/neotest',
-    dependencies = {
-      'nvim-neotest/neotest-jest',
-      'adrigzr/neotest-mocha',
-      "marilari88/neotest-vitest",
-    },
-    opts = {
-      adapters = {
-        ['neotest-jest'] = {
-          jestCommand = "npm test --",
-          jestConfigFile = "jest.config.ts",
-          env = { CI = true },
-          cwd = function(path)
-            return vim.fn.getcwd()
-          end,
-        },
-        ['neotest-mocha'] = {
-          command = "npm test --",
-          command_args = function(context)
-            -- The context contains:
-            --   results_path: The file that json results are written to
-            --   test_name_pattern: The generated pattern for the test
-            --   path: The path to the test file
-            --
-            -- It should return a string array of arguments
-            --
-            -- Not specifying 'command_args' will use the defaults below
-            return {
-              "--full-trace",
-              "--reporter=json",
-              "--reporter-options=output=" .. context.results_path,
-              "--grep=" .. context.test_name_pattern,
-              context.path,
-            }
-          end,
-          env = { CI = true },
-          cwd = function(path)
-            return vim.fn.getcwd()
-          end,
-        },
-        ["neotest-vitest"] = {
-          filter_dir = function(name, rel_path, root)
-            return name ~= "node_modules"
-          end,
-        },
-      }
-    },
   },
 }

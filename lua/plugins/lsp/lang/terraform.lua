@@ -5,15 +5,6 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 return {
-  {
-    'mfussenegger/nvim-lint',
-    opts = {
-      linters_by_ft = {
-        terraform = { 'tfsec', 'trivy' },
-        tf = { 'tfsec', 'trivy' },
-      },
-    },
-  },
 
   -- [telescope-terraform-doc] - Telescope picker for Terraform docs.
   -- see: `:h telescope-terraform-doc`
