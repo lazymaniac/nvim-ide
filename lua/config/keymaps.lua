@@ -69,7 +69,7 @@ map({ 'n', 't' }, '<A-b>', function () Snacks.terminal.toggle("btop") end, { des
 map({ 'n', 't' }, '<A-c>', function () Snacks.terminal.toggle("nap") end, { desc = 'Code snippets TUI [A-c]' })
 map({ 'n', 't' }, '<A-d>', function () Snacks.terminal.toggle("lazydocker") end, { desc = 'Docker TUI [A-d]' })
 map({ 'n', 't' }, '<A-D>', function () Snacks.terminal.toggle("podman-tui") end, { desc = 'Podman TUI [A-D]' })
-map({ 'n', 't' }, '<A-e>', function () Snacks.terminal.toggle("euporie-notebook") end, { desc = 'Juoyter Notebooks TUI [A-e]' })
+map({ 'n', 't' }, '<A-e>', function () Snacks.terminal.toggle("euporie-notebook") end, { desc = 'Jupyter Notebooks TUI [A-e]' })
 map({ 'n', 't' }, '<A-f>', function () Snacks.terminal.open("zellij options --theme kanagawa") end, { desc = 'New Terminal [A-f]' })
 map({ 'n', 't' }, '<A-g>', function () Snacks.lazygit() end, { desc = 'GIT TUI [A-g]' })
 map({ 'n', 't' }, '<A-h>', function () Snacks.terminal.toggle("posting") end, { desc = 'REST Client TUI [A-h]' })
