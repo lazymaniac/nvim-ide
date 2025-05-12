@@ -316,8 +316,8 @@ return {
   -- link: https://gitlab.com/schrieveslaach/sonarlint.nvim
   {
     'https://gitlab.com/schrieveslaach/sonarlint.nvim',
-    enabled = false,
-    ft = { 'java', 'javascript', 'typescript', 'c', 'go' },
+    enabled = true,
+    ft = { 'java', 'javascript', 'typescript', 'c', 'go', 'kubernetes', 'css', 'docker', 'xml', 'html', 'python' },
     config = function()
       require('sonarlint').setup {
         server = {
@@ -326,10 +326,27 @@ return {
             '-stdio',
             '-analyzers',
             vim.fn.expand '$MASON/share/sonarlint-analyzers/sonarjava.jar',
+            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonarjs.jar',
+            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonarxml.jar',
+            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonargo.jar',
+            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonarhtml.jar',
+            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonariac.jar',
+            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonarjavasymbolicexecution.jar',
+            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonarpython.jar',
           },
         },
         filetypes = {
           'java',
+          'javascript',
+          'typescript',
+          'c',
+          'go',
+          'kubernetes',
+          'css',
+          'docker',
+          'xml',
+          'html',
+          'python',
         },
       }
     end,
