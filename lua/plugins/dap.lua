@@ -88,7 +88,6 @@ return {
           port = 5005,
         },
       }
-
       -- set up listneres to open dap view
       local dv = require("dap-view")
       dap.listeners.before.attach["dap-view-config"] = function()
@@ -103,7 +102,6 @@ return {
       dap.listeners.before.event_exited["dap-view-config"] = function()
         dv.close()
       end
-
       local Config = require 'config'
       vim.api.nvim_set_hl(0, 'DapStoppedLine', { default = true, link = 'Visual' })
       for name, sign in pairs(Config.icons.dap) do
