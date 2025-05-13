@@ -1,18 +1,5 @@
 return {
 
-  -- [[ PERFORMANCE ]] --------------------------------------------------------------
-  -- [vim-startuptime] - Measure startup time. Displayed on dashboard
-  -- link: https://github.com/dstein64/vim-startuptime
-  {
-    'dstein64/vim-startuptime',
-    branch = 'master',
-    event = 'VeryLazy',
-    cmd = 'StartupTime',
-    config = function()
-      vim.g.startuptime_tries = 10
-    end,
-  },
-
   -- [[ SESSION MANAGEMENT ]] ---------------------------------------------------------------
 
   -- [persistence.nvim] - Session management. This saves your session in the background,
