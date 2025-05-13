@@ -231,6 +231,14 @@ return {
           'javascript.jsx',
         },
         root_markers = { 'angular.json', 'package.json', 'nx.json' },
+        on_attach = function(_, bufnr)
+          local wk = require 'which-key'
+          wk.add {
+            { '<leader>ct', '<cmd>lua require("ng").goto_template_for_component()<cr>', desc = 'Goto Template [ct]', mode = 'n', buffer = bufnr },
+            { '<leader>cc', '<cmd>lua require("ng").goto_component_with_template_file()<cr>', desc = 'Goto Component [cc]', mode = 'n', buffer = bufnr },
+            { '<leader>cb', '<cmd>lua require("ng").get_template_tcb()<cr>', desc = 'Goto Type Check Block [cb]', mode = 'n', buffer = bufnr },
+          }
+        end,
       })
     end,
   },
