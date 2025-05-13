@@ -26,7 +26,6 @@ return {
         markdown = { 'markdownlint', 'write-good' },
         python = { 'ruff', 'pylint', 'flake8', 'mypy' },
         ruby = { 'erb-lint', 'rubocop', 'trivy' },
-        rust = { 'bacon' },
         terraform = { 'tfsec', 'trivy' },
         tf = { 'tfsec', 'trivy' },
         typescript = { 'eslint_d', 'trivy' },

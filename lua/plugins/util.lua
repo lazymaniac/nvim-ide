@@ -56,22 +56,6 @@ return {
     },
   },
 
-  -- [showkeys] - Keys screencaster
-  -- see: `:h showkeys`
-  -- link: https://github.com/NvChad/showkeys
-  {
-    'nvchad/showkeys',
-    cmd = 'ShowkeysToggle',
-    keys = {
-      {
-        '<leader>lK',
-        '<cmd>ShowkeysToggle<cr>',
-        mode = { 'n' },
-        desc = 'Keys Screencast',
-      },
-    },
-  },
-
   -- [[ TOYS ]] ---------------------------------------------------------------
 
   -- [wttr.nvim] - Show current weather in lualine or forecast in popup

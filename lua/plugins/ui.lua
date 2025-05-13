@@ -4,8 +4,7 @@ vim.api.nvim_create_autocmd('LspProgress', {
   ---@param ev {data: {client_id: integer, params: lsp.ProgressParams}}
   callback = function(ev)
     local client = vim.lsp.get_client_by_id(ev.data.client_id)
-    local value = ev.data.params
-    .value --[[@as {percentage?: number, title?: string, message?: string, kind: "begin" | "report" | "end"}]]
+    local value = ev.data.params.value --[[@as {percentage?: number, title?: string, message?: string, kind: "begin" | "report" | "end"}]]
     if not client or type(value) ~= 'table' then
       return
     end
@@ -36,8 +35,7 @@ vim.api.nvim_create_autocmd('LspProgress', {
       id = 'lsp_progress',
       title = client.name,
       opts = function(notif)
-        notif.icon = #progress[client.id] == 0 and ' ' or
-        spinner[math.floor(vim.uv.hrtime() / (1e6 * 80)) % #spinner + 1]
+        notif.icon = #progress[client.id] == 0 and ' ' or spinner[math.floor(vim.uv.hrtime() / (1e6 * 80)) % #spinner + 1]
       end,
     })
   end,
@@ -71,9 +69,9 @@ return {
       bigfile = { enabled = true },
       dashboard = {
         width = 80,
-        row = nil,                                                                   -- dashboard position. nil for center
-        col = nil,                                                                   -- dashboard position. nil for center
-        pane_gap = 4,                                                                -- empty columns between vertical panes
+        row = nil, -- dashboard position. nil for center
+        col = nil, -- dashboard position. nil for center
+        pane_gap = 4, -- empty columns between vertical panes
         autokeys = '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', -- autokey sequence
         -- These settings are used by some built-in sections
         preset = {
@@ -230,7 +228,7 @@ return {
             patterns = { '.git', '_darcs', '.hg', '.bzr', '.svn', 'package.json', 'Makefile' },
             recent = true,
             matcher = {
-              frecency = true,   -- use frecency boosting
+              frecency = true, -- use frecency boosting
               sort_empty = true, -- sort even when the filter is empty
               cwd_bonus = false,
             },
@@ -275,16 +273,16 @@ return {
         },
         ---@class snacks.picker.matcher.Config
         matcher = {
-          fuzzy = true,          -- use fuzzy matching
-          smartcase = true,      -- use smartcase
-          ignorecase = true,     -- use ignorecase
-          sort_empty = false,    -- sort results when the search string is empty
+          fuzzy = true, -- use fuzzy matching
+          smartcase = true, -- use smartcase
+          ignorecase = true, -- use ignorecase
+          sort_empty = false, -- sort results when the search string is empty
           filename_bonus = true, -- give bonus for matching file names (last part of the path)
-          file_pos = true,       -- support patterns like `file:line:col` and `file:line`
+          file_pos = true, -- support patterns like `file:line:col` and `file:line`
           -- the bonusses below, possibly require string concatenation and path normalization,
           -- so this can have a performance impact for large lists and increase memory usage
-          cwd_bonus = true,      -- give bonus for matching files in the cwd
-          frecency = false,      -- frecency bonus
+          cwd_bonus = true, -- give bonus for matching files in the cwd
+          frecency = false, -- frecency bonus
           history_bonus = false, -- give more weight to chronological order
         },
         sort = {
@@ -296,18 +294,18 @@ return {
         formatters = {
           file = {
             filename_first = true, -- display filename before the file path
-            truncate = 40,         -- truncate the file path to (roughly) this length
+            truncate = 40, -- truncate the file path to (roughly) this length
             filename_only = false, -- only show the filename
           },
           selected = {
             show_always = true, -- only show the selected column when there are multiple selections
-            unselected = true,  -- use the unselected icon for unselected items
+            unselected = true, -- use the unselected icon for unselected items
           },
           severity = {
-            icons = true,  -- show severity icons
+            icons = true, -- show severity icons
             level = false, -- show severity level
             ---@type "left"|"right"
-            pos = 'left',  -- position of the diagnostics
+            pos = 'left', -- position of the diagnostics
           },
         },
         ---@class snacks.picker.previewers.Config
@@ -317,18 +315,18 @@ return {
           },
           file = {
             max_size = 1024 * 1024, -- 1MB
-            max_line_length = 500,  -- max line length
+            max_line_length = 500, -- max line length
             ft = nil, ---@type string? filetype for highlighting. Use `nil` for auto detect
           },
           man_pager = nil, ---@type string? MANPAGER env to use for `man` preview
         },
         ---@class snacks.picker.jump.Config
         jump = {
-          jumplist = true,   -- save the current position in the jumplist
-          tagstack = false,  -- save the current position in the tagstack
+          jumplist = true, -- save the current position in the jumplist
+          tagstack = false, -- save the current position in the tagstack
           reuse_win = false, -- reuse an existing window if the buffer is already open
-          close = true,      -- close the picker when jumping/editing to a location (defaults to true)
-          match = false,     -- jump to the first match position. (useful for `lines`)
+          close = true, -- close the picker when jumping/editing to a location (defaults to true)
+          match = false, -- jump to the first match position. (useful for `lines`)
         },
         toggles = {
           follow = 'f',
@@ -584,30 +582,30 @@ return {
     branch = 'main',
     event = 'VeryLazy',
     keys = {
-      { '<leader>bp', '<Cmd>BufferLineTogglePin<CR>',            desc = 'Toggle pin [bp]' },
+      { '<leader>bp', '<Cmd>BufferLineTogglePin<CR>', desc = 'Toggle pin [bp]' },
       { '<leader>bP', '<Cmd>BufferLineGroupClose ungrouped<CR>', desc = 'Delete non-pinned buffers [bP]' },
-      { '<leader>bo', '<Cmd>BufferLineCloseOthers<CR>',          desc = 'Delete other buffers [bo]' },
-      { '<leader>br', '<Cmd>BufferLineCloseRight<CR>',           desc = 'Delete buffers to the right [br]' },
-      { '<leader>bl', '<Cmd>BufferLineCloseLeft<CR>',            desc = 'Delete buffers to the left [bl]' },
-      { '<S-h>',      '<cmd>BufferLineCyclePrev<cr>',            desc = 'Prev buffer <S-h>' },
-      { '<S-l>',      '<cmd>BufferLineCycleNext<cr>',            desc = 'Next buffer <S-l>' },
-      { '[b',         '<cmd>BufferLineCyclePrev<cr>',            desc = 'Prev buffer <[b>' },
-      { ']b',         '<cmd>BufferLineCycleNext<cr>',            desc = 'Next buffer <]b>' },
+      { '<leader>bo', '<Cmd>BufferLineCloseOthers<CR>', desc = 'Delete other buffers [bo]' },
+      { '<leader>br', '<Cmd>BufferLineCloseRight<CR>', desc = 'Delete buffers to the right [br]' },
+      { '<leader>bl', '<Cmd>BufferLineCloseLeft<CR>', desc = 'Delete buffers to the left [bl]' },
+      { '<S-h>', '<cmd>BufferLineCyclePrev<cr>', desc = 'Prev buffer <S-h>' },
+      { '<S-l>', '<cmd>BufferLineCycleNext<cr>', desc = 'Next buffer <S-l>' },
+      { '[b', '<cmd>BufferLineCyclePrev<cr>', desc = 'Prev buffer <[b>' },
+      { ']b', '<cmd>BufferLineCycleNext<cr>', desc = 'Next buffer <]b>' },
     },
     opts = {
       options = {
-        mode = 'buffers',    -- Set to "tabs" to only show tabpages instead
+        mode = 'buffers', -- Set to "tabs" to only show tabpages instead
         -- style_preset = require('bufferline').style_preset.minimal, -- or style_preset.minimal
-        themable = true,     --Allows highlight groups to be overridden i.e. sets highlights as default
+        themable = true, --Allows highlight groups to be overridden i.e. sets highlights as default
         numbers = 'ordinal', -- "none" | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
         close_command = function(n)
           Snacks.bufdelete.delete { buf = n }
         end, -- can be a string | function, see "Mouse actions"
         right_mouse_command = function(n)
           Snacks.bufdelete.delete { buf = n }
-        end,                              -- can be a string | function, see "Mouse actions"
+        end, -- can be a string | function, see "Mouse actions"
         left_mouse_command = 'buffer %d', -- can be a string | function, see "Mouse actions"
-        middle_mouse_command = nil,       -- can be a string | function, see "Mouse actions"
+        middle_mouse_command = nil, -- can be a string | function, see "Mouse actions"
         indicator = { style = 'icon', icon = '▎' },
         buffer_close_icon = ' ',
         modified_icon = '●',
@@ -615,19 +613,19 @@ return {
         left_trunc_marker = ' ',
         right_trunc_marker = ' ',
         max_name_length = 30,
-        max_prefix_length = 30,   -- prefix used when a buffer is de-duplicated
-        truncate_names = true,    -- Whether or not tab names should be truncated
+        max_prefix_length = 30, -- prefix used when a buffer is de-duplicated
+        truncate_names = true, -- Whether or not tab names should be truncated
         tab_size = 18,
-        diagnostics = false,      -- | "nvim_lsp" | "coc" | false
+        diagnostics = false, -- | "nvim_lsp" | "coc" | false
         diagnostics_update_in_insert = false,
-        color_icons = true,       -- Whether or not to add the filetype icon to highlights
+        color_icons = true, -- Whether or not to add the filetype icon to highlights
         show_buffer_icons = true, -- Disable filetype icons for buffers
         show_buffer_close_icons = true,
         show_close_icon = true,
         show_tab_indicators = true,
         show_duplicate_prefix = true, -- Whether to show duplicate buffer prefix
-        persist_buffer_sort = true,   -- Whether or not custom sorted buffers should persist
-        move_wraps_at_ends = true,    -- whether or not the move command "wraps" at the first or last position
+        persist_buffer_sort = true, -- Whether or not custom sorted buffers should persist
+        move_wraps_at_ends = true, -- whether or not the move command "wraps" at the first or last position
         -- can also be a table containing 2 custom separators
         -- [focused and unfocused]. eg: { '|', '|' }
         separator_style = { '|' }, -- 'slant' | 'slope' | 'thick' | 'thin' | { 'any', 'any' },
@@ -683,41 +681,6 @@ return {
   -- link: https://github.com/MunifTanjim/nui.nvim
   { 'MunifTanjim/nui.nvim', branch = 'main' },
 
-  -- [floating-help.nvim] - Vim help shown in floating popup
-  -- see: 'h: floating-help'
-  -- link: https://github.com/Tyler-Barham/floating-help.nvim
-  {
-    'Tyler-Barham/floating-help.nvim',
-    branch = 'main',
-    event = 'VeryLazy',
-    -- stylua: ignore
-    keys = {
-      { '<F1>', '<cmd>FloatingHelpToggle<cr>',                                                    mode = { 'n' }, desc = 'Toggle Floating Help <F1>' },
-      { '<F5>', function() require("floating-help").open('t=help', vim.fn.expand("<cword>")) end, mode = { 'n' }, desc = 'Search cword in Help <F5>' },
-      { '<F6>', function() require("floating-help").open('t=man', vim.fn.expand("<cword>")) end,  mode = { 'n' }, desc = 'Search cwrod in Man <F6>' },
-    },
-    config = function()
-      require('floating-help').setup {
-        -- Defaults
-        width = 82,     -- Whole numbers are columns/rows
-        height = 0.99,  -- Decimals are a percentage of the editor
-        position = 'E', -- NW,N,NW,W,C,E,SW,S,SE (C==center)
-        borderchars = { '─', '│', '─', '│', '╭', '╮', '╯', '╰' },
-      }
-      -- Only replace cmds, not search; only replace the first instance
-      local function cmd_abbrev(abbrev, expansion)
-        local cmd = 'cabbr ' ..
-        abbrev .. ' <c-r>=(getcmdpos() == 1 && getcmdtype() == ":" ? "' .. expansion .. '" : "' .. abbrev .. '")<CR>'
-        vim.cmd(cmd)
-      end
-      -- Redirect `:h` to `:FloatingHelp`
-      cmd_abbrev('h', 'FloatingHelp')
-      cmd_abbrev('help', 'FloatingHelp')
-      cmd_abbrev('helpc', 'FloatingHelpClose')
-      cmd_abbrev('helpclose', 'FloatingHelpClose')
-    end,
-  },
-
   -- [numb.nvim] - Show preview of location when jumping to line with `:{number}`
   -- see: `:h numb`
   -- link: https://github.com/nacro90/numb.nvim
@@ -726,11 +689,11 @@ return {
     branch = 'master',
     event = 'VeryLazy',
     opts = {
-      show_numbers = true,         -- Enable 'number' for the window while peeking
-      show_cursorline = true,      -- Enable 'cursorline' for the window while peeking
+      show_numbers = true, -- Enable 'number' for the window while peeking
+      show_cursorline = true, -- Enable 'cursorline' for the window while peeking
       hide_relativenumbers = true, -- Enable turning off 'relativenumber' for the window while peeking
-      number_only = false,         -- Peek only when the command is only a number instead of when it starts with a number
-      centered_peeking = true,     -- Peeked line will be centered relative to window
+      number_only = false, -- Peek only when the command is only a number instead of when it starts with a number
+      centered_peeking = true, -- Peeked line will be centered relative to window
     },
     config = function(_, opts)
       require('numb').setup(opts)

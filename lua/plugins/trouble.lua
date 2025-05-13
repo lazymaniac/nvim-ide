@@ -8,6 +8,7 @@ local split_preview = {
   relative = 'win',
   border = 'rounded',
 }
+
 return {
 
   -- [[ DIAGNOSTICS & LSP ]] ---------------------------------------------------------------
@@ -229,5 +230,4 @@ return {
       },
     },
   },
-
 }
