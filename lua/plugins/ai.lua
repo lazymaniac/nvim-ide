@@ -480,7 +480,7 @@ Replace old code with new implementation
 - Minimize explanations about the tool itself
 - When looking for symbol, pass only the name of symbol without the object. E.g. use: `saveUsers` instead of `userRepository.saveUsers`
 ]],
-            hanlers = {
+            handlers = {
               on_exit = function(self, agent)
                 code_extractor.symbol_data = {}
                 code_extractor.filetype = ''
@@ -574,11 +574,8 @@ Content:
       prompts = {
         {
           role = 'system',
-          content = function(context)
-            return [[Act as a seasoned ]]
-              .. context.filetype
-              .. [[ programmer with over 20 years of commercial experience.
-Your task is to suggest refactoring of a specified piece of code to improve its efficiency,
+          content = function(_)
+            return [[ Your task is to suggest refactoring of a specified piece of code to improve its efficiency,
 readability, and maintainability without altering its functionality. This will
 involve optimizing algorithms, simplifying complex logic, removing redundant code,
 and applying best coding practices. Additionally, conduct thorough testing to confirm
