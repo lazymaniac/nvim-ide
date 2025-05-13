@@ -101,15 +101,4 @@ return {
       }
     end,
   },
-
-  -- [org-checkbox.nvim] - Convert list into checkboxes and viceversa
-  -- see: `:h org-checkbox.nvim`
-  -- link: https://github.com/massix/org-checkbox.nvim
-  {
-    'massix/org-checkbox.nvim',
-    config = function()
-      require('orgcheckbox').setup { lhs = '<leader>oT' }
-    end,
-    ft = { 'org' },
-  },
 }

@@ -242,122 +242,6 @@ return {
     end,
   },
 
-  -- [nvim-surround] - Superior text surroundings. Add, remove, replace.
-  -- see: `:h nvim-surround`
-  -- link: https://github.com/kylechui/nvim-surround
-  {
-    'kylechui/nvim-surround',
-    branch = 'main',
-    event = 'VeryLazy',
-    config = function()
-      require('nvim-surround').setup {
-        keymaps = {
-          insert = '<C-g>s',
-          insert_line = '<C-g>S',
-          normal = 'ys',
-          normal_cur = 'yss',
-          normal_line = 'yS',
-          normal_cur_line = 'ySS',
-          visual = 'S',
-          visual_line = 'gS',
-          delete = 'ds',
-          change = 'cs',
-          change_line = 'cS',
-        },
-        aliases = {
-          ['a'] = '>',
-          ['b'] = ')',
-          ['B'] = '}',
-          ['r'] = ']',
-          ['q'] = { '"', "'", '`' },
-          ['s'] = { '}', ']', ')', '>', '"', "'", '`' },
-        },
-        highlight = {
-          duration = 0,
-        },
-        move_cursor = 'begin',
-        indent_lines = function(start, stop)
-          local b = vim.bo
-          -- Only re-indent the selection if a formatter is set up already
-          if start < stop and (b.equalprg ~= '' or b.indentexpr ~= '' or b.cindent or b.smartindent or b.lisp) then
-            vim.cmd(string.format('silent normal! %dG=%dG', start, stop))
-          end
-        end,
-      }
-      -- Setup keymappings. Code borrowed from surround-ui
-      local root_key = 'S'
-      local grammar_targets = {
-        ['['] = '',
-        [']'] = '',
-        ['('] = '',
-        [')'] = '',
-        ['{'] = '',
-        ['}'] = '',
-        ['<'] = '',
-        ['>'] = '',
-        ['`'] = '',
-        ["'"] = '',
-        ['"'] = '',
-      }
-      local abbreviated_targets = {
-        ['b'] = ' [bracket]',
-      }
-      local keywords_targets = {
-        ['w'] = ' [word]',
-        ['W'] = ' [WORD]',
-        ['f'] = ' [function]',
-        ['q'] = ' [quote]',
-      }
-      local all_targets = {}
-      all_targets = vim.tbl_extend('error', all_targets, grammar_targets, abbreviated_targets, keywords_targets)
-      local abbreviated_and_grammar_targets = {}
-      abbreviated_and_grammar_targets = vim.tbl_extend('error', abbreviated_and_grammar_targets, grammar_targets, abbreviated_targets)
-      local mappings = {
-        ['<leader>'] = {
-          [root_key] = { name = '+[surround]' },
-        },
-      }
-      -- around mappings
-      mappings['<leader>'][root_key]['a'] = { name = '+[around]' }
-      for char, desc in pairs(all_targets) do
-        mappings['<leader>'][root_key]['a'][char] = { name = desc }
-        for ichar, target in pairs(abbreviated_and_grammar_targets) do
-          mappings['<leader>'][root_key]['a'][char][ichar] =
-            { '<CMD>call feedkeys("ysa\\' .. char .. '\\' .. ichar .. '")<CR>', 'ysa' .. char .. ichar .. target }
-        end
-      end
-      -- inner mappings
-      mappings['<leader>'][root_key]['i'] = { name = '+[inner]' }
-      for char, desc in pairs(all_targets) do
-        mappings['<leader>'][root_key]['i'][char] = { name = desc }
-        for ichar, target in pairs(all_targets) do
-          mappings['<leader>'][root_key]['i'][char][ichar] =
-            { '<CMD>call feedkeys("ysi\\' .. char .. '\\' .. ichar .. '")<CR>', 'ysi' .. char .. ichar .. target }
-        end
-      end
-      -- change mappings
-      mappings['<leader>'][root_key]['c'] = { name = '+[change]' }
-      for char, desc in pairs(all_targets) do
-        mappings['<leader>'][root_key]['c'][char] = { name = desc }
-        for ichar, target in pairs(all_targets) do
-          mappings['<leader>'][root_key]['c'][char][ichar] =
-            { '<CMD>call feedkeys("cs\\' .. char .. '\\' .. ichar .. '")<CR>', 'cs' .. char .. ichar .. target }
-        end
-      end
-      -- delete mappings
-      mappings['<leader>'][root_key]['d'] = { name = '+[delete]' }
-      for char, target in pairs(all_targets) do
-        mappings['<leader>'][root_key]['d'][char] = { '<CMD>call feedkeys("ds\\' .. char .. '")<CR>', 'ds' .. char .. target }
-      end
-      -- line mappings
-      mappings['<leader>'][root_key]['s'] = { name = '+[line]' }
-      for char, target in pairs(all_targets) do
-        mappings['<leader>'][root_key]['s'][char] = { '<CMD>call feedkeys("yss\\' .. char .. '")<CR>', 'yss' .. char .. target }
-      end
-      require('which-key').register(mappings)
-    end,
-  },
-
   -- [auto-indent.nvim] - Auto move cursor to match indentation
   -- see: `:h auto-indent.nvim`
   -- link: https://github.com/VidocqH/auto-indent.nvim
@@ -466,7 +350,36 @@ return {
 
   {
     'caliguIa/zendiagram.nvim',
-    opts = {},
+    opts = {
+      header = 'Diagnostics', -- Float window title
+      source = true, -- Whether to display diagnostic source
+      relative = 'line', -- "line"|"win" - What the float window's position is relative to
+      anchor = 'NE', -- "NE"|"SE"|"SW"|"NW" - When 'relative' is set to "win" this sets the position of the floating window
+    },
+    config = function(_, opts)
+      require('zendiagram').setup(opts)
+      vim.diagnostic.open_float = Zendiagram.open
+
+      vim.keymap.set({ 'n', 'x' }, ']d', function()
+        vim.diagnostic.jump { count = 1 }
+        vim.schedule(function()
+          require('zendiagram').open()
+          -- or: vim.cmd.Zendiagram('open')
+          -- or: Zendiagram.open()
+          -- or: vim.diagnostic.open_float() if you have overridden the default function
+        end)
+      end, { desc = 'Jump to next diagnostic' })
+
+      vim.keymap.set({ 'n', 'x' }, '[d', function()
+        vim.diagnostic.jump { count = -1 }
+        vim.schedule(function()
+          require('zendiagram').open()
+          -- or: vim.cmd.Zendiagram('open')
+          -- or: Zendiagram.open()
+          -- or: vim.diagnostic.open_float() if you have overridden the default function
+        end)
+      end, { desc = 'Jump to prev diagnostic' })
+    end,
   },
 
   {
@@ -478,6 +391,6 @@ return {
         mode = { 'n', 'v' },
         desc = 'Regex explain',
       },
-    }
+    },
   },
 }
