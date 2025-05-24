@@ -45,7 +45,6 @@ return {
           { 'petertriho/cmp-git', opts = {} },
         },
       },
-      'fang2hou/blink-copilot',
     },
 
     event = 'InsertEnter',
@@ -110,15 +109,7 @@ return {
       -- elsewhere in your config, without redefining it, due to `opts_extend`
       sources = {
         compat = {},
-        default = { 'lsp', 'path', 'snippets', 'buffer', 'copilot' },
-        providers = {
-          copilot = {
-            name = 'copilot',
-            module = 'blink-copilot',
-            score_offset = 100,
-            async = true,
-          },
-        },
+        default = { 'lsp', 'path', 'snippets', 'buffer'},
       },
     },
     opts_extend = { 'sources.default' },
