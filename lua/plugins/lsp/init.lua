@@ -152,7 +152,6 @@ return {
         'svelte',
         'terraformls',
         'vtsls',
-        'volar',
       },
       automatic_enable = {
         exclude = { 'rust_analyzer', 'jdtls' },
