@@ -94,4 +94,6 @@ return {
       end,
     },
   },
+
+  { 'echasnovski/mini.diff', version = false },
 }
