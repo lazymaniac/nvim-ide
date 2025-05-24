@@ -1,4 +1,3 @@
-local last_operation = ''
 -- Helper class definition
 
 -- Code Editor helper
@@ -40,6 +39,15 @@ function CodeEditor:get_bufnr_by_filename(filename)
     end
   end
   return self:open_buffer(filename)
+end
+
+function CodeEditor:get_winnr_by_bufnr(bufnr)
+  local winnr = vim.fn.bufwinnr(bufnr)
+  if winnr == -1 then
+    vim.notify('No window number found for bufnr: ' .. bufnr, vim.log.levels.WARN)
+    return nil
+  end
+  return winnr
 end
 
 function CodeEditor:intersect(bufnr, line)
@@ -99,6 +107,47 @@ function CodeEditor:add(args)
   else
     vim.notify("Can't find buffer number by file name", vim.log.levels.WARN)
   end
+end
+
+function CodeEditor:diff(args)
+  local provider = 'mini_diff'
+  local diff = require('codecompanion.providers.diff.' .. provider)
+  local keymaps = require 'codecompanion.utils.keymaps'
+  local bufnr = self:get_bufnr_by_filename(args.filename)
+  local winnr = self:get_winnr_by_bufnr(bufnr)
+
+  local diff_args = {
+    bufnr = bufnr,
+    contents = vim.api.nvim_buf_get_lines(bufnr, 0, -1, true),
+    filetype = vim.api.nvim_get_option_value('filetype', { buf = bufnr }),
+    winnr = winnr,
+  }
+  diff = diff.new(diff_args)
+  keymaps
+    .new({
+      bufnr = bufnr,
+      callbacks = require 'codecompanion.strategies.inline.keymaps',
+      data = { diff = diff },
+      keymaps = {
+        accept_change = {
+          modes = {
+            n = 'ga',
+          },
+          index = 1,
+          callback = 'keymaps.accept_change',
+          description = 'Accept change',
+        },
+        reject_change = {
+          modes = {
+            n = 'gr',
+          },
+          index = 2,
+          callback = 'keymaps.reject_change',
+          description = 'Reject change',
+        },
+      },
+    })
+    :set()
 end
 
 -- Code Extractor helper
@@ -395,12 +444,12 @@ local config = {
             cmds = {
               function(_, args, _)
                 local operation = args.operation
-                last_operation = operation
                 local symbol = args.symbol
 
                 if operation == 'edit' then
                   code_editor:delete(args)
                   code_editor:add(args)
+                  code_editor:diff(args)
                   return { status = 'success', data = 'Code has beed updated' }
                 else
                   local bufnr = code_extractor:move_cursor_to_symbol(symbol)
@@ -640,7 +689,7 @@ in all expected scenarios.]]
       close_chat_at = 240, -- Close an open chat buffer if the total columns of your display are less than...
       layout = 'vertical', -- vertical|horizontal split for default provider
       opts = { 'internal', 'filler', 'closeoff', 'algorithm:patience', 'followwrap', 'linematch:120' },
-      provider = 'default', -- default|mini_diff
+      provider = 'mini_diff', -- default|mini_diff
     },
     inline = {
       -- If the inline prompt creates a new buffer, how should we display this?
@@ -730,7 +779,7 @@ return {
             },
           },
           suggestion = {
-            enabled = false,
+            enabled = true,
             auto_trigger = false,
             hide_during_completion = true,
             debounce = 75,
