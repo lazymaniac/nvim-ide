@@ -23,7 +23,7 @@ return {
         html = { 'htmlhint' },
         java = { 'checkstyle', 'trivy' },
         kotlin = { 'ktlint', 'detekt' },
-        markdown = { 'markdownlint', 'write-good' },
+        markdown = { 'markdownlint' },
         python = { 'ruff', 'pylint', 'flake8', 'mypy' },
         ruby = { 'erb-lint', 'rubocop', 'trivy' },
         terraform = { 'tfsec', 'trivy' },

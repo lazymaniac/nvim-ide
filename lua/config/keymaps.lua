@@ -77,7 +77,7 @@ map({ 'n', 't' }, '<A-i>', function () Snacks.terminal.toggle("clx") end, { desc
 map({ 'n', 't' }, '<A-k>', function () Snacks.terminal.toggle("k9s") end, { desc = 'Cluster TUI [A-k]' })
 map({ 'n', 't' }, '<A-l>', function () Snacks.terminal.toggle("cloudlens") end, { desc = 'Cloud Resources TUI [A-l]' })
 map({ 'n', 't' }, '<A-s>', function () Snacks.terminal.toggle("harlequin") end, { desc = 'Database TUI [A-s]' })
-map({ 'n', 't' }, '<A-m>', function () Snacks.terminal.toggle("omm") end, { desc = 'Task Manager TUI [A-n]' })
+map({ 'n', 't' }, '<A-m>', function () Snacks.terminal.toggle("omm --editor nvim") end, { desc = 'Task Manager TUI [A-n]' })
 map({ 'n', 't' }, '<A-p>', function () Snacks.terminal.toggle("python3") end, { desc = 'Python Term [A-p]' })
 map({ 'n', 't' }, '<A-t>', function () Snacks.terminal.toggle("termscp") end, { desc = 'Network Client [A-t]' })
 map({ 'n', 't' }, '<A-u>', function () Snacks.terminal.toggle("dua i") end, { desc = 'Disk Usage TUI [A-u]' })
