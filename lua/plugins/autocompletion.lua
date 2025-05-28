@@ -145,9 +145,9 @@ return {
         menu = {
           enabled = true,
           min_width = 15,
-          max_height = 10,
+          max_height = 12,
           border = 'rounded', -- Defaults to `vim.o.winborder` on nvim 0.11+
-          winblend = 0,
+          winblend = 10,
           winhighlight = 'Normal:BlinkCmpMenu,FloatBorder:BlinkCmpMenuBorder,CursorLine:BlinkCmpMenuSelection,Search:None',
           -- Keep the cursor X lines away from the top/bottom of the window
           scrolloff = 2,
@@ -155,7 +155,7 @@ return {
           scrollbar = true,
           -- Which directions to show the window,
           -- falling back to the next direction when there's not enough space
-          direction_priority = { 's', 'n' },
+          direction_priority = { 'n', 's' },
           -- Whether to automatically show the window when new completion items are available
           auto_show = true,
           -- Screen coordinates of the command line
@@ -281,9 +281,9 @@ return {
           window = {
             min_width = 10,
             max_width = 80,
-            max_height = 20,
+            max_height = 40,
             border = 'rounded', -- Defaults to `vim.o.winborder` on nvim 0.11+ or 'padded' when not defined/<=0.10
-            winblend = 0,
+            winblend = 10,
             winhighlight = 'Normal:BlinkCmpDoc,FloatBorder:BlinkCmpDocBorder,EndOfBuffer:BlinkCmpDoc',
             -- Note that the gutter will be disabled when border ~= 'none'
             scrollbar = true,
@@ -329,7 +329,7 @@ return {
           max_width = 100,
           max_height = 10,
           border = 'rounded', -- Defaults to `vim.o.winborder` on nvim 0.11+ or 'padded' when not defined/<=0.10
-          winblend = 0,
+          winblend = 10,
           winhighlight = 'Normal:BlinkCmpSignatureHelp,FloatBorder:BlinkCmpSignatureHelpBorder',
           scrollbar = true, -- Note that the gutter will be disabled when border ~= 'none'
           -- Which directions to show the window,
