@@ -1,34 +1,3 @@
-local cmp_actions = {
-  -- Native Snippets
-  snippet_forward = function()
-    if vim.snippet.active { direction = 1 } then
-      vim.schedule(function()
-        vim.snippet.jump(1)
-      end)
-      return true
-    end
-  end,
-  snippet_stop = function()
-    if vim.snippet then
-      vim.snippet.stop()
-    end
-  end,
-}
-
-local function map(actions, fallback)
-  return function()
-    for _, name in ipairs(actions) do
-      if cmp_actions[name] then
-        local ret = cmp_actions[name]()
-        if ret then
-          return true
-        end
-      end
-    end
-    return type(fallback) == 'function' and fallback() or fallback
-  end
-end
-
 return {
 
   -- [[ AUTOCOMPLETION ]] ---------------------------------------------------------------
@@ -53,6 +22,21 @@ return {
             -- See the configuration section for more details
             -- Load luvit types when the `vim.uv` word is found
             { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
+          },
+        },
+      },
+      {
+        'fang2hou/blink-copilot',
+        opts = {
+          max_completions = 3,
+          max_attempts = 4,
+          kind_name = 'copilot', ---@type string | false
+          kind_icon = ' ', ---@type string | false
+          kind_hl = true, ---@type string | false
+          debounce = 200, ---@type integer | false
+          auto_refresh = {
+            backward = true,
+            forward = true,
           },
         },
       },
@@ -205,12 +189,21 @@ return {
               kind_icon = {
                 ellipsis = false,
                 text = function(ctx)
-                  return ctx.kind_icon .. ctx.icon_gap
+                  local kind_icon, _, _ = require('mini.icons').get('lsp', ctx.kind)
+                  return kind_icon
                 end,
-                -- Set the highlight priority to 20000 to beat the cursorline's default priority of 10000
+                -- (optional) use highlights from mini.icons
                 highlight = function(ctx)
-                  return { { group = ctx.kind_hl, priority = 20000 } }
+                  local _, hl, _ = require('mini.icons').get('lsp', ctx.kind)
+                  return hl
                 end,
+                -- text = function(ctx)
+                --   return ctx.kind_icon .. ctx.icon_gap
+                -- end,
+                -- -- Set the highlight priority to 20000 to beat the cursorline's default priority of 10000
+                -- highlight = function(ctx)
+                --   return { { group = ctx.kind_hl, priority = 20000 } }
+                -- end,
               },
               kind = {
                 ellipsis = false,
@@ -219,8 +212,12 @@ return {
                   return ctx.kind
                 end,
                 highlight = function(ctx)
-                  return ctx.kind_hl
+                  local _, hl, _ = require('mini.icons').get('lsp', ctx.kind)
+                  return hl
                 end,
+                -- highlight = function(ctx)
+                --   return ctx.kind_hl
+                -- end,
               },
               label = {
                 width = { fill = true, max = 60 },
@@ -383,8 +380,14 @@ return {
       -- elsewhere in your config, without redefining it, due to `opts_extend`
       sources = {
         compat = {},
-        default = { 'lazydev', 'lsp', 'path', 'snippets', 'buffer', 'omni', 'cmdline' },
+        default = { 'copilot', 'lazydev', 'lsp', 'path', 'snippets', 'buffer', 'omni', 'cmdline' },
         providers = {
+          copilot = {
+            name = 'copilot',
+            module = 'blink-copilot',
+            score_offset = 100,
+            async = true,
+          },
           lazydev = {
             name = 'LazyDev',
             module = 'lazydev.integrations.blink',
@@ -396,62 +399,20 @@ return {
     },
     opts_extend = { 'sources.default' },
     config = function(_, opts)
-      -- setup compat sources
-      local enabled = opts.sources.default
-      for _, source in ipairs(opts.sources.compat or {}) do
-        opts.sources.providers[source] = vim.tbl_deep_extend('force', { name = source, module = 'blink.compat.source' }, opts.sources.providers[source] or {})
-        if type(enabled) == 'table' and not vim.tbl_contains(enabled, source) then
-          table.insert(enabled, source)
-        end
-      end
+      vim.api.nvim_create_autocmd('User', {
+        pattern = 'BlinkCmpMenuOpen',
+        callback = function()
+          require('copilot.suggestion').dismiss()
+          vim.b.copilot_suggestion_hidden = true
+        end,
+      })
 
-      -- add ai_accept to <Tab> key
-      if not opts.keymap['<Tab>'] then
-        if opts.keymap.preset == 'super-tab' then -- super-tab
-          opts.keymap['<Tab>'] = {
-            require('blink.cmp.keymap.presets')['super-tab']['<Tab>'][1],
-            map { 'snippet_forward', 'ai_accept' },
-            'fallback',
-          }
-        else -- other presets
-          opts.keymap['<Tab>'] = {
-            map { 'snippet_forward', 'ai_accept' },
-            'fallback',
-          }
-        end
-      end
-
-      -- Unset custom prop to pass blink.cmp validation
-      opts.sources.compat = nil
-
-      -- check if we need to override symbol kinds
-      for _, provider in pairs(opts.sources.providers or {}) do
-        ---@cast provider blink.cmp.SourceProviderConfig|{kind?:string}
-        if provider.kind then
-          local CompletionItemKind = require('blink.cmp.types').CompletionItemKind
-          local kind_idx = #CompletionItemKind + 1
-
-          CompletionItemKind[kind_idx] = provider.kind
-          ---@diagnostic disable-next-line: no-unknown
-          CompletionItemKind[provider.kind] = kind_idx
-
-          ---@type fun(ctx: blink.cmp.Context, items: blink.cmp.CompletionItem[]): blink.cmp.CompletionItem[]
-          local transform_items = provider.transform_items
-          ---@param ctx blink.cmp.Context
-          ---@param items blink.cmp.CompletionItem[]
-          provider.transform_items = function(ctx, items)
-            items = transform_items and transform_items(ctx, items) or items
-            for _, item in ipairs(items) do
-              item.kind = kind_idx or item.kind
-            end
-            return items
-          end
-
-          -- Unset custom prop to pass blink.cmp validation
-          provider.kind = nil
-        end
-      end
-
+      vim.api.nvim_create_autocmd('User', {
+        pattern = 'BlinkCmpMenuClose',
+        callback = function()
+          vim.b.copilot_suggestion_hidden = false
+        end,
+      })
       require('blink.cmp').setup(opts)
     end,
   },
