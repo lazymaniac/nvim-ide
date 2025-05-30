@@ -23,7 +23,6 @@ return {
     opts = {
       -- In which modes mappings from this `config` should be created
       modes = { insert = true, command = true, terminal = false },
-
       -- Global mappings. Each right hand side should be a pair information, a
       -- table with at least these fields (see more in |MiniPairs.map|):
       -- - <action> - one of 'open', 'close', 'closeopen'.
@@ -43,26 +42,6 @@ return {
         ['"'] = { action = 'closeopen', pair = '""', neigh_pattern = '[^\\].', register = { cr = false } },
         ["'"] = { action = 'closeopen', pair = "''", neigh_pattern = '[^%a\\].', register = { cr = false } },
         ['`'] = { action = 'closeopen', pair = '``', neigh_pattern = '[^\\].', register = { cr = false } },
-      },
-    },
-  },
-
-  {
-    'mhanberg/output-panel.nvim',
-    version = '*',
-    event = 'VeryLazy',
-    config = function()
-      require('output_panel').setup {
-        max_buffer_size = 5000, -- default
-      }
-    end,
-    cmd = { 'OutputPanel' },
-    keys = {
-      {
-        '<leader>lo',
-        vim.cmd.OutputPanel,
-        mode = 'n',
-        desc = 'Toggle the output panel',
       },
     },
   },

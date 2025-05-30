@@ -528,7 +528,7 @@ return {
       { 'gI',              function() Snacks.picker.lsp_implementations() end,                   desc = 'Goto Implementation (gI)' },
       { 'gy',              function() Snacks.picker.lsp_type_definitions() end,                  desc = 'Goto Type Definition (gy)' },
       { '<leader>ss',      function() Snacks.picker.lsp_symbols() end,                           desc = 'LSP Symbols [ss]' },
-      { '<leader>o',       function() Snacks.picker.lsp_symbols() end,                           desc = 'LSP Symbols [o]' },
+      -- { '<leader>o',       function() Snacks.picker.lsp_symbols() end,                           desc = 'LSP Symbols [o]' },
       { '<leader>sS',      function() Snacks.picker.lsp_workspace_symbols() end,                 desc = 'LSP Workspace Symbols [sS]' },
       -- Other
       { '<leader>Z',       function() Snacks.zen() end,                                          desc = 'Toggle Zen Mode [Z]' },
