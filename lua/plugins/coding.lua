@@ -206,8 +206,37 @@ return {
     'm-demare/hlargs.nvim',
     branch = 'main',
     event = 'VeryLazy',
+    opts = {},
+  },
+
+  -- [guess-indent.nvim] - Automatically detect and set indentation
+  -- link: https://github.com/NMAC427/guess-indent.nvim
+  {
+    'nmac427/guess-indent.nvim',
     config = function()
-      require('hlargs').setup()
+      require('guess-indent').setup {
+        auto_cmd = true, -- Set to false to disable automatic execution
+        override_editorconfig = false, -- Set to true to override settings set by .editorconfig
+        filetype_exclude = { -- A list of filetypes for which the auto command gets disabled
+          'netrw',
+          'tutor',
+        },
+        buftype_exclude = { -- A list of buffer types for which the auto command gets disabled
+          'help',
+          'nofile',
+          'terminal',
+          'prompt',
+        },
+        on_tab_options = { -- A table of vim options when tabs are detected
+          ['expandtab'] = false,
+        },
+        on_space_options = { -- A table of vim options when spaces are detected
+          ['expandtab'] = true,
+          ['tabstop'] = 'detected', -- If the option value is 'detected', The value is set to the automatically detected indent size.
+          ['softtabstop'] = 'detected',
+          ['shiftwidth'] = 'detected',
+        },
+      }
     end,
   },
 
@@ -219,17 +248,7 @@ return {
     branch = 'master',
     event = 'VeryLazy',
     config = function()
-      local rainbow_delimiters = require 'rainbow-delimiters'
-      require('rainbow-delimiters.setup').setup {
-        strategy = {
-          [''] = rainbow_delimiters.strategy['global'],
-          vim = rainbow_delimiters.strategy['local'],
-        },
-        query = {
-          [''] = 'rainbow-delimiters',
-          lua = 'rainbow-blocks',
-        },
-      }
+      require('rainbow-delimiters.setup').setup {}
     end,
   },
 
@@ -323,9 +342,6 @@ return {
         vim.diagnostic.jump { count = 1 }
         vim.schedule(function()
           require('zendiagram').open()
-          -- or: vim.cmd.Zendiagram('open')
-          -- or: Zendiagram.open()
-          -- or: vim.diagnostic.open_float() if you have overridden the default function
         end)
       end, { desc = 'Jump to next diagnostic' })
 
@@ -333,9 +349,6 @@ return {
         vim.diagnostic.jump { count = -1 }
         vim.schedule(function()
           require('zendiagram').open()
-          -- or: vim.cmd.Zendiagram('open')
-          -- or: Zendiagram.open()
-          -- or: vim.diagnostic.open_float() if you have overridden the default function
         end)
       end, { desc = 'Jump to prev diagnostic' })
     end,
