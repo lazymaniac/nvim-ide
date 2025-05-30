@@ -184,20 +184,13 @@ return {
     opts = {
       dismiss_keys = { 'j', 'k', '<c-c>', 'q' },
       override_function = function(_) end,
-      keys = 'qwertyuiopasdfghlzxcvbnm',
+      keys = 'asdfghlzxcvbnm',
       popup = {
         border = 'rounded',
         hide_cursor = true,
-        highlight = {
-          divider = 'FloatBorder',
-          key = 'MoreMsg',
-          title = 'Title',
-          window = 'NormalFloat',
-        },
-        title = 'Select code action:',
+        title = 'Select one of:',
       },
       priority = {},
-      register_ui_select = true,
     },
   },
 
