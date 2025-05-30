@@ -28,8 +28,8 @@ return {
       {
         'fang2hou/blink-copilot',
         opts = {
-          max_completions = 3,
-          max_attempts = 4,
+          max_completions = 5,
+          max_attempts = 6,
           kind_name = 'copilot', ---@type string | false
           kind_icon = ' ', ---@type string | false
           kind_hl = true, ---@type string | false
