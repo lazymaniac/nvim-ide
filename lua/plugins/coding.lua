@@ -172,26 +172,10 @@ return {
         view = {
           min_column_width = 5,
           spacing = 2,
-          ---@type "highlight" | "border"
           display_mode = 'border',
         },
       }
     end,
-  },
-
-  {
-    'Chaitanyabsprip/fastaction.nvim',
-    opts = {
-      dismiss_keys = { 'j', 'k', '<c-c>', 'q' },
-      override_function = function(_) end,
-      keys = 'asdfghlzxcvbnm',
-      popup = {
-        border = 'rounded',
-        hide_cursor = true,
-        title = 'Select one of:',
-      },
-      priority = {},
-    },
   },
 
   -- [boole.nvim] - Allows to flip opposite values, or quickly increase or decrease numbers.
@@ -225,16 +209,6 @@ return {
     config = function()
       require('hlargs').setup()
     end,
-  },
-
-  -- [auto-indent.nvim] - Auto move cursor to match indentation
-  -- see: `:h auto-indent.nvim`
-  -- link: https://github.com/VidocqH/auto-indent.nvim
-  {
-    'vidocqh/auto-indent.nvim',
-    branch = 'main',
-    event = 'VeryLazy',
-    opts = {},
   },
 
   -- [rainbow_delimiters.nvim] - Rainbow colored delimiters
