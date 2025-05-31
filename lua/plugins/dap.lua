@@ -22,6 +22,9 @@ return {
     dependencies = {
       {
         'igorlfs/nvim-dap-view',
+        keys = {
+          { '<leader>dw', '<cmd>DapViewWatch<cr>', mode = { 'n', 'v' }, desc = 'Watch expression' },
+        },
         opts = {
           winbar = {
             show = true,
