@@ -1,5 +1,3 @@
-local Util = require 'util'
-
 local java_filetypes = { 'java' }
 local root_markers = { 'gradlew', 'mvnw', 'gradle', 'mvn', '.git' }
 
@@ -340,7 +338,7 @@ return {
         cmd = { 'jdtls' },
         full_cmd = function(opts)
           local root_dir = opts.root_dir(root_markers)
-          local jdtls_dir = vim.fn.expand("$MASON/share/jdtls")
+          local jdtls_dir = vim.fn.expand '$MASON/share/jdtls'
           local lombok_path = jdtls_dir .. '/lombok.jar'
           local lombok_agent_param = '--jvm-arg=-javaagent:' .. lombok_path
           local xmx_param = '--jvm-arg=-Xmx4g'
@@ -367,30 +365,23 @@ return {
       -- local opts = Util.opts 'nvim-jdtls' or {}
       -- Find the extra bundles that should be passed on the jdtls command-line
       -- if nvim-dap is enabled with java debug/test.
-      local mason_registry = require 'mason-registry'
       local bundles = {} ---@type string[]
-      if opts.dap and Util.has 'nvim-dap' and mason_registry.is_installed 'java-debug-adapter' then
-        local java_dbg_path = vim.fn.expand("$MASON/share/java-debug-adapter")
-        local jar_patterns = {
-          java_dbg_path .. '/extension/server/com.microsoft.java.debug.plugin-*.jar',
-        }
-        if mason_registry.is_installed 'vscode-java-decompiler' then
-          local java_decompiler_path = vim.fn.expand("$MASON/share/vscode-java-decompiler")
-          vim.list_extend(jar_patterns, {
-            java_decompiler_path .. '/server/*.jar',
-          })
-        end
-        -- java-test also depends on java-debug-adapter.
-        if opts.test and mason_registry.is_installed 'java-test' then
-          local java_test_path = vim.fn.expand("$MASON/share/java-test")
-          vim.list_extend(jar_patterns, {
-            java_test_path .. '/extension/server/*.jar',
-          })
-        end
-        for _, jar_pattern in ipairs(jar_patterns) do
-          for _, bundle in ipairs(vim.split(vim.fn.glob(jar_pattern), '\n')) do
-            table.insert(bundles, bundle)
-          end
+      local java_dbg_path = vim.fn.expand '$MASON/share/java-debug-adapter'
+      local jar_patterns = {
+        java_dbg_path .. '/com.microsoft.java.debug.plugin-*.jar',
+      }
+      local java_decompiler_path = vim.fn.expand '$MASON/share/vscode-java-decompiler'
+      vim.list_extend(jar_patterns, {
+        java_decompiler_path .. '/bundles/*.jar',
+      })
+      -- java-test also depends on java-debug-adapter.
+      local java_test_path = vim.fn.expand '$MASON/share/java-test'
+      vim.list_extend(jar_patterns, {
+        java_test_path .. '/*.jar',
+      })
+      for _, jar_pattern in ipairs(jar_patterns) do
+        for _, bundle in ipairs(vim.split(vim.fn.glob(jar_pattern), '\n')) do
+          table.insert(bundles, bundle)
         end
       end
       local function attach_jdtls()
@@ -460,22 +451,18 @@ return {
               },
               { '<leader>cxc', [[<ESC><CMD>lua require('jdtls').extract_constant(true)<CR>]], desc = 'Extract Constant [cxc]', mode = 'v', buffer = args.buf },
             }
-            if opts.dap and Util.has 'nvim-dap' and mason_registry.is_installed 'java-debug-adapter' then
-              -- custom init for Java debugger
-              require('jdtls').setup_dap(opts.dap)
-              require('jdtls.dap').setup_dap_main_class_configs()
-              -- Java Test require Java debugger to work
-              if opts.test and mason_registry.is_installed 'java-test' then
-                -- custom keymaps for Java test runner (not yet compatible with neotest)
-                wk.add {
-                  { '<leader>d', group = '+[debug]' },
-                  { '<leader>dT', require('jdtls.dap').test_class, desc = 'Debug Test Class [tt]', mode = 'n', buffer = args.buf },
-                  { '<leader>dt', require('jdtls.dap').test_nearest_method, desc = 'Debug Nearest Test Method [tr]', mode = 'n', buffer = args.buf },
-                  { '<leader>dP', require('jdtls.dap').pick_test, desc = 'Pick Test and Debug [tp]', mode = 'n', buffer = args.buf },
-                  { '<leader>dM', require('jdtls.dap').fetch_main_configs, desc = 'Fetch Main Class [dM]', mode = 'n', buffer = args.buf },
-                }
-              end
-            end
+            -- custom init for Java debugger
+            require('jdtls').setup_dap(opts.dap)
+            require('jdtls.dap').setup_dap_main_class_configs()
+            -- Java Test require Java debugger to work
+            -- custom keymaps for Java test runner (not yet compatible with neotest)
+            wk.add {
+              { '<leader>d', group = '+[debug]' },
+              { '<leader>dT', require('jdtls.dap').test_class, desc = 'Debug Test Class [tt]', mode = 'n', buffer = args.buf },
+              { '<leader>dt', require('jdtls.dap').test_nearest_method, desc = 'Debug Nearest Test Method [tr]', mode = 'n', buffer = args.buf },
+              { '<leader>dP', require('jdtls.dap').pick_test, desc = 'Pick Test and Debug [tp]', mode = 'n', buffer = args.buf },
+              { '<leader>dM', require('jdtls.dap').fetch_main_configs, desc = 'Fetch Main Class [dM]', mode = 'n', buffer = args.buf },
+            }
             -- User can set additional keymaps in opts.on_attach
             if opts.on_attach then
               opts.on_attach(args)
