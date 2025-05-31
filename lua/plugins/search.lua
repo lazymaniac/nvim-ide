@@ -1,5 +1,3 @@
-local Util = require 'util'
-
 return {
 
   -- [[ SEARCHING AND REPLACING ]] ---------------------------------------------------------------
@@ -30,6 +28,7 @@ return {
 
   {
     'FluxxField/smart-motion.nvim',
+    branch = 'master',
     opts = {
       keys = 'fjdksleirughtynm',
       presets = {
