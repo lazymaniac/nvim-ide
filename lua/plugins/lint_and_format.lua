@@ -21,7 +21,7 @@ return {
         haskell = { 'hlint' },
         helm = { 'kube-linter' },
         html = { 'htmlhint' },
-        java = { 'checkstyle', 'trivy' },
+        java = { 'trivy' },
         kotlin = { 'ktlint', 'detekt' },
         markdown = { 'markdownlint' },
         python = { 'ruff', 'pylint', 'flake8', 'mypy' },

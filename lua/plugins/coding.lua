@@ -16,6 +16,20 @@ return {
     },
   },
 
+  {
+    'Chaitanyabsprip/fastaction.nvim',
+    opts = {
+      dismiss_keys = { 'j', 'k', '<c-c>', 'q' },
+      keys = 'asdfghlzxcvbnm',
+      popup = {
+        border = 'rounded',
+        hide_cursor = true,
+        title = 'Select one of:',
+      },
+      priority = {},
+    },
+  },
+
   -- auto pairs
   {
     'echasnovski/mini.pairs',

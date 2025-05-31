@@ -32,7 +32,6 @@ local packages = {
   'stylelint',
   'eslint_d',
   'java-debug-adapter', -- java
-  'checkstyle',
   'java-test',
   'vscode-java-decompiler',
   'jq', -- json
