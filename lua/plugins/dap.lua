@@ -88,21 +88,15 @@ return {
     },
     -- stylua: ignore
     keys = {
-      { '<leader>dc', function() require('dap').continue() end,                     desc = 'Continue [dc]' },
+      { '<F1>', function() require('dap').continue() end,                     desc = 'Continue [dc]' },
+      { '<F2>', function() require('dap').step_into() end,                    desc = 'Step Into [di]' },
+      { '<F3>', function() require('dap').step_over() end,                    desc = 'Step Over [do]' },
+      { '<F4>', function() require('dap').step_out() end,                     desc = 'Step Out [dO]' },
+      { '<F5>', function() require('dap').run_last() end,                     desc = 'Run Last [dl]' },
+      { '<F6>', function() require('dap').terminate() end,                    desc = 'Terminate [dq]' },
+      { '<F7>', function() require('dap').pause() end,                        desc = 'Pause [dp]' },
       { '<leader>da', function() require('dap').continue { before = get_args } end, desc = 'Run with Args [da]' },
       { '<leader>dC', function() require('dap').run_to_cursor() end,                desc = 'Run to Cursor [dC]' },
-      { '<leader>dg', function() require('dap').goto_() end,                        desc = 'Go to line (no execute) [dg]' },
-      { '<leader>di', function() require('dap').step_into() end,                    desc = 'Step Into [di]' },
-      { '<leader>dj', function() require('dap').down() end,                         desc = 'Down [dj]' },
-      { '<leader>dk', function() require('dap').up() end,                           desc = 'Up [dk]' },
-      { '<leader>dl', function() require('dap').run_last() end,                     desc = 'Run Last [dl]' },
-      { '<leader>dO', function() require('dap').step_out() end,                     desc = 'Step Out [dO]' },
-      { '<leader>do', function() require('dap').step_over() end,                    desc = 'Step Over [do]' },
-      { '<leader>dp', function() require('dap').pause() end,                        desc = 'Pause [dp]' },
-      { '<leader>dr', function() require('dap').repl.toggle() end,                  desc = 'Toggle REPL [dr]' },
-      { '<leader>ds', function() require('dap').session() end,                      desc = 'Session [ds]' },
-      { '<leader>dq', function() require('dap').terminate() end,                    desc = 'Terminate [dq]' },
-      { '<leader>dw', function() require('dap.ui.widgets').hover() end,             desc = 'Widgets [dw]' },
     },
     config = function()
       local dap = require 'dap'
