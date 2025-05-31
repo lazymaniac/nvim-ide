@@ -487,13 +487,7 @@ return {
       { '<leader>fp',      function() Snacks.picker.projects() end,                              desc = 'Projects [fp]' },
       { '<leader>fr',      function() Snacks.picker.recent() end,                                desc = 'Recent [fr]' },
       -- git
-      { '<leader>gb',      function() Snacks.picker.git_branches() end,                          desc = 'Git Branches [gb]' },
-      { '<leader>gl',      function() Snacks.picker.git_log() end,                               desc = 'Git Log [gl]' },
       { '<leader>gL',      function() Snacks.picker.git_log_line() end,                          desc = 'Git Log Line [gL]' },
-      { '<leader>gs',      function() Snacks.picker.git_status() end,                            desc = 'Git Status [gs]' },
-      { '<leader>gS',      function() Snacks.picker.git_stash() end,                             desc = 'Git Stash [gS]' },
-      { '<leader>gd',      function() Snacks.picker.git_diff() end,                              desc = 'Git Diff (Hunks) [gd]' },
-      { '<leader>gf',      function() Snacks.picker.git_log_file() end,                          desc = 'Git Log File [gf]' },
       -- Grep
       { '<leader>sb',      function() Snacks.picker.lines() end,                                 desc = 'Buffer Lines [sb]' },
       { '<leader>sB',      function() Snacks.picker.grep_buffers() end,                          desc = 'Grep Open Buffers [sB]' },

@@ -28,7 +28,7 @@ return {
             -- You can add a "console" section to merge the terminal with the other views
             sections = { "watches", "scopes", "exceptions", "breakpoints", "threads", "repl" },
             -- Must be one of the sections declared above
-            default_section = "watches",
+            default_section = "scopes",
             headers = {
               breakpoints = "Breakpoints [B]",
               scopes = "Scopes [S]",

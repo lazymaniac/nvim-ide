@@ -1,3 +1,6 @@
+local Util = require 'util'
+local map = Util.safe_keymap_set
+
 return {
 
   -- [[ GIT ]] ---------------------------------------------------------------
@@ -9,91 +12,103 @@ return {
   -- link: https://github.com/lewis6991/gitsigns.nvim
   {
     'lewis6991/gitsigns.nvim',
-    event = 'VeryLazy',
-    config = function(_, opts)
-      local wk = require 'which-key'
-      local defaults = {
-        { '<leader>gu', group = '+[buffer]' },
-        { '<leader>gut', group = '+[toggle]' },
-      }
-      wk.add(defaults)
-      require('gitsigns').setup(opts)
-    end,
-    opts = {
-      signcolumn = true, -- Toggle with `:Gitsigns toggle_signs`
-      numhl = true, -- Toggle with `:Gitsigns toggle_numhl`
-      linehl = false, -- Toggle with `:Gitsigns toggle_linehl`
-      word_diff = false, -- Toggle with `:Gitsigns toggle_word_diff`
-      watch_gitdir = {
-        interval = 1000,
-        follow_files = true,
-      },
-      attach_to_untracked = true,
-      current_line_blame = true, -- Toggle with `:Gitsigns toggle_current_line_blame`
-      current_line_blame_opts = {
-        virt_text = true,
-        virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
-        delay = 1000,
-        ignore_whitespace = false,
-      },
-      sign_priority = 6,
-      update_debounce = 100,
-      status_formatter = nil, -- Use default
-      max_file_length = 40000,
-      preview_config = {
-        -- Options passed to nvim_open_win
-        border = 'single',
-        style = 'minimal',
-        relative = 'cursor',
-        row = 0,
-        col = 1,
-      },
-      on_attach = function(buffer)
-        local gs = package.loaded.gitsigns
-        local function map(mode, l, r, desc)
-          vim.keymap.set(mode, l, r, { buffer = buffer, desc = desc })
-        end
-        -- Navigation
-        map({ 'n', 'v' }, ']h', function()
-          if vim.wo.diff then
-            return ']h'
-          end
-          vim.schedule(function()
-            gs.next_hunk()
-          end)
-          return '<Ignore>'
-        end, 'Jump to next hunk <]h>')
-        map({ 'n', 'v' }, '[h', function()
-          if vim.wo.diff then
-            return '[h'
-          end
-          vim.schedule(function()
-            gs.prev_hunk()
-          end)
-          return '<Ignore>'
-        end, 'Jump to prev hunk <[h>')
-        -- Actions
-        map({ 'n', 'v' }, '<leader>gus', ':Gitsigns stage_hunk<CR>', 'Stage Hunk [gus]')
-        map({ 'n', 'v' }, '<leader>gur', ':Gitsigns reset_hunk<CR>', 'Reset Hunk [gur]')
-        map('n', '<leader>guS', gs.stage_buffer, 'Stage Buffer [guS]')
-        map('n', '<leader>guu', gs.undo_stage_hunk, 'Undo Stage Hunk [guu]')
-        map('n', '<leader>guR', gs.reset_buffer, 'Reset Buffer [guR]')
-        map('n', '<leader>gup', gs.preview_hunk_inline, 'Preview Hunk [gup]')
-        map('n', '<leader>gub', function()
-          gs.blame_line { full = true }
-        end, 'Blame Line [gub]')
-        map('n', '<leader>gud', gs.diffthis, 'Diff This [gud]')
-        map('n', '<leader>guD', function()
-          gs.diffthis '~'
-        end, 'Diff This ~ [guD]')
-        map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', 'GitSigns Select Hunk <ih>')
-        -- Toggles
-        map('n', '<leader>gutb', gs.toggle_current_line_blame, 'Toggle line blame [gutb]')
-        map('n', '<leader>gutd', gs.toggle_deleted, 'Toggle git show deleted [gutd]')
-        map('n', '<leader>guts', gs.toggle_signs, 'Toggle signs [guts]')
-      end,
-    },
-  },
+    event = 'BufReadPre',
+    config = function()
+      require('gitsigns').setup {
+        signs = {
+          add = { text = '┃' },
+          change = { text = '┃' },
+          delete = { text = '_' },
+          topdelete = { text = '‾' },
+          changedelete = { text = '~' },
+          untracked = { text = '┆' },
+        },
+        signs_staged = {
+          add = { text = '┃' },
+          change = { text = '┃' },
+          delete = { text = '_' },
+          topdelete = { text = '‾' },
+          changedelete = { text = '~' },
+          untracked = { text = '┆' },
+        },
+        signs_staged_enable = true,
+        signcolumn = true, -- Toggle with `:Gitsigns toggle_signs`
+        numhl = false, -- Toggle with `:Gitsigns toggle_numhl`
+        linehl = false, -- Toggle with `:Gitsigns toggle_linehl`
+        word_diff = false, -- Toggle with `:Gitsigns toggle_word_diff`
+        watch_gitdir = {
+          follow_files = true,
+        },
+        auto_attach = true,
+        attach_to_untracked = true,
+        current_line_blame = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
+        current_line_blame_opts = {
+          virt_text = true,
+          virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
+          delay = 1000,
+          ignore_whitespace = false,
+          virt_text_priority = 100,
+          use_focus = true,
+        },
+        current_line_blame_formatter = '<author>, <author_time:%R> - <summary>',
+        sign_priority = 6,
+        update_debounce = 100,
+        status_formatter = nil, -- Use default
+        max_file_length = 40000, -- Disable if file is longer than this (in lines)
+        preview_config = {
+          -- Options passed to nvim_open_win
+          style = 'minimal',
+          relative = 'cursor',
+          row = 0,
+          col = 1,
+        },
+        on_attach = function(bufnr)
+          local gitsigns = require 'gitsigns'
 
-  { 'echasnovski/mini.diff', version = false },
+          -- Navigation
+          map('n', ']h', function()
+            if vim.wo.diff then
+              vim.cmd.normal { ']h', bang = true }
+            else
+              gitsigns.nav_hunk 'next'
+            end
+          end, { desc = 'Next hunk ]h]' })
+          map('n', '[h', function()
+            if vim.wo.diff then
+              vim.cmd.normal { '[h', bang = true }
+            else
+              gitsigns.nav_hunk 'prev'
+            end
+          end, { desc = 'Prev hunk [h' })
+          -- Actions
+          map('n', '<leader>gs', gitsigns.stage_hunk, { desc = 'Stage hunk [gs]' })
+          map('n', '<leader>gr', gitsigns.reset_hunk, { desc = 'Reset hunk [gr]' })
+          map('v', '<leader>gs', function()
+            gitsigns.stage_hunk { vim.fn.line '.', vim.fn.line 'v' }
+          end, { desc = 'Stage hunk [gs]' })
+          map('v', '<leader>gr', function()
+            gitsigns.reset_hunk { vim.fn.line '.', vim.fn.line 'v' }
+          end, { desc = 'Reset hunk [gr]' })
+          map('n', '<leader>gS', gitsigns.stage_buffer, { desc = 'Stage buffer [gS]' })
+          map('n', '<leader>gR', gitsigns.reset_buffer, { desc = 'Reset buffer [gR]' })
+          map('n', '<leader>gp', gitsigns.preview_hunk, { desc = 'Preview hunk [gp]' })
+          map('n', '<leader>gi', gitsigns.preview_hunk_inline, { desc = 'Preview hunk inline [gi]' })
+          map('n', '<leader>gb', gitsigns.blame, { desc = 'Blame [gb]' })
+          map('n', '<leader>gd', gitsigns.diffthis, { desc = 'Diff this [gd]' })
+          map('n', '<leader>gD', function()
+            gitsigns.diffthis '~'
+          end, { desc = 'Diff this against HEAD [gD]' })
+          map('n', '<leader>gQ', function()
+            gitsigns.setqflist 'all'
+          end, { desc = 'Set qflist with all hunks [gQ]' })
+          map('n', '<leader>gq', gitsigns.setqflist, { desc = 'Set qflist with current hunk [gq]' })
+          -- Toggles
+          map('n', '<leader>gtb', gitsigns.toggle_current_line_blame, { desc = 'Toggle current line blame [gtb]' })
+          map('n', '<leader>gtw', gitsigns.toggle_word_diff, { desc = 'Toggle word diff [gtw]' })
+          -- Text object
+          map({ 'o', 'x' }, 'ih', gitsigns.select_hunk, { desc = 'Select hunk [ih]' })
+        end,
+      }
+    end,
+  },
 }

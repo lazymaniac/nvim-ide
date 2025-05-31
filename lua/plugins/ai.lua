@@ -110,7 +110,7 @@ function CodeEditor:add(args)
 end
 
 function CodeEditor:diff(args)
-  local provider = 'mini_diff'
+  local provider = 'default'
   local diff = require('codecompanion.providers.diff.' .. provider)
   local keymaps = require 'codecompanion.utils.keymaps'
   local bufnr = self:get_bufnr_by_filename(args.filename)
@@ -689,7 +689,7 @@ in all expected scenarios.]]
       close_chat_at = 240, -- Close an open chat buffer if the total columns of your display are less than...
       layout = 'vertical', -- vertical|horizontal split for default provider
       opts = { 'internal', 'filler', 'closeoff', 'algorithm:patience', 'followwrap', 'linematch:120' },
-      provider = 'mini_diff', -- default|mini_diff
+      provider = 'default', -- default|mini_diff
     },
     inline = {
       -- If the inline prompt creates a new buffer, how should we display this?
