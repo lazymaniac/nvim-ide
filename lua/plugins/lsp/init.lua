@@ -58,7 +58,6 @@ local packages = {
   'chrome-debug-adapter', -- typescript
   'firefox-debug-adapter',
   'js-debug-adapter',
-  'node-debug2-adapter',
   'eslint_d',
   'yamllint', -- yaml
   'prettierd',
@@ -68,7 +67,6 @@ local packages = {
   'kube-linter',
   'detekt',
   'luacheck',
-  'selene',
   'actionlint',
   'xmlformatter',
 }

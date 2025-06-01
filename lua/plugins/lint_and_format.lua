@@ -11,7 +11,6 @@ return {
     event = 'VeryLazy',
     config = function()
       require('lint').linters_by_ft = {
-        lua = { 'selene' },
         angular = { 'djlint' },
         ansible = { 'ansible-lint' },
         clojure = { 'clj-kondo' },

@@ -91,15 +91,15 @@ return {
     },
     -- stylua: ignore
     keys = {
-      { '<F1>', function() require('dap').continue() end,                     desc = 'Continue [dc]' },
-      { '<F2>', function() require('dap').step_into() end,                    desc = 'Step Into [di]' },
-      { '<F3>', function() require('dap').step_over() end,                    desc = 'Step Over [do]' },
-      { '<F4>', function() require('dap').step_out() end,                     desc = 'Step Out [dO]' },
-      { '<F5>', function() require('dap').run_last() end,                     desc = 'Run Last [dl]' },
-      { '<F6>', function() require('dap').terminate() end,                    desc = 'Terminate [dq]' },
-      { '<F7>', function() require('dap').pause() end,                        desc = 'Pause [dp]' },
+      { '<F1>', function() require('dap').continue() end, desc = 'Continue [dc]' },
+      { '<F2>', function() require('dap').step_into() end, desc = 'Step Into [di]' },
+      { '<F3>', function() require('dap').step_over() end, desc = 'Step Over [do]' },
+      { '<F4>', function() require('dap').step_out() end, desc = 'Step Out [dO]' },
+      { '<F5>', function() require('dap').run_last() end, desc = 'Run Last [dl]' },
+      { '<F6>', function() require('dap').terminate() end, desc = 'Terminate [dq]' },
+      { '<F7>', function() require('dap').pause() end, desc = 'Pause [dp]' },
       { '<leader>da', function() require('dap').continue { before = get_args } end, desc = 'Run with Args [da]' },
-      { '<leader>dC', function() require('dap').run_to_cursor() end,                desc = 'Run to Cursor [dC]' },
+      { '<leader>dC', function() require('dap').run_to_cursor() end, desc = 'Run to Cursor [dC]' },
     },
     config = function()
       local dap = require 'dap'
