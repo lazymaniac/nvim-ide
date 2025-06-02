@@ -55,9 +55,7 @@ local packages = {
   'sqruff',
   'tfsec', -- terraform
   'trivy',
-  'chrome-debug-adapter', -- typescript
-  'firefox-debug-adapter',
-  'js-debug-adapter',
+  'js-debug-adapter', -- typrescript, javascript
   'eslint_d',
   'yamllint', -- yaml
   'prettierd',
