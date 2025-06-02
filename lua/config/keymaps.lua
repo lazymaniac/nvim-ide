@@ -70,7 +70,6 @@ map({ 'n', 't' }, '<A-c>', function () Snacks.terminal.toggle("nap") end, { desc
 map({ 'n', 't' }, '<A-d>', function () Snacks.terminal.toggle("lazydocker") end, { desc = 'Docker TUI [A-d]' })
 map({ 'n', 't' }, '<A-D>', function () Snacks.terminal.toggle("podman-tui") end, { desc = 'Podman TUI [A-D]' })
 map({ 'n', 't' }, '<A-e>', function () Snacks.terminal.toggle("euporie-notebook") end, { desc = 'Jupyter Notebooks TUI [A-e]' })
-map({ 'n', 't' }, '<A-f>', function () Snacks.terminal.open("zellij options --theme kanagawa") end, { desc = 'New Terminal [A-f]' })
 map({ 'n', 't' }, '<A-g>', function () Snacks.lazygit() end, { desc = 'GIT TUI [A-g]' })
 map({ 'n', 't' }, '<A-h>', function () Snacks.terminal.toggle("posting") end, { desc = 'REST Client TUI [A-h]' })
 map({ 'n', 't' }, '<A-i>', function () Snacks.terminal.toggle("clx") end, { desc = 'Hackernews TUI [A-i]' })
@@ -82,7 +81,7 @@ map({ 'n', 't' }, '<A-p>', function () Snacks.terminal.toggle("python3") end, { 
 map({ 'n', 't' }, '<A-t>', function () Snacks.terminal.toggle("termscp") end, { desc = 'Network Client [A-t]' })
 map({ 'n', 't' }, '<A-u>', function () Snacks.terminal.toggle("dua i") end, { desc = 'Disk Usage TUI [A-u]' })
 map({ 'n', 't' }, '<A-v>', function () Snacks.terminal.toggle("jshell") end, { desc = 'JShell Term [A-v]' })
-map({ 'n', 't' }, '<A-\\>', function () Snacks.terminal.toggle("zellij options --theme kanagawa") end, { desc = 'Toggle Terminal [A-\\]' })
+map({ 'n', 't' }, '<A-\\>', function () Snacks.terminal.toggle("zellij attach -c options --theme kanagawa-light --show-startup-tips true") end, { desc = 'Toggle Terminal [A-\\]' })
 --
 -- Clear search with <esc>
 map({ 'i', 'n' }, '<esc>', '<cmd>noh<cr><esc>', { desc = 'Escape and clear hlsearch <esc>' })
