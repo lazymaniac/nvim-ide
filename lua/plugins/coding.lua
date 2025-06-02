@@ -341,30 +341,12 @@ return {
   },
 
   {
-    'caliguIa/zendiagram.nvim',
-    opts = {
-      header = 'Diagnostics', -- Float window title
-      source = true, -- Whether to display diagnostic source
-      relative = 'win', -- "line"|"win" - What the float window's position is relative to
-      anchor = 'NE', -- "NE"|"SE"|"SW"|"NW" - When 'relative' is set to "win" this sets the position of the floating window
-    },
-    config = function(_, opts)
-      require('zendiagram').setup(opts)
-      vim.diagnostic.open_float = Zendiagram.open
-
-      vim.keymap.set({ 'n', 'x' }, ']d', function()
-        vim.diagnostic.jump { count = 1 }
-        vim.schedule(function()
-          require('zendiagram').open()
-        end)
-      end, { desc = 'Jump to next diagnostic' })
-
-      vim.keymap.set({ 'n', 'x' }, '[d', function()
-        vim.diagnostic.jump { count = -1 }
-        vim.schedule(function()
-          require('zendiagram').open()
-        end)
-      end, { desc = 'Jump to prev diagnostic' })
+    'rachartier/tiny-inline-diagnostic.nvim',
+    event = 'VeryLazy', -- Or `LspAttach`
+    priority = 1000, -- needs to be loaded in first
+    config = function()
+      require('tiny-inline-diagnostic').setup()
+      vim.diagnostic.config { virtual_text = false } -- Only if needed in your configuration, if you already have native LSP diagnostics
     end,
   },
 
