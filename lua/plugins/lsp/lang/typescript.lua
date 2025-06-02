@@ -278,8 +278,8 @@ return {
             program = '${workspaceFolder}/node_modules/karma/bin/karma',
             args = {
               'start',
-              '${workspaceFolder}/karma.conf.js',
-              '--single-run',
+              -- '${workspaceFolder}/karma.conf.js',
+              -- '--single-run',
               '--browsers',
               'ChromeHeadless',
             },
@@ -298,8 +298,8 @@ return {
             program = '${workspaceFolder}/node_modules/karma/bin/karma',
             args = {
               'start',
-              '${workspaceFolder}/karma.conf.js',
-              '--single-run',
+              -- '${workspaceFolder}/karma.conf.js',
+              -- '--single-run',
               '--browsers',
               'ChromeHeadless',
               '--grep',
@@ -319,7 +319,7 @@ return {
             name = 'Jasmine All Tests',
             program = '${workspaceFolder}/node_modules/.bin/jasmine',
             args = {
-              '--config=spec/support/jasmine.json', -- Path to Jasmine configuration file
+              -- '--config=spec/support/jasmine.json', -- Path to Jasmine configuration file
             },
             cwd = '${workspaceFolder}',
             console = 'integratedTerminal',
@@ -336,7 +336,39 @@ return {
             program = '${workspaceFolder}/node_modules/.bin/jasmine',
             args = {
               '${file}', -- Run the currently open file
-              '--config=spec/support/jasmine.json', -- Path to Jasmine configuration file
+              -- '--config=spec/support/jasmine.json', -- Path to Jasmine configuration file
+            },
+            cwd = '${workspaceFolder}',
+            console = 'integratedTerminal',
+            internalConsoleOptions = 'neverOpen',
+            skipFiles = {
+              '<node_internals>/**',
+              '${workspaceFolder}/node_modules/**',
+            },
+          },
+          {
+            type = 'pwa-node',
+            request = 'launch',
+            name = 'Debug npm test (alternative)',
+            program = 'npm',
+            args = {
+              'test',
+            },
+            cwd = '${workspaceFolder}',
+            console = 'integratedTerminal',
+            internalConsoleOptions = 'neverOpen',
+            skipFiles = {
+              '<node_internals>/**',
+              '${workspaceFolder}/node_modules/**',
+            },
+          },
+          {
+            type = 'pwa-node',
+            request = 'launch',
+            name = 'Debug npm test',
+            runtimeExecutable = 'npm',
+            runtimeArgs = {
+              'test',
             },
             cwd = '${workspaceFolder}',
             console = 'integratedTerminal',
