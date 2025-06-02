@@ -204,18 +204,56 @@ return {
           {
             type = 'pwa-node',
             request = 'attach',
-            name = 'Attach',
+            name = 'Attach to Node process',
             processId = require('dap.utils').pick_process,
             cwd = '${workspaceFolder}',
           },
           {
             type = 'pwa-node',
             request = 'launch',
-            name = 'Debug Mocha Tests',
-            -- trace = true, -- include debugger info
-            runtimeExecutable = 'node',
-            runtimeArgs = {
-              './node_modules/mocha/bin/mocha.js',
+            name = 'Mocha All',
+            program = '${workspaceFolder}/node_modules/mocha/bin/_mocha',
+            args = {
+              '--timeout',
+              '999999',
+              '--colors',
+              '${workspaceFolder}/test',
+            },
+            console = 'integratedTerminal',
+            internalConsoleOptions = 'neverOpen',
+            skipFiles = {
+              '<node_internals>/**',
+              '${workspaceFolder}/node_modules/**',
+            },
+          },
+          {
+            type = 'pwa-node',
+            request = 'launch',
+            name = 'Mocha Current File',
+            program = '${workspaceFolder}/node_modules/mocha/bin/_mocha',
+            args = {
+              '--timeout',
+              '999999',
+              '--colors',
+              '${file}',
+            },
+            console = 'integratedTerminal',
+            internalConsoleOptions = 'neverOpen',
+            skipFiles = {
+              '<node_internals>/**',
+              '${workspaceFolder}/node_modules/**',
+            },
+          },
+          {
+            type = 'pwa-node',
+            request = 'launch',
+            name = 'Jest Current File',
+            program = '${workspaceFolder}/node_modules/.bin/jest',
+            args = {
+              '--runInBand',
+              '${relativeFile}',
+              '--config',
+              'jest.config.js',
             },
             rootPath = '${workspaceFolder}',
             cwd = '${workspaceFolder}',
@@ -225,31 +263,88 @@ return {
           {
             type = 'pwa-node',
             request = 'launch',
-            name = 'Debug Jest Tests',
-            -- trace = true, -- include debugger info
-            runtimeExecutable = 'node',
-            runtimeArgs = {
-              './node_modules/jest/bin/jest.js',
+            name = 'Jest All',
+            program = '${workspaceFolder}/node_modules/.bin/jest',
+            args = {
               '--runInBand',
             },
-            rootPath = '${workspaceFolder}',
-            cwd = '${workspaceFolder}',
             console = 'integratedTerminal',
             internalConsoleOptions = 'neverOpen',
           },
           {
             type = 'pwa-node',
             request = 'launch',
-            name = 'Debug Jasmine Tests',
-            -- trace = true, -- include debugger info
-            runtimeExecutable = 'node',
-            runtimeArgs = {
-              './node_modules/jasmine/bin/jasmine.js',
+            name = 'Karma All Tests',
+            program = '${workspaceFolder}/node_modules/karma/bin/karma',
+            args = {
+              'start',
+              '${workspaceFolder}/karma.conf.js',
+              '--single-run',
+              '--browsers',
+              'ChromeHeadless',
             },
-            rootPath = '${workspaceFolder}',
             cwd = '${workspaceFolder}',
             console = 'integratedTerminal',
             internalConsoleOptions = 'neverOpen',
+            skipFiles = {
+              '<node_internals>/**',
+              '${workspaceFolder}/node_modules/**',
+            },
+          },
+          {
+            type = 'pwa-node',
+            request = 'launch',
+            name = 'Karma Current File',
+            program = '${workspaceFolder}/node_modules/karma/bin/karma',
+            args = {
+              'start',
+              '${workspaceFolder}/karma.conf.js',
+              '--single-run',
+              '--browsers',
+              'ChromeHeadless',
+              '--grep',
+              '${file}',
+            },
+            cwd = '${workspaceFolder}',
+            console = 'integratedTerminal',
+            internalConsoleOptions = 'neverOpen',
+            skipFiles = {
+              '<node_internals>/**',
+              '${workspaceFolder}/node_modules/**',
+            },
+          },
+          {
+            type = 'pwa-node',
+            request = 'launch',
+            name = 'Jasmine All Tests',
+            program = '${workspaceFolder}/node_modules/.bin/jasmine',
+            args = {
+              '--config=spec/support/jasmine.json', -- Path to Jasmine configuration file
+            },
+            cwd = '${workspaceFolder}',
+            console = 'integratedTerminal',
+            internalConsoleOptions = 'neverOpen',
+            skipFiles = {
+              '<node_internals>/**',
+              '${workspaceFolder}/node_modules/**',
+            },
+          },
+          {
+            type = 'pwa-node',
+            request = 'launch',
+            name = 'Jasmine Current File',
+            program = '${workspaceFolder}/node_modules/.bin/jasmine',
+            args = {
+              '${file}', -- Run the currently open file
+              '--config=spec/support/jasmine.json', -- Path to Jasmine configuration file
+            },
+            cwd = '${workspaceFolder}',
+            console = 'integratedTerminal',
+            internalConsoleOptions = 'neverOpen',
+            skipFiles = {
+              '<node_internals>/**',
+              '${workspaceFolder}/node_modules/**',
+            },
           },
         }
       end
