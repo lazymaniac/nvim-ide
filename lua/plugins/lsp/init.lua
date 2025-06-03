@@ -134,7 +134,6 @@ return {
         'cssls',
         'jdtls',
         'jsonls',
-        'julials',
         'kotlin_language_server',
         'marksman',
         'puppet',

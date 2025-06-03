@@ -41,6 +41,7 @@ brew install one2nc/cloudlens/cloudlens
 brew install derailed/k9s/k9s
 brew install dhth/tap/omm
 brew install circumflex
+brew install Valkyrie00/homebrew-bbrew/bbrew
 
 asdf plugin add java
 asdf plugin add ruby
