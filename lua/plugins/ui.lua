@@ -60,7 +60,9 @@ return {
     priority = 1000,
     lazy = false,
     opts = {
-      image = {},
+      animate = {
+        enabled = true,
+      },
       terminal = {
         win = {
           position = 'float',
@@ -75,6 +77,7 @@ return {
         autokeys = '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', -- autokey sequence
         -- These settings are used by some built-in sections
         preset = {
+          pick = nil,
           -- Used by the `keys` section to show keymaps.
           -- Set your custom keymaps here.
           -- When using a function, the `items` argument are the default keymaps.
@@ -131,13 +134,10 @@ return {
           { section = 'startup' },
         },
       },
-      dim = {
-        enabled = true,
-        animate = {
-          enabled = true,
-        },
-      },
       gitbrowse = {
+        enabled = true,
+      },
+      image = {
         enabled = true,
       },
       explorer = { replace_netrw = true },
@@ -701,7 +701,6 @@ return {
           Snacks.toggle.option('background', { off = 'light', on = 'dark', name = 'Dark Background' }):map '<leader>ub'
           Snacks.toggle.inlay_hints():map '<leader>uh'
           Snacks.toggle.indent():map '<leader>ug'
-          Snacks.toggle.dim():map '<leader>uD'
         end,
       })
     end,
