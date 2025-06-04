@@ -90,7 +90,6 @@ return {
             { icon = ' ', key = 's', desc = 'Restore Session', section = 'session' },
             { icon = '󰒲 ', key = 'l', desc = 'Lazy', action = ':Lazy update', enabled = package.loaded.lazy ~= nil },
             { icon = '󱊓 ', key = 'm', desc = 'Mason', action = ':Mason', enabled = package.loaded.lazy ~= nil },
-            { icon = ' ', key = 'L', desc = 'Leetcode', action = ':Leet' },
             { icon = ' ', key = 't', desc = 'Typing', action = ':Typr' },
             { icon = ' ', key = 'S', desc = 'Typing stats', action = ':TyprStats' },
             { icon = ' ', key = 'q', desc = 'Quit', action = ':qa' },

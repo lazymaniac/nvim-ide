@@ -65,7 +65,7 @@ return {
   {
     'chrisgrieser/nvim-scissors',
     branch = 'main',
-    dependencies = 'nvim-telescope/telescope.nvim',
+    dependencies = 'folke/snacks.nvim',
     -- stylua: ignore
     keys = {
       { '<leader>fs', function() require('scissors').addNewSnippet() end, mode = { 'n', 'v' },       desc = 'Add New Snippet [fs]' },

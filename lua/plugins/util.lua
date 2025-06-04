@@ -84,7 +84,6 @@ return {
   {
     'barrett-ruth/http-codes.nvim',
     config = true,
-    -- or 'nvim-telescope/telescope.nvim'
     dependencies = 'ibhagwan/fzf-lua',
     keys = {
       { '<leader>lH', '<cmd>HTTPCodes<cr>', desc = 'HTTP Codes [lH]' },
