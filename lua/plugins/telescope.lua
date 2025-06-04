@@ -15,7 +15,7 @@ return {
     -- stylua: ignore
     keys = {
       -- search
-      { '<leader>p', '<cmd>Telescope registers layout_strategy=vertical<cr>', desc = 'Registers [s"]', },
+      { '<leader>p', '<cmd>Telescope registers layout_strategy=vertical<cr>', desc = 'Registers [p]', },
       { '<leader>sP', function() require('telescope.builtin').find_files { cwd = require('lazy.core.config').options.root, layout_strategy = 'vertical' } end, desc = 'Search Plugin File [sP]', },
     },
     opts = function()
@@ -164,14 +164,6 @@ return {
             },
           },
         },
-        extensions = {
-          fzf = {
-            fuzzy = true, -- false will only do exact matching
-            override_generic_sorter = true, -- override the generic sorter
-            override_file_sorter = true, -- override the file sorter
-            case_mode = 'smart_case', -- or "ignore_case" or "respect_case"
-          },
-        },
         cmdline = {
           picker = {
             layout_config = {
@@ -204,102 +196,6 @@ return {
       require('lspconfig')['yamlls'].setup(cfg)
       ---@diagnostic disable-next-line: undefined-field
       require('telescope').load_extension 'yaml_schema'
-    end,
-  },
-
-  -- [telescope-fzf-native.nvim] - Power telescope search with fzf
-  -- see: `:h telescope-fzf-native.nvim`
-  -- link: https://github.com/nvim-telescope/telescope-fzf-native.nvim
-  {
-    'nvim-telescope/telescope-fzf-native.nvim',
-    branch = 'main',
-    dependencies = { 'nvim-telescope/telescope.nvim' },
-    build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5 && cmake --build build --config Release && cmake --install build --prefix build',
-    config = function()
-      ---@diagnostic disable-next-line: undefined-field
-      require('telescope').load_extension 'fzf'
-    end,
-  },
-
-  -- [telescope-dap.nvim] - Integratio of nvim-dap with telescope
-  -- see: `:h telescope-dap.nvim`
-  -- link: https://github.com/nvim-telescope/telescope-dap.nvim
-  {
-    'nvim-telescope/telescope-dap.nvim',
-    branch = 'master',
-    dependencies = { 'nvim-telescope/telescope.nvim' },
-    -- stylua: ignore
-    keys = {
-      { '<leader>dn', '<cmd>Telescope dap configurations<cr>',   desc = 'DAP Configurations [dn]' },
-    },
-    config = function()
-      ---@diagnostic disable-next-line: undefined-field
-      require('telescope').load_extension 'dap'
-    end,
-  },
-
-  -- [telescope-git-diffs] - Telescope picker for git diffs before commit.
-  -- see: `:h telescope-git-diffs`
-  -- link: https://github.com/paopaol/telescope-git-diffs.nvim
-  {
-    'paopaol/telescope-git-diffs.nvim',
-    branch = 'main',
-    dependencies = { 'nvim-telescope/telescope.nvim', 'nvim-lua/plenary.nvim', 'sindrets/diffview.nvim' },
-    -- stylua: ignore
-    keys = {
-      { '<leader>gC', '<cmd>Telescope git_diffs diff_commits<cr>', mode = { 'n', 'v' }, desc = 'Search Commits [gc]' },
-    },
-    config = function()
-      ---@diagnostic disable-next-line: undefined-field
-      require('telescope').load_extension 'git_diffs'
-    end,
-  },
-
-  -- [telescope-luasnip] - Telescope picker for luasnip.
-  -- see: `:h telescope-luasnip`
-  -- link: https://github.com/benfowler/telescope-luasnip.nvim
-  {
-    'benfowler/telescope-luasnip.nvim',
-    branch = 'master',
-    dependencies = { 'nvim-telescope/telescope.nvim' },
-    -- stylua: ignore
-    keys = {
-      { '<leader>sL', '<cmd>Telescope luasnip<cr>', mode = { 'n', 'v' }, desc = 'Search Snippets [sL]' },
-    },
-    config = function()
-      ---@diagnostic disable-next-line: undefined-field
-      require('telescope').load_extension 'luasnip'
-    end,
-  },
-
-  -- [telescope-docker] - Telecope picker for docker stuff.
-  -- see: `:h telescope-docker`
-  -- link: https://github.com/lpoto/telescope-docker.nvim
-  {
-    'lpoto/telescope-docker.nvim',
-    branch = 'main',
-    dependencies = { 'nvim-telescope/telescope.nvim' },
-    keys = {
-      { '<leader>fd', '<Cmd>Telescope docker<CR>', desc = 'Docker [fd]' },
-    },
-    config = function()
-      ---@diagnostic disable-next-line: undefined-field
-      require('telescope').load_extension 'docker'
-    end,
-  },
-
-  -- [telescope-git-file-history] - Telescope pcker for git file history.
-  -- see: `:h telescope-git-file-history`
-  -- link: https://github.com/isak102/telescope-git-file-history.nvim
-  {
-    'isak102/telescope-git-file-history.nvim',
-    branch = 'master',
-    dependencies = { 'nvim-telescope/telescope.nvim', 'tpope/vim-fugitive' },
-    keys = {
-      { '<leader>fh', '<CMD>Telescope git_file_history<CR>', desc = 'Search File History [fh]' },
-    },
-    config = function()
-      require('telescope').load_extension 'git_file_history'
     end,
   },
 }
