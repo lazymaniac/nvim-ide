@@ -42,6 +42,8 @@ brew install derailed/k9s/k9s
 brew install dhth/tap/omm
 brew install circumflex
 brew install Valkyrie00/homebrew-bbrew/bbrew
+brew install --cask font-maple-mono
+brew install --cask font-maple-mono-nf
 
 asdf plugin add java
 asdf plugin add ruby
