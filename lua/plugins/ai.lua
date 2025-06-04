@@ -404,7 +404,7 @@ local config = {
         auto_generate_title = true,
         continue_last_chat = false,
         delete_on_clearing_chat = false,
-        picker = 'snacks',
+        picker = 'default',
         enable_logging = false,
         dir_to_save = vim.fn.stdpath 'data' .. '/codecompanion-history',
       },
@@ -651,7 +651,7 @@ in all expected scenarios.]]
       width = 95,
       height = 10,
       prompt = 'Prompt ', -- Prompt used for interactive LLM calls
-      provider = 'snacks', -- default|telescope
+      provider = 'default', -- default|telescope
       opts = {
         show_default_actions = true, -- Show the default actions in the action palette?
         show_default_prompt_library = true, -- Show the default prompt library in the action palette?

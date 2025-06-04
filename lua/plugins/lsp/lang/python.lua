@@ -3,7 +3,7 @@ return {
     'nvim-neotest/neotest',
     dependencies = {
       { 'nvim-neotest/neotest-python' },
-      { 'thenbe/neotest-playwright',  dependencies = 'nvim-telescope/telescope.nvim' },
+      { 'thenbe/neotest-playwright' },
     },
     opts = {
       adapters = {

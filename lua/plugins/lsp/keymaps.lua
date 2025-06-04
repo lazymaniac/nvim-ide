@@ -1,5 +1,3 @@
-local telescope = require 'telescope.builtin'
-
 local M = {}
 
 M._keys = nil
@@ -10,20 +8,6 @@ function M.get()
   end
   M._keys = {
     { '<leader>li', '<cmd>LspInfo<cr>', desc = 'Lsp Info [li]' },
-    {
-      '<leader>cw',
-      function()
-        telescope.lsp_workspace_symbols {}
-      end,
-      desc = 'Workspace Symbols [cw]',
-    },
-    {
-      '<leader>cW',
-      function()
-        telescope.lsp_dynamic_workspace_symbols {}
-      end,
-      desc = 'Dynamic Workspace Symbols [cW]',
-    },
     {
       '<leader>ci',
       '<cmd>Trouble incoming_calls_perv<cr>',
