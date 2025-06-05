@@ -26,24 +26,4 @@ return {
       wk.add(helm_mappings)
     end,
   },
-
-  -- [kubectl.nvim] - Manage kubernetes clusert from neovim
-  -- see: `:h kubectl.nvim`
-  -- link: link-to-repo
-  {
-    'ramilito/kubectl.nvim',
-    dependencies = { 'nvim-lua/plenary.nvim' },
-    keys = {
-      {
-        '<leader>lc',
-        function()
-          require('kubectl').open()
-        end,
-        desc = 'Kubectl [lc]',
-      },
-    },
-    config = function()
-      require('kubectl').setup()
-    end,
-  },
 }

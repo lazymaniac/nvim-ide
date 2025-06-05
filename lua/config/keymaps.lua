@@ -65,23 +65,6 @@ function _G.set_terminal_keymaps()
 end
 
 vim.cmd 'autocmd! TermOpen term://* lua set_terminal_keymaps()'
-map({ 'n', 't' }, '<A-b>', function () Snacks.terminal.toggle("btop") end, { desc = 'System Monitor TUI [A-b]' })
-map({ 'n', 't' }, '<A-c>', function () Snacks.terminal.toggle("nap") end, { desc = 'Code snippets TUI [A-c]' })
-map({ 'n', 't' }, '<A-d>', function () Snacks.terminal.toggle("lazydocker") end, { desc = 'Docker TUI [A-d]' })
-map({ 'n', 't' }, '<A-D>', function () Snacks.terminal.toggle("podman-tui") end, { desc = 'Podman TUI [A-D]' })
-map({ 'n', 't' }, '<A-e>', function () Snacks.terminal.toggle("euporie-notebook") end, { desc = 'Jupyter Notebooks TUI [A-e]' })
-map({ 'n', 't' }, '<A-g>', function () Snacks.lazygit() end, { desc = 'GIT TUI [A-g]' })
-map({ 'n', 't' }, '<A-h>', function () Snacks.terminal.toggle("posting") end, { desc = 'REST Client TUI [A-h]' })
-map({ 'n', 't' }, '<A-i>', function () Snacks.terminal.toggle("clx") end, { desc = 'Hackernews TUI [A-i]' })
-map({ 'n', 't' }, '<A-k>', function () Snacks.terminal.toggle("k9s") end, { desc = 'Cluster TUI [A-k]' })
-map({ 'n', 't' }, '<A-l>', function () Snacks.terminal.toggle("cloudlens") end, { desc = 'Cloud Resources TUI [A-l]' })
-map({ 'n', 't' }, '<A-s>', function () Snacks.terminal.toggle("harlequin") end, { desc = 'Database TUI [A-s]' })
-map({ 'n', 't' }, '<A-m>', function () Snacks.terminal.toggle("omm --editor nvim") end, { desc = 'Task Manager TUI [A-n]' })
-map({ 'n', 't' }, '<A-p>', function () Snacks.terminal.toggle("python3") end, { desc = 'Python Term [A-p]' })
-map({ 'n', 't' }, '<A-t>', function () Snacks.terminal.toggle("termscp") end, { desc = 'Network Client [A-t]' })
-map({ 'n', 't' }, '<A-u>', function () Snacks.terminal.toggle("dua i") end, { desc = 'Disk Usage TUI [A-u]' })
-map({ 'n', 't' }, '<A-v>', function () Snacks.terminal.toggle("jshell") end, { desc = 'JShell Term [A-v]' })
-map({ 'n', 't' }, '<A-\\>', function () Snacks.terminal.toggle("zellij attach -c options --theme kanagawa-light --show-startup-tips true") end, { desc = 'Toggle Terminal [A-\\]' })
 --
 -- Clear search with <esc>
 map({ 'i', 'n' }, '<esc>', '<cmd>noh<cr><esc>', { desc = 'Escape and clear hlsearch <esc>' })
