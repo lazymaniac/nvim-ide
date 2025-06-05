@@ -399,7 +399,7 @@ return {
           return vim.fn.getcmdpos() > 0
         end,
         ---@type snacks.notifier.style
-        style = 'compact',
+        style = 'fancy',
         top_down = true, -- place notifications from top to bottom
         date_format = '%R', -- time format for notifications
         -- format for footer when more lines are available
@@ -1408,7 +1408,6 @@ return {
       { '<leader>:', function() Snacks.picker.command_history() end, desc = 'Command History [:]', },
       { '<leader>e', function() Snacks.explorer() end, desc = 'File Explorer [e]', },
       -- find
-      { '<leader>fb', function() Snacks.picker.buffers() end, desc = 'Buffers [fb]', },
       { '<leader>fc', function() Snacks.picker.files { cwd = vim.fn.stdpath 'config' } end, desc = 'Find Config File [fc]', },
       { '<leader>ff', function() Snacks.picker.files() end, desc = 'Find Files [ff]', },
       { '<leader>fg', function() Snacks.picker.git_files() end, desc = 'Find Git Files [fg]', },
@@ -1419,7 +1418,6 @@ return {
       -- Grep
       { '<leader>sb', function() Snacks.picker.lines() end, desc = 'Buffer Lines [sb]', },
       { '<leader>sB', function() Snacks.picker.grep_buffers() end, desc = 'Grep Open Buffers [sB]', },
-      { '<leader>sg', function() Snacks.picker.grep() end, desc = 'Grep [sg]', },
       { '<leader>sw', function() Snacks.picker.grep_word() end, desc = 'Visual selection or word [sw]', mode = { 'n', 'x' }, },
       -- search
       { '<leader>p', function() Snacks.picker.registers() end, desc = 'Registers [p]', },
@@ -1457,7 +1455,8 @@ return {
       { '<leader>.', function() Snacks.scratch() end, desc = 'Toggle Scratch Buffer [.]', },
       { '<leader>S', function() Snacks.scratch.select() end, desc = 'Select Scratch Buffer [S]', },
       { '<leader>sn', function() Snacks.notifier.show_history() end, desc = 'Notification History [sn]', },
-      { '<leader>bd', function() Snacks.bufdelete() end, desc = 'Delete Buffer [bd]', },
+      { '<leader>bd', function() Snacks.bufdelete() end, desc = 'Delete Current Buffer [bd]', },
+      { '<leader>bo', function() Snacks.bufdelete.other() end, desc = 'Delete Other Buffers [bo]', },
       { '<leader>fR', function() Snacks.rename.rename_file() end, desc = 'Rename File [fR]', },
       { '<leader>gB', function() Snacks.gitbrowse() end, desc = 'Git Browse [gB]', mode = { 'n', 'v' }, },
       { '<leader>gg', function() Snacks.lazygit() end, desc = 'Lazygit [gg]', },
