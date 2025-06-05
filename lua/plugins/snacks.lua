@@ -673,16 +673,6 @@ return {
             untracked = false,
             submodules = false,
           },
-          git_grep = {
-            finder = 'git_grep',
-            format = 'file',
-            untracked = false,
-            need_search = true,
-            submodules = false,
-            show_empty = true,
-            supports_live = true,
-            live = true,
-          },
           grep = {
             finder = 'grep',
             regex = true,
@@ -1447,7 +1437,6 @@ return {
       { 'gr', function() Snacks.picker.lsp_references() end, nowait = true, desc = 'References (gr)', },
       { 'gI', function() Snacks.picker.lsp_implementations() end, desc = 'Goto Implementation (gI)', },
       { 'gy', function() Snacks.picker.lsp_type_definitions() end, desc = 'Goto Type Definition (gy)', },
-      { '<leader>cs', function() Snacks.picker.lsp_symbols() end, desc = 'LSP Symbols [cs]', },
       { '<leader>o', function() Snacks.picker.lsp_symbols() end, desc = 'LSP Symbols [o]', },
       { '<leader>cS', function() Snacks.picker.lsp_workspace_symbols() end, desc = 'LSP Workspace Symbols [sS]', },
       -- Other
