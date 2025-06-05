@@ -12,13 +12,13 @@ return {
     'nvchad/minty',
     keys = {
       {
-        '<leader>lcs',
+        '<leader>lCs',
         '<cmd>Shades<cr>',
         mode = { 'n' },
         desc = 'Pick Color Shades',
       },
       {
-        '<leader>lcc',
+        '<leader>lCc',
         '<cmd>Huefy<cr>',
         mode = { 'n' },
         desc = 'Pick Color',

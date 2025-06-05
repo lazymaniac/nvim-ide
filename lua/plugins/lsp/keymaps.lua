@@ -8,16 +8,6 @@ function M.get()
   end
   M._keys = {
     { '<leader>li', '<cmd>LspInfo<cr>', desc = 'Lsp Info [li]' },
-    {
-      '<leader>ci',
-      '<cmd>Trouble incoming_calls_perv<cr>',
-      desc = 'Incoming Calls [ci]',
-    },
-    {
-      '<leader>co',
-      '<cmd> Trouble outgoing_calls_prev<cr>',
-      desc = 'Outgoing Calls [co]',
-    },
     { 'K', vim.lsp.buf.hover, desc = 'Hover Documentation <K>' },
     { 'gK', vim.lsp.buf.signature_help, desc = 'Signature Documentation <gK>', has = 'signatureHelp' },
     { '<C-k>', vim.lsp.buf.signature_help, mode = 'i', desc = 'Signature Help <C-k>', has = 'signatureHelp' },
