@@ -1462,26 +1462,26 @@ return {
       { '<leader>gB', function() Snacks.gitbrowse() end, desc = 'Git Browse [gB]', mode = { 'n', 'v' }, },
       { '<leader>gg', function() Snacks.lazygit() end, desc = 'Lazygit [gg]', },
       { '<leader>un', function() Snacks.notifier.hide() end, desc = 'Dismiss All Notifications [un]', },
-      { ']]', function() Snacks.words.jump(vim.v.count1) end, desc = 'Next Reference', mode = { 'n', 't' }, },
-      { '[[', function() Snacks.words.jump(-vim.v.count1) end, desc = 'Prev Reference', mode = { 'n', 't' }, },
+      { ']]', function() Snacks.words.jump(vim.v.count1) end, desc = 'Next Reference', mode = { 'n'}, },
+      { '[[', function() Snacks.words.jump(-vim.v.count1) end, desc = 'Prev Reference', mode = { 'n' }, },
       -- terminal apps
-      { '<leader>la', function() Snacks.terminal.toggle 'cloudlens' end, desc = 'Cloud Resources TUI [lc]', mode = { 'n', 't' }, },
-      { '<leader>lb', function() Snacks.terminal.toggle 'btop' end, desc = 'System Monitor TUI [lb]', mode = { 'n', 't' }, },
-      { '<leader>lc', function() Snacks.terminal.toggle 'nap' end, desc = 'Code snippets TUI [lc]', mode = { 'n', 't' }, },
-      { '<leader>ld', function() Snacks.terminal.toggle 'podman-tui' end, desc = 'Podman TUI [ld]', mode = { 'n', 't' }, },
-      { '<leader>lD', function() Snacks.terminal.toggle 'lazydocker' end, desc = 'Docker TUI [lD]', mode = { 'n', 't' }, },
-      { '<leader>lg', function() Snacks.lazygit() end, desc = 'GIT TUI [lg]', mode = { 'n', 't' }, },
-      { '<leader>lh', function() Snacks.terminal.toggle 'clx' end, desc = 'Hackernews TUI [lh]', mode = { 'n', 't' }, },
-      { '<leader>lj', function() Snacks.terminal.toggle 'euporie-notebook' end, desc = 'Jupyter Notebooks TUI [lj]', mode = { 'n', 't' }, },
-      { '<leader>lK', function() Snacks.terminal.toggle 'k9s' end, desc = 'Kubernetes TUI [lk]', mode = { 'n', 't' }, },
-      { '<leader>ln', function() Snacks.terminal.toggle 'termscp' end, desc = 'Network Client [ln]', mode = { 'n', 't' }, },
-      { '<leader>lp', function() Snacks.terminal.toggle 'python3' end, desc = 'Python Term [lp]', mode = { 'n', 't' }, },
-      { '<leader>lr', function() Snacks.terminal.toggle 'posting' end, desc = 'REST Client TUI [lr]', mode = { 'n', 't' }, },
-      { '<leader>ls', function() Snacks.terminal.toggle 'harlequin' end, desc = 'Database TUI [ls]', mode = { 'n', 't' }, },
-      { '<leader>lt', function() Snacks.terminal.toggle 'omm --editor nvim' end, desc = 'TODO TUI [lt]', mode = { 'n', 't' }, },
-      { '<leader>lu', function() Snacks.terminal.toggle 'dua i' end, desc = 'Disk Usage TUI [lu]', mode = { 'n', 't' }, },
-      { '<leader>lv', function() Snacks.terminal.toggle 'jshell' end, desc = 'JShell Term [lv]', mode = { 'n', 't' }, },
-      { '<c-/>', function() Snacks.terminal.toggle 'zellij attach -c options --theme kanagawa-light --show-startup-tips true' end, desc = 'Toggle Terminal (c-/)', mode = { 'n', 't' }, },
+      { '<leader>la', function() Snacks.terminal.toggle 'cloudlens' end, desc = 'Cloud Resources TUI [lc]' },
+      { '<leader>lb', function() Snacks.terminal.toggle 'btop' end, desc = 'System Monitor TUI [lb]' },
+      { '<leader>lc', function() Snacks.terminal.toggle 'nap' end, desc = 'Code snippets TUI [lc]' },
+      { '<leader>ld', function() Snacks.terminal.toggle 'podman-tui' end, desc = 'Podman TUI [ld]' },
+      { '<leader>lD', function() Snacks.terminal.toggle 'lazydocker' end, desc = 'Docker TUI [lD]' },
+      { '<leader>lg', function() Snacks.lazygit() end, desc = 'GIT TUI [lg]' },
+      { '<leader>lh', function() Snacks.terminal.toggle 'clx' end, desc = 'Hackernews TUI [lh]' },
+      { '<leader>lj', function() Snacks.terminal.toggle 'euporie-notebook' end, desc = 'Jupyter Notebooks TUI [lj]' },
+      { '<leader>lK', function() Snacks.terminal.toggle 'k9s' end, desc = 'Kubernetes TUI [lk]' },
+      { '<leader>ln', function() Snacks.terminal.toggle 'termscp' end, desc = 'Network Client [ln]' },
+      { '<leader>lp', function() Snacks.terminal.toggle 'python3' end, desc = 'Python Term [lp]' },
+      { '<leader>lr', function() Snacks.terminal.toggle 'posting' end, desc = 'REST Client TUI [lr]' },
+      { '<leader>ls', function() Snacks.terminal.toggle 'harlequin' end, desc = 'Database TUI [ls]' },
+      { '<leader>lt', function() Snacks.terminal.toggle 'omm --editor nvim' end, desc = 'TODO TUI [lt]' },
+      { '<leader>lu', function() Snacks.terminal.toggle 'dua i' end, desc = 'Disk Usage TUI [lu]' },
+      { '<leader>lv', function() Snacks.terminal.toggle 'jshell' end, desc = 'JShell Term [lv]' },
+      { '<c-/>', function() Snacks.terminal.toggle 'zellij attach -c options --theme kanagawa-light --show-startup-tips true' end, desc = 'Toggle Terminal (c-/)' },
     },
     init = function()
       vim.api.nvim_create_autocmd('User', {
@@ -1509,11 +1509,9 @@ return {
           Snacks.toggle.treesitter():map '<leader>uT'
           Snacks.toggle.option('background', { off = 'light', on = 'dark', name = 'Dark Background' }):map '<leader>ub'
           Snacks.toggle.inlay_hints():map '<leader>uh'
-          Snacks.toggle.indent():map '<leader>ug'
           Snacks.toggle.scroll():map '<leader>uS'
           Snacks.toggle.words():map '<leader>uW'
-          Snacks.toggle.zen():map '<leader>uz'
-          Snacks.toggle.zoom():map '<leader>uZ'
+          Snacks.toggle.zoom():map '<leader>uz'
         end,
       })
     end,
