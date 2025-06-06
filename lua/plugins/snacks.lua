@@ -833,6 +833,9 @@ return {
           lsp_declarations = {
             finder = 'lsp_declarations',
             format = 'file',
+            layout = {
+              preset = 'bottom',
+            },
             include_current = false,
             auto_confirm = true,
             jump = { tagstack = true, reuse_win = true },
@@ -840,6 +843,9 @@ return {
           lsp_definitions = {
             finder = 'lsp_definitions',
             format = 'file',
+            layout = {
+              preset = 'bottom',
+            },
             include_current = false,
             auto_confirm = true,
             jump = { tagstack = true, reuse_win = true },
@@ -847,6 +853,9 @@ return {
           lsp_implementations = {
             finder = 'lsp_implementations',
             format = 'file',
+            layout = {
+              preset = 'bottom',
+            },
             include_current = false,
             auto_confirm = true,
             jump = { tagstack = true, reuse_win = true },
@@ -854,6 +863,9 @@ return {
           lsp_references = {
             finder = 'lsp_references',
             format = 'file',
+            layout = {
+              preset = 'bottom',
+            },
             include_declaration = true,
             include_current = false,
             auto_confirm = true,
@@ -862,6 +874,9 @@ return {
           lsp_symbols = {
             finder = 'lsp_symbols',
             format = 'lsp_symbol',
+            layout = {
+              preset = 'sidebar',
+            },
             tree = true,
             filter = {
               default = {
@@ -903,27 +918,32 @@ return {
           lsp_type_definitions = {
             finder = 'lsp_type_definitions',
             format = 'file',
+            layout = {
+              preset = 'bottom',
+            },
             include_current = false,
             auto_confirm = true,
             jump = { tagstack = true, reuse_win = true },
           },
-          lsp_workspace_symbols = {},
+          lsp_workspace_symbols = {
+            layout = {
+              preset = 'sidebar',
+            },
+          },
           man = {
             finder = 'system_man',
             format = 'man',
             preview = 'man',
-            confirm = function(picker, item)
-              picker:close()
-              if item then
-                vim.schedule(function()
-                  vim.cmd('Man ' .. item.ref)
-                end)
-              end
-            end,
+            layout = {
+              preset = 'bottom',
+            },
           },
           marks = {
             finder = 'vim_marks',
             format = 'file',
+            layout = {
+              preset = 'bottom',
+            },
             global = true,
             ['local'] = true,
           },
@@ -933,39 +953,6 @@ return {
             preview = 'preview',
             formatters = { severity = { level = true } },
             confirm = 'close',
-          },
-          picker_actions = {
-            finder = 'meta_actions',
-            format = 'text',
-          },
-          picker_format = {
-            finder = 'meta_format',
-            format = 'text',
-          },
-          picker_layouts = {
-            finder = 'meta_layouts',
-            format = 'text',
-            on_change = function(picker, item)
-              vim.schedule(function()
-                picker:set_layout(item.text)
-              end)
-            end,
-          },
-          picker_preview = {
-            finder = 'meta_preview',
-            format = 'text',
-          },
-          pickers = {
-            finder = 'meta_pickers',
-            format = 'text',
-            confirm = function(picker, item)
-              picker:close()
-              if item then
-                vim.schedule(function()
-                  Snacks.picker(item.text)
-                end)
-              end
-            end,
           },
           projects = {
             finder = 'recent_projects',
@@ -1006,10 +993,16 @@ return {
           qflist = {
             finder = 'qf',
             format = 'file',
+            layout = {
+              preset = 'bottom',
+            },
           },
           recent = {
             finder = 'recent_files',
             format = 'file',
+            layout = {
+              preset = 'bottom',
+            },
             filter = {
               paths = {
                 [vim.fn.stdpath 'data'] = false,
@@ -1022,11 +1015,17 @@ return {
             finder = 'vim_registers',
             format = 'register',
             preview = 'preview',
+            layout = {
+              preset = 'bottom',
+            },
             confirm = { 'copy', 'close' },
           },
           smart = {
             multi = { 'buffers', 'recent', 'files' },
             format = 'file', -- use `file` format for all sources
+            layout = {
+              preset = 'bottom',
+            },
             matcher = {
               cwd_bonus = true, -- boost cwd matches
               frecency = true, -- use frecency boosting
@@ -1065,6 +1064,9 @@ return {
             finder = 'vim_undo',
             format = 'undo',
             preview = 'diff',
+            layout = {
+              preset = 'bottom',
+            },
             confirm = 'item_action',
             win = {
               preview = { wo = { number = false, relativenumber = false, signcolumn = 'no' } },
