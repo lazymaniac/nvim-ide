@@ -7,7 +7,6 @@ function M.get()
     return M._keys
   end
   M._keys = {
-    { '<leader>li', '<cmd>LspInfo<cr>', desc = 'Lsp Info [li]' },
     { 'K', vim.lsp.buf.hover, desc = 'Hover Documentation <K>' },
     { 'gK', vim.lsp.buf.signature_help, desc = 'Signature Documentation <gK>', has = 'signatureHelp' },
     { '<C-k>', vim.lsp.buf.signature_help, mode = 'i', desc = 'Signature Help <C-k>', has = 'signatureHelp' },
