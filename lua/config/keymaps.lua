@@ -97,8 +97,8 @@ map('v', '<', '<gv^')
 map('v', '>', '>gv^')
 
 -- Lazy & Mason
-map('n', '<leader>ll', '<cmd>Lazy<cr>', { desc = 'Lazy [ll]' })
-map('n', '<leader>lm', '<cmd>Mason<cr>', { desc = 'Mason [lm]' })
+map('n', '<leader>ml', '<cmd>Lazy<cr>', { desc = 'Lazy [ml]' })
+map('n', '<leader>mm', '<cmd>Mason<cr>', { desc = 'Mason [mm]' })
 
 map('n', '[q', vim.cmd.cprev, { desc = 'Previous quickfix <[q>' })
 map('n', ']q', vim.cmd.cnext, { desc = 'Next quickfix <]q>' })
