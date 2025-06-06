@@ -100,12 +100,6 @@ map('v', '>', '>gv^')
 map('n', '<leader>ll', '<cmd>Lazy<cr>', { desc = 'Lazy [ll]' })
 map('n', '<leader>lm', '<cmd>Mason<cr>', { desc = 'Mason [lm]' })
 
--- new file
-map('n', '<leader>fn', '<cmd>enew<cr>', { desc = 'New File [fn]' })
-
-map('n', '<leader>xl', '<cmd>lopen<cr>', { desc = 'Location List [xl]' })
-map('n', '<leader>xq', '<cmd>copen<cr>', { desc = 'Quickfix List [xq]' })
-
 map('n', '[q', vim.cmd.cprev, { desc = 'Previous quickfix <[q>' })
 map('n', ']q', vim.cmd.cnext, { desc = 'Next quickfix <]q>' })
 
