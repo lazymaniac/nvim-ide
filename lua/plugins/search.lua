@@ -9,7 +9,7 @@ return {
     cmd = 'GrugFar',
     keys = {
       {
-        '<leader>sr',
+        '<leader>ss',
         function()
           local grug = require 'grug-far'
           local ext = vim.bo.buftype == '' and vim.fn.expand '%:e'
