@@ -410,17 +410,24 @@ return {
         refresh = 50, -- refresh at most every 50ms
       },
       picker = {
-        prompt = ' ',
+        prompt = ' 󱎸 > ',
         sources = {
           autocmds = {
             finder = 'vim_autocmds',
             format = 'autocmd',
             preview = 'preview',
+            layout = {
+              preset = 'bottom',
+            },
           },
           buffers = {
             finder = 'buffers',
             format = 'buffer',
-            hidden = true,
+            preview = 'file',
+            layout = {
+              preset = 'bottom',
+            },
+            hidden = false,
             unloaded = true,
             current = true,
             sort_lastused = true,
@@ -433,26 +440,13 @@ return {
               list = { keys = { ['dd'] = 'bufdelete' } },
             },
           },
-          cliphist = {
-            finder = 'system_cliphist',
-            format = 'text',
-            preview = 'preview',
-            confirm = { 'copy', 'close' },
-          },
           colorschemes = {
             finder = 'vim_colorschemes',
             format = 'text',
             preview = 'colorscheme',
-            preset = 'vertical',
-            confirm = function(picker, item)
-              picker:close()
-              if item then
-                picker.preview.state.colorscheme = nil
-                vim.schedule(function()
-                  vim.cmd('colorscheme ' .. item.text)
-                end)
-              end
-            end,
+            layout = {
+              preset = 'default',
+            },
           },
           command_history = {
             finder = 'vim_history',
@@ -470,10 +464,16 @@ return {
             format = 'command',
             preview = 'preview',
             confirm = 'cmd',
+            layout = {
+              preset = 'bottom',
+            },
           },
           diagnostics = {
             finder = 'diagnostics',
             format = 'diagnostic',
+            layout = {
+              preset = 'bottom',
+            },
             sort = {
               fields = {
                 'is_current',
@@ -490,6 +490,9 @@ return {
           diagnostics_buffer = {
             finder = 'diagnostics',
             format = 'diagnostic',
+            layout = {
+              preset = 'bottom',
+            },
             sort = {
               fields = { 'severity', 'file', 'lnum' },
             },
@@ -518,9 +521,6 @@ return {
               severity = { pos = 'right' },
             },
             matcher = { sort_empty = false, fuzzy = false },
-            config = function(opts)
-              return require('snacks.picker.source.explorer').setup(opts)
-            end,
             actions = {
               copy_file_path = {
                 action = function(_, item)
@@ -660,16 +660,22 @@ return {
           files = {
             finder = 'files',
             format = 'file',
+            layout = {
+              preset = 'bottom',
+            },
             show_empty = true,
-            hidden = false,
-            ignored = false,
-            follow = false,
+            hidden = true,
+            ignored = true,
+            follow = true,
             supports_live = true,
           },
           git_files = {
             finder = 'git_files',
             show_empty = true,
             format = 'file',
+            layout = {
+              preset = 'bottom',
+            },
             untracked = false,
             submodules = false,
           },
@@ -680,10 +686,16 @@ return {
             show_empty = true,
             live = true, -- live grep by default
             supports_live = true,
+            layout = {
+              preset = 'bottom',
+            },
           },
           grep_buffers = {
             finder = 'grep',
             format = 'file',
+            layout = {
+              preset = 'bottom',
+            },
             live = true,
             buffers = true,
             need_search = false,
@@ -693,6 +705,9 @@ return {
             finder = 'grep',
             regex = false,
             format = 'file',
+            layout = {
+              preset = 'bottom',
+            },
             search = function(picker)
               return picker:word()
             end,
@@ -705,6 +720,9 @@ return {
             previewers = {
               file = { ft = 'help' },
             },
+            layout = {
+              preset = 'bottom',
+            },
             win = { preview = { minimal = true } },
             confirm = 'help',
           },
@@ -712,6 +730,9 @@ return {
             finder = 'vim_highlights',
             format = 'hl',
             preview = 'preview',
+            layout = {
+              preset = 'bottom',
+            },
             confirm = 'close',
           },
           icons = {
@@ -724,11 +745,17 @@ return {
           jumps = {
             finder = 'vim_jumps',
             format = 'file',
+            layout = {
+              preset = 'bottom',
+            },
           },
           keymaps = {
             finder = 'vim_keymaps',
             format = 'keymap',
             preview = 'preview',
+            layout = {
+              preset = 'bottom',
+            },
             global = true,
             plugs = false,
             ['local'] = true,
@@ -764,6 +791,9 @@ return {
           lazy = {
             finder = 'lazy_spec',
             pattern = "'",
+            layout = {
+              preset = 'bottom',
+            },
           },
           lines = {
             finder = 'lines',
@@ -788,6 +818,9 @@ return {
             finder = 'qf',
             format = 'file',
             qf_win = 0,
+            layout = {
+              preset = 'bottom',
+            },
           },
           lsp_config = {
             finder = 'lsp.config#find',
@@ -1397,12 +1430,6 @@ return {
       { '<leader>/', function() Snacks.picker.grep() end, desc = 'Grep [/]', },
       { '<leader>:', function() Snacks.picker.command_history() end, desc = 'Command History [:]', },
       { '<leader>e', function() Snacks.explorer() end, desc = 'File Explorer [e]', },
-      -- find
-      { '<leader>fc', function() Snacks.picker.files { cwd = vim.fn.stdpath 'config' } end, desc = 'Find Config File [fc]', },
-      { '<leader>ff', function() Snacks.picker.files() end, desc = 'Find Files [ff]', },
-      { '<leader>fg', function() Snacks.picker.git_files() end, desc = 'Find Git Files [fg]', },
-      { '<leader>fp', function() Snacks.picker.projects() end, desc = 'Projects [fp]', },
-      { '<leader>fr', function() Snacks.picker.recent() end, desc = 'Recent [fr]', },
       -- git
       { '<leader>gL', function() Snacks.picker.git_log_line() end, desc = 'Git Log Line [gL]', },
       -- Grep
@@ -1410,6 +1437,11 @@ return {
       { '<leader>sB', function() Snacks.picker.grep_buffers() end, desc = 'Grep Open Buffers [sB]', },
       { '<leader>sw', function() Snacks.picker.grep_word() end, desc = 'Visual selection or word [sw]', mode = { 'n', 'x' }, },
       -- search
+      { '<leader>sF', function() Snacks.picker.files { cwd = vim.fn.stdpath 'config' } end, desc = 'Find Config File [sF]', },
+      { '<leader>sf', function() Snacks.picker.files() end, desc = 'Find Files [sf]', },
+      { '<leader>sg', function() Snacks.picker.git_files() end, desc = 'Find Git Files [sg]', },
+      { '<leader>sp', function() Snacks.picker.projects() end, desc = 'Projects [sp]', },
+      { '<leader>sr', function() Snacks.picker.recent() end, desc = 'Recent [sr]', },
       { '<leader>p', function() Snacks.picker.registers() end, desc = 'Registers [p]', },
       { '<leader>s/', function() Snacks.picker.search_history() end, desc = 'Search History [s/]', },
       { '<leader>sa', function() Snacks.picker.autocmds() end, desc = 'Autocmds [sa]', },
@@ -1426,7 +1458,7 @@ return {
       { '<leader>sl', function() Snacks.picker.loclist() end, desc = 'Location List [sl]', },
       { '<leader>sm', function() Snacks.picker.marks() end, desc = 'Marks [sm]', },
       { '<leader>sM', function() Snacks.picker.man() end, desc = 'Man Pages [sM]', },
-      { '<leader>sp', function() Snacks.picker.lazy() end, desc = 'Search for Plugin Spec [sp]', },
+      { '<leader>sP', function() Snacks.picker.lazy() end, desc = 'Search for Plugin Spec [sp]', },
       { '<leader>sq', function() Snacks.picker.qflist() end, desc = 'Quickfix List [sq]', },
       { '<leader>sR', function() Snacks.picker.resume() end, desc = 'Resume [sR]', },
       { '<leader>su', function() Snacks.picker.undo() end, desc = 'Undo History [su]', },
@@ -1446,7 +1478,7 @@ return {
       { '<leader>sn', function() Snacks.notifier.show_history() end, desc = 'Notification History [sn]', },
       { '<leader>bd', function() Snacks.bufdelete() end, desc = 'Delete Current Buffer [bd]', },
       { '<leader>bo', function() Snacks.bufdelete.other() end, desc = 'Delete Other Buffers [bo]', },
-      { '<leader>fR', function() Snacks.rename.rename_file() end, desc = 'Rename File [fR]', },
+      { '<leader>cR', function() Snacks.rename.rename_file() end, desc = 'Rename File [fR]', },
       { '<leader>gB', function() Snacks.gitbrowse() end, desc = 'Git Browse [gB]', mode = { 'n', 'v' }, },
       { '<leader>gg', function() Snacks.lazygit() end, desc = 'Lazygit [gg]', },
       { '<leader>un', function() Snacks.notifier.hide() end, desc = 'Dismiss All Notifications [un]', },
