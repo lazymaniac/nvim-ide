@@ -1501,7 +1501,8 @@ return {
       { '<leader>lt', function() Snacks.terminal.toggle 'omm --editor nvim' end, desc = 'TODO TUI [lt]' },
       { '<leader>lu', function() Snacks.terminal.toggle 'dua i' end, desc = 'Disk Usage TUI [lu]' },
       { '<leader>lv', function() Snacks.terminal.toggle 'jshell' end, desc = 'JShell Term [lv]' },
-      { '<c-/>', function() Snacks.terminal.toggle 'zellij attach -c options --theme kanagawa-light --show-startup-tips true' end, desc = 'Toggle Terminal (c-/)' },
+      { '<c-/>', function() Snacks.terminal.toggle 'zellij attach -c options --theme kanagawa --show-startup-tips true' end, desc = 'Toggle Terminal (c-/)', mode = {'n', 't'} },
+      { '<leader>li', function() Snacks.picker.lsp_config() end, desc = 'LSP Info [li]' },
     },
     init = function()
       vim.api.nvim_create_autocmd('User', {
