@@ -68,8 +68,8 @@ return {
     dependencies = 'folke/snacks.nvim',
     -- stylua: ignore
     keys = {
-      { '<leader>fs', function() require('scissors').addNewSnippet() end, mode = { 'n', 'v' },       desc = 'Add New Snippet [fs]' },
-      { '<leader>fS', function() require('scissors').editSnippet() end,   desc = 'Edit Snippet [fS]' },
+      { '<leader>cS', function() require('scissors').addNewSnippet() end, mode = { 'n', 'v' },       desc = 'Add New Snippet [cS]' },
+      { '<leader>cE', function() require('scissors').editSnippet() end,   desc = 'Edit Snippet [cE]' },
     },
     opts = {
       snippetDir = vim.fn.stdpath 'config' .. '/snippets',
