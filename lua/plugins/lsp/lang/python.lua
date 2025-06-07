@@ -1,27 +1,5 @@
 return {
   {
-    'nvim-neotest/neotest',
-    dependencies = {
-      { 'nvim-neotest/neotest-python' },
-      { 'thenbe/neotest-playwright' },
-    },
-    opts = {
-      adapters = {
-        ['neotest-python'] = {
-          runner = 'pytest',
-          python = '.venv/bin/python',
-        },
-        ['neotest-playwright'] = {
-          options = {
-            persist_project_selection = true,
-            enable_dynamic_test_discovery = true,
-          },
-        },
-      },
-    },
-  },
-
-  {
     'mfussenegger/nvim-dap',
     dependencies = {
       'mfussenegger/nvim-dap-python',
@@ -43,7 +21,7 @@ return {
     'linux-cultist/venv-selector.nvim',
     branch = 'regexp',
     cmd = 'VenvSelect',
-    ft = { "python" },
+    ft = { 'python' },
     keys = { { '<leader>cv', '<cmd>:VenvSelect<cr>', desc = 'Select VirtualEnv [cv]' } },
     opts = {
       settings = {
@@ -53,5 +31,4 @@ return {
       },
     },
   },
-
 }

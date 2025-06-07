@@ -1,5 +1,5 @@
-if not require('mason-registry').is_installed('hadolint') then
-  vim.cmd('masoninstall hadolint')
+if not require('mason-registry').is_installed 'hadolint' then
+  vim.cmd 'masoninstall hadolint'
 end
 
 return {
@@ -35,15 +35,5 @@ return {
         },
       }
     end,
-  },
-
-  {
-    'nvim-neotest/neotest',
-    dependencies = { 'jfpedroza/neotest-elixir' },
-    opts = {
-      adapters = {
-        ['neotest-elixir'] = {},
-      },
-    },
   },
 }

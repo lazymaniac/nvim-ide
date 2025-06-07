@@ -112,6 +112,7 @@ return {
           cmake = { 'cmakelang' },
           angular = { 'djlint', 'prettierd' },
           ruby = { 'erb-formatter', 'rubocop' },
+          eruby = { 'erb_format' },
           go = { 'goimports', 'gofumpt' },
           json = { 'jq', 'prettierd' },
           javascript = { 'prettierd' },

@@ -122,8 +122,6 @@ return {
             ['ai'] = '@conditional.outer',
             ['am'] = '@comment.outer',
             ['im'] = '@comment.inner',
-            ['ib'] = { query = '@code_cell.inner', desc = 'in block' },
-            ['ab'] = { query = '@code_cell.outer', desc = 'around block' },
           },
         },
         move = {
@@ -178,6 +176,13 @@ return {
         end, opts.ensure_installed)
       end
       require('nvim-treesitter.configs').setup(opts)
+      -- angular files
+      vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
+        pattern = { '*.component.html', '*.container.html' },
+        callback = function()
+          vim.treesitter.start(nil, 'angular')
+        end,
+      })
     end,
   },
 

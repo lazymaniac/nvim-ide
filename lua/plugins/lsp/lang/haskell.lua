@@ -10,19 +10,6 @@ return {
     config = function() end,
   },
 
-  {
-    'nvim-neotest/neotest',
-    optional = true,
-    dependencies = {
-      { 'mrcjkb/neotest-haskell', branch = 'master' },
-    },
-    opts = {
-      adapters = {
-        ['neotest-haskell'] = {},
-      },
-    },
-  },
-
   -- [haskell-snippets] - Haskell specific snippets.
   -- see: `:h haskell-snippets`
   -- link: https://github.com/mrcjkb/haskell-snippets.nvim

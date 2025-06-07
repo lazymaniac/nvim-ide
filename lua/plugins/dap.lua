@@ -88,6 +88,10 @@ return {
       { 'jay-babu/mason-nvim-dap.nvim', branch = 'main' },
       { 'stevearc/overseer.nvim', branch = 'master' },
       { 'LiadOz/nvim-dap-repl-highlights', branch = 'master' },
+      {
+        'leoluz/nvim-dap-go',
+        config = true,
+      },
     },
     -- stylua: ignore
     keys = {

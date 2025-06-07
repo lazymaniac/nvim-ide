@@ -32,12 +32,12 @@ return {
     opts = {
       keys = 'fjdksleirughtynm',
       presets = {
-        words = true,
-        lines = true,
+        words = false,
+        lines = false,
         search = true,
-        delete = true,
-        yank = true,
-        change = true,
+        delete = false,
+        yank = false,
+        change = false,
       },
     },
   },
