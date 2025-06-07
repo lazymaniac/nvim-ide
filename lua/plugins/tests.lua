@@ -14,14 +14,52 @@ return {
       'nvim-treesitter/nvim-treesitter',
       'stevearc/overseer.nvim',
       'nvim-neotest/nvim-nio',
-      'jfpedroza/neotest-elixir',
-      'nvim-neotest/neotest-go',
-      'mrcjkb/neotest-haskell',
-      'rcasia/neotest-java',
-      'codymikol/neotest-kotlin',
-      'nvim-neotest/neotest-python',
-      'thenbe/neotest-playwright',
-      'olimorris/neotest-rspec',
+      -- adapters
+      {
+        'jfpedroza/neotest-elixir',
+        branch = 'master',
+      },
+      {
+        'nvim-neotest/neotest-go',
+        branch = 'main',
+      },
+      {
+        'mrcjkb/neotest-haskell',
+        branch = 'master',
+      },
+      {
+        'rcasia/neotest-java',
+        branch = 'main',
+      },
+      {
+        'nvim-neotest/neotest-jest',
+        branch = 'main',
+      },
+      {
+        'nvim-neotest/neotest-python',
+        branch = 'master',
+      },
+      {
+        'thenbe/neotest-playwright',
+        branch = 'master',
+      },
+      {
+        'olimorris/neotest-rspec',
+        branch = 'main',
+      },
+      {
+        'marilari88/neotest-vitest',
+        branch = 'main',
+      },
+      {
+        'zidhuss/neotest-minitest',
+        branch = 'main',
+      },
+      {
+        'nvim-neotest/neotest-vim-test',
+        branch = 'master',
+      },
+      'vim-test/vim-test',
     },
     -- stylua: ignore
     keys = {
@@ -50,10 +88,12 @@ return {
           ['neotest-go'] = {},
           ['neotest-elixir'] = {},
           ['neotest-haskell'] = {},
-          ['neotest-kotlin'] = {},
           ['neotest-python'] = {
+            dap = { justMyCode = false },
+            args = { '--log-level', 'DEBUG' },
             runner = 'pytest',
             python = '.venv/bin/python',
+            pytest_discover_instances = true,
           },
           ['neotest-playwright'] = {
             options = {
@@ -62,14 +102,39 @@ return {
             },
           },
           ['neotest-rspec'] = {
-            -- NOTE: By default neotest-rspec uses the system wide rspec gem instead of the one through bundler
-            -- rspec_cmd = function()
-            --   return vim.tbl_flatten({
-            --     "bundle",
-            --     "exec",
-            --     "rspec",
-            --   })
-            -- end,
+            rspec_cmd = function()
+              return vim.tbl_flatten {
+                'bundle',
+                'exec',
+                'rspec',
+              }
+            end,
+          },
+          ['neotest-jest'] = {
+            jestCommand = 'npm test --',
+            jestConfigFile = 'custom.jest.config.ts',
+            env = { CI = true },
+            cwd = function(path)
+              return vim.fn.getcwd()
+            end,
+          },
+          ['neotest-vitest'] = {
+            filter_dir = function(name, _, _)
+              return name ~= 'node_modules'
+            end,
+          },
+          ['neotest-minitest'] = {
+            test_cmd = function()
+              return vim.tbl_flatten {
+                'bundle',
+                'exec',
+                'ruby',
+                '-Itest',
+              }
+            end,
+          },
+          ['neotest-vim-test'] = {
+            ignore_filetypes = { 'python', 'lua', 'java', 'go', 'elixir', 'haskell' },
           },
         },
         benchmark = {
@@ -103,7 +168,7 @@ return {
           notify = '',
           passed = '',
           running = '',
-          running_animated = { '/', '|', '\\', '-', '/', '|', '\\', '-' },
+          running_animated = { '⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏' },
           skipped = '',
           unknown = '',
           watching = '',
@@ -111,7 +176,7 @@ return {
         jump = {
           enabled = true,
         },
-        log_level = 3,
+        log_level = vim.log.levels.DEBUG,
         output = {
           enabled = true,
           open_on_run = 'short',
@@ -123,7 +188,7 @@ return {
         projects = {},
         quickfix = {
           enabled = true,
-          open = true,
+          open = false,
         },
         run = {
           enabled = true,
@@ -137,7 +202,7 @@ return {
         status = {
           enabled = true,
           signs = true,
-          virtual_text = false,
+          virtual_text = true,
         },
         strategies = {
           integrated = {
@@ -151,43 +216,10 @@ return {
           enabled = true,
           expand_errors = true,
           follow = true,
-          mappings = {
-            attach = 'a',
-            clear_marked = 'M',
-            clear_target = 'T',
-            debug = 'd',
-            debug_marked = 'D',
-            expand = { '<CR>', '<2-LeftMouse>' },
-            expand_all = 'e',
-            help = '?',
-            jumpto = 'i',
-            mark = 'm',
-            next_failed = 'J',
-            output = 'o',
-            prev_failed = 'K',
-            run = 'r',
-            run_marked = 'R',
-            short = 'O',
-            stop = 'u',
-            target = 't',
-            watch = 'w',
-          },
           open = 'botright vsplit | vertical resize 50',
         },
         watch = {
           enabled = true,
-          symbol_queries = {
-            go = '        ;query\n        ;Captures imported types\n        (qualified_type name: (type_identifier) @symbol)\n        ;Captures package-local and built-in types\n        (type_identifier)@symbol\n        ;Captures imported function calls and variables/constants\n        (selector_expression field: (field_identifier) @symbol)\n        ;Captures package-local functions calls\n        (call_expression function: (identifier) @symbol)\n      ',
-            haskell = '        ;query\n        ;explicit import\n        ((import_item [(variable)]) @symbol)\n        ;symbols that may be imported implicitly\n        ((type) @symbol)\n        (qualified_variable (variable) @symbol)\n        (exp_apply (exp_name (variable) @symbol))\n        ((constructor) @symbol)\n        ((operator) @symbol)\n      ',
-            java = '        ;query\n        ;captures imported classes\n        (import_declaration\n            (scoped_identifier name: ((identifier) @symbol))\n        )\n      ',
-            javascript = '  ;query\n  ;Captures named imports\n  (import_specifier name: (identifier) @symbol)\n  ;Captures default import\n  (import_clause (identifier) @symbol)\n  ;Capture require statements\n  (variable_declarator \n  name: (identifier) @symbol\n  value: (call_expression (identifier) @function  (#eq? @function "require")))\n  ;Capture namespace imports\n  (namespace_import (identifier) @symbol)\n',
-            lua = '        ;query\n        ;Captures module names in require calls\n        (function_call\n          name: ((identifier) @function (#eq? @function "require"))\n          arguments: (arguments (string) @symbol))\n      ',
-            python = "        ;query\n        ;Captures imports and modules they're imported from\n        (import_from_statement (_ (identifier) @symbol))\n        (import_statement (_ (identifier) @symbol))\n      ",
-            ruby = '        ;query\n        ;rspec - class name\n        (call\n          method: (identifier) @_ (#match? @_ "^(describe|context)")\n          arguments: (argument_list (constant) @symbol )\n        )\n\n        ;rspec - namespaced class name\n        (call\n          method: (identifier)\n          arguments: (argument_list\n            (scope_resolution\n              name: (constant) @symbol))\n        )\n      ',
-            rust = '        ;query\n        ;submodule import\n        (mod_item\n          name: (identifier) @symbol)\n        ;single import\n        (use_declaration\n          argument: (scoped_identifier\n            name: (identifier) @symbol))\n        ;import list\n        (use_declaration\n          argument: (scoped_use_list\n            list: (use_list\n                [(scoped_identifier\n                   path: (identifier)\n                   name: (identifier) @symbol)\n                 ((identifier) @symbol)])))\n        ;wildcard import\n        (use_declaration\n          argument: (scoped_use_list\n            path: (identifier)\n            [(use_list\n              [(scoped_identifier\n                path: (identifier)\n                name: (identifier) @symbol)\n                ((identifier) @symbol)\n              ])]))\n      ',
-            tsx = '  ;query\n  ;Captures named imports\n  (import_specifier name: (identifier) @symbol)\n  ;Captures default import\n  (import_clause (identifier) @symbol)\n  ;Capture require statements\n  (variable_declarator \n  name: (identifier) @symbol\n  value: (call_expression (identifier) @function  (#eq? @function "require")))\n  ;Capture namespace imports\n  (namespace_import (identifier) @symbol)\n',
-            typescript = '  ;query\n  ;Captures named imports\n  (import_specifier name: (identifier) @symbol)\n  ;Captures default import\n  (import_clause (identifier) @symbol)\n  ;Capture require statements\n  (variable_declarator \n  name: (identifier) @symbol\n  value: (call_expression (identifier) @function  (#eq? @function "require")))\n  ;Capture namespace imports\n  (namespace_import (identifier) @symbol)\n',
-          },
         },
       }
       local neotest_ns = vim.api.nvim_create_namespace 'neotest'
@@ -200,34 +232,6 @@ return {
           end,
         },
       }, neotest_ns)
-      if require('util').has 'trouble.nvim' then
-        opts.consumers = opts.consumers or {}
-        -- Refresh and auto close trouble after running tests
-        opts.consumers.trouble = function(client)
-          client.listeners.results = function(adapter_id, results, partial)
-            if partial then
-              return
-            end
-            local tree = assert(client:get_position(nil, { adapter = adapter_id }))
-            local failed = 0
-            for pos_id, result in pairs(results) do
-              if result.status == 'failed' and tree:get_key(pos_id) then
-                failed = failed + 1
-              end
-            end
-            vim.schedule(function()
-              local trouble = require 'trouble'
-              if trouble.is_open() then
-                trouble.refresh()
-                if failed == 0 then
-                  trouble.close()
-                end
-              end
-            end)
-            return {}
-          end
-        end
-      end
       if opts.adapters then
         local adapters = {}
         for name, config in pairs(opts.adapters or {}) do
@@ -242,8 +246,11 @@ return {
               local meta = getmetatable(adapter)
               if adapter.setup then
                 adapter.setup(config)
+              elseif adapter.adapter then
+                adapter.adapter(config)
+                adapter = adapter.adapter
               elseif meta and meta.__call then
-                adapter(config)
+                adapter = adapter(config)
               else
                 error('Adapter ' .. name .. ' does not support setup')
               end
