@@ -1,14 +1,5 @@
 return {
 
-  {
-    'nvim-treesitter/nvim-treesitter',
-    opts = function(_, opts)
-      if type(opts.ensure_installed) == 'table' then
-        vim.list_extend(opts.ensure_installed, {  })
-      end
-    end,
-  },
-
   -- [SchemaStore.nvim] - Schema stores for nvim.
   -- see: `:h SchemaStore.nvim`
   -- link: link-to-repo

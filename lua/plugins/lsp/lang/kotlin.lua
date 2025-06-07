@@ -1,16 +1,6 @@
 return {
 
   {
-    'nvim-neotest/neotest',
-    dependencies = { 'codymikol/neotest-kotlin' },
-    opts = {
-      adapters = {
-        ['neotest-kotlin'] = {},
-      },
-    },
-  },
-
-  {
     'mfussenegger/nvim-dap',
     opts = {
       setup = {

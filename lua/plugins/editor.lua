@@ -347,4 +347,11 @@ return {
       dapSharedKeymaps = false,
     },
   },
+
+  {
+    'folke/paint.nvim',
+    config = function()
+      require('paint').setup {}
+    end,
+  },
 }

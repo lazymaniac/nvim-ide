@@ -22,7 +22,10 @@ return {
     'L3MON4D3/LuaSnip',
     branch = 'master',
     event = 'VimEnter',
-    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter',
+      'johnpapa/vscode-angular-snippets',
+    },
     init = function()
       local ls = require 'luasnip'
       ls.setup {
@@ -42,6 +45,7 @@ return {
           ls.change_choice(1)
         end
       end, { silent = true })
+      require('luasnip.loaders.from_vscode').lazy_load()
     end,
   },
 

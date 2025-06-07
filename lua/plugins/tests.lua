@@ -9,7 +9,20 @@ return {
     'nvim-neotest/neotest',
     branch = 'master',
     event = 'VeryLazy',
-    dependencies = { 'nvim-lua/plenary.nvim', 'nvim-treesitter/nvim-treesitter', 'stevearc/overseer.nvim', 'nvim-neotest/nvim-nio' },
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-treesitter/nvim-treesitter',
+      'stevearc/overseer.nvim',
+      'nvim-neotest/nvim-nio',
+      'jfpedroza/neotest-elixir',
+      'nvim-neotest/neotest-go',
+      'mrcjkb/neotest-haskell',
+      'rcasia/neotest-java',
+      'codymikol/neotest-kotlin',
+      'nvim-neotest/neotest-python',
+      'thenbe/neotest-playwright',
+      'olimorris/neotest-rspec',
+    },
     -- stylua: ignore
     keys = {
       { '<leader>tt', function() require('neotest').run.run(vim.fn.expand '%') end, desc = 'Run File [tt]', },
@@ -33,9 +46,31 @@ return {
       local opts = {
         adapters = {
           ['neotest-java'] = { ignore_wrapper = false },
-          require 'rustaceanvim.neotest',
+          ['rustaceanvim.neotest'] = {},
           ['neotest-go'] = {},
-          ['neotest-python'] = {},
+          ['neotest-elixir'] = {},
+          ['neotest-haskell'] = {},
+          ['neotest-kotlin'] = {},
+          ['neotest-python'] = {
+            runner = 'pytest',
+            python = '.venv/bin/python',
+          },
+          ['neotest-playwright'] = {
+            options = {
+              persist_project_selection = true,
+              enable_dynamic_test_discovery = true,
+            },
+          },
+          ['neotest-rspec'] = {
+            -- NOTE: By default neotest-rspec uses the system wide rspec gem instead of the one through bundler
+            -- rspec_cmd = function()
+            --   return vim.tbl_flatten({
+            --     "bundle",
+            --     "exec",
+            --     "rspec",
+            --   })
+            -- end,
+          },
         },
         benchmark = {
           enabled = true,

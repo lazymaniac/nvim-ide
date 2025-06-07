@@ -474,9 +474,4 @@ return {
       attach_jdtls()
     end,
   },
-
-  {
-    'nvim-neotest/neotest',
-    dependencies = { 'rcasia/neotest-java' },
-  },
 }

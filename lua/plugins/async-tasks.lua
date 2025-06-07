@@ -52,31 +52,6 @@ return {
           separator = '────────────────────────────────────────',
           -- Default direction. Can be "left", "right", or "bottom"
           direction = 'bottom',
-          -- Set keymap to false to remove default behavior
-          -- You can add custom keymaps here as well (anything vim.keymap.set accepts)
-          bindings = {
-            ['?'] = 'ShowHelp',
-            ['g?'] = 'ShowHelp',
-            ['<CR>'] = 'RunAction',
-            ['<C-e>'] = 'Edit',
-            ['o'] = 'Open',
-            ['<C-v>'] = 'OpenVsplit',
-            ['<C-s>'] = 'OpenSplit',
-            ['<C-f>'] = 'OpenFloat',
-            ['<C-q>'] = 'OpenQuickFix',
-            ['p'] = 'TogglePreview',
-            ['<C-l>'] = 'IncreaseDetail',
-            ['<C-h>'] = 'DecreaseDetail',
-            ['L'] = 'IncreaseAllDetail',
-            ['H'] = 'DecreaseAllDetail',
-            ['['] = 'DecreaseWidth',
-            [']'] = 'IncreaseWidth',
-            ['{'] = 'PrevTask',
-            ['}'] = 'NextTask',
-            ['<C-k>'] = 'ScrollOutputUp',
-            ['<C-j>'] = 'ScrollOutputDown',
-            ['q'] = 'Close',
-          },
         },
         -- See :help overseer-actions
         actions = {},

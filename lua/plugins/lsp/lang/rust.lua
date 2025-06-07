@@ -72,15 +72,6 @@ return {
     end,
   },
 
-  {
-    'nvim-neotest/neotest',
-    opts = {
-      adapters = {
-        ['rustaceanvim.neotest'] = {},
-      },
-    },
-  },
-
   -- [crates.nvim] - Rust Crates support.
   -- see: `:h crates.nvim`
   -- link: https://github.com/Saecki/crates.nvim
