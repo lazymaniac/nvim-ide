@@ -1,9 +1,9 @@
 return {
   base46 = {
-    theme = 'kanagawa',
+    theme = 'everforest', -- kanagawa/everforest/onedark/atom/atom_colored
     hl_add = {},
     hl_override = {},
-    integrations = { 'dap' },
+    integrations = { 'dap', 'treesitter', 'whichkey' },
     changed_themes = {},
     transparency = false,
     theme_toggle = { 'kanagawa', 'everforest' },
