@@ -1556,7 +1556,7 @@ return {
       { '<leader>mM', function() Snacks.picker.man() end, desc = 'Man Pages [mM]', },
       { '<leader>mj', function() Snacks.picker.jumps() end, desc = 'Jumps [mj]', },
       { '<leader>mp', function() Snacks.picker.lazy() end, desc = 'Search for Plugin Spec [mp]', },
-      { '<leader>mC', function() Snacks.picker.colorschemes() end, desc = 'Colorschemes [mC]', },
+      { '<leader>mC', function() require('nvchad.themes').open() end, desc = 'Colorschemes [mC]', },
       { '<leader>mi', function() Snacks.picker.lsp_config() end, desc = 'LSP Info [mi]' },
       -- LSP
       { 'gd', function() Snacks.picker.lsp_definitions() end, desc = 'Goto Definition (gd)', },

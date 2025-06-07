@@ -1,12 +1,12 @@
 return {
   base46 = {
-    theme = 'everforest', -- kanagawa/everforest/onedark/atom/atom_colored
+    theme = 'nightowl', -- kanagawa/everforest/onedark/atom/atom_colored
     hl_add = {},
     hl_override = {},
     integrations = { 'dap', 'treesitter', 'whichkey' },
     changed_themes = {},
     transparency = false,
-    theme_toggle = { 'kanagawa', 'everforest' },
+    theme_toggle = { 'nightowl', 'everforest' },
   },
 
   ui = {
