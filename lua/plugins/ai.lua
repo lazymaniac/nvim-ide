@@ -811,9 +811,6 @@ return {
           ['.'] = false,
         },
         copilot_model = '',
-        telemetry = {
-          telemetryLevel = 'off',
-        },
       }
     end,
   },
