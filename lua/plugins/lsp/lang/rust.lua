@@ -10,7 +10,11 @@ return {
     config = function()
       vim.g.rustaceanvim = {
         -- Plugin configuration
-        -- tools = {},
+        tools = {
+          code_action = {
+            ui_select_fallback = true, -- Use `ui-select` for code actions if available
+          }
+        },
         -- LSP configuration
         server = {
           on_attach = function(client, bufnr)

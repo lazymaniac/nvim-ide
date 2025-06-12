@@ -124,6 +124,7 @@ return {
           kotlin = { 'ktlint' },
           markdown = { 'prettierd', 'markdownlint', 'markdown-toc' },
           yaml = { 'prettierd', 'actionlint' },
+          rust = { 'rustfmt' },
           -- Conform will run multiple formatters sequentially
           -- go = { 'goimports', 'gofmt' },
           -- Use a sub-list to run only the first available formatter
