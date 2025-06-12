@@ -134,7 +134,7 @@ return {
             end,
           },
           ['neotest-vim-test'] = {
-            ignore_filetypes = { 'python', 'lua', 'java', 'go', 'elixir', 'haskell' },
+            ignore_filetypes = { 'python', 'lua', 'java', 'go', 'elixir', 'haskell', 'ruby' },
           },
         },
         benchmark = {
