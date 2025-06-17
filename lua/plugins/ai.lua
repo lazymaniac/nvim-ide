@@ -380,6 +380,15 @@ local config = {
         },
       })
     end,
+    copilot = function()
+      return require('codecompanion.adapters').extend('copilot', {
+        schema = {
+          model = {
+            default = 'claude-sonnet-4',
+          },
+        },
+      })
+    end,
     ollama = function()
       return require('codecompanion.adapters').extend('ollama', {
         schema = {
@@ -401,12 +410,25 @@ local config = {
       enabled = true,
       opts = {
         keymap = 'gh',
+        auto_save = true,
+        expiration_days = 0,
+        picker = 'default', --- ("telescope", "snacks", "fzf-lua", or "default")
+        picker_keymaps = {
+          rename = { n = 'r', i = '<M-r>' },
+          delete = { n = 'd', i = '<M-d>' },
+          duplicate = { n = '<C-y>', i = '<C-y>' },
+        },
         auto_generate_title = true,
-        continue_last_chat = false,
+        title_generation_opts = {
+          adapter = nil, -- "copilot"
+          model = nil, -- "gpt-4o"
+          refresh_every_n_prompts = 0, -- e.g., 3 to refresh after every 3rd user prompt
+          max_refreshes = 3,
+        },
+        continue_last_chat = true,
         delete_on_clearing_chat = false,
-        picker = 'default',
-        enable_logging = false,
         dir_to_save = vim.fn.stdpath 'data' .. '/codecompanion-history',
+        enable_logging = true,
       },
     },
     mcphub = {
@@ -426,10 +448,14 @@ local config = {
   strategies = {
     -- CHAT STRATEGY ----------------------------------------------------------
     chat = {
-      adapter = 'copilot',
+      adapter = 'anthropic',
       roles = {
         llm = function(adapter)
-          return adapter.formatted_name .. ' (model=' .. adapter.parameters.model .. ')'
+          if adapter.parameters and adapter.parameters.model then
+            return adapter.formatted_name .. ' (model=' .. adapter.parameters.model .. ')'
+          else
+            return adapter.formatted_name
+          end
         end,
         user = 'Me',
       },
@@ -603,10 +629,11 @@ Content:
     },
     -- INLINE STRATEGY --------------------------------------------------------
     inline = {
-      adapter = 'copilot',
+      adapter = 'anthropic',
     },
+    -- CMD STRATEGY -----------------------------------------------------------
     cmd = {
-      adapter = 'copilot',
+      adapter = 'anthropic',
     },
   },
   prompt_library = {
@@ -720,10 +747,9 @@ return {
     dependencies = {
       'nvim-lua/plenary.nvim',
       'nvim-treesitter/nvim-treesitter',
-      'j-hui/fidget.nvim',
-      'ravitemer/codecompanion-history.nvim', -- Save and load conversation history
+      'ravitemer/codecompanion-history.nvim',
       {
-        'ravitemer/mcphub.nvim', -- Manage MCP servers
+        'ravitemer/mcphub.nvim',
         cmd = 'MCPHub',
         build = 'bundled_build.lua',
         config = {
@@ -731,7 +757,7 @@ return {
         },
       },
       {
-        'Davidyz/VectorCode', -- Index and search code in your repositories
+        'Davidyz/VectorCode',
         version = '*',
         build = 'uv tool upgrade vectorcode',
         dependencies = { 'nvim-lua/plenary.nvim' },
@@ -759,6 +785,7 @@ return {
   {
     'zbirenbaum/copilot.lua',
     cmd = 'Copilot',
+    enabled = true,
     event = 'InsertEnter',
     config = function()
       require('copilot').setup {
@@ -771,33 +798,9 @@ return {
         },
         panel = {
           enabled = false,
-          auto_refresh = false,
-          keymap = {
-            jump_prev = '[[',
-            jump_next = ']]',
-            accept = '<CR>',
-            refresh = 'gr',
-            open = '<M-CR>',
-          },
-          layout = {
-            position = 'bottom', -- | top | left | right | horizontal | vertical
-            ratio = 0.4,
-          },
         },
         suggestion = {
           enabled = true,
-          auto_trigger = false,
-          hide_during_completion = true,
-          debounce = 75,
-          trigger_on_accept = true,
-          keymap = {
-            accept = '<M-l>',
-            accept_word = false,
-            accept_line = false,
-            next = '<M-]>',
-            prev = '<M-[>',
-            dismiss = '<C-]>',
-          },
         },
         filetypes = {
           yaml = false,
