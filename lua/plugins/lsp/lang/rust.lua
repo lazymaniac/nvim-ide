@@ -20,7 +20,7 @@ return {
           on_attach = function(client, bufnr)
             local wk = require 'which-key'
             wk.add {
-              { '<leader>ca', '<cmd>RustLsp codeAction<cr>', desc = 'Code Action [ca]', mode = 'n', buffer = bufnr },
+              -- { '<leader>ca', '<cmd>RustLsp codeAction<cr>', desc = 'Code Action [ca]', mode = 'n', buffer = bufnr },
               { '<leader>ce', '<cmd>RustLsp externalDocs<cr>', desc = 'External Docs [ce]', mode = 'n', buffer = bufnr },
               { '<leader>cp', '<cmd>RustLsp rebuildProcMacros<cr>', desc = 'Rebuild Proc Macros [cp]', mode = 'n', buffer = bufnr },
               { '<leader>cx', '<cmd>RustLsp explainError<cr>', desc = 'Explain Error [cx]', mode = 'n', buffer = bufnr },
