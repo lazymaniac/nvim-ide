@@ -425,7 +425,7 @@ local config = {
           refresh_every_n_prompts = 0, -- e.g., 3 to refresh after every 3rd user prompt
           max_refreshes = 3,
         },
-        continue_last_chat = true,
+        continue_last_chat = false,
         delete_on_clearing_chat = false,
         dir_to_save = vim.fn.stdpath 'data' .. '/codecompanion-history',
         enable_logging = true,
@@ -769,6 +769,7 @@ return {
       { '<leader>ac', '<cmd>CodeCompanionChat<cr>',    mode = { 'n', 'v' }, desc = 'Open Chat [ac]' },
       { '<leader>at', '<cmd>CodeCompanionToggle<cr>',  mode = { 'n', 'v' }, desc = 'Toggle Chat [at]' },
       { '<leader>aa', '<cmd>CodeCompanionActions<cr>', mode = { 'n', 'v' }, desc = 'Actions [aa]' },
+      { '<leader>am', '<cmd>MCPHub<cr>', mode = { 'n' }, desc = 'MCP Hub [am]' },
     },
     config = function()
       -- mappings group
