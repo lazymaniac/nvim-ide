@@ -296,6 +296,9 @@ local config = {
     -- CHAT STRATEGY ----------------------------------------------------------
     chat = {
       adapter = 'anthropic',
+      opts = {
+        completion_provider = 'blink', -- blink|cmp|coc|default
+      },
       roles = {
         llm = function(adapter)
           if adapter.parameters and adapter.parameters.model then
@@ -307,6 +310,12 @@ local config = {
         user = 'Me',
       },
       tools = {
+        opts = {
+          default_tools = {
+            'code_symbol_scout',
+            'insert_edit_into_file',
+          },
+        },
         code_symbol_scout = {
           description = 'Use LSP methods to build the context around unknown or important code symbols.',
           opts = {
@@ -464,6 +473,8 @@ Content:
         modes = { 'v' },
         short_name = 'refactor',
         auto_submit = false,
+        is_slash_command = false,
+        is_default = true,
         stop_context_insertion = true,
         user_prompt = false,
       },
