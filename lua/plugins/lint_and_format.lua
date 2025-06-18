@@ -24,7 +24,7 @@ return {
         kotlin = { 'ktlint', 'detekt' },
         markdown = { 'markdownlint' },
         python = { 'ruff', 'pylint', 'flake8', 'mypy' },
-        ruby = { 'erb-lint', 'rubocop', 'trivy' },
+        ruby = { 'erb_lint', 'rubocop', 'trivy' },
         terraform = { 'tfsec', 'trivy' },
         tf = { 'tfsec', 'trivy' },
         typescript = { 'eslint_d', 'trivy' },

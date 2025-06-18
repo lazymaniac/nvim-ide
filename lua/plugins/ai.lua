@@ -366,6 +366,10 @@ local code_editor = CodeEditor:new()
 
 local config = {
   adapters = {
+    opts = {
+      show_defaults = false,
+      show_model_choices = true,
+    },
     anthropic = function()
       return require('codecompanion.adapters').extend('anthropic', {
         env = {
