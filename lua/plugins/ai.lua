@@ -1,155 +1,5 @@
 -- Helper class definition
 
--- Code Editor helper
-local CodeEditor = {}
-CodeEditor.__index = CodeEditor
-
-function CodeEditor:new()
-  local instance = setmetatable({}, CodeEditor)
-  return instance
-end
-
-CodeEditor.deltas = {}
-
-function CodeEditor:add_delta(bufnr, line, delta)
-  table.insert(self.deltas, { bufnr = bufnr, line = line, delta = delta })
-end
-
-function CodeEditor:open_buffer(filename)
-  if not filename or filename == '' then
-    vim.notify('No filename provided to open_buffer', vim.log.levels.ERROR)
-    return nil
-  end
-
-  if vim.fn.filereadable(filename) == 0 then
-    vim.notify('File is unreadable. Path: ' .. filename, vim.log.levels.WARN)
-  end
-
-  local bufnr = vim.fn.bufadd(filename)
-  vim.fn.bufload(bufnr)
-  vim.api.nvim_set_current_buf(bufnr)
-
-  return bufnr
-end
-
-function CodeEditor:get_bufnr_by_filename(filename)
-  for _, bn in ipairs(vim.api.nvim_list_bufs()) do
-    if vim.api.nvim_buf_get_name(bn) == filename then
-      return bn
-    end
-  end
-  return self:open_buffer(filename)
-end
-
-function CodeEditor:get_winnr_by_bufnr(bufnr)
-  local winnr = vim.fn.bufwinnr(bufnr)
-  if winnr == -1 then
-    vim.notify('No window number found for bufnr: ' .. bufnr, vim.log.levels.WARN)
-    return nil
-  end
-  return winnr
-end
-
-function CodeEditor:intersect(bufnr, line)
-  local delta = 0
-  for _, v in ipairs(self.deltas) do
-    if bufnr == v.bufnr and line > v.line then
-      delta = delta + v.delta
-    end
-  end
-  return delta
-end
-
-function CodeEditor:delete(args)
-  local start_line
-  local end_line
-  start_line = tonumber(args.start_line)
-  assert(start_line, 'No start line number provided by the LLM')
-  if start_line == 0 then
-    start_line = 1
-  end
-
-  end_line = tonumber(args.end_line)
-  assert(end_line, 'No end line number provided by the LLM')
-  if end_line == 0 then
-    end_line = 1
-  end
-
-  local bufnr = self:get_bufnr_by_filename(args.filename)
-
-  if bufnr then
-    local delta = self:intersect(bufnr, start_line)
-
-    vim.api.nvim_buf_set_lines(bufnr, start_line + delta - 1, end_line + delta, false, {})
-    self:add_delta(bufnr, start_line, (start_line - end_line - 1))
-  else
-    vim.notify("Can't find buffer number by file name.", vim.log.levels.ERROR)
-  end
-end
-
-function CodeEditor:add(args)
-  local start_line
-  start_line = tonumber(args.start_line)
-  assert(start_line, 'No line number provided by the LLM')
-  if start_line == 0 then
-    start_line = 1
-  end
-
-  local bufnr = self:get_bufnr_by_filename(args.filename)
-
-  if bufnr then
-    local delta = self:intersect(bufnr, start_line)
-
-    local lines = vim.split(args.code, '\n', { plain = true, trimempty = false })
-    vim.api.nvim_buf_set_lines(bufnr, start_line + delta - 1, start_line + delta - 1, false, lines)
-
-    self:add_delta(bufnr, start_line, tonumber(#lines))
-  else
-    vim.notify("Can't find buffer number by file name", vim.log.levels.WARN)
-  end
-end
-
-function CodeEditor:diff(args)
-  local provider = 'default'
-  local diff = require('codecompanion.providers.diff.' .. provider)
-  local keymaps = require 'codecompanion.utils.keymaps'
-  local bufnr = self:get_bufnr_by_filename(args.filename)
-  local winnr = self:get_winnr_by_bufnr(bufnr)
-
-  local diff_args = {
-    bufnr = bufnr,
-    contents = vim.api.nvim_buf_get_lines(bufnr, 0, -1, true),
-    filetype = vim.api.nvim_get_option_value('filetype', { buf = bufnr }),
-    winnr = winnr,
-  }
-  diff = diff.new(diff_args)
-  keymaps
-    .new({
-      bufnr = bufnr,
-      callbacks = require 'codecompanion.strategies.inline.keymaps',
-      data = { diff = diff },
-      keymaps = {
-        accept_change = {
-          modes = {
-            n = 'ga',
-          },
-          index = 1,
-          callback = 'keymaps.accept_change',
-          description = 'Accept change',
-        },
-        reject_change = {
-          modes = {
-            n = 'gr',
-          },
-          index = 2,
-          callback = 'keymaps.reject_change',
-          description = 'Reject change',
-        },
-      },
-    })
-    :set()
-end
-
 -- Code Extractor helper
 local CodeExtractor = {}
 CodeExtractor.__index = CodeExtractor
@@ -238,7 +88,7 @@ function CodeExtractor:get_node_data(bufnr, node)
   return {
     code_block = code_block,
     start_line = start_row + 1,
-    end_line = end_row + 1,
+    end_line = end_row,
     filename = filename,
   }
 end
@@ -362,7 +212,6 @@ end
 
 -- Helpers initioalization
 local code_extractor = CodeExtractor:new()
-local code_editor = CodeEditor:new()
 
 local config = {
   adapters = {
@@ -397,7 +246,7 @@ local config = {
       return require('codecompanion.adapters').extend('ollama', {
         schema = {
           model = {
-            default = 'llama3.3:latest',
+            default = 'llama4:latest',
           },
           num_ctx = {
             default = 8192,
@@ -464,33 +313,26 @@ local config = {
         user = 'Me',
       },
       tools = {
-        code_developer = {
-          description = 'Act as developer by utilizing LSP methods and code modification capabilities.',
+        code_symbol_scout = {
+          description = 'Use LSP methods to build the context around unknown or important code symbols.',
           opts = {
             user_approval = false,
           },
           callback = {
-            name = 'code_developer',
+            name = 'code_symbol_scout',
             cmds = {
               function(_, args, _)
                 local operation = args.operation
                 local symbol = args.symbol
 
-                if operation == 'edit' then
-                  code_editor:delete(args)
-                  code_editor:add(args)
-                  code_editor:diff(args)
-                  return { status = 'success', data = 'Code has beed updated' }
-                else
-                  local bufnr = code_extractor:move_cursor_to_symbol(symbol)
+                local bufnr = code_extractor:move_cursor_to_symbol(symbol)
 
-                  if code_extractor.lsp_methods[operation] then
-                    code_extractor:call_lsp_method(bufnr, code_extractor.lsp_methods[operation])
-                    code_extractor.filetype = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
-                    return { status = 'success', data = 'Tool executed successfully' }
-                  else
-                    vim.notify('Unsupported LSP method', vim.log.levels.WARN)
-                  end
+                if code_extractor.lsp_methods[operation] then
+                  code_extractor:call_lsp_method(bufnr, code_extractor.lsp_methods[operation])
+                  code_extractor.filetype = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
+                  return { status = 'success', data = 'Tool executed successfully' }
+                else
+                  vim.notify('Unsupported LSP method', vim.log.levels.WARN)
                 end
 
                 return { status = 'error', data = 'No symbol found' }
@@ -499,8 +341,8 @@ local config = {
             schema = {
               type = 'function',
               ['function'] = {
-                name = 'code_developer',
-                description = 'Act as developer by utilizing LSP methods and code modification capabilities.',
+                name = 'code_symbol_scout',
+                description = 'Use LSP methods to build the context around unknown or important code symbols.',
                 parameters = {
                   type = 'object',
                   properties = {
@@ -510,29 +352,12 @@ local config = {
                         'get_definition',
                         'get_references',
                         'get_implementation',
-                        'edit',
                       },
-                      description = 'The action to be performed by the code developer tool',
+                      description = 'The LSP operation to be performed by the Code Symbol Scout tool.',
                     },
                     symbol = {
                       type = 'string',
-                      description = 'The symbol to be processed by the code developer tool',
-                    },
-                    filename = {
-                      type = 'string',
-                      description = 'The name of the file to be modified',
-                    },
-                    start_line = {
-                      type = 'integer',
-                      description = 'The starting line number of the code block to be modified',
-                    },
-                    end_line = {
-                      type = 'integer',
-                      description = 'The ending line number of the code block to be modified',
-                    },
-                    code = {
-                      type = 'string',
-                      description = 'The new code to be inserted into the file',
+                      description = 'The unknown or important code symbol that the Code Symbol Scout tool will use to perform LSP operations.',
                     },
                   },
                   required = {
@@ -543,16 +368,13 @@ local config = {
                 strict = true,
               },
             },
-            system_prompt = [[## Code Developer Tool (`code_developer`) Guidelines
+            system_prompt = [[## Code Symbol Scout Tool (`code_symbol_scout`) Guidelines
 
 ## MANDATORY USAGE
-Use `get_definition`, `get_references` or `get_implementation` AT THE START of EVERY coding task to gather context before answering. Don't overuse these actions. Think what is needed to solve the task, don't fall into rabbit hole.
-Use `edit` action only when asked by user.
+Use this tool AT THE START of a coding task to gather context about code symbols that are unknown to you or are important to solve the given problem before providing final answer. Don't overuse this tool.
 
 ## Purpose
-Traverses the codebase to find definitions, references, or implementations of code symbols to provide error proof solution
-OR
-Replace old code with new implementation
+Use LSP operations to build context around unknown code symbols to provide error proof solution without guessing.
 
 ## Important
 - Wait for tool results before providing solutions
@@ -560,7 +382,7 @@ Replace old code with new implementation
 - When looking for symbol, pass only the name of symbol without the object. E.g. use: `saveUsers` instead of `userRepository.saveUsers`
 ]],
             handlers = {
-              on_exit = function(self, agent)
+              on_exit = function(_, agent)
                 code_extractor.symbol_data = {}
                 code_extractor.filetype = ''
                 vim.notify 'Tool executed successfully'
@@ -568,10 +390,10 @@ Replace old code with new implementation
               end,
             },
             output = {
-              success = function(self, agent, cmd, stdout)
+              success = function(self, agent, _, _)
                 local operation = self.args.operation
                 if operation == 'edit' then
-                  return agent.chat:add_tool_output(self, 'Code modified', 'Code modified')
+                  return agent.chat:add_tool_output(self, 'Code successfully modified', 'Code successfully modified')
                 end
 
                 local symbol = self.args.symbol
@@ -603,7 +425,7 @@ Content:
 
                 return agent.chat:add_tool_output(self, buf_message_content, buf_message_content)
               end,
-              error = function(self, agent, cmd, stderr, stdout)
+              error = function(self, agent, _, stderr, _)
                 return agent.chat:add_tool_output(self, tostring(stderr[1]), tostring(stderr[1]))
               end,
             },
@@ -655,12 +477,7 @@ Content:
         {
           role = 'system',
           content = function(_)
-            return [[ Your task is to suggest refactoring of a specified piece of code to improve its efficiency,
-readability, and maintainability without altering its functionality. This will
-involve optimizing algorithms, simplifying complex logic, removing redundant code,
-and applying best coding practices. Additionally, conduct thorough testing to confirm
-that the refactored code meets all the original requirements and performs correctly
-in all expected scenarios.]]
+            return [[ Your task is to suggest refactoring of a specified piece of code to improve its efficiency, readability, and maintainability without altering its functionality. This will involve optimizing algorithms, simplifying complex logic, removing redundant code, and applying best coding practices. Check every aspect of the code, including variable names, function structures, and overall design patterns. Your goal is to provide a cleaner, more efficient version of the code that adheres to modern coding standards. ]]
           end,
         },
         {
@@ -707,13 +524,13 @@ in all expected scenarios.]]
           wrap = true,
         },
       },
-      intro_message = 'Welcome to CodeCompanion! Press ? for options',
+      intro_message = 'Press ? for help',
       show_header_separator = false, -- Show header separators in the chat buffer? Set this to false if you're using an external markdown formatting plugin
       show_references = true, -- Show references (from slash commands and variables) in the chat buffer?
       separator = '─', -- The separator between the different messages in the chat buffer
       show_settings = false, -- Show LLM settings at the top of the chat buffer?
       show_token_count = true, -- Show the token count for each response?
-      start_in_insert_mode = false, -- Open the chat buffer in insert mode?
+      start_in_insert_mode = true, -- Open the chat buffer in insert mode?
     },
     diff = {
       enabled = true,
