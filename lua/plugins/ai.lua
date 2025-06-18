@@ -263,7 +263,7 @@ local config = {
       enabled = true,
       opts = {
         keymap = 'gh',
-        auto_save = true,
+        auto_save = false,
         expiration_days = 0,
         picker = 'default', --- ("telescope", "snacks", "fzf-lua", or "default")
         picker_keymaps = {
@@ -271,13 +271,7 @@ local config = {
           delete = { n = 'd', i = '<M-d>' },
           duplicate = { n = '<C-y>', i = '<C-y>' },
         },
-        auto_generate_title = true,
-        title_generation_opts = {
-          adapter = nil, -- "copilot"
-          model = nil, -- "gpt-4o"
-          refresh_every_n_prompts = 0, -- e.g., 3 to refresh after every 3rd user prompt
-          max_refreshes = 3,
-        },
+        auto_generate_title = false,
         continue_last_chat = false,
         delete_on_clearing_chat = false,
         dir_to_save = vim.fn.stdpath 'data' .. '/codecompanion-history',
