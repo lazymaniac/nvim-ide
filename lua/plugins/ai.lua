@@ -1,25 +1,25 @@
 -- Helper class definition
 
 -- Code Extractor helper
-local CodeExtractor = {}
-CodeExtractor.__index = CodeExtractor
+local CodeSymbolScout = {}
+CodeSymbolScout.__index = CodeSymbolScout
 
-function CodeExtractor:new()
-  local instance = setmetatable({}, CodeExtractor)
+function CodeSymbolScout:new()
+  local instance = setmetatable({}, CodeSymbolScout)
   return instance
 end
 
-CodeExtractor.lsp_timeout_ms = 10000
-CodeExtractor.symbol_data = {}
-CodeExtractor.filetype = ''
+CodeSymbolScout.LSP_TIMEOUT_MS = 10000
+CodeSymbolScout.symbol_data = {}
+CodeSymbolScout.filetype = ''
 
-CodeExtractor.lsp_methods = {
+CodeSymbolScout.LSP_METHODS = {
   get_definition = vim.lsp.protocol.Methods.textDocument_definition,
   get_references = vim.lsp.protocol.Methods.textDocument_references,
   get_implementation = vim.lsp.protocol.Methods.textDocument_implementation,
 }
 
-CodeExtractor.DEFINITION_NODE_TYPES = {
+CodeSymbolScout.DEFINITION_NODE_TYPES = {
   -- Functions and Classes
   function_definition = true,
   method_definition = true,
@@ -49,11 +49,11 @@ CodeExtractor.DEFINITION_NODE_TYPES = {
   decorated_definition = true,
 }
 
-function CodeExtractor:is_valid_buffer(bufnr)
+function CodeSymbolScout:is_valid_buffer(bufnr)
   return bufnr and vim.api.nvim_buf_is_valid(bufnr)
 end
 
-function CodeExtractor:get_buffer_lines(bufnr, start_row, end_row)
+function CodeSymbolScout:get_buffer_lines(bufnr, start_row, end_row)
   if not self:is_valid_buffer(bufnr) then
     return { status = 'error', data = 'Provided bufnr is invalid: ' .. bufnr }
   end
@@ -61,7 +61,7 @@ function CodeExtractor:get_buffer_lines(bufnr, start_row, end_row)
   return { status = 'success', data = lines }
 end
 
-function CodeExtractor:get_node_data(bufnr, node)
+function CodeSymbolScout:get_node_data(bufnr, node)
   if not (node and bufnr) then
     return { status = 'error', data = 'Missing node or bufnr' }
   end
@@ -100,7 +100,7 @@ function CodeExtractor:get_node_data(bufnr, node)
   }
 end
 
-function CodeExtractor:get_symbol_data(bufnr, row, col)
+function CodeSymbolScout:get_symbol_data(bufnr, row, col)
   if not self:is_valid_buffer(bufnr) then
     return { status = 'error', data = 'Invalid buffer id: ' .. bufnr }
   end
@@ -124,14 +124,14 @@ function CodeExtractor:get_symbol_data(bufnr, row, col)
   return { status = 'error', data = 'No definition node found at position' }
 end
 
-function CodeExtractor:validate_lsp_params(bufnr, method)
+function CodeSymbolScout:validate_lsp_params(bufnr, method)
   if not (bufnr and method) then
     return { status = 'error', data = 'Unable to call lsp. Missing bufnr or method. buffer=' .. bufnr .. ' method=' .. method }
   end
   return { status = 'success', data = 'Parameters valid' }
 end
 
-function CodeExtractor:execute_lsp_request(bufnr, method)
+function CodeSymbolScout:execute_lsp_request(bufnr, method)
   local clients = vim.lsp.get_clients {
     bufnr = vim._resolve_bufnr(bufnr),
     method = method,
@@ -146,7 +146,7 @@ function CodeExtractor:execute_lsp_request(bufnr, method)
 
   for _, client in ipairs(clients) do
     local position_params = vim.lsp.util.make_position_params(0, client.offset_encoding)
-    local lsp_result, err = client:request_sync(method, position_params, self.lsp_timeout_ms, bufnr)
+    local lsp_result, err = client:request_sync(method, position_params, self.LSP_TIMEOUT_MS, bufnr)
     if err then
       table.insert(errors, 'LSP error: ' .. tostring(err))
     elseif lsp_result and lsp_result.result then
@@ -166,7 +166,7 @@ function CodeExtractor:execute_lsp_request(bufnr, method)
   return { status = 'success', data = lsp_results }
 end
 
-function CodeExtractor:process_single_range(uri, range)
+function CodeSymbolScout:process_single_range(uri, range)
   if not (uri and range) then
     return { status = 'error', data = 'Missing uri or range' }
   end
@@ -183,7 +183,7 @@ function CodeExtractor:process_single_range(uri, range)
   end
 end
 
-function CodeExtractor:process_lsp_result(result)
+function CodeSymbolScout:process_lsp_result(result)
   if result.range then
     return self:process_single_range(result.uri or result.targetUri, result.range)
   end
@@ -207,7 +207,7 @@ function CodeExtractor:process_lsp_result(result)
   return { status = 'success', data = 'Results processed' }
 end
 
-function CodeExtractor:call_lsp_method(bufnr, method)
+function CodeSymbolScout:call_lsp_method(bufnr, method)
   local validation = self:validate_lsp_params(bufnr, method)
   if validation.status == 'error' then
     return { status = 'error', data = validation.data }
@@ -227,7 +227,7 @@ function CodeExtractor:call_lsp_method(bufnr, method)
   end
 end
 
-function CodeExtractor:process_all_lsp_results(results_by_client, method)
+function CodeSymbolScout:process_all_lsp_results(results_by_client, method)
   local processed_count = 0
   local errors = {}
 
@@ -249,7 +249,7 @@ function CodeExtractor:process_all_lsp_results(results_by_client, method)
   return { status = 'success', data = processed_count }
 end
 
-function CodeExtractor:move_cursor_to_symbol(symbol)
+function CodeSymbolScout:move_cursor_to_symbol(symbol)
   local bufs = vim.api.nvim_list_bufs()
 
   for _, bufnr in ipairs(bufs) do
@@ -275,7 +275,7 @@ function CodeExtractor:move_cursor_to_symbol(symbol)
 end
 
 -- Helpers initialization
-local code_extractor = CodeExtractor:new()
+local code_symbol_scout = CodeSymbolScout:new()
 
 local config = {
   adapters = {
@@ -392,19 +392,22 @@ local config = {
                 local operation = args.operation
                 local symbol = args.symbol
 
-                local bufnr = code_extractor:move_cursor_to_symbol(symbol)
+                local bufnr = code_symbol_scout:move_cursor_to_symbol(symbol)
 
                 if bufnr == -1 then
                   return { status = 'error', data = 'No symbol found. Check the spelling.' }
                 end
 
-                if not code_extractor.lsp_methods[operation] then
-                  return { status = 'error', data = 'Unsupported LSP method: ' .. operation .. '. Supported lsp methods are: ' .. table.concat(code_extractor.lsp_methods, ', ') }
+                if not code_symbol_scout.LSP_METHODS[operation] then
+                  return {
+                    status = 'error',
+                    data = 'Unsupported LSP method: ' .. operation .. '. Supported lsp methods are: ' .. table.concat(code_symbol_scout.LSP_METHODS, ', '),
+                  }
                 end
 
-                local result = code_extractor:call_lsp_method(bufnr, code_extractor.lsp_methods[operation])
+                local result = code_symbol_scout:call_lsp_method(bufnr, code_symbol_scout.LSP_METHODS[operation])
                 if result.status == 'success' then
-                  code_extractor.filetype = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
+                  code_symbol_scout.filetype = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
                   return { status = 'success', data = 'Tool executed successfully' }
                 else
                   return { status = 'error', data = result.data }
@@ -456,8 +459,8 @@ Use LSP operations to build context around unknown code symbols to provide error
 ]],
             handlers = {
               on_exit = function(_, agent)
-                code_extractor.symbol_data = {}
-                code_extractor.filetype = ''
+                code_symbol_scout.symbol_data = {}
+                code_symbol_scout.filetype = ''
                 vim.notify 'Tool executed successfully'
                 return agent.chat:submit()
               end,
@@ -472,7 +475,7 @@ Use LSP operations to build context around unknown code symbols to provide error
                 local symbol = self.args.symbol
                 local buf_message_content = ''
 
-                for _, code_block in ipairs(code_extractor.symbol_data) do
+                for _, code_block in ipairs(code_symbol_scout.symbol_data) do
                   buf_message_content = buf_message_content
                     .. string.format(
                       [[
@@ -491,7 +494,7 @@ Content:
                       code_block.filename,
                       code_block.start_line,
                       code_block.end_line,
-                      code_extractor.filetype,
+                      code_symbol_scout.filetype,
                       code_block.code_block
                     )
                 end
