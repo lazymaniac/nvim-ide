@@ -249,29 +249,61 @@ function CodeSymbolScout:process_all_lsp_results(results_by_client, method)
   return { status = 'success', data = processed_count }
 end
 
+function CodeSymbolScout:find_symbol_in_line(line, symbol)
+  local pattern = '%f[%w_]' .. vim.pesc(symbol) .. '%f[^%w_]'
+  local start_col = line:find(pattern)
+  return start_col
+end
+
+function CodeSymbolScout:is_searchable_buffer(bufnr)
+  return self:is_valid_buffer(bufnr) and vim.api.nvim_buf_is_loaded(bufnr) and vim.api.nvim_get_option_value('modifiable', { buf = bufnr })
+end
+
+function CodeSymbolScout:search_symbol_in_buffer(bufnr, symbol)
+  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+
+  for line_num, line_content in ipairs(lines) do
+    local col = self:find_symbol_in_line(line_content, symbol)
+    if col then
+      return { line = line_num, col = col - 1 }
+    end
+  end
+
+  return nil
+end
+
+function CodeSymbolScout:set_cursor_position(bufnr, position)
+  local window_ids = vim.fn.win_findbuf(bufnr)
+  if #window_ids == 0 then
+    return false
+  end
+
+  vim.api.nvim_set_current_win(window_ids[1])
+  vim.api.nvim_win_set_cursor(0, { position.line, position.col })
+  return true
+end
+
 function CodeSymbolScout:move_cursor_to_symbol(symbol)
-  local bufs = vim.api.nvim_list_bufs()
+  if not symbol or symbol == '' then
+    return { status = 'error', data = 'Symbol parameter is required and cannot be empty' }
+  end
 
-  for _, bufnr in ipairs(bufs) do
-    if vim.api.nvim_buf_is_loaded(bufnr) and vim.api.nvim_get_option_value('modifiable', { buf = bufnr }) then
-      local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, true)
+  local buffer_list = vim.api.nvim_list_bufs()
 
-      for i, line in ipairs(lines) do
-        local col = line:find(symbol)
+  for _, bufnr in ipairs(buffer_list) do
+    if self:is_searchable_buffer(bufnr) then
+      local symbol_position = self:search_symbol_in_buffer(bufnr, symbol)
 
-        if col then
-          local win_ids = vim.fn.win_findbuf(bufnr)
-          if #win_ids > 0 then
-            vim.api.nvim_set_current_win(win_ids[1])
-            vim.api.nvim_win_set_cursor(0, { i, col - 1 })
-            return bufnr
-          end
-          break
+      if symbol_position then
+        local cursor_set = self:set_cursor_position(bufnr, symbol_position)
+        if cursor_set then
+          return { status = 'success', data = bufnr }
         end
       end
     end
   end
-  return -1
+
+  return { status = 'error', data = 'Symbol not found in any loaded buffer' }
 end
 
 -- Helpers initialization
@@ -377,7 +409,7 @@ local config = {
         opts = {
           default_tools = {
             'code_symbol_scout',
-            'insert_edit_into_file',
+            -- 'insert_edit_into_file',
           },
         },
         code_symbol_scout = {
@@ -392,11 +424,13 @@ local config = {
                 local operation = args.operation
                 local symbol = args.symbol
 
-                local bufnr = code_symbol_scout:move_cursor_to_symbol(symbol)
+                local cursor_result = code_symbol_scout:move_cursor_to_symbol(symbol)
 
-                if bufnr == -1 then
-                  return { status = 'error', data = 'No symbol found. Check the spelling.' }
+                if cursor_result.status == 'error' then
+                  return cursor_result
                 end
+
+                local bufnr = cursor_result.data
 
                 if not code_symbol_scout.LSP_METHODS[operation] then
                   return {
