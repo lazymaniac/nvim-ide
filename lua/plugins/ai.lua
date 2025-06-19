@@ -55,23 +55,27 @@ end
 
 function CodeExtractor:get_buffer_lines(bufnr, start_row, end_row)
   if not self:is_valid_buffer(bufnr) then
-    vim.notify('Provided bufnr is invalid: ' .. bufnr, vim.log.levels.WARN)
-    return nil
+    return { status = 'error', data = 'Provided bufnr is invalid: ' .. bufnr }
   end
-  return vim.api.nvim_buf_get_lines(bufnr, start_row, end_row, false)
+  local lines = vim.api.nvim_buf_get_lines(bufnr, start_row, end_row, false)
+  return { status = 'success', data = lines }
 end
 
 function CodeExtractor:get_node_data(bufnr, node)
   if not (node and bufnr) then
-    return nil
+    return { status = 'error', data = 'Missing node or bufnr' }
   end
 
   local start_row, start_col, end_row, end_col = node:range()
-  local lines = self:get_buffer_lines(bufnr, start_row, end_row + 1)
+  local lines_result = self:get_buffer_lines(bufnr, start_row, end_row + 1)
 
-  if not lines then
-    vim.notify('Symbol text range is empty.', vim.log.levels.WARN)
-    return nil
+  if lines_result.status == 'error' then
+    return lines_result
+  end
+
+  local lines = lines_result.data
+  if not lines or #lines == 0 then
+    return { status = 'error', data = 'Symbol text range is empty' }
   end
 
   local code_block
@@ -86,23 +90,24 @@ function CodeExtractor:get_node_data(bufnr, node)
   local filename = vim.api.nvim_buf_get_name(bufnr)
 
   return {
-    code_block = code_block,
-    start_line = start_row + 1,
-    end_line = end_row,
-    filename = filename,
+    status = 'success',
+    data = {
+      code_block = code_block,
+      start_line = start_row + 1,
+      end_line = end_row,
+      filename = filename,
+    },
   }
 end
 
 function CodeExtractor:get_symbol_data(bufnr, row, col)
   if not self:is_valid_buffer(bufnr) then
-    vim.notify('Invalid buffer id:' .. bufnr)
-    return nil
+    return { status = 'error', data = 'Invalid buffer id: ' .. bufnr }
   end
 
   local parser = vim.treesitter.get_parser(bufnr)
   if not parser then
-    vim.notify("Can't initialize tree-sitter parser for buffer id: " .. bufnr, vim.log.levels.ERROR)
-    return nil
+    return { status = 'error', data = "Can't initialize tree-sitter parser for buffer id: " .. bufnr }
   end
 
   local tree = parser:parse()[1]
@@ -116,73 +121,132 @@ function CodeExtractor:get_symbol_data(bufnr, row, col)
     node = node:parent()
   end
 
-  return nil
+  return { status = 'error', data = 'No definition node found at position' }
 end
 
 function CodeExtractor:validate_lsp_params(bufnr, method)
   if not (bufnr and method) then
-    vim.notify('Unable to call lsp. Missing bufnr or method. buffer=' .. bufnr .. ' method=' .. method, vim.log.levels.WARN)
-    return false
+    return { status = 'error', data = 'Unable to call lsp. Missing bufnr or method. buffer=' .. bufnr .. ' method=' .. method }
   end
-  return true
+  return { status = 'success', data = 'Parameters valid' }
 end
 
 function CodeExtractor:execute_lsp_request(bufnr, method)
-  local position_params = vim.lsp.util.make_position_params(0, vim.lsp.client.offset_encoding)
+  local clients = vim.lsp.get_clients {
+    bufnr = vim._resolve_bufnr(bufnr),
+    method = method,
+  }
 
-  local results_by_client, err = vim.lsp.buf_request_sync(bufnr, method, position_params, self.lsp_timeout_ms)
-  if err then
-    vim.notify('LSP error: ' .. tostring(err), vim.log.levels.ERROR)
-    return nil
+  if #clients == 0 then
+    return { status = 'error', data = 'No matching language servers with ' .. method .. ' capability' }
   end
-  return results_by_client
+
+  local lsp_results = {}
+  local errors = {}
+
+  for _, client in ipairs(clients) do
+    local position_params = vim.lsp.util.make_position_params(0, client.offset_encoding)
+    local lsp_result, err = client:request_sync(method, position_params, self.lsp_timeout_ms, bufnr)
+    if err then
+      table.insert(errors, 'LSP error: ' .. tostring(err))
+    elseif lsp_result and lsp_result.result then
+      if not lsp_results[client.name] then
+        lsp_results[client.name] = {}
+      end
+      lsp_results[client.name] = lsp_result.result
+    else
+      table.insert(errors, 'No results for method: ' .. method .. ' for client: ' .. client.name)
+    end
+  end
+
+  if next(lsp_results) == nil and #errors > 0 then
+    return { status = 'error', data = table.concat(errors, '; ') }
+  end
+
+  return { status = 'success', data = lsp_results }
 end
 
 function CodeExtractor:process_single_range(uri, range)
   if not (uri and range) then
-    return
+    return { status = 'error', data = 'Missing uri or range' }
   end
 
   local target_bufnr = vim.uri_to_bufnr(uri)
   vim.fn.bufload(target_bufnr)
 
-  local data = self:get_symbol_data(target_bufnr, range.start.line, range.start.character)
-  if data then
-    table.insert(self.symbol_data, data)
+  local symbol_result = self:get_symbol_data(target_bufnr, range.start.line, range.start.character)
+  if symbol_result.status == 'success' then
+    table.insert(self.symbol_data, symbol_result.data)
+    return { status = 'success', data = 'Symbol processed' }
   else
-    vim.notify("Can't extract symbol data.", vim.log.levels.WARN)
+    return { status = 'error', data = "Can't extract symbol data: " .. symbol_result.data }
   end
 end
 
 function CodeExtractor:process_lsp_result(result)
   if result.range then
-    self:process_single_range(result.uri or result.targetUri, result.range)
-    return
+    return self:process_single_range(result.uri or result.targetUri, result.range)
   end
 
   if #result > 10 then
-    vim.notify('Too many results for symbol. Ignoring', vim.log.levels.WARN)
-    return
+    return { status = 'error', data = 'Too many results for symbol. Ignoring' }
   end
 
+  local errors = {}
   for _, item in pairs(result) do
-    self:process_single_range(item.uri or item.targetUri, item.range or item.targetSelectionRange)
+    local process_result = self:process_single_range(item.uri or item.targetUri, item.range or item.targetSelectionRange)
+    if process_result.status == 'error' then
+      table.insert(errors, process_result.data)
+    end
   end
+
+  if #errors > 0 then
+    return { status = 'error', data = table.concat(errors, '; ') }
+  end
+
+  return { status = 'success', data = 'Results processed' }
 end
 
 function CodeExtractor:call_lsp_method(bufnr, method)
-  if not self:validate_lsp_params(bufnr, method) then
-    return
+  local validation = self:validate_lsp_params(bufnr, method)
+  if validation.status == 'error' then
+    return { status = 'error', data = validation.data }
   end
 
-  local results_by_client = self:execute_lsp_request(bufnr, method)
-  if not results_by_client then
-    return
+  local results = self:execute_lsp_request(bufnr, method)
+  if results.status == 'error' then
+    return { status = 'error', data = results.data }
   end
 
-  for _, lsp_results in pairs(results_by_client) do
-    self:process_lsp_result(lsp_results.result or {})
+  local processed_result = self:process_all_lsp_results(results.data, method)
+  if processed_result.status == 'success' then
+    vim.notify(string.format('[LSP] Successfully processed %d result sets for method: %s', processed_result.data, method), vim.log.levels.DEBUG)
+    return { status = 'success', data = 'Tool executed successfully' }
+  else
+    return { status = 'error', data = processed_result.data }
   end
+end
+
+function CodeExtractor:process_all_lsp_results(results_by_client, method)
+  local processed_count = 0
+  local errors = {}
+
+  for client_name, lsp_results in pairs(results_by_client) do
+    vim.notify(string.format('[LSP] Processing results from client: %s for method: %s', client_name, method), vim.log.levels.DEBUG)
+
+    local process_result = self:process_lsp_result(lsp_results or {})
+    if process_result.status == 'success' then
+      processed_count = processed_count + 1
+    else
+      table.insert(errors, 'Client ' .. client_name .. ': ' .. process_result.data)
+    end
+  end
+
+  if #errors > 0 then
+    return { status = 'error', data = table.concat(errors, '; ') }
+  end
+
+  return { status = 'success', data = processed_count }
 end
 
 function CodeExtractor:move_cursor_to_symbol(symbol)
@@ -210,7 +274,7 @@ function CodeExtractor:move_cursor_to_symbol(symbol)
   return -1
 end
 
--- Helpers initioalization
+-- Helpers initialization
 local code_extractor = CodeExtractor:new()
 
 local config = {
@@ -330,22 +394,28 @@ local config = {
 
                 local bufnr = code_extractor:move_cursor_to_symbol(symbol)
 
-                if code_extractor.lsp_methods[operation] then
-                  code_extractor:call_lsp_method(bufnr, code_extractor.lsp_methods[operation])
+                if bufnr == -1 then
+                  return { status = 'error', data = 'No symbol found. Check the spelling.' }
+                end
+
+                if not code_extractor.lsp_methods[operation] then
+                  return { status = 'error', data = 'Unsupported LSP method: ' .. operation .. '. Supported lsp methods are: ' .. table.concat(code_extractor.lsp_methods, ', ') }
+                end
+
+                local result = code_extractor:call_lsp_method(bufnr, code_extractor.lsp_methods[operation])
+                if result.status == 'success' then
                   code_extractor.filetype = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
                   return { status = 'success', data = 'Tool executed successfully' }
                 else
-                  vim.notify('Unsupported LSP method', vim.log.levels.WARN)
+                  return { status = 'error', data = result.data }
                 end
-
-                return { status = 'error', data = 'No symbol found' }
               end,
             },
             schema = {
               type = 'function',
               ['function'] = {
                 name = 'code_symbol_scout',
-                description = 'Use LSP methods to build the context around unknown or important code symbols.',
+                description = 'Use given LSP methods to build the context around unknown or important code symbols.',
                 parameters = {
                   type = 'object',
                   properties = {
