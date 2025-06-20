@@ -417,7 +417,7 @@ local config = {
                   return cursor_result
                 end
 
-                local bufnr = cursor_result.data
+                local bufnr = tonumber(cursor_result.data)
 
                 if not lsp_tool.LSP_METHODS[operation] then
                   return {
