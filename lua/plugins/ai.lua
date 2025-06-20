@@ -439,7 +439,16 @@ local config = {
               type = 'function',
               ['function'] = {
                 name = 'lsp_tool',
-                description = 'Use available LSP methods to build the context around unknown or important code symbols.',
+                description = [[Use available LSP operations to build context around unknown code symbols to provide error-proof solution without unnecessary guessing.
+
+== MANDATORY USAGE ==
+Use this tool AT THE START of a coding task to gather context about code symbols that are unknown to you and are important to solve the given problem before providing the final answer. This tool should help you solve the problem without any guesses or assumptions.
+
+== Important ==
+- Wait for tool results before providing solutions
+- Minimize explanations about the tool itself
+- When looking for a symbol, pass only the exact name of the symbol without the object. E.g. use: `saveUsers` instead of `userRepository.saveUsers`
+]],
                 parameters = {
                   type = 'object',
                   properties = {
@@ -450,11 +459,11 @@ local config = {
                         'get_references',
                         'get_implementation',
                       },
-                      description = 'The LSP operation to be performed by the LSP tool.',
+                      description = 'Available LSP operation to be performed by the LSP tool on the given code symbol.',
                     },
                     symbol = {
                       type = 'string',
-                      description = 'The unknown or important code symbol that the LSP tool will use to perform LSP operations.',
+                      description = 'The unknown code symbol that the LSP tool will use to perform LSP operations.',
                     },
                   },
                   required = {
@@ -465,19 +474,6 @@ local config = {
                 strict = true,
               },
             },
-            system_prompt = [[## LSP Tool (`lsp_tool`) Guidelines
-
-## MANDATORY USAGE
-Use this tool AT THE START of a coding task to gather context about code symbols that are unknown to you and are important to solve the given problem before providing final answer. This tool should help you solve the problem without guessing or assuming anything.
-
-## Purpose
-Use LSP operations to build context around unknown code symbols to provide error proof solution without guessing.
-
-## Important
-- Wait for tool results before providing solutions
-- Minimize explanations about the tool itself
-- When looking for symbol, pass only the name of symbol without the object. E.g. use: `saveUsers` instead of `userRepository.saveUsers`
-]],
             handlers = {
               on_exit = function(_, agent)
                 lsp_tool.symbol_data = {}
