@@ -484,15 +484,11 @@ Use this tool AT THE START of a coding task to gather context about code symbols
             output = {
               success = function(self, agent, _, _)
                 local operation = self.args.operation
-                if operation == 'edit' then
-                  return agent.chat:add_tool_output(self, 'Code successfully modified', 'Code successfully modified')
-                end
-
                 local symbol = self.args.symbol
-                local buf_message_content = ''
+                local chat_message_content = ''
 
                 for _, code_block in ipairs(lsp_tool.symbol_data) do
-                  buf_message_content = buf_message_content
+                  chat_message_content = chat_message_content
                     .. string.format(
                       [[
 ---
@@ -515,7 +511,7 @@ Content:
                     )
                 end
 
-                return agent.chat:add_tool_output(self, buf_message_content, buf_message_content)
+                return agent.chat:add_tool_output(self, chat_message_content, chat_message_content)
               end,
               error = function(self, agent, _, stderr, _)
                 return agent.chat:add_tool_output(self, tostring(stderr[1]), tostring(stderr[1]))
