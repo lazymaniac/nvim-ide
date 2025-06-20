@@ -1,25 +1,25 @@
 -- Helper class definition
 
 -- Code Extractor helper
-local CodeSymbolScout = {}
-CodeSymbolScout.__index = CodeSymbolScout
+local LSPTool = {}
+LSPTool.__index = LSPTool
 
-function CodeSymbolScout:new()
-  local instance = setmetatable({}, CodeSymbolScout)
+function LSPTool:new()
+  local instance = setmetatable({}, LSPTool)
   return instance
 end
 
-CodeSymbolScout.LSP_TIMEOUT_MS = 10000
-CodeSymbolScout.symbol_data = {}
-CodeSymbolScout.filetype = ''
+LSPTool.LSP_TIMEOUT_MS = 10000
+LSPTool.symbol_data = {}
+LSPTool.filetype = ''
 
-CodeSymbolScout.LSP_METHODS = {
+LSPTool.LSP_METHODS = {
   get_definition = vim.lsp.protocol.Methods.textDocument_definition,
   get_references = vim.lsp.protocol.Methods.textDocument_references,
   get_implementation = vim.lsp.protocol.Methods.textDocument_implementation,
 }
 
-CodeSymbolScout.DEFINITION_NODE_TYPES = {
+LSPTool.TREESITTER_NODES = {
   -- Functions and Classes
   function_definition = true,
   method_definition = true,
@@ -49,33 +49,20 @@ CodeSymbolScout.DEFINITION_NODE_TYPES = {
   decorated_definition = true,
 }
 
-function CodeSymbolScout:is_valid_buffer(bufnr)
+function LSPTool:is_valid_buffer(bufnr)
   return bufnr and vim.api.nvim_buf_is_valid(bufnr)
 end
 
-function CodeSymbolScout:get_buffer_lines(bufnr, start_row, end_row)
-  if not self:is_valid_buffer(bufnr) then
-    return { status = 'error', data = 'Provided bufnr is invalid: ' .. bufnr }
-  end
-  local lines = vim.api.nvim_buf_get_lines(bufnr, start_row, end_row, false)
-  return { status = 'success', data = lines }
+function LSPTool:get_buffer_lines(bufnr, start_row, end_row)
+  return vim.api.nvim_buf_get_lines(bufnr, start_row, end_row, false)
 end
 
-function CodeSymbolScout:get_node_data(bufnr, node)
-  if not (node and bufnr) then
-    return { status = 'error', data = 'Missing node or bufnr' }
-  end
-
+function LSPTool:get_node_data(bufnr, node)
   local start_row, start_col, end_row, end_col = node:range()
-  local lines_result = self:get_buffer_lines(bufnr, start_row, end_row + 1)
 
-  if lines_result.status == 'error' then
-    return lines_result
-  end
-
-  local lines = lines_result.data
+  local lines = self:get_buffer_lines(bufnr, start_row, end_row + 1)
   if not lines or #lines == 0 then
-    return { status = 'error', data = 'Symbol text range is empty' }
+    return { status = 'error', data = 'Symbol text range is empty. Tool could not extract symbol data.' }
   end
 
   local code_block
@@ -100,14 +87,14 @@ function CodeSymbolScout:get_node_data(bufnr, node)
   }
 end
 
-function CodeSymbolScout:get_symbol_data(bufnr, row, col)
+function LSPTool:get_symbol_data(bufnr, row, col)
   if not self:is_valid_buffer(bufnr) then
-    return { status = 'error', data = 'Invalid buffer id: ' .. bufnr }
+    return { status = 'error', data = 'Invalid buffer id: ' .. bufnr .. '. Internal tool error. Skip future tool calls.' }
   end
 
   local parser = vim.treesitter.get_parser(bufnr)
   if not parser then
-    return { status = 'error', data = "Can't initialize tree-sitter parser for buffer id: " .. bufnr }
+    return { status = 'error', data = "Can't initialize tree-sitter parser for buffer id: " .. bufnr .. '. Internal tool error. Skip future tool calls.' }
   end
 
   local tree = parser:parse()[1]
@@ -115,30 +102,33 @@ function CodeSymbolScout:get_symbol_data(bufnr, row, col)
   local node = root:named_descendant_for_range(row, col, row, col)
 
   while node do
-    if self.DEFINITION_NODE_TYPES[node:type()] then
+    if self.TREESITTER_NODES[node:type()] then
       return self:get_node_data(bufnr, node)
     end
     node = node:parent()
   end
 
-  return { status = 'error', data = 'No definition node found at position' }
+  return { status = 'error', data = 'No definition node found at position. Might be unsupported treesitter node type. Skip repeat of this tool calls.' }
 end
 
-function CodeSymbolScout:validate_lsp_params(bufnr, method)
+function LSPTool:validate_lsp_params(bufnr, method)
   if not (bufnr and method) then
-    return { status = 'error', data = 'Unable to call lsp. Missing bufnr or method. buffer=' .. bufnr .. ' method=' .. method }
+    return {
+      status = 'error',
+      data = 'Missing bufnr or method. buffer=' .. bufnr .. ' method=' .. method .. '. Tool could not find provided symbol in the code. Check spelling.',
+    }
   end
-  return { status = 'success', data = 'Parameters valid' }
+  return { status = 'success', data = '' }
 end
 
-function CodeSymbolScout:execute_lsp_request(bufnr, method)
+function LSPTool:execute_lsp_request(bufnr, method)
   local clients = vim.lsp.get_clients {
     bufnr = vim._resolve_bufnr(bufnr),
     method = method,
   }
 
   if #clients == 0 then
-    return { status = 'error', data = 'No matching language servers with ' .. method .. ' capability' }
+    return { status = 'error', data = 'No matching language servers with ' .. method .. ' capability. Internal tool error. Skip future tool calls.' }
   end
 
   local lsp_results = {}
@@ -160,15 +150,15 @@ function CodeSymbolScout:execute_lsp_request(bufnr, method)
   end
 
   if next(lsp_results) == nil and #errors > 0 then
-    return { status = 'error', data = table.concat(errors, '; ') }
+    return { status = 'error', data = table.concat(errors, '; ') .. '. Internal tool error. Skip future tool calls.' }
   end
 
   return { status = 'success', data = lsp_results }
 end
 
-function CodeSymbolScout:process_single_range(uri, range)
+function LSPTool:process_single_range(uri, range)
   if not (uri and range) then
-    return { status = 'error', data = 'Missing uri or range' }
+    return { status = 'error', data = 'Missing uri or range. Internal tool error. Skip future tool calls.' }
   end
 
   local target_bufnr = vim.uri_to_bufnr(uri)
@@ -183,13 +173,13 @@ function CodeSymbolScout:process_single_range(uri, range)
   end
 end
 
-function CodeSymbolScout:process_lsp_result(result)
+function LSPTool:process_lsp_result(result)
   if result.range then
     return self:process_single_range(result.uri or result.targetUri, result.range)
   end
 
-  if #result > 10 then
-    return { status = 'error', data = 'Too many results for symbol. Ignoring' }
+  if #result > 20 then
+    return { status = 'error', data = 'Too many results for symbol operation. Ignoring.' }
   end
 
   local errors = {}
@@ -207,7 +197,7 @@ function CodeSymbolScout:process_lsp_result(result)
   return { status = 'success', data = 'Results processed' }
 end
 
-function CodeSymbolScout:call_lsp_method(bufnr, method)
+function LSPTool:call_lsp_method(bufnr, method)
   local validation = self:validate_lsp_params(bufnr, method)
   if validation.status == 'error' then
     return { status = 'error', data = validation.data }
@@ -220,20 +210,17 @@ function CodeSymbolScout:call_lsp_method(bufnr, method)
 
   local processed_result = self:process_all_lsp_results(results.data, method)
   if processed_result.status == 'success' then
-    vim.notify(string.format('[LSP] Successfully processed %d result sets for method: %s', processed_result.data, method), vim.log.levels.DEBUG)
     return { status = 'success', data = 'Tool executed successfully' }
   else
     return { status = 'error', data = processed_result.data }
   end
 end
 
-function CodeSymbolScout:process_all_lsp_results(results_by_client, method)
+function LSPTool:process_all_lsp_results(results_by_client, method)
   local processed_count = 0
   local errors = {}
 
   for client_name, lsp_results in pairs(results_by_client) do
-    vim.notify(string.format('[LSP] Processing results from client: %s for method: %s', client_name, method), vim.log.levels.DEBUG)
-
     local process_result = self:process_lsp_result(lsp_results or {})
     if process_result.status == 'success' then
       processed_count = processed_count + 1
@@ -249,17 +236,17 @@ function CodeSymbolScout:process_all_lsp_results(results_by_client, method)
   return { status = 'success', data = processed_count }
 end
 
-function CodeSymbolScout:find_symbol_in_line(line, symbol)
+function LSPTool:find_symbol_in_line(line, symbol)
   local pattern = '%f[%w_]' .. vim.pesc(symbol) .. '%f[^%w_]'
   local start_col = line:find(pattern)
   return start_col
 end
 
-function CodeSymbolScout:is_searchable_buffer(bufnr)
+function LSPTool:is_searchable_buffer(bufnr)
   return self:is_valid_buffer(bufnr) and vim.api.nvim_buf_is_loaded(bufnr) and vim.api.nvim_get_option_value('modifiable', { buf = bufnr })
 end
 
-function CodeSymbolScout:search_symbol_in_buffer(bufnr, symbol)
+function LSPTool:search_symbol_in_buffer(bufnr, symbol)
   local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 
   for line_num, line_content in ipairs(lines) do
@@ -272,7 +259,7 @@ function CodeSymbolScout:search_symbol_in_buffer(bufnr, symbol)
   return nil
 end
 
-function CodeSymbolScout:set_cursor_position(bufnr, position)
+function LSPTool:set_cursor_position(bufnr, position)
   local window_ids = vim.fn.win_findbuf(bufnr)
   if #window_ids == 0 then
     return false
@@ -283,9 +270,9 @@ function CodeSymbolScout:set_cursor_position(bufnr, position)
   return true
 end
 
-function CodeSymbolScout:move_cursor_to_symbol(symbol)
+function LSPTool:move_cursor_to_symbol(symbol)
   if not symbol or symbol == '' then
-    return { status = 'error', data = 'Symbol parameter is required and cannot be empty' }
+    return { status = 'error', data = 'Symbol parameter is required and cannot be empty. Provide a symbol to look for.' }
   end
 
   local buffer_list = vim.api.nvim_list_bufs()
@@ -303,11 +290,11 @@ function CodeSymbolScout:move_cursor_to_symbol(symbol)
     end
   end
 
-  return { status = 'error', data = 'Symbol not found in any loaded buffer' }
+  return { status = 'error', data = 'Symbol not found in any loaded buffer. Double check the spelling of the symbol.' }
 end
 
 -- Helpers initialization
-local code_symbol_scout = CodeSymbolScout:new()
+local lsp_tool = LSPTool:new()
 
 local config = {
   adapters = {
@@ -408,23 +395,23 @@ local config = {
       tools = {
         opts = {
           default_tools = {
-            'code_symbol_scout',
+            'lsp_tool',
             -- 'insert_edit_into_file',
           },
         },
-        code_symbol_scout = {
+        lsp_tool = {
           description = 'Use LSP methods to build the context around unknown or important code symbols.',
           opts = {
             user_approval = false,
           },
           callback = {
-            name = 'code_symbol_scout',
+            name = 'lsp_tool',
             cmds = {
               function(_, args, _)
                 local operation = args.operation
                 local symbol = args.symbol
 
-                local cursor_result = code_symbol_scout:move_cursor_to_symbol(symbol)
+                local cursor_result = lsp_tool:move_cursor_to_symbol(symbol)
 
                 if cursor_result.status == 'error' then
                   return cursor_result
@@ -432,16 +419,16 @@ local config = {
 
                 local bufnr = cursor_result.data
 
-                if not code_symbol_scout.LSP_METHODS[operation] then
+                if not lsp_tool.LSP_METHODS[operation] then
                   return {
                     status = 'error',
-                    data = 'Unsupported LSP method: ' .. operation .. '. Supported lsp methods are: ' .. table.concat(code_symbol_scout.LSP_METHODS, ', '),
+                    data = 'Unsupported LSP method: ' .. operation .. '. Supported lsp methods are: ' .. table.concat(lsp_tool.LSP_METHODS, ', '),
                   }
                 end
 
-                local result = code_symbol_scout:call_lsp_method(bufnr, code_symbol_scout.LSP_METHODS[operation])
+                local result = lsp_tool:call_lsp_method(bufnr, lsp_tool.LSP_METHODS[operation])
                 if result.status == 'success' then
-                  code_symbol_scout.filetype = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
+                  lsp_tool.filetype = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
                   return { status = 'success', data = 'Tool executed successfully' }
                 else
                   return { status = 'error', data = result.data }
@@ -451,8 +438,8 @@ local config = {
             schema = {
               type = 'function',
               ['function'] = {
-                name = 'code_symbol_scout',
-                description = 'Use given LSP methods to build the context around unknown or important code symbols.',
+                name = 'lsp_tool',
+                description = 'Use available LSP methods to build the context around unknown or important code symbols.',
                 parameters = {
                   type = 'object',
                   properties = {
@@ -463,11 +450,11 @@ local config = {
                         'get_references',
                         'get_implementation',
                       },
-                      description = 'The LSP operation to be performed by the Code Symbol Scout tool.',
+                      description = 'The LSP operation to be performed by the LSP tool.',
                     },
                     symbol = {
                       type = 'string',
-                      description = 'The unknown or important code symbol that the Code Symbol Scout tool will use to perform LSP operations.',
+                      description = 'The unknown or important code symbol that the LSP tool will use to perform LSP operations.',
                     },
                   },
                   required = {
@@ -478,10 +465,10 @@ local config = {
                 strict = true,
               },
             },
-            system_prompt = [[## Code Symbol Scout Tool (`code_symbol_scout`) Guidelines
+            system_prompt = [[## LSP Tool (`lsp_tool`) Guidelines
 
 ## MANDATORY USAGE
-Use this tool AT THE START of a coding task to gather context about code symbols that are unknown to you or are important to solve the given problem before providing final answer. Don't overuse this tool.
+Use this tool AT THE START of a coding task to gather context about code symbols that are unknown to you and are important to solve the given problem before providing final answer. This tool should help you solve the problem without guessing or assuming anything.
 
 ## Purpose
 Use LSP operations to build context around unknown code symbols to provide error proof solution without guessing.
@@ -493,9 +480,8 @@ Use LSP operations to build context around unknown code symbols to provide error
 ]],
             handlers = {
               on_exit = function(_, agent)
-                code_symbol_scout.symbol_data = {}
-                code_symbol_scout.filetype = ''
-                vim.notify 'Tool executed successfully'
+                lsp_tool.symbol_data = {}
+                lsp_tool.filetype = ''
                 return agent.chat:submit()
               end,
             },
@@ -509,7 +495,7 @@ Use LSP operations to build context around unknown code symbols to provide error
                 local symbol = self.args.symbol
                 local buf_message_content = ''
 
-                for _, code_block in ipairs(code_symbol_scout.symbol_data) do
+                for _, code_block in ipairs(lsp_tool.symbol_data) do
                   buf_message_content = buf_message_content
                     .. string.format(
                       [[
@@ -528,7 +514,7 @@ Content:
                       code_block.filename,
                       code_block.start_line,
                       code_block.end_line,
-                      code_symbol_scout.filetype,
+                      lsp_tool.filetype,
                       code_block.code_block
                     )
                 end
