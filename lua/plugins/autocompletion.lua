@@ -8,13 +8,6 @@ return {
     dependencies = {
       dependencies = { 'L3MON4D3/LuaSnip', version = 'v2.*' },
       {
-        'saghen/blink.compat',
-        opts = {},
-        dependencies = {
-          { 'petertriho/cmp-git', opts = {} },
-        },
-      },
-      {
         'folke/lazydev.nvim',
         ft = 'lua', -- only load on lua files
         opts = {
@@ -387,7 +380,6 @@ return {
       -- Default list of enabled providers defined so that you can extend it
       -- elsewhere in your config, without redefining it, due to `opts_extend`
       sources = {
-        compat = {},
         default = { 'copilot', 'lazydev', 'lsp', 'path', 'snippets', 'buffer', 'omni', 'cmdline' },
         providers = {
           copilot = {

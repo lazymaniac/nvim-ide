@@ -38,14 +38,14 @@ function M.number()
   end
 end
 
-local enabled = not vim.diagnostic.is_disabled()
+local enabled = vim.diagnostic.is_enabled()
 function M.diagnostics()
   enabled = not enabled
   if enabled then
     vim.diagnostic.enable()
     Util.info('Enabled diagnostics', { title = 'Diagnostics' })
   else
-    vim.diagnostic.disable()
+    vim.diagnostic.enable(false)
     Util.warn('Disabled diagnostics', { title = 'Diagnostics' })
   end
 end
