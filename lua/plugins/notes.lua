@@ -57,12 +57,6 @@ return {
               },
             },
           },
-          ['core.completion'] = {
-            config = {
-              engine = 'nvim-cmp',
-              name = '[Neorg]',
-            },
-          },
           ['core.export'] = {
             config = {
               export_dir = '~/neorg/export/',
