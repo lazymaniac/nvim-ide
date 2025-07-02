@@ -14,8 +14,8 @@ return {
       -- }
       wiki_dirs = {
         -- neowiki.nvim supports both absolute and relative paths
-        { name = 'Work', path = '~/work/wiki' },
-        { name = 'Personal', path = 'personal/wiki' },
+        { name = 'Work', path = '~/.notes/work/wiki' },
+        { name = 'Personal', path = '~/.notes/personal/wiki' },
       },
       -- The filename for a wiki's index page (e.g., "index.md").
       index_file = 'index.md',
