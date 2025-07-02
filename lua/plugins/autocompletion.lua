@@ -6,7 +6,7 @@ return {
     build = 'cargo build --release',
     -- optional: provides snippets for the snippet source
     dependencies = {
-      dependencies = { 'L3MON4D3/LuaSnip', version = 'v2.*' },
+      { 'L3MON4D3/LuaSnip', version = 'v2.*' },
       {
         'folke/lazydev.nvim',
         ft = 'lua', -- only load on lua files
