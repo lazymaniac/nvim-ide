@@ -1,81 +1,71 @@
 return {
 
   -- [[ NOTE TAKING ]] ---------------------------------------------------------------
-
-  -- [luarocks.nvim] - Install lua dependencies from nvim.
-  -- see: `:h luarocks.nvim`
-  -- link: https://github.com/vhyrro/luarocks.nvim
   {
-    'vhyrro/luarocks.nvim',
-    branch = 'main',
-    priority = 1000, -- We'd like this plugin to load first out of the rest
-    config = true, -- This automatically runs `require("luarocks-nvim").setup()`
-    dependencies = {
-      'MunifTanjim/nui.nvim',
-      'nvim-neotest/nvim-nio',
-      'nvim-neorg/lua-utils.nvim',
-      'nvim-lua/plenary.nvim',
-      'pysan3/pathlib.nvim',
-    },
+    'echaya/neowiki.nvim',
     opts = {
-    },
-  },
+      -- A list of tables, where each table defines a wiki.
+      -- Both absolute and tilde-expanded paths are supported.
+      -- If this is nil, the plugin defaults to `~/wiki`.
+      -- Example:
+      -- wiki_dirs = {
+      --   { name = "Work", path = "~/Documents/work-wiki" },
+      --   { name = "Personal", path = "personal-wiki" },
+      -- }
+      wiki_dirs = {
+        -- neowiki.nvim supports both absolute and relative paths
+        { name = 'Work', path = '~/work/wiki' },
+        { name = 'Personal', path = 'personal/wiki' },
+      },
+      -- The filename for a wiki's index page (e.g., "index.md").
+      index_file = 'index.md',
+      -- Defines the keymaps used by neowiki.
+      -- Setting a keymap to `false` or an empty string will disable it.
+      keymaps = {
+        -- In Normal mode, follows the link under the cursor.
+        -- In Visual mode, creates a link from the selection.
+        action_link = '<CR>',
+        action_link_vsplit = '<S-CR>',
+        action_link_split = '<C-CR>',
+        -- Toggles the status of a gtd item.
+        -- Works on the current line in Normal mode and on the selection in Visual mode.
+        toggle_task = '<leader>nt',
+        -- Jumps to the next link in the buffer.
+        next_link = '<Tab>',
+        -- Jumps to the previous link in the buffer.
+        prev_link = '<S-Tab>',
+        -- Jumps to the index page of the current wiki.
+        jump_to_index = '<Backspace>',
+        -- Deletes the current wiki page.
+        delete_page = '<leader>nd',
+        -- Removes all links in the current file that point to non-existent pages.
+        cleanup_links = '<leader>nc',
+      },
 
-  -- [neorg] - Note taking, calendar, presentations, journal
-  -- see: `:h neorg`
-  -- link: https://github.com/nvim-neorg/neorg
-  {
-    'nvim-neorg/neorg',
-    branch = 'main',
-    event = 'VeryLazy',
-    dependencies = { 'nvim-lua/plenary.nvim', 'luarocks.nvim' },
-    -- stylua: ignore
-    keys = {
-      { '<leader>nn',  '<cmd>Neorg index<cr>',                            mode = { 'n', 'v' }, desc = 'Notes index [nn]' },
-      { '<leader>nc',  '<cmd>Neorg journal custom<cr>',                   mode = { 'n', 'v' }, desc = 'Journal custom day [nc]' },
-      { '<leader>nt',  '<cmd>Neorg journal today<cr>',                    mode = { 'n', 'v' }, desc = 'Journal today [nt]' },
-      { '<leader>no',  '<cmd>Neorg journal tomorrow<cr>',                 mode = { 'n', 'v' }, desc = 'Journal tomorrow [no]' },
-      { '<leader>ny',  '<cmd>Neorg journal yesterday<cr>',                mode = { 'n', 'v' }, desc = 'Journal yesterday [ny]' },
-      { '<leader>ns',  '<cmd>Neorg sync-parsers<cr>',                     mode = { 'n', 'v' }, desc = 'Neorg sync-parsers [ns]' },
-    },
-    config = function()
-      local wk = require 'which-key'
-      local defaults = {
-        { '<leader>n', group = '+[notes]' },
-        { '<leader>nf', group = '+[find/insert]' },
-      }
-      wk.add(defaults)
-      require('neorg').setup {
-        load = {
-          ['core.defaults'] = {}, -- Loads default behaviour
-          ['core.concealer'] = {}, -- Adds pretty icons to your documents
-          ['core.dirman'] = { -- Manages Neorg workspaces
-            config = {
-              default_workspace = 'notes',
-              workspaces = {
-                notes = '~/neorg/notes',
-              },
-            },
-          },
-          ['core.export'] = {
-            config = {
-              export_dir = '~/neorg/export/',
-            },
-          },
-          ['core.export.markdown'] = {
-            config = {
-              extension = 'md',
-              extensions = 'all',
-            },
-          },
-          ['core.presenter'] = {
-            config = {
-              zen_mode = 'zen-mode',
-            },
-          },
-          ['core.summary'] = {},
+      -- Configuration for the GTD functionality.
+      gtd = {
+        -- Set to false to disable the progress percentage virtual text.
+        show_gtd_progress = true,
+        -- The highlight group to use for the progress virtual text.
+        gtd_progress_hl_group = 'Comment',
+      },
+      -- Configuration for opening wiki in floating window.
+      floating_wiki = {
+        -- Config for nvim_open_win(). Defines the window's structure,
+        -- position, and border.
+        open = {
+          relative = 'editor',
+          width = 0.85,
+          height = 0.85,
+          border = 'rounded',
         },
-      }
-    end,
+        -- Options for nvim_win_set_option(). Defines the style
+        -- within the window after it's created.
+        style = {},
+      },
+    },
+    keys = {
+      { '<leader>nn', "<cmd>lua require('neowiki').open_wiki_floating()<cr>", desc = 'Open Wiki' },
+    },
   },
 }
