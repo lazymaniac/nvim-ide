@@ -55,8 +55,8 @@ return {
         -- position, and border.
         open = {
           relative = 'editor',
-          width = 0.85,
-          height = 0.85,
+          width = 0.9,
+          height = 0.9,
           border = 'rounded',
         },
         -- Options for nvim_win_set_option(). Defines the style
