@@ -78,18 +78,6 @@ return {
     },
   },
 
-  -- [http-codes.nvim] - Preview http codes
-  -- see: `:h http-codes`
-  -- link: https://github.com/barrett-ruth/http-codes.nvim?tab=readme-ov-file
-  {
-    'barrett-ruth/http-codes.nvim',
-    config = true,
-    dependencies = 'ibhagwan/fzf-lua',
-    keys = {
-      { '<leader>lH', '<cmd>HTTPCodes<cr>', desc = 'HTTP Codes [lH]' },
-    },
-  },
-
   {
     'nvzone/typr',
     dependencies = 'nvzone/volt',
