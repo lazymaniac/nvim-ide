@@ -239,11 +239,11 @@ return {
   -- see: `:h codecompanion.txt`
   -- link: https://github.com/olimorris/codecompanion.nvim
   {
-    dir = '/Users/sebastian/workspace/codecompanion.nvim/',
-    dev = true,
-    -- 'lazymaniac/codecompanion.nvim',
+    -- dir = '/Users/sebastian/workspace/codecompanion.nvim/',
+    -- dev = true,
+    'lazymaniac/codecompanion.nvim',
     event = 'VeryLazy',
-    -- branch = 'feature/lsp-tool',
+    branch = 'feature/lsp-tool',
     dependencies = {
       'nvim-lua/plenary.nvim',
       'nvim-treesitter/nvim-treesitter',
