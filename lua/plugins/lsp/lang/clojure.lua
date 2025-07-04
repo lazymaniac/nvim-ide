@@ -5,6 +5,7 @@ return {
   -- Colorize the output of the log buffer
   {
     "m00qek/baleia.nvim",
+    ft = { "clojure", "fennel" },
     opts = {
       line_starts_at = 3,
     },

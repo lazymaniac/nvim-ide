@@ -7,9 +7,8 @@ return {
   {
     'nvim-treesitter/nvim-treesitter',
     branch = 'master',
-    version = false, -- last release is way too old and doesn't work on Windows
     build = ':TSUpdate',
-    event = { 'VeryLazy' },
+    event = { 'BufReadPost', 'BufNewFile' },
     keys = {
       { '<c-space>', desc = 'Increment selection <C-SPC>' },
       { '<bs>', desc = 'Decrement selection <BS>', mode = 'x' },
@@ -85,9 +84,6 @@ return {
         'git_rebase',
         'gitignore',
         'gitattributes',
-        'elixir',
-        'heex',
-        'eex',
         'dockerfile',
         'cmake',
         'clojure',
@@ -155,7 +151,6 @@ return {
     },
     config = function(_, opts)
       local parser_configs = require('nvim-treesitter.parsers').get_parser_configs()
-
       parser_configs.lua_patterns = {
         install_info = {
           url = 'https://github.com/OXY2DEV/tree-sitter-lua_patterns',
@@ -192,9 +187,8 @@ return {
   {
     'nvim-treesitter/nvim-treesitter-textobjects',
     branch = 'master',
+    event = { 'BufReadPost', 'BufNewFile' },
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
-    enabled = false,
-    event = 'VeryLazy',
     config = function()
       -- When in diff mode, we want to use the default
       -- vim text objects c & C instead of the treesitter ones.
@@ -225,8 +219,8 @@ return {
   {
     'windwp/nvim-ts-autotag',
     branch = 'main',
+    event = 'InsertEnter',
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
-    event = 'VeryLazy',
     opts = {},
   },
 }

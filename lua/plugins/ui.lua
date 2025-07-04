@@ -61,7 +61,7 @@ return {
   {
     'akinsho/bufferline.nvim',
     branch = 'main',
-    event = 'VeryLazy',
+    event = 'BufReadPost',
     keys = {
       { '<leader>bp', '<Cmd>BufferLineTogglePin<CR>', desc = 'Toggle pin [bp]' },
       { '<leader>bP', '<Cmd>BufferLineGroupClose ungrouped<CR>', desc = 'Delete non-pinned buffers [bP]' },
@@ -144,6 +144,7 @@ return {
 
   {
     'echasnovski/mini.icons',
+    lazy = true,
     opts = {
       lsp = {
         copilot = { glyph = ' ' },
@@ -154,18 +155,13 @@ return {
     end,
   },
 
-  -- [nui.nvim] - UI components like popups.
-  -- see: `:h nui`
-  -- link: https://github.com/MunifTanjim/nui.nvim
-  { 'MunifTanjim/nui.nvim', branch = 'main' },
-
   -- [numb.nvim] - Show preview of location when jumping to line with `:{number}`
   -- see: `:h numb`
   -- link: https://github.com/nacro90/numb.nvim
   {
     'nacro90/numb.nvim',
     branch = 'master',
-    event = 'VeryLazy',
+    event = 'BufReadPre',
     opts = {
       show_numbers = true, -- Enable 'number' for the window while peeking
       show_cursorline = true, -- Enable 'cursorline' for the window while peeking

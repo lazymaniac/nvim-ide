@@ -6,7 +6,7 @@ return {
   {
     'h4ckm1n-dev/kube-utils-nvim',
     branch = 'main',
-    event = 'VeryLazy',
+    ft = { 'yaml', 'helm' },
     config = function()
       local helm_mappings = {
         { '<leader>lk', group = '[kubernetes]' },

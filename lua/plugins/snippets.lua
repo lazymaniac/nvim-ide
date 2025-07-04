@@ -2,64 +2,28 @@ return {
 
   -- [[ CODE SNIPPETS ]] ---------------------------------------------------------------
 
-  -- [friendly-snippets] - Set of useful snippets in vscode format
-  -- see: `:h friendly-snippets`
-  -- link: https://github.com/rafamadriz/friendly-snippets
-  {
-    'rafamadriz/friendly-snippets',
-    branch = 'main',
-    event = 'VeryLazy',
-    dependencies = { 'L3MON4D3/LuaSnip' },
-    config = function()
-      require('luasnip.loaders.from_vscode').lazy_load { paths = './snippets' }
-    end,
-  },
-
   -- [luasnip] - Snippets engine. Loads snippets from various sources like vscode
   -- see: `h: luasnip`
   -- link: https://github.com/L3MON4D3/LuaSnip
   {
     'L3MON4D3/LuaSnip',
     branch = 'master',
-    event = 'VimEnter',
+    build = 'make install_jsregexp',
+    event = 'InsertEnter',
     dependencies = {
       'nvim-treesitter/nvim-treesitter',
       'johnpapa/vscode-angular-snippets',
+      {
+        'rafamadriz/friendly-snippets',
+        config = function()
+          require('luasnip.loaders.from_vscode').lazy_load { paths = './snippets' }
+        end,
+      },
     },
     init = function()
-      local ls = require 'luasnip'
-      ls.setup {
-        -- Required to automatically include base snippets, like "c" snippets for "cpp"
-        load_ft_func = require('luasnip_snippets.common.snip_utils').load_ft_func,
-        ft_func = require('luasnip_snippets.common.snip_utils').ft_func,
-        -- To enable auto expansin
-        enable_autosnippets = true,
-        -- Uncomment to enable visual snippets triggered using <c-x>
-        -- store_selection_keys = '<c-x>',
-        history = true,
-        delete_check_events = 'TextChanged',
+      require('luasnip.loaders.from_vscode').lazy_load {
+        paths = { vim.fn.stdpath 'config' .. '/snippets' },
       }
-      -- LuaSnip key bindings
-      vim.keymap.set({ 'i', 's' }, '<C-E>', function()
-        if ls.choice_active() then
-          ls.change_choice(1)
-        end
-      end, { silent = true })
-      require('luasnip.loaders.from_vscode').lazy_load()
-    end,
-  },
-
-  -- [luasnip_snippets] - Library of snippets ported from vim-snippets
-  -- see: `luasnip_snippets`
-  -- link: https://github.com/mireq/luasnip-snippets
-  {
-    'mireq/luasnip-snippets',
-    branch = 'main',
-    event = 'VeryLazy',
-    dependencies = { 'L3MON4D3/LuaSnip' },
-    init = function()
-      -- Mandatory setup function
-      require('luasnip_snippets.common.snip_utils').setup()
     end,
   },
 
@@ -69,26 +33,52 @@ return {
   {
     'chrisgrieser/nvim-scissors',
     branch = 'main',
-    dependencies = 'folke/snacks.nvim',
-    -- stylua: ignore
     keys = {
-      { '<leader>cS', function() require('scissors').addNewSnippet() end, mode = { 'n', 'v' },       desc = 'Add New Snippet [cS]' },
-      { '<leader>cE', function() require('scissors').editSnippet() end,   desc = 'Edit Snippet [cE]' },
+      {
+        '<leader>cS',
+        function()
+          require('scissors').addNewSnippet()
+        end,
+        mode = { 'n', 'v' },
+        desc = 'Add New Snippet [cS]',
+      },
+      {
+        '<leader>cE',
+        function()
+          require('scissors').editSnippet()
+        end,
+        desc = 'Edit Snippet [cE]',
+      },
     },
     opts = {
       snippetDir = vim.fn.stdpath 'config' .. '/snippets',
       editSnippetPopup = {
-        height = 0.4, -- relative to the window, number between 0 and 1
+        height = 0.4, -- relative to the window, between 0-1
         width = 0.6,
-        border = 'rounded',
+        border = 'rounded', -- `vim.o.winborder` on nvim 0.11, otherwise "rounded"
         keymaps = {
           cancel = 'q',
-          saveChanges = '<CR>',
+          saveChanges = '<CR>', -- alternatively, can also use `:w`
           goBackToSearch = '<BS>',
-          delete = '<C-BS>',
+          deleteSnippet = '<C-BS>',
+          duplicateSnippet = '<C-d>',
           openInFile = '<C-o>',
-          insertNextToken = '<C-t>', -- works in insert & normal mode
+          insertNextPlaceholder = '<C-p>', -- insert & normal mode
+          showHelp = '?',
         },
+      },
+
+      snippetSelection = {
+        picker = 'vim.ui.select', ---@type "auto"|"telescope"|"snacks"|"vim.ui.select"
+        -- `snacks` picker configurable via snacks config,
+        -- see https://github.com/folke/snacks.nvim/blob/main/docs/picker.md
+      },
+      backdrop = {
+        enabled = true,
+        blend = 50, -- between 0-100
+      },
+      icons = {
+        scissors = '󰩫',
       },
       -- `none` writes as a minified json file using `vim.encode.json`.
       -- `yq`/`jq` ensure formatted & sorted json files, which is relevant when

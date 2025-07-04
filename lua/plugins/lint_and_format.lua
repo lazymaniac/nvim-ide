@@ -8,14 +8,13 @@ return {
   {
     'mfussenegger/nvim-lint',
     branch = 'master',
-    event = 'VeryLazy',
+    event = 'BufReadPost',
     config = function()
       require('lint').linters_by_ft = {
         angular = { 'djlint' },
         ansible = { 'ansible-lint' },
         clojure = { 'clj-kondo' },
         cmake = { 'cmakelint' },
-        elixir = { 'trivy' },
         go = { 'golangci-lint' },
         haskell = { 'hlint' },
         helm = { 'kube-linter' },
@@ -90,7 +89,6 @@ return {
   {
     'stevearc/conform.nvim',
     branch = 'master',
-    event = 'VeryLazy',
     dependencies = { 'mason-org/mason.nvim', 'frostplexx/mason-bridge.nvim' },
     cmd = 'ConformInfo',
     -- stylua: ignore

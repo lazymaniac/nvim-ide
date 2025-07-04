@@ -29,7 +29,7 @@ return {
   -- [plenary.nvim] - Utility lib used by other plugins
   -- see: `:h help-tag`
   -- link: https://github.com/nvim-lua/plenary.nvim
-  { 'nvim-lua/plenary.nvim', branch = 'master' },
+  { 'nvim-lua/plenary.nvim', branch = 'master', lazy = true },
 
   -- [[ LEARNING VIM MOTIONS ]] ---------------------------------------------------------------
 
@@ -39,7 +39,6 @@ return {
   {
     'm4xshen/hardtime.nvim',
     branch = 'main',
-    event = 'VeryLazy',
     dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim' },
     -- stylua: ignore
     keys = {
@@ -64,7 +63,6 @@ return {
   {
     'lazymaniac/wttr.nvim',
     branch = 'main',
-    event = 'VeryLazy',
     dependencies = { 'nvim-lua/plenary.nvim', 'MunifTanjim/nui.nvim' },
     -- stylua: ignore
     keys = {

@@ -7,7 +7,6 @@ return {
     -- see: `:h overseer.nvim`
     -- link: https://github.com/stevearc/overseer.nvim
     'stevearc/overseer.nvim',
-    event = 'VeryLazy',
     branch = 'master',
     -- stylua: ignore
     keys = {

@@ -4,7 +4,7 @@ return {
   {
     'saghen/blink.cmp',
     build = 'cargo build --release',
-    -- optional: provides snippets for the snippet source
+    event = 'InsertEnter',
     dependencies = {
       { 'L3MON4D3/LuaSnip', version = 'v2.*' },
       {
@@ -25,8 +25,6 @@ return {
           max_attempts = 6,
           kind_name = 'copilot', ---@type string | false
           kind_icon = ' ', ---@type string | false
-          kind_hl = true, ---@type string | false
-          debounce = 200, ---@type integer | false
           auto_refresh = {
             backward = true,
             forward = true,
@@ -34,7 +32,6 @@ return {
         },
       },
     },
-    event = 'InsertEnter',
     ---@module 'blink.cmp'
     ---@type blink.cmp.Config
     opts = {

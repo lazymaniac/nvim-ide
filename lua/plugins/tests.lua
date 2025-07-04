@@ -8,17 +8,12 @@ return {
   {
     'nvim-neotest/neotest',
     branch = 'master',
-    event = 'VeryLazy',
     dependencies = {
       'nvim-lua/plenary.nvim',
       'nvim-treesitter/nvim-treesitter',
       'stevearc/overseer.nvim',
       'nvim-neotest/nvim-nio',
       -- adapters
-      {
-        'jfpedroza/neotest-elixir',
-        branch = 'master',
-      },
       {
         'nvim-neotest/neotest-go',
         branch = 'main',
@@ -86,7 +81,6 @@ return {
           ['neotest-java'] = { ignore_wrapper = false },
           ['rustaceanvim.neotest'] = {},
           ['neotest-go'] = {},
-          ['neotest-elixir'] = {},
           ['neotest-haskell'] = {},
           ['neotest-python'] = {
             dap = { justMyCode = false },
@@ -134,7 +128,7 @@ return {
             end,
           },
           ['neotest-vim-test'] = {
-            ignore_filetypes = { 'python', 'lua', 'java', 'go', 'elixir', 'haskell', 'ruby' },
+            ignore_filetypes = { 'python', 'lua', 'java', 'go', 'haskell', 'ruby' },
           },
         },
         benchmark = {
