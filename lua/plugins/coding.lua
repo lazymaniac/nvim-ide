@@ -18,6 +18,7 @@ return {
 
   {
     'Chaitanyabsprip/fastaction.nvim',
+    event = 'LspAttach',
     opts = {
       dismiss_keys = { 'j', 'k', '<c-c>', 'q' },
       keys = 'asdfghlzxcvbnm',
@@ -33,7 +34,7 @@ return {
   -- auto pairs
   {
     'echasnovski/mini.pairs',
-    event = 'VeryLazy',
+    event = 'InsertEnter',
     opts = {
       -- In which modes mappings from this `config` should be created
       modes = { insert = true, command = true, terminal = false },
@@ -62,6 +63,7 @@ return {
 
   {
     'hat0uma/csvview.nvim',
+    ft = { 'csv', 'tsv' },
     config = function()
       require('csvview').setup {
         parser = {
@@ -93,8 +95,8 @@ return {
   -- link: https://github.com/nat-418/boole.nvim
   {
     'nat-418/boole.nvim',
+    event = 'BufReadPost',
     branch = 'main',
-    event = 'VeryLazy',
     config = function()
       require('boole').setup {
         mappings = {
@@ -114,8 +116,8 @@ return {
   -- link: https://github.com/m-demare/hlargs.nvim
   {
     'm-demare/hlargs.nvim',
+    event = 'LspAttach',
     branch = 'main',
-    event = 'VeryLazy',
     opts = {},
   },
 
@@ -123,6 +125,7 @@ return {
   -- link: https://github.com/NMAC427/guess-indent.nvim
   {
     'nmac427/guess-indent.nvim',
+    event = 'BufReadPre',
     config = function()
       require('guess-indent').setup {
         auto_cmd = true, -- Set to false to disable automatic execution
@@ -156,7 +159,7 @@ return {
   {
     'HiPhish/rainbow-delimiters.nvim',
     branch = 'master',
-    event = 'VeryLazy',
+    event = 'BufReadPost',
     config = function()
       require('rainbow-delimiters.setup').setup {}
     end,
@@ -164,7 +167,7 @@ return {
 
   {
     'rachartier/tiny-inline-diagnostic.nvim',
-    event = 'VeryLazy', -- Or `LspAttach`
+    event = 'LspAttach', -- Or `LspAttach`
     priority = 1000, -- needs to be loaded in first
     config = function()
       require('tiny-inline-diagnostic').setup()

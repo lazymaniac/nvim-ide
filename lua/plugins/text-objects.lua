@@ -24,11 +24,11 @@ return {
   {
     'echasnovski/mini.ai',
     branch = 'main',
+    event = { 'BufReadPost', 'BufNewFile' },
     -- keys = {
     --   { "a", mode = { "x", "o" } },
     --   { "i", mode = { "x", "o" } },
     -- },
-    event = 'VeryLazy',
     opts = function()
       local ai = require 'mini.ai'
       return {
@@ -254,7 +254,7 @@ return {
   -- ---------------------------------------------------------------------------------------------------------------
   {
     'chrisgrieser/nvim-various-textobjs',
+    event = 'BufEnter',
     branch = 'main',
-    event = 'VeryLazy',
   },
 }

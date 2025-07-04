@@ -5,7 +5,6 @@ return {
   -- link: https://github.com/joeveiga/ng.nvim
   {
     'joeveiga/ng.nvim',
-    event = 'VeryLazy',
     branch = 'main',
   },
 }

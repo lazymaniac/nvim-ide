@@ -139,13 +139,17 @@ return {
         { ']', group = '+[next]' },
         { '[', group = '+[prev]' },
         { '<leader><tab>', group = '+[tabs]' },
+        { '<leader>a', group = '+[ai]' },
         { '<leader>b', group = '+[buffer]' },
         { '<leader>c', group = '+[code]' },
         { '<leader>d', group = '+[debug]' },
         { '<leader>f', group = '+[file/find]' },
         { '<leader>g', group = '+[git]' },
+        { '<leader>n', group = '+[notes]' },
         { '<leader>q', group = '+[quit/session]' },
+        { '<leader>r', group = '+[run]' },
         { '<leader>s', group = '+[search]' },
+        { '<leader>t', group = '+[tests]' },
         { '<leader>u', group = '+[ui]' },
         { '<leader>w', group = '+[windows]' },
         { '<leader>x', group = '+[diagnostics/quickfix]' },
@@ -162,35 +166,12 @@ return {
 
   -- [[ BUFFER UTILS ]] ---------------------------------------------------------------
 
-  -- [windows.nvim] - Plugin for maximizing windows
-  -- see: `:h windows.nvim`
-  -- link: https://github.com/anuvyklack/windows.nvim
-  {
-    'anuvyklack/windows.nvim',
-    branch = 'main',
-    dependencies = {
-      { 'anuvyklack/middleclass', branch = 'master' },
-      { 'anuvyklack/animation.nvim', branch = 'main' },
-    },
-    -- stylua: ignore
-    keys = {
-      { '<leader>wm', '<cmd>WindowsMaximize<cr>',        mode = { 'n', 'v' }, desc = 'Maximize Window [wm]', },
-      { '<leader>we', '<cmd>WindowsEqualize<cr>',        mode = { 'n', 'v' }, desc = 'Equalize Window [we]', },
-      { '<leader>wt', '<cmd>WindowsToggleAutowidth<cr>', mode = { 'n', 'v' }, desc = 'Toggle Autowidth [wt]', },
-    },
-    config = function()
-      vim.o.winwidth = 10
-      vim.o.winminwidth = 10
-      vim.o.equalalways = false
-      require('windows').setup()
-    end,
-  },
-
   -- [better_escape.nvim] - Escpe from insert mode with jj or jk
   -- see: `:h better_escape.nvim`
   -- link: https://github.com/max397574/better-escape.nvim
   {
     'max397574/better-escape.nvim',
+    event = 'InsertEnter',
     config = function()
       require('better_escape').setup {
         timeout = vim.o.timeoutlen,
@@ -241,7 +222,7 @@ return {
   {
     'chrishrb/gx.nvim',
     branch = 'main',
-    event = { 'BufEnter' },
+    event = { 'VeryLazy' },
     dependencies = { 'nvim-lua/plenary.nvim' },
     opts = {
       handler_options = {
@@ -256,6 +237,7 @@ return {
   {
     'mvllow/modes.nvim',
     branch = 'main',
+    event = 'BufReadPre',
     config = function()
       require('modes').setup {
         colors = {
@@ -290,7 +272,7 @@ return {
   {
     'kevinhwang91/nvim-hlslens',
     branch = 'main',
-    event = 'VeryLazy',
+    event = 'BufReadPre',
     config = function()
       require('hlslens').setup {}
     end,
@@ -344,6 +326,7 @@ return {
 
   {
     'folke/paint.nvim',
+    event = 'BufReadPre',
     config = function()
       require('paint').setup {}
     end,

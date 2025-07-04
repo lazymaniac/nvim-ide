@@ -77,7 +77,6 @@ return {
   {
     'mason-org/mason.nvim',
     branch = 'main',
-    event = 'VeryLazy',
     cmd = 'Mason',
     build = ':MasonUpdate',
     opts = {
@@ -110,6 +109,7 @@ return {
   {
     'mason-org/mason-lspconfig.nvim',
     branch = 'main',
+    event = 'BufReadPre',
     opts = {
       ensure_installed = {
         'lua_ls',
@@ -122,7 +122,6 @@ return {
         'cucumber_language_server',
         'dockerls',
         'docker_compose_language_service',
-        'elixirls',
         'gopls',
         'gradle_ls',
         'groovyls',
@@ -148,7 +147,7 @@ return {
         'vtsls',
       },
       automatic_enable = {
-        exclude = { 'rust_analyzer', 'jdtls' },
+        exclude = { 'rust_analyzer', 'jdtls', 'groovyls', 'gradle_ls' },
       },
     },
   },
@@ -158,7 +157,7 @@ return {
   -- link: https://github.com/neovim/nvim-lspconfig
   {
     'neovim/nvim-lspconfig',
-    event = 'VeryLazy',
+    event = 'BufReadPre',
     config = function(_, opts)
       -- setup keymaps
       Util.lsp.on_attach(function(client, buffer)

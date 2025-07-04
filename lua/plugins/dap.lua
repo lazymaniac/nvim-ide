@@ -18,7 +18,7 @@ return {
   {
     'mfussenegger/nvim-dap',
     branch = 'master',
-    event = 'VeryLazy',
+    event = 'LspAttach',
     dependencies = {
       {
         'igorlfs/nvim-dap-view',
@@ -145,7 +145,6 @@ return {
   {
     'theHamsta/nvim-dap-virtual-text',
     branch = 'master',
-    event = 'VeryLazy',
     -- stylua: ignore
     keys = {
       { '<leader>dv', '<cmd>DapVirtualTextToggle<cr>', desc = 'Toggle DAP Virtual Text [dv]', mode = { 'n', 'v' } },
@@ -184,7 +183,7 @@ return {
   {
     'jay-babu/mason-nvim-dap.nvim',
     branch = 'main',
-    event = 'VeryLazy',
+    event = 'LspAttach',
     dependencies = { 'mason-org/mason.nvim' },
     cmd = { 'DapInstall', 'DapUninstall' },
     opts = {
@@ -207,8 +206,8 @@ return {
   -- link: https://github.com/LiadOz/nvim-dap-repl-highlights
   {
     'LiadOz/nvim-dap-repl-highlights',
+    event = 'LspAttach',
     branch = 'master',
-    event = 'VeryLazy',
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
     config = function()
       require('nvim-dap-repl-highlights').setup()
@@ -237,6 +236,7 @@ return {
   {
     'lucaSartore/nvim-dap-exception-breakpoints',
     dependencies = { 'mfussenegger/nvim-dap' },
+    event = 'LspAttach',
     config = function()
       local set_exception_breakpoints = require 'nvim-dap-exception-breakpoints'
       vim.api.nvim_set_keymap('n', '<leader>dE', '', { desc = '[D]ebug [C]ondition breakpoints', callback = set_exception_breakpoints })

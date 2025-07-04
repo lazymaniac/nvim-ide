@@ -24,7 +24,6 @@ return {
         desc = 'Pick Color',
       },
     },
-    event = 'VeryLazy',
     cmd = { 'Shades', 'Huefy' },
     opts = {
       huefy = {

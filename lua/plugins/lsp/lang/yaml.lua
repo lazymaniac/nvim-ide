@@ -5,5 +5,6 @@ return {
   -- link: link-to-repo
   {
     'b0o/SchemaStore.nvim',
+    ft = { 'json', 'yaml', 'jsonc' },
   },
 }

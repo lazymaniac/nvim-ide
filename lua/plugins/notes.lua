@@ -3,6 +3,9 @@ return {
   -- [[ NOTE TAKING ]] ---------------------------------------------------------------
   {
     'echaya/neowiki.nvim',
+    keys = {
+      { '<leader>nn', "<cmd>lua require('neowiki').open_wiki_floating('Personal')<cr>", desc = 'Open Wiki' },
+    },
     opts = {
       -- A list of tables, where each table defines a wiki.
       -- Both absolute and tilde-expanded paths are supported.
@@ -63,9 +66,6 @@ return {
         -- within the window after it's created.
         style = {},
       },
-    },
-    keys = {
-      { '<leader>nn', "<cmd>lua require('neowiki').open_wiki_floating()<cr>", desc = 'Open Wiki' },
     },
   },
 }
