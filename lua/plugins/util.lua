@@ -24,12 +24,6 @@ return {
     },
   },
 
-  -- [[ UTIL LIB ]] ---------------------------------------------------------------
-
-  -- [plenary.nvim] - Utility lib used by other plugins
-  -- see: `:h help-tag`
-  -- link: https://github.com/nvim-lua/plenary.nvim
-  { 'nvim-lua/plenary.nvim', branch = 'master', lazy = true },
 
   -- [[ LEARNING VIM MOTIONS ]] ---------------------------------------------------------------
 

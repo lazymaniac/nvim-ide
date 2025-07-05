@@ -7,8 +7,8 @@ return {
   {
     'nvim-treesitter/nvim-treesitter',
     branch = 'master',
+    lazy = false,
     build = ':TSUpdate',
-    event = { 'BufReadPost', 'BufNewFile' },
     keys = {
       { '<c-space>', desc = 'Increment selection <C-SPC>' },
       { '<bs>', desc = 'Decrement selection <BS>', mode = 'x' },
@@ -54,7 +54,7 @@ return {
         'vim',
         'vimdoc',
         'yaml',
-        'dap_repl',
+        -- 'dap_repl',
         'http',
         'vue',
         'terraform',

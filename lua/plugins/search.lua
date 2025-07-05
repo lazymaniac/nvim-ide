@@ -2,7 +2,9 @@ return {
 
   -- [[ SEARCHING AND REPLACING ]] ---------------------------------------------------------------
 
-  -- search/replace in multiple files
+  -- [grug-far.nvim] - Search and replace across multiple files with a fuzzy finder interface.
+  -- see: `:h grug-far.nvim`
+  -- link: https://github.com/MagicDuck/grug-far.nvim
   {
     'MagicDuck/grug-far.nvim',
     opts = { headerMaxWidth = 80 },
@@ -26,6 +28,9 @@ return {
     },
   },
 
+-- [smart-motion.nvim] - Home row keys for smart motions
+-- see: `:h smart-motion.nvim`
+-- link: https://github.com/FluxxField/smart-motion.nvim
   {
     'FluxxField/smart-motion.nvim',
     branch = 'master',

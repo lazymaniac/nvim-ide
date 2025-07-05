@@ -1,4 +1,7 @@
 return {
+  -- [snacks.nvim] - Collection of utilities
+  -- see: `:h snacks.nvim`
+  -- link: https://github.com/folke/snacks.nvim
   {
     'folke/snacks.nvim',
     priority = 1000,

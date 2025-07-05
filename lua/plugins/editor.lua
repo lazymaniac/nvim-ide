@@ -214,7 +214,7 @@ return {
   -- [vim-repeat] - Support `.` repeat in plugins.
   -- see: `:h vim-repeat`
   -- link: https://github.com/tpope/vim-repeat
-  { 'tpope/vim-repeat', branch = 'master' },
+  { 'tpope/vim-repeat', event = 'BufReadPost', branch = 'master' },
 
   -- [gx.nvim] - Open link in browser
   -- see: `:h gx.nvim`
@@ -222,7 +222,7 @@ return {
   {
     'chrishrb/gx.nvim',
     branch = 'main',
-    event = { 'VeryLazy' },
+    event = 'BufReadPost',
     dependencies = { 'nvim-lua/plenary.nvim' },
     opts = {
       handler_options = {
@@ -278,6 +278,9 @@ return {
     end,
   },
 
+  -- [nvim-recorder] - Enhances Neovim's macro recording capabilities.
+  -- see: `:h nvim-recorder`
+  -- link: https://github.com/chrisgrieser/nvim-recorder
   {
     'chrisgrieser/nvim-recorder',
     opts = {
@@ -322,13 +325,5 @@ return {
       -- (See README for further explanations.)
       dapSharedKeymaps = false,
     },
-  },
-
-  {
-    'folke/paint.nvim',
-    event = 'BufReadPre',
-    config = function()
-      require('paint').setup {}
-    end,
   },
 }

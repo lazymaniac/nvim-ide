@@ -1,6 +1,9 @@
 return {
 
   -- [[ NOTE TAKING ]] ---------------------------------------------------------------
+  -- [neowiki.nvim] - Wiki note-taking plugin.
+  -- see: `:h neowiki.nvim`
+  -- link: https://github.com/echaya/neowiki.nvim
   {
     'echaya/neowiki.nvim',
     keys = {
@@ -17,8 +20,7 @@ return {
       -- }
       wiki_dirs = {
         -- neowiki.nvim supports both absolute and relative paths
-        { name = 'Work', path = '~/.notes/work/wiki' },
-        { name = 'Personal', path = '~/.notes/personal/wiki' },
+        { name = 'Notes', path = '~/.notes/notes/wiki' },
       },
       -- The filename for a wiki's index page (e.g., "index.md").
       index_file = 'index.md',
