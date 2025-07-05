@@ -239,10 +239,10 @@ return {
   -- see: `:h codecompanion.txt`
   -- link: https://github.com/olimorris/codecompanion.nvim
   {
-    -- dir = '/Users/sebastian/workspace/codecompanion.nvim/',
-    -- dev = true,
-    'lazymaniac/codecompanion.nvim',
-    branch = 'feature/lsp-tool',
+    dir = '/Users/sebastian/workspace/codecompanion.nvim/',
+    dev = true,
+    -- 'lazymaniac/codecompanion.nvim',
+    -- branch = 'feature/lsp-tool',
     dependencies = {
       'nvim-lua/plenary.nvim',
       'nvim-treesitter/nvim-treesitter',
@@ -282,6 +282,9 @@ return {
     end,
   },
 
+  -- [copilot.lua] - Copilot integration for Neovim
+  -- see: `:h copilot.lua`
+  -- link: https://github.com/zbirenbaum/copilot.lua
   {
     'zbirenbaum/copilot.lua',
     cmd = 'Copilot',

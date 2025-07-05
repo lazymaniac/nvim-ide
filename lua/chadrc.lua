@@ -20,10 +20,11 @@ return {
       },
     },
     statusline = {
-      theme = 'default', -- default/vscode/vscode_colored/minimal
+      enabled = true,
+      theme = 'minimal', -- default/vscode/vscode_colored/minimal
       -- default/round/block/arrow separators work only for default statusline theme
       -- round and block will work for minimal theme only
-      separator_style = 'arrow',
+      separator_style = 'round',
       order = { 'mode', 'file', 'git', '%=', '%=', 'diagnostics', 'dap', 'lint', 'lsp', 'cwd', 'cursor' },
       modules = {
         dap = function()
@@ -40,35 +41,15 @@ return {
         end,
       },
     },
-    -- lazyload it when there are 1+ buffers
     tabufline = {
-      enabled = false,
-      lazyload = false,
+      enabled = true,
+      lazyload = true,
       order = { 'treeOffset', 'buffers', 'tabs', 'btns' },
       modules = nil,
-    },
-  },
-  nvdash = {
-    load_on_startup = false,
-  },
-  term = {
-    winopts = { number = false, relativenumber = false },
-    sizes = { sp = 0.45, vsp = 0.45, ['bo sp'] = 0.45, ['bo vsp'] = 0.45 },
-    float = {
-      relative = 'editor',
-      row = 0.05,
-      col = 0.05,
-      width = 0.9,
-      height = 0.8,
-      border = 'rounded',
+      bufwidth = 25,
     },
   },
   lsp = { signature = true },
-  cheatsheet = {
-    theme = 'grid', -- simple/grid
-    excluded_groups = { 'terminal (t)', 'autopairs', 'Nvim', 'Opens' }, -- can add group name or with mode
-  },
-  mason = { pkgs = {} },
   colorify = {
     enabled = true,
     mode = 'virtual', -- fg, bg, virtual

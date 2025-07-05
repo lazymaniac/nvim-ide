@@ -16,6 +16,9 @@ return {
     },
   },
 
+  -- [fastaction.nvim] - Quickly select actions from a popup menu.
+  -- see: `:h fastaction.nvim`
+  -- link: https://github.com/Chaitanyabsprip/fastaction.nvim
   {
     'Chaitanyabsprip/fastaction.nvim',
     event = 'LspAttach',
@@ -32,6 +35,9 @@ return {
   },
 
   -- auto pairs
+  -- [mini.pairs] - Automatically insert and delete pairs of characters.
+  -- see: `:h mini.pairs`
+  -- link: https://github.com/echasnovski/mini.pairs
   {
     'echasnovski/mini.pairs',
     event = 'InsertEnter',
@@ -61,6 +67,9 @@ return {
     },
   },
 
+  -- [csvview.nvim] - CSV/TSV file viewer with syntax highlighting and navigation.
+  -- see: `:h csvview.nvim`
+  -- link: https://github.com/hat0uma/csvview.nvim
   {
     'hat0uma/csvview.nvim',
     ft = { 'csv', 'tsv' },
@@ -76,9 +85,9 @@ return {
           },
           quote_char = '"',
           comments = {
-            -- "#",
+            "#",
             -- "--",
-            -- "//",
+            "//",
           },
         },
         view = {
@@ -165,6 +174,9 @@ return {
     end,
   },
 
+  -- [tiny-inline-diagnostic.nvim] - Render inline diagnostics in a compact way.
+  -- see: `:h tiny-inline-diagnostic.nvim`
+  -- link: https://github.com/rachartier/tiny-inline-diagnostic.nvim
   {
     'rachartier/tiny-inline-diagnostic.nvim',
     event = 'LspAttach', -- Or `LspAttach`
@@ -175,6 +187,9 @@ return {
     end,
   },
 
+  -- [patterns.nvim] - Regex explain tool
+  -- see: `:h patterns.nvim`
+  -- link: https://github.com/OXY2DEV/patterns.nvim
   {
     'OXY2DEV/patterns.nvim',
     keys = {
