@@ -6,7 +6,7 @@ return {
     integrations = { 'dap', 'treesitter', 'whichkey' },
     changed_themes = {},
     transparency = false,
-    theme_toggle = { 'nightowl', 'everforest' },
+    theme_toggle = { 'nightowl', 'kanagawa' },
   },
 
   ui = {
