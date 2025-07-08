@@ -156,7 +156,7 @@ return {
         -- Types are "echo", "notify", and "file"
         log = {
           {
-            type = 'echo',
+            type = 'notify',
             level = vim.log.levels.WARN,
           },
           {
