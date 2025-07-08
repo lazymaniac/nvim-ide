@@ -25,19 +25,12 @@ return {
       -- default/round/block/arrow separators work only for default statusline theme
       -- round and block will work for minimal theme only
       separator_style = 'round',
-      order = { 'mode', 'file', 'git', '%=', '%=', 'diagnostics', 'dap', 'lint', 'lsp', 'cwd', 'cursor' },
+      order = { 'mode', 'file', 'git', '%=', '%=', 'diagnostics', 'dap', 'lsp', 'cwd', 'cursor' },
       modules = {
         dap = function()
           if require('dap').status() ~= '' then
-            return '  ' .. require('dap').status()
+            return '   ' .. require('dap').status() .. '  '
           end
-        end,
-        lint = function()
-          local linters = require('lint').get_running()
-          if #linters == 0 then
-            return '󰦕'
-          end
-          return '󱉶 ' .. table.concat(linters, ', ')
         end,
       },
     },
