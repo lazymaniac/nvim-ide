@@ -54,7 +54,7 @@ return {
         'vim',
         'vimdoc',
         'yaml',
-        -- 'dap_repl',
+        'dap_repl',
         'http',
         'vue',
         'terraform',
@@ -170,6 +170,7 @@ return {
           ---@diagnostic disable-next-line: param-type-mismatch
         end, opts.ensure_installed)
       end
+      require('nvim-dap-repl-highlights').setup()
       require('nvim-treesitter.configs').setup(opts)
       -- angular files
       vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
