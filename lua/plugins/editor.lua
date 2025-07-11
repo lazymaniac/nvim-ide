@@ -236,8 +236,7 @@ return {
   -- link: https://github.com/mvllow/modes.nvim
   {
     'mvllow/modes.nvim',
-    branch = 'main',
-    event = 'BufReadPre',
+    event = 'BufReadPost',
     config = function()
       require('modes').setup {
         colors = {
