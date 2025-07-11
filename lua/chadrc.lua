@@ -29,7 +29,7 @@ return {
       modules = {
         dap = function()
           if require('dap').status() ~= '' then
-            return '   ' .. require('dap').status() .. '  '
+            return '   ' .. require('dap').status() .. ' '
           end
         end,
       },
