@@ -101,14 +101,18 @@ local config = {
       },
       tools = {
         opts = {
+          auto_submit_errors = true, -- Send any errors to the LLM automatically?
+          auto_submit_success = true, -- Send any successful output to the LLM automatically?
           default_tools = {
-            'list_code_usages',
+            -- 'planning_agent'
+            -- 'list_code_usages',
             -- 'insert_edit_into_file',
+            'full_stack_dev',
           },
         },
       },
       slash_commands = {
-        ['git_files'] = {
+        ['ls_git_files'] = {
           description = 'List git files',
           ---@param chat CodeCompanion.Chat
           callback = function(chat)
