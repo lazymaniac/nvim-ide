@@ -82,4 +82,51 @@ return {
     opts = {},
     cmd = { 'Typr', 'TyprStats' },
   },
+
+  -- [store.nvim] - Plugins browser.
+  -- see: `:h store.nvim`
+  -- link: https://github.com/alex-popov-tech/store.nvim
+  {
+    'alex-popov-tech/store.nvim',
+    cmd = 'Store',
+    keys = {
+      { '<leader>lP', '<cmd>Store<cr>', desc = 'Open Plugin Store' },
+    },
+    config = function()
+      require('store').setup {
+        -- Window dimensions (percentages or absolute)
+        width = 0.8,
+        height = 0.8,
+
+        -- Layout proportions (must sum to 1.0)
+        proportions = {
+          list = 0.3, -- 30% for repository list
+          preview = 0.7, -- 70% for preview pane
+        },
+
+        -- Keybindings (arrays of keys for each action)
+        keybindings = {
+          help = { '?' }, -- Show help
+          close = { 'q', '<esc>', '<c-c>' }, -- Close modal
+          filter = { 'f' }, -- Open filter input
+          refresh = { 'r' }, -- Refresh data
+          open = { '<cr>', 'o' }, -- Open selected repository
+          switch_focus = { '<tab>', '<s-tab>' }, -- Switch focus between panes
+          sort = { 's' }, -- Sort repositories
+        },
+
+        -- Repository display options
+        list_fields = { 'full_name', 'pushed_at', 'stars', 'forks', 'issues', 'tags' },
+        full_name_limit = 35, -- Max characters for repository names
+
+        -- GitHub API (optional)
+        github_token = nil, -- GitHub token for increased rate limits
+
+        -- Behavior
+        preview_debounce = 100, -- ms delay for preview updates
+        cache_duration = 24 * 60 * 60, -- 24 hours in seconds
+        logging = 'off', -- Levels: off, error, warn, log, debug
+      }
+    end,
+  },
 }

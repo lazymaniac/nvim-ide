@@ -7,7 +7,7 @@ return {
   {
     'echaya/neowiki.nvim',
     keys = {
-      { '<leader>nn', "<cmd>lua require('neowiki').open_wiki_floating('Personal')<cr>", desc = 'Open Wiki' },
+      { '<leader>nn', "<cmd>lua require('neowiki').open_wiki_floating()<cr>", desc = 'Open Notes' },
     },
     opts = {
       -- A list of tables, where each table defines a wiki.
