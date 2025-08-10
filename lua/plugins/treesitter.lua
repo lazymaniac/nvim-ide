@@ -224,4 +224,11 @@ return {
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
     opts = {},
   },
+
+  {
+    'nvim-treesitter/nvim-treesitter-context',
+    event = 'BufReadPost',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    opts = {},
+  },
 }
