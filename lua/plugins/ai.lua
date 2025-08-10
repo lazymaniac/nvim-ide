@@ -8,7 +8,7 @@ local config = {
       return require('codecompanion.adapters').extend('anthropic', {
         schema = {
           model = {
-            default = 'claude-3-7-sonnet-20250219',
+            default = 'claude-sonnet-4-20250514',
           },
         },
         env = {
@@ -29,6 +29,13 @@ local config = {
           model = {
             default = 'claude-sonnet-4',
           },
+        },
+      })
+    end,
+    tavily = function()
+      return require('codecompanion.adapters').extend('tavily', {
+        env = {
+          api_key = 'cmd:cat ~/.tavily',
         },
       })
     end,
@@ -53,19 +60,19 @@ local config = {
       enabled = true,
       opts = {
         keymap = 'gh',
-        auto_save = false,
+        auto_save = true,
         expiration_days = 0,
-        picker = 'default', --- ("telescope", "snacks", "fzf-lua", or "default")
+        picker = 'snacks', --- ("telescope", "snacks", "fzf-lua", or "default")
         picker_keymaps = {
           rename = { n = 'r', i = '<M-r>' },
           delete = { n = 'd', i = '<M-d>' },
           duplicate = { n = '<C-y>', i = '<C-y>' },
         },
-        auto_generate_title = false,
-        continue_last_chat = false,
+        auto_generate_title = true,
+        continue_last_chat = true,
         delete_on_clearing_chat = false,
         dir_to_save = vim.fn.stdpath 'data' .. '/codecompanion-history',
-        enable_logging = true,
+        enable_logging = false,
       },
     },
     mcphub = {
@@ -104,7 +111,8 @@ local config = {
           auto_submit_errors = true, -- Send any errors to the LLM automatically?
           auto_submit_success = true, -- Send any successful output to the LLM automatically?
           default_tools = {
-            'full_stack_dev',
+            -- 'list_code_usages',
+            -- 'full_stack_dev',
           },
         },
       },
@@ -208,10 +216,10 @@ local config = {
       separator = '─', -- The separator between the different messages in the chat buffer
       show_settings = false, -- Show LLM settings at the top of the chat buffer?
       show_token_count = true, -- Show the token count for each response?
-      start_in_insert_mode = true, -- Open the chat buffer in insert mode?
+      start_in_insert_mode = false, -- Open the chat buffer in insert mode?
     },
     diff = {
-      enabled = true,
+      enabled = false,
       close_chat_at = 240, -- Close an open chat buffer if the total columns of your display are less than...
       layout = 'vertical', -- vertical|horizontal split for default provider
       opts = { 'internal', 'filler', 'closeoff', 'algorithm:patience', 'followwrap', 'linematch:120' },
