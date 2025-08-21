@@ -10,9 +10,9 @@ local config = {
           model = {
             default = 'claude-sonnet-4-20250514',
           },
-        },
-        env = {
-          api_key = 'cmd:cat ~/.anthropic',
+          auth_type = {
+            default = 'oauth',
+          },
         },
       })
     end,
@@ -43,38 +43,22 @@ local config = {
       return require('codecompanion.adapters').extend('ollama', {
         schema = {
           model = {
-            default = 'llama4:latest',
+            default = 'gpt-oss:120b',
           },
           num_ctx = {
-            default = 8192,
+            default = 60000,
           },
           temperature = {
             default = 0.9,
+          },
+          think = {
+            default = false,
           },
         },
       })
     end,
   },
   extensions = {
-    history = {
-      enabled = true,
-      opts = {
-        keymap = 'gh',
-        auto_save = true,
-        expiration_days = 0,
-        picker = 'snacks', --- ("telescope", "snacks", "fzf-lua", or "default")
-        picker_keymaps = {
-          rename = { n = 'r', i = '<M-r>' },
-          delete = { n = 'd', i = '<M-d>' },
-          duplicate = { n = '<C-y>', i = '<C-y>' },
-        },
-        auto_generate_title = true,
-        continue_last_chat = true,
-        delete_on_clearing_chat = false,
-        dir_to_save = vim.fn.stdpath 'data' .. '/codecompanion-history',
-        enable_logging = false,
-      },
-    },
     mcphub = {
       callback = 'mcphub.extensions.codecompanion',
       opts = {
@@ -88,6 +72,7 @@ local config = {
         add_tool = true,
       },
     },
+    reasoning = { callback = 'codecompanion._extensions.reasoning', opts = { enabled = true } },
   },
   strategies = {
     -- CHAT STRATEGY ----------------------------------------------------------
@@ -111,8 +96,7 @@ local config = {
           auto_submit_errors = true, -- Send any errors to the LLM automatically?
           auto_submit_success = true, -- Send any successful output to the LLM automatically?
           default_tools = {
-            -- 'list_code_usages',
-            -- 'full_stack_dev',
+            'meta_agent',
           },
         },
       },
@@ -255,7 +239,6 @@ return {
     dependencies = {
       'nvim-lua/plenary.nvim',
       'nvim-treesitter/nvim-treesitter',
-      'ravitemer/codecompanion-history.nvim',
       {
         'ravitemer/mcphub.nvim',
         cmd = 'MCPHub',
@@ -269,6 +252,10 @@ return {
         version = '*',
         build = 'uv tool upgrade vectorcode',
         dependencies = { 'nvim-lua/plenary.nvim' },
+      },
+      {
+        dir = '/Users/sebastian/workspace/codecompanion-reasoning.nvim/',
+        dev = true,
       },
     },
     -- stylua: ignore
