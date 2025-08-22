@@ -46,13 +46,10 @@ local config = {
             default = 'gpt-oss:120b',
           },
           num_ctx = {
-            default = 60000,
+            default = 120000,
           },
           temperature = {
-            default = 0.9,
-          },
-          think = {
-            default = false,
+            default = 1.0,
           },
         },
       })
@@ -65,11 +62,6 @@ local config = {
         make_vars = true,
         make_slash_commands = true,
         show_result_in_chat = true,
-      },
-    },
-    vectorcode = {
-      opts = {
-        add_tool = true,
       },
     },
     reasoning = { callback = 'codecompanion._extensions.reasoning', opts = { enabled = true } },
@@ -246,12 +238,6 @@ return {
         opts = {
           use_bundled_binary = true,
         },
-      },
-      {
-        'Davidyz/VectorCode',
-        version = '*',
-        build = 'uv tool upgrade vectorcode',
-        dependencies = { 'nvim-lua/plenary.nvim' },
       },
       {
         dir = '/Users/sebastian/workspace/codecompanion-reasoning.nvim/',
