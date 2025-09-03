@@ -61,11 +61,7 @@ return {
   {
     'echasnovski/mini.icons',
     lazy = true,
-    opts = {
-      lsp = {
-        copilot = { glyph = ' ' },
-      },
-    },
+    opts = {},
     config = function(_, opts)
       require('mini.icons').setup(opts)
     end,

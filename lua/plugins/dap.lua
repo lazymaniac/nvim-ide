@@ -32,7 +32,7 @@ return {
           winbar = {
             show = true,
             -- You can add a "console" section to merge the terminal with the other views
-            sections = { 'watches', 'scopes', 'exceptions', 'breakpoints', 'threads', 'repl', 'console' },
+            sections = { 'watches', 'scopes', 'exceptions', 'breakpoints', 'threads', 'repl' },
             -- Must be one of the sections declared above (except for "console")
             default_section = 'watches',
             -- Configure each section individually
@@ -97,7 +97,7 @@ return {
             -- Add your own sections
             custom_sections = {},
             controls = {
-              enabled = false,
+              enabled = true,
               position = 'right',
               buttons = {
                 'play',
@@ -117,7 +117,7 @@ return {
             position = 'below',
             terminal = {
               width = 0.5,
-              position = 'left',
+              position = 'right',
               -- List of debug adapters for which the terminal should be ALWAYS hidden
               hide = {},
               -- Hide the terminal when starting a new session
