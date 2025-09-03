@@ -41,7 +41,7 @@ local config = {
               default = 120000,
             },
             temperature = {
-              default = 1.0,
+              default = 0.8,
             },
           },
         })
@@ -113,39 +113,6 @@ local config = {
     -- CMD STRATEGY -----------------------------------------------------------
     cmd = {
       adapter = 'anthropic',
-    },
-  },
-  prompt_library = {
-    ['Suggest Refactoring'] = {
-      strategy = 'chat',
-      description = 'Suggest refactoring for provided piece of code.',
-      opts = {
-        modes = { 'v' },
-        short_name = 'refactor',
-        auto_submit = false,
-        is_slash_command = false,
-        is_default = true,
-        stop_context_insertion = true,
-        user_prompt = false,
-      },
-      prompts = {
-        {
-          role = 'system',
-          content = function(_)
-            return [[ Your task is to suggest refactoring of a specified piece of code to improve its efficiency, readability, and maintainability without altering its functionality. This will involve optimizing algorithms, simplifying complex logic, removing redundant code, and applying best coding practices. Check every aspect of the code, including variable names, function structures, and overall design patterns. Your goal is to provide a cleaner, more efficient version of the code that adheres to modern coding standards. ]]
-          end,
-        },
-        {
-          role = 'user',
-          content = function(context)
-            local text = require('codecompanion.helpers.actions').get_code(context.start_line, context.end_line)
-            return 'I have the following code:\n\n```' .. context.filetype .. '\n' .. text .. '\n```\n\n'
-          end,
-          opts = {
-            contains_code = true,
-          },
-        },
-      },
     },
   },
   -- DISPLAY OPTIONS ----------------------------------------------------------
@@ -249,12 +216,15 @@ return {
     },
     -- stylua: ignore
     keys = {
-      { '<leader>ai', '<cmd>CodeCompanion<cr>',        mode = { 'n', 'v' }, desc = 'Inline Prompt [ai]' },
-      { '<leader>ac', '<cmd>CodeCompanionChat<cr>',    mode = { 'n', 'v' }, desc = 'Open Chat [ac]' },
-      { '<leader>at', '<cmd>CodeCompanionChat Toggle<cr>',  mode = { 'n', 'v' }, desc = 'Toggle Chat [at]' },
+      { '<leader>ai', '<cmd>CodeCompanion<cr>', mode = { 'n', 'v' }, desc = 'Inline Prompt [ai]' },
+      { '<leader>ac', '<cmd>CodeCompanionChat<cr>', mode = { 'n', 'v' }, desc = 'Open Chat [ac]' },
+      { '<leader>at', '<cmd>CodeCompanionChat Toggle<cr>', mode = { 'n', 'v' }, desc = 'Toggle Chat [at]' },
       { '<leader>aa', '<cmd>CodeCompanionActions<cr>', mode = { 'n', 'v' }, desc = 'Actions [aa]' },
       { '<leader>am', '<cmd>MCPHub<cr>', mode = { 'n' }, desc = 'MCP Hub [am]' },
       { '<leader>ah', '<cmd>CodeCompanionChatHistory<cr>', mode = { 'n' }, desc = 'Chat History [ah]' },
+      { '<leader>al', '<cmd>CodeCompanionChatLast<cr>', mode = { 'n' }, desc = 'Continue Last Session [al]' },
+      { '<leader>ap', '<cmd>CodeCompanionProjectKnowledge<cr>', mode = { 'n' }, desc = 'Open Project Knowledge file [ap]' },
+      { '<leader>ap', '<cmd>CodeCompanionInitProjectKnowledge<cr>', mode = { 'n' }, desc = 'Initialize Project Knowledge [ap]' },
     },
     config = function()
       -- mappings group
