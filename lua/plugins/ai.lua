@@ -1,59 +1,52 @@
 local config = {
   adapters = {
-    opts = {
-      show_defaults = false,
-      show_model_choices = true,
+    http = {
+      opts = {
+        show_defaults = false,
+        show_model_choices = true,
+      },
+      anthropic = function()
+        return require('codecompanion.adapters').extend('anthropic', {
+          schema = {
+            model = {
+              default = 'claude-sonnet-4-20250514',
+            },
+            auth_type = {
+              default = 'oauth',
+            },
+          },
+        })
+      end,
+      openai = function()
+        return require('codecompanion.adapters').extend('openai', {
+          env = {
+            api_key = 'cmd:cat ~/.gpt',
+          },
+        })
+      end,
+      tavily = function()
+        return require('codecompanion.adapters').extend('tavily', {
+          env = {
+            api_key = 'cmd:cat ~/.tavily',
+          },
+        })
+      end,
+      ollama = function()
+        return require('codecompanion.adapters').extend('ollama', {
+          schema = {
+            model = {
+              default = 'gpt-oss:120b',
+            },
+            num_ctx = {
+              default = 120000,
+            },
+            temperature = {
+              default = 1.0,
+            },
+          },
+        })
+      end,
     },
-    anthropic = function()
-      return require('codecompanion.adapters').extend('anthropic', {
-        schema = {
-          model = {
-            default = 'claude-sonnet-4-20250514',
-          },
-          auth_type = {
-            default = 'oauth',
-          },
-        },
-      })
-    end,
-    openai = function()
-      return require('codecompanion.adapters').extend('openai', {
-        env = {
-          api_key = 'cmd:cat ~/.gpt',
-        },
-      })
-    end,
-    copilot = function()
-      return require('codecompanion.adapters').extend('copilot', {
-        schema = {
-          model = {
-            default = 'claude-sonnet-4',
-          },
-        },
-      })
-    end,
-    tavily = function()
-      return require('codecompanion.adapters').extend('tavily', {
-        env = {
-          api_key = 'cmd:cat ~/.tavily',
-        },
-      })
-    end,
-    ollama = function()
-      return require('codecompanion.adapters').extend('ollama', {
-        schema = {
-          model = {
-            default = 'gpt-oss:120b',
-          },
-          num_ctx = {
-            default = 120000,
-          },
-          temperature = {
-            default = 1.0,
-          },
-        },
-      })
-    end,
   },
   extensions = {
     mcphub = {
@@ -242,6 +235,16 @@ return {
       {
         dir = '/Users/sebastian/workspace/codecompanion-reasoning.nvim/',
         dev = true,
+        config = function()
+          require('codecompanion-reasoning').setup {
+            chat_history = {
+              auto_save = true,
+              auto_load_last_session = true,
+              max_sessions = 100,
+              enable_commands = true,
+            },
+          }
+        end,
       },
     },
     -- stylua: ignore
@@ -251,6 +254,7 @@ return {
       { '<leader>at', '<cmd>CodeCompanionChat Toggle<cr>',  mode = { 'n', 'v' }, desc = 'Toggle Chat [at]' },
       { '<leader>aa', '<cmd>CodeCompanionActions<cr>', mode = { 'n', 'v' }, desc = 'Actions [aa]' },
       { '<leader>am', '<cmd>MCPHub<cr>', mode = { 'n' }, desc = 'MCP Hub [am]' },
+      { '<leader>ah', '<cmd>CodeCompanionChatHistory<cr>', mode = { 'n' }, desc = 'Chat History [ah]' },
     },
     config = function()
       -- mappings group
@@ -261,45 +265,6 @@ return {
       wk.add(defaults)
       -- plugin setup
       require('codecompanion').setup(config)
-    end,
-  },
-
-  -- [copilot.lua] - Copilot integration for Neovim
-  -- see: `:h copilot.lua`
-  -- link: https://github.com/zbirenbaum/copilot.lua
-  {
-    'zbirenbaum/copilot.lua',
-    cmd = 'Copilot',
-    enabled = true,
-    event = 'InsertEnter',
-    config = function()
-      require('copilot').setup {
-        server_opts_overrides = {
-          settings = {
-            telemetry = {
-              telemetryLevel = 'off',
-            },
-          },
-        },
-        panel = {
-          enabled = false,
-        },
-        suggestion = {
-          enabled = true,
-        },
-        filetypes = {
-          yaml = false,
-          markdown = false,
-          help = false,
-          gitcommit = false,
-          gitrebase = false,
-          hgcommit = false,
-          svn = false,
-          cvs = false,
-          ['.'] = false,
-        },
-        copilot_model = '',
-      }
     end,
   },
 }

@@ -56,22 +56,6 @@ return {
           },
         },
       },
-      -- [blink-copilot] - Inegration with GitHub Copilot
-      -- see: `:h blink-copilot`
-      -- link: https://github.com/fang2hou/blink-copilot
-      {
-        'fang2hou/blink-copilot',
-        opts = {
-          max_completions = 5,
-          max_attempts = 6,
-          kind_name = 'copilot', ---@type string | false
-          kind_icon = ' ', ---@type string | false
-          auto_refresh = {
-            backward = true,
-            forward = true,
-          },
-        },
-      },
     },
     ---@module 'blink.cmp'
     ---@type blink.cmp.Config
@@ -418,14 +402,8 @@ return {
       -- Default list of enabled providers defined so that you can extend it
       -- elsewhere in your config, without redefining it, due to `opts_extend`
       sources = {
-        default = { 'copilot', 'lazydev', 'lsp', 'path', 'snippets', 'buffer', 'omni', 'cmdline' },
+        default = { 'lazydev', 'lsp', 'path', 'snippets', 'buffer', 'omni', 'cmdline' },
         providers = {
-          copilot = {
-            name = 'copilot',
-            module = 'blink-copilot',
-            score_offset = 100,
-            async = true,
-          },
           lazydev = {
             name = 'LazyDev',
             module = 'lazydev.integrations.blink',
@@ -437,20 +415,6 @@ return {
     },
     opts_extend = { 'sources.default' },
     config = function(_, opts)
-      vim.api.nvim_create_autocmd('User', {
-        pattern = 'BlinkCmpMenuOpen',
-        callback = function()
-          require('copilot.suggestion').dismiss()
-          vim.b.copilot_suggestion_hidden = true
-        end,
-      })
-
-      vim.api.nvim_create_autocmd('User', {
-        pattern = 'BlinkCmpMenuClose',
-        callback = function()
-          vim.b.copilot_suggestion_hidden = false
-        end,
-      })
       require('blink.cmp').setup(opts)
     end,
   },
