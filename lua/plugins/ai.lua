@@ -8,17 +8,34 @@ local config = {
       anthropic = function()
         return require('codecompanion.adapters').extend('anthropic', {
           schema = {
-            model = {
-              default = 'claude-sonnet-4-20250514',
-            },
             auth_type = {
               default = 'oauth',
             },
+          },
+          env = {
+            api_key = 'cmd:cat ~/.anthropic',
           },
         })
       end,
       openai = function()
         return require('codecompanion.adapters').extend('openai', {
+          schema = {
+            model = {
+              default = 'gpt-5',
+            },
+          },
+          env = {
+            api_key = 'cmd:cat ~/.gpt',
+          },
+        })
+      end,
+      openai_responses = function()
+        return require('codecompanion.adapters').extend('openai_responses', {
+          schema = {
+            model = {
+              default = 'gpt-5',
+            },
+          },
           env = {
             api_key = 'cmd:cat ~/.gpt',
           },
@@ -57,12 +74,51 @@ local config = {
         show_result_in_chat = true,
       },
     },
-    reasoning = { callback = 'codecompanion._extensions.reasoning', opts = { enabled = true } },
+    reasoning = {
+      callback = 'codecompanion._extensions.reasoning',
+      opts = {
+        project_knowledge_initialization = {
+          adapter = 'openai', -- defaults to chat adapter
+          model = 'gpt-5-mini',
+        },
+        session_optimizer = {
+          adapter = 'openai', -- defaults to chat adapter
+          model = 'gpt-5-nano', -- defaults to chat model
+          summary_max_words = 2000, -- target words in generated summary
+        },
+        session_title_generator = {
+          adapter = 'openai', -- defaults to chat adapter
+          model = 'gpt-5-nano', -- defaults to chat model
+          refresh_every_n_user_prompts = 3,
+          max_words_per_title = 6,
+          format_title = nil,
+        },
+        reflect_on_progress = {
+          adapter = 'openai',
+          model = 'gpt-5-nano',
+        },
+        session_history = {
+          auto_save = true,
+          auto_generate_title = true,
+          continue_last_session = false,
+          picker = 'default',
+          max_sessions = 100,
+          sessions_dir = vim.fn.stdpath 'data' .. '/codecompanion-reasoning/sessions',
+          session_file_pattern = 'session_%Y%m%d_%H%M%S.lua',
+          keymaps = {
+            rename = { n = 'r', i = '<M-r>' },
+            delete = { n = 'd', i = '<M-d>' },
+            duplicate = { n = '<C-y>', i = '<C-y>' },
+          },
+        },
+        enabled = true,
+      },
+    },
   },
   strategies = {
     -- CHAT STRATEGY ----------------------------------------------------------
     chat = {
-      adapter = 'anthropic',
+      adapter = 'openai_responses',
       opts = {
         completion_provider = 'blink', -- blink|cmp|coc|default
       },
@@ -108,11 +164,7 @@ local config = {
     },
     -- INLINE STRATEGY --------------------------------------------------------
     inline = {
-      adapter = 'anthropic',
-    },
-    -- CMD STRATEGY -----------------------------------------------------------
-    cmd = {
-      adapter = 'anthropic',
+      adapter = 'openai_responses',
     },
   },
   -- DISPLAY OPTIONS ----------------------------------------------------------
@@ -155,11 +207,38 @@ local config = {
       start_in_insert_mode = false, -- Open the chat buffer in insert mode?
     },
     diff = {
-      enabled = false,
-      close_chat_at = 240, -- Close an open chat buffer if the total columns of your display are less than...
-      layout = 'vertical', -- vertical|horizontal split for default provider
-      opts = { 'internal', 'filler', 'closeoff', 'algorithm:patience', 'followwrap', 'linematch:120' },
-      provider = 'default', -- default|mini_diff
+      enabled = true,
+      provider = 'inline', -- mini_diff|split|inline
+
+      provider_opts = {
+        -- Options for inline diff provider
+        inline = {
+          layout = 'float', -- float|buffer - Where to display the diff
+
+          opts = {
+            context_lines = 4, -- Number of context lines in hunks
+            dim = 25, -- Background dim level for floating diff (0-100, [100 full transparent], only applies when layout = "float")
+            full_width_removed = true, -- Make removed lines span full width
+            show_keymap_hints = true, -- Show "gda: accept | gdr: reject" hints above diff
+            show_removed = true, -- Show removed lines as virtual text
+          },
+        },
+
+        -- Options for the split provider
+        split = {
+          close_chat_at = 240, -- Close an open chat buffer if the total columns of your display are less than...
+          layout = 'vertical', -- vertical|horizontal split
+          opts = {
+            'internal',
+            'filler',
+            'closeoff',
+            'algorithm:histogram', -- https://adamj.eu/tech/2024/01/18/git-improve-diff-histogram/
+            'indent-heuristic', -- https://blog.k-nut.eu/better-git-diffs
+            'followwrap',
+            'linematch:120',
+          },
+        },
+      },
     },
     inline = {
       -- If the inline prompt creates a new buffer, how should we display this?
@@ -168,7 +247,7 @@ local config = {
   },
   -- GENERAL OPTIONS ----------------------------------------------------------
   opts = {
-    log_level = 'DEBUG', -- TRACE|DEBUG|ERROR|INFO
+    log_level = 'TRACE', -- TRACE|DEBUG|ERROR|INFO
     -- If this is false then any default prompt that is marked as containing code
     -- will not be sent to the LLM. Please note that whilst I have made every
     -- effort to ensure no code leakage, using this is at your own risk
@@ -184,8 +263,9 @@ return {
   -- see: `:h codecompanion.txt`
   -- link: https://github.com/olimorris/codecompanion.nvim
   {
-    dir = '/Users/sebastian/workspace/codecompanion.nvim/',
-    dev = true,
+    'olimorris/codecompanion.nvim',
+    -- dir = '/Users/sebastian/workspace/codecompanion.nvim/',
+    -- dev = true,
     -- 'lazymaniac/codecompanion.nvim',
     -- branch = 'feature/lsp-tool',
     dependencies = {
@@ -196,22 +276,60 @@ return {
         cmd = 'MCPHub',
         build = 'bundled_build.lua',
         opts = {
-          use_bundled_binary = true,
+          use_bundled_binary = true, -- Use local `mcp-hub` binary (set this to true when using build = "bundled_build.lua")
+          workspace = {
+            enabled = true, -- Enable project-local configuration files
+            look_for = { '.mcphub/servers.json', '.vscode/mcp.json', '.cursor/mcp.json' }, -- Files to look for when detecting project boundaries (VS Code format supported)
+            reload_on_dir_changed = true, -- Automatically switch hubs on DirChanged event
+            port_range = { min = 40000, max = 41000 }, -- Port range for generating unique workspace ports
+            get_port = nil, -- Optional function returning custom port number. Called when generating ports to allow custom port assignment logic
+          },
+          ---Chat-plugin related options-----------------
+          auto_approve = false, -- Auto approve mcp tool calls
+          auto_toggle_mcp_servers = false, -- Let LLMs start and stop MCP servers automatically
+          --- Plugin specific options-------------------
+          native_servers = {}, -- add your custom lua native servers here
+          builtin_tools = {
+            edit_file = {
+              parser = {
+                track_issues = true,
+                extract_inline_content = true,
+              },
+              locator = {
+                fuzzy_threshold = 0.8,
+                enable_fuzzy_matching = true,
+              },
+              ui = {
+                go_to_origin_on_complete = true,
+                keybindings = {
+                  accept = '.',
+                  reject = ',',
+                  next = 'n',
+                  prev = 'p',
+                  accept_all = 'ga',
+                  reject_all = 'gr',
+                },
+              },
+            },
+          },
+          ui = {
+            window = {
+              width = 0.8, -- 0-1 (ratio); "50%" (percentage); 50 (raw number)
+              height = 0.8, -- 0-1 (ratio); "50%" (percentage); 50 (raw number)
+              align = 'center', -- "center", "top-left", "top-right", "bottom-left", "bottom-right", "top", "bottom", "left", "right"
+              relative = 'editor',
+              zindex = 50,
+              border = 'rounded', -- "none", "single", "double", "rounded", "solid", "shadow"
+            },
+            wo = { -- window-scoped options (vim.wo)
+              winhl = 'Normal:MCPHubNormal,FloatBorder:MCPHubBorder',
+            },
+          },
         },
       },
       {
         dir = '/Users/sebastian/workspace/codecompanion-reasoning.nvim/',
         dev = true,
-        config = function()
-          require('codecompanion-reasoning').setup {
-            chat_history = {
-              auto_save = true,
-              auto_load_last_session = true,
-              max_sessions = 100,
-              enable_commands = true,
-            },
-          }
-        end,
       },
     },
     -- stylua: ignore
@@ -227,13 +345,11 @@ return {
       { '<leader>ap', '<cmd>CodeCompanionInitProjectKnowledge<cr>', mode = { 'n' }, desc = 'Initialize Project Knowledge [ap]' },
     },
     config = function()
-      -- mappings group
       local wk = require 'which-key'
       local defaults = {
         { '<leader>a', group = '+[AI]' },
       }
       wk.add(defaults)
-      -- plugin setup
       require('codecompanion').setup(config)
     end,
   },
