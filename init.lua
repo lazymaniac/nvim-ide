@@ -8,7 +8,7 @@ end
 
 if vim.g.neovide then
   -- text
-  vim.o.guifont = 'VictorMono Nerd Font:h13'
+  vim.o.guifont = 'Maple Mono NF:h13'
   vim.g.neovide_text_gamma = 0.8
   vim.g.neovide_text_contrast = 0.9
 
