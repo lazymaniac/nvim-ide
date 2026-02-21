@@ -50,11 +50,6 @@ return {
         'zidhuss/neotest-minitest',
         branch = 'main',
       },
-      {
-        'nvim-neotest/neotest-vim-test',
-        branch = 'master',
-      },
-      'vim-test/vim-test',
     },
     -- stylua: ignore
     keys = {
@@ -126,9 +121,6 @@ return {
                 '-Itest',
               }
             end,
-          },
-          ['neotest-vim-test'] = {
-            ignore_filetypes = { 'python', 'lua', 'java', 'go', 'haskell', 'ruby' },
           },
         },
         benchmark = {
