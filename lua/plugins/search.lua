@@ -29,7 +29,7 @@ return {
   },
 
   {
-    'ggandor/leap.nvim',
+    url = "https://codeberg.org/andyg/leap.nvim",
     config = function()
       -- require('leap').set_default_mappings()
       -- Exclude whitespace and the middle of alphabetic words from preview:
