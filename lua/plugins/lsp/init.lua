@@ -16,6 +16,9 @@ local packages = {
   'cmakelint', -- cmake
   'cmakelang',
   'codelldb', -- rust, c
+  'cypher-language-server', -- neo4j cypher language server
+  'graphql-language-service-cli',
+  'postgres-language-server',
   'shellcheck', -- bash
   'shellharden',
   'beautysh',
