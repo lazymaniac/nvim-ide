@@ -34,6 +34,8 @@ local packages = {
   'java-debug-adapter', -- java
   'java-test',
   'vscode-java-decompiler',
+  'vscode-spring-boot-tools',
+  'vscode-java-dependency',
   'jq', -- json
   'jsonlint',
   'prettierd',
