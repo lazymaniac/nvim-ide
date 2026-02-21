@@ -136,17 +136,6 @@ return {
           },
           goto_previous_end = { ['[F'] = '@function.outer', ['[C'] = '@class.outer' },
         },
-        swap = {
-          enable = true,
-          swap_next = {
-            ['<F2>'] = '@parameter.inner',
-            ['<F4>'] = '@code_cell.outer',
-          },
-          swap_previous = {
-            ['<F3>'] = '@parameter.inner',
-            ['<F5>'] = '@code_cell.outer',
-          },
-        },
       },
     },
     config = function(_, opts)
