@@ -34,7 +34,7 @@ return {
             -- You can add a "console" section to merge the terminal with the other views
             sections = { 'watches', 'scopes', 'exceptions', 'breakpoints', 'threads', 'repl' },
             -- Must be one of the sections declared above (except for "console")
-            default_section = 'watcher',
+            default_section = 'watches',
             show_keymap_hints = true,
             base_sections = {
               -- Labels can be set dynamically with functions
