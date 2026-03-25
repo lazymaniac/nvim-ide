@@ -518,7 +518,7 @@ return {
             hidden = true,
             ignored = true,
             jump = { close = false },
-            layout = { preset = 'sidebar', preview = false, layout = { position = 'right' } },
+            layout = { preset = 'sidebar', preview = false, layout = { position = 'right', width = 60 } },
             formatters = {
               file = { filename_only = true },
               severity = { pos = 'right' },
@@ -632,6 +632,50 @@ return {
                   }
                 end,
               },
+              recursive_toggle = function(picker, item)
+                local Actions = require 'snacks.explorer.actions'
+                local Tree = require 'snacks.explorer.tree'
+
+                local get_children = function(node)
+                  local children = {}
+                  for _, child in pairs(node.children) do
+                    table.insert(children, child)
+                  end
+                  return children
+                end
+
+                local refresh = function()
+                  Actions.update(picker, { refresh = true })
+                end
+
+                ---@param node snacks.picker.explorer.Node
+                local function toggle_recursive(node)
+                  Tree:toggle(node.path)
+                  refresh()
+                  vim.schedule(function()
+                    local children = get_children(node)
+                    if #children ~= 1 then
+                      return
+                    end
+                    local child = children[1]
+                    if not child.dir then
+                      return
+                    end
+                    toggle_recursive(child)
+                  end)
+                end
+
+                local node = Tree:node(item.file)
+                if not node then
+                  return
+                end
+
+                if node.dir then
+                  toggle_recursive(node)
+                else
+                  picker:action 'confirm'
+                end
+              end,
               diff = {
                 action = function(picker)
                   picker:close()
@@ -656,6 +700,7 @@ return {
                   ['s'] = 'search_in_directory',
                   ['S'] = 'search_in_directory_case_sensitive',
                   ['D'] = 'diff',
+                  ['<CR>'] = 'recursive_toggle',
                 },
               },
             },
@@ -1210,7 +1255,7 @@ return {
             follow = 'f',
             -- selected = '● ',
             unselected = ' ',
-            selected = " ",
+            selected = ' ',
           },
           git = {
             enabled = true, -- show git icons
@@ -1591,6 +1636,7 @@ return {
       { '<leader>lg', function() Snacks.lazygit() end, desc = 'GIT TUI [lg]' },
       { '<leader>lh', function() Snacks.terminal.toggle 'clx' end, desc = 'Hackernews TUI [lh]' },
       { '<leader>lj', function() Snacks.terminal.toggle 'euporie-notebook' end, desc = 'Jupyter Notebooks TUI [lj]' },
+      { '<leader>lk', function() Snacks.terminal.toggle 'tiki' end, desc = 'Kanban [lk]' },
       { '<leader>lK', function() Snacks.terminal.toggle 'k9s' end, desc = 'Kubernetes TUI [lk]' },
       { '<leader>ln', function() Snacks.terminal.toggle 'termscp' end, desc = 'Network Client [ln]' },
       { '<leader>lp', function() Snacks.terminal.toggle 'python3' end, desc = 'Python Term [lp]' },

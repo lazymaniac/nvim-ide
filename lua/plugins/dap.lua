@@ -32,7 +32,7 @@ return {
           winbar = {
             show = true,
             -- You can add a "console" section to merge the terminal with the other views
-            sections = { 'watches', 'scopes', 'exceptions', 'breakpoints', 'threads', 'repl' },
+            sections = { 'watches', 'scopes', 'exceptions', 'breakpoints', 'threads', 'repl', 'console' },
             -- Must be one of the sections declared above (except for "console")
             default_section = 'watches',
             show_keymap_hints = true,
@@ -45,7 +45,6 @@ return {
               watches = { label = 'Watches', keymap = 'W' },
               threads = { label = 'Threads', keymap = 'T' },
               repl = { label = 'REPL', keymap = 'R' },
-              sessions = { label = 'Sessions', keymap = 'K' },
               console = { label = 'Console', keymap = 'C' },
             },
             -- Add your own sections
@@ -247,6 +246,7 @@ return {
   {
     'Weissle/persistent-breakpoints.nvim',
     branch = 'main',
+    lazy = false,
     keys = {
       { '<leader>dB', '<cmd>PBSetConditionalBreakpoint<cr>', desc = 'Conditional Breakpoint [dB]' },
       { '<leader>db', '<cmd>PBToggleBreakpoint<cr>', desc = 'Toggle Breakpoint [db]' },
