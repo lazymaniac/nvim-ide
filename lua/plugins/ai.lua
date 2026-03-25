@@ -30,10 +30,7 @@ local config = {
         return require('codecompanion.adapters').extend('ollama', {
           schema = {
             model = {
-              default = 'qwen3-next',
-            },
-            num_ctx = {
-              default = 120000,
+              default = 'qwen3-coder-next:q8_0',
             },
           },
         })
@@ -87,10 +84,10 @@ local config = {
     },
     chat = {
       window = {
-        layout = 'float', -- float|vertical|horizontal|buffer
+        layout = 'vertical', -- float|vertical|horizontal|buffer
         border = 'rounded',
-        height = 0.8,
-        width = 0.8,
+        height = 0.3,
+        width = 0.3,
         relative = 'editor',
         opts = {
           breakindent = true,
@@ -169,9 +166,9 @@ return {
   -- see: `:h codecompanion.txt`
   -- link: https://github.com/olimorris/codecompanion.nvim
   {
-    -- 'olimorris/codecompanion.nvim',
-    dir = '/Users/sebastian/workspace/codecompanion.nvim/',
-    dev = true,
+    'olimorris/codecompanion.nvim',
+    -- dir = '/Users/sebastian/workspace/codecompanion.nvim/',
+    -- dev = true,
     -- 'lazymaniac/codecompanion.nvim',
     -- branch = 'feature/lsp-tool',
     dependencies = {

@@ -127,7 +127,7 @@ return {
           -- javascript = { { 'prettierd', 'prettier' } },
           -- You can use a function here to determine the formatters dynamically
           -- Use the "*" filetype to run formatters on all filetypes.
-          ['*'] = { 'codespell', 'trim_whitespace' },
+          ['*'] = { 'trim_whitespace' },
           -- Use the "_" filetype to run formatters on filetypes that don't
           -- have other formatters configured.
         },
