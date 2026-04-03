@@ -1,5 +1,17 @@
 local config = {
   adapters = {
+    acp = {
+      kilo = function()
+        return require("codecompanion.adapters").extend("opencode", {
+          commands = {
+            default = {
+              "kilo",
+              "acp",
+            },
+          },
+        })
+      end,
+    },
     http = {
       opts = {
         show_defaults = false,
