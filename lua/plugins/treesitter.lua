@@ -6,23 +6,12 @@ return {
   -- link: https://github.com/nvim-treesitter/nvim-treesitter
   {
     'nvim-treesitter/nvim-treesitter',
-    branch = 'master',
+    branch = 'main',
     lazy = false,
     build = ':TSUpdate',
-    keys = {
-      { '<c-space>', desc = 'Increment selection <C-SPC>' },
-      { '<bs>', desc = 'Decrement selection <BS>', mode = 'x' },
-    },
-    init = function(plugin)
-      require('lazy.core.loader').add_to_rtp(plugin)
-      require 'nvim-treesitter.query_predicates'
-    end,
-    dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects', 'LiadOz/nvim-dap-repl-highlights' },
     cmd = { 'TSUpdateSync', 'TSUpdate', 'TSInstall' },
     ---@diagnostic disable-next-line: missing-fields
     opts = {
-      highlight = { enable = true },
-      indent = { enable = true },
       ensure_installed = {
         'angular',
         'bash',
@@ -34,7 +23,6 @@ return {
         'properties',
         'jsdoc',
         'json',
-        'jsonc',
         'latex',
         'lua',
         'luadoc',
@@ -47,7 +35,6 @@ return {
         'r',
         'regex',
         'sql',
-        'lua_patterns',
         'toml',
         'tsx',
         'typescript',
@@ -90,82 +77,35 @@ return {
         'c',
         'cpp',
       },
-      auto_install = true,
-      incremental_selection = {
-        enable = true,
-        keymaps = {
-          init_selection = '<C-space>',
-          node_incremental = '<C-space>',
-          scope_incremental = false,
-          node_decremental = '<bs>',
-        },
-      },
-      textobjects = {
-        select = {
-          enable = true,
-          lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
-          keymaps = {
-            -- You can use the capture groups defined in textobjects.scm
-            ['aa'] = '@parameter.outer',
-            ['ia'] = '@parameter.inner',
-            ['af'] = '@function.outer',
-            ['if'] = '@function.inner',
-            ['ac'] = '@class.outer',
-            ['ic'] = '@class.inner',
-            ['il'] = '@loop.inner',
-            ['al'] = '@loop.outer',
-            ['ii'] = '@conditional.inner',
-            ['ai'] = '@conditional.outer',
-            ['am'] = '@comment.outer',
-            ['im'] = '@comment.inner',
-          },
-        },
-        move = {
-          enable = true,
-          set_jumps = true,
-          goto_next_start = {
-            [']f'] = '@function.outer',
-            [']c'] = '@class.outer',
-            [']B'] = { query = '@code_cell.inner', desc = 'next code block' },
-          },
-          goto_next_end = { [']F'] = '@function.outer', [']C'] = '@class.outer' },
-          goto_previous_start = {
-            ['[f'] = '@function.outer',
-            ['[c'] = '@class.outer',
-            ['[B'] = { query = '@code_cell.inner', desc = 'previous code block' },
-          },
-          goto_previous_end = { ['[F'] = '@function.outer', ['[C'] = '@class.outer' },
-        },
-      },
     },
     config = function(_, opts)
-      local parser_configs = require('nvim-treesitter.parsers').get_parser_configs()
-      parser_configs.lua_patterns = {
-        install_info = {
-          url = 'https://github.com/OXY2DEV/tree-sitter-lua_patterns',
-          files = { 'src/parser.c' },
-          branch = 'main',
-        },
-      }
-      if type(opts.ensure_installed) == 'table' then
-        ---@type table<string, boolean>
-        local added = {}
-        opts.ensure_installed = vim.tbl_filter(function(lang)
-          if added[lang] then
-            return false
-          end
-          added[lang] = true
-          return true
-          ---@diagnostic disable-next-line: param-type-mismatch
-        end, opts.ensure_installed)
-      end
       require('nvim-dap-repl-highlights').setup()
-      require('nvim-treesitter.configs').setup(opts)
-      -- angular files
-      vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
-        pattern = { '*.component.html', '*.container.html' },
-        callback = function()
-          vim.treesitter.start(nil, 'angular')
+      require('nvim-treesitter').install(opts.ensure_installed)
+      vim.api.nvim_create_autocmd('FileType', {
+        group = vim.api.nvim_create_augroup('treesitter.setup', {}),
+        callback = function(args)
+          local buf = args.buf
+          local filetype = args.match
+
+          -- you need some mechanism to avoid running on buffers that do not
+          -- correspond to a language (like oil.nvim buffers), this implementation
+          -- checks if a parser exists for the current language
+          local language = vim.treesitter.language.get_lang(filetype) or filetype
+          if not vim.treesitter.language.add(language) then
+            return
+          end
+
+          -- replicate `fold = { enable = true }`
+          vim.wo.foldmethod = 'expr'
+          vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+
+          -- replicate `highlight = { enable = true }`
+          vim.treesitter.start(buf, language)
+
+          -- replicate `indent = { enable = true }`
+          vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+
+          -- `incremental_selection = { enable = true }` covered by 0.12.0
         end,
       })
     end,
@@ -176,31 +116,175 @@ return {
   -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   {
     'nvim-treesitter/nvim-treesitter-textobjects',
-    branch = 'master',
-    event = { 'BufReadPost', 'BufNewFile' },
-    dependencies = { 'nvim-treesitter/nvim-treesitter' },
-    config = function()
-      -- When in diff mode, we want to use the default
-      -- vim text objects c & C instead of the treesitter ones.
-      local move = require 'nvim-treesitter.textobjects.move' ---@type table<string,fun(...)>
-      local configs = require 'nvim-treesitter.configs'
-      for name, fn in pairs(move) do
-        if name:find 'goto' == 1 then
-          move[name] = function(q, ...)
-            if vim.wo.diff then
-              local config = configs.get_module('textobjects.move')[name] ---@type table<string,string>
-              for key, query in pairs(config or {}) do
-                if q == query and key:find '[%]%[][cC]' then
-                  vim.cmd('normal! ' .. key)
-                  return
-                end
-              end
-            end
-            return fn(q, ...)
-          end
-        end
-      end
+    branch = 'main',
+    lazy = false,
+    init = function()
+      vim.g.no_plugin_maps = true
     end,
+    keys = {
+      {
+        ';',
+        function()
+          require('nvim-treesitter-textobjects.repeatable_move').repeat_last_move_next()
+        end,
+        desc = 'Repeat last move next',
+        mode = { 'n', 'x', 'o' },
+      },
+      {
+        ',',
+        function()
+          require('nvim-treesitter-textobjects.repeatable_move').repeat_last_move_previous()
+        end,
+        desc = 'Repeat last move previous',
+        mode = { 'n', 'x', 'o' },
+      },
+      {
+        'am',
+        function()
+          require('nvim-treesitter-textobjects.select').select_textobject('@function.outer', 'textobjects')
+        end,
+        desc = 'Select function outer',
+        mode = { 'x', 'o' },
+      },
+      {
+        'im',
+        function()
+          require('nvim-treesitter-textobjects.select').select_textobject('@function.inner', 'textobjects')
+        end,
+        desc = 'Select function inner',
+        mode = { 'x', 'o' },
+      },
+      {
+        'ac',
+        function()
+          require('nvim-treesitter-textobjects.select').select_textobject('@class.outer', 'textobjects')
+        end,
+        desc = 'Select class outer',
+        mode = { 'x', 'o' },
+      },
+      {
+        'ic',
+        function()
+          require('nvim-treesitter-textobjects.select').select_textobject('@class.inner', 'textobjects')
+        end,
+        desc = 'Select class inner',
+        mode = { 'x', 'o' },
+      },
+      {
+        'as',
+        function()
+          require('nvim-treesitter-textobjects.select').select_textobject('@local.scope', 'locals')
+        end,
+        desc = 'Select local scope',
+        mode = { 'x', 'o' },
+      },
+      {
+        ']m',
+        function()
+          require('nvim-treesitter-textobjects.move').goto_next_start('@function.outer', 'textobjects')
+        end,
+        desc = 'Goto next function',
+        mode = { 'n', 'x', 'o' },
+      },
+      {
+        '[m',
+        function()
+          require('nvim-treesitter-textobjects.move').goto_previous_start('@function.outer', 'textobjects')
+        end,
+        desc = 'Goto previous function',
+        mode = { 'n', 'x', 'o' },
+      },
+      {
+        ']M',
+        function()
+          require('nvim-treesitter-textobjects.move').goto_next_end('@function.outer', 'textobjects')
+        end,
+        desc = 'Goto next function end',
+        mode = { 'n', 'x', 'o' },
+      },
+      {
+        '[M',
+        function()
+          require('nvim-treesitter-textobjects.move').goto_previous_end('@function.outer', 'textobjects')
+        end,
+        desc = 'Goto previous function end',
+        mode = { 'n', 'x', 'o' },
+      },
+      {
+        ']o',
+        function()
+          require('nvim-treesitter-textobjects.move').goto_next_start({ '@loop.inner', '@loop.outer' }, 'textobjects')
+        end,
+        desc = 'Goto next loop',
+        mode = { 'n', 'x', 'o' },
+      },
+      {
+        '[o',
+        function()
+          require('nvim-treesitter-textobjects.move').goto_previous_start({ '@loop.inner', '@loop.outer' }, 'textobjects')
+        end,
+        desc = 'Goto previous loop',
+        mode = { 'n', 'x', 'o' },
+      },
+      {
+        ']s',
+        function()
+          require('nvim-treesitter-textobjects.move').goto_next_start('@local.scope', 'locals')
+        end,
+        desc = 'Goto next scope',
+        mode = { 'n', 'x', 'o' },
+      },
+      {
+        '[s',
+        function()
+          require('nvim-treesitter-textobjects.move').goto_previous_start('@local.scope', 'locals')
+        end,
+        desc = 'Goto previous scope',
+        mode = { 'n', 'x', 'o' },
+      },
+      {
+        ']z',
+        function()
+          require('nvim-treesitter-textobjects.move').goto_next_start('@fold', 'folds')
+        end,
+        desc = 'Goto next fold',
+        mode = { 'n', 'x', 'o' },
+      },
+      {
+        '[z',
+        function()
+          require('nvim-treesitter-textobjects.move').goto_previous_start('@fold', 'folds')
+        end,
+        desc = 'Goto previous fold',
+        mode = { 'n', 'x', 'o' },
+      },
+      {
+        ']d',
+        function()
+          require('nvim-treesitter-textobjects.move').goto_next('@conditional.outer', 'textobjects')
+        end,
+        desc = 'Goto next conditional',
+        mode = { 'n', 'x', 'o' },
+      },
+      {
+        '[d',
+        function()
+          require('nvim-treesitter-textobjects.move').goto_previous('@conditional.outer', 'textobjects')
+        end,
+        desc = 'Goto previous conditional',
+        mode = { 'n', 'x', 'o' },
+      },
+    },
+    opts = {
+      select = {
+        lookahead = true,
+        selection_modes = {
+          ['@parameter.outer'] = 'v',
+          ['@function.outer'] = 'V',
+        },
+        include_surrounding_whitespace = false,
+      },
+    },
   },
 
   -- [nvim-ts-autotags] - Automatically add closing tags for HTML and JSX
