@@ -1,5 +1,17 @@
 return {
 
+  {
+    'neovim/nvim-lspconfig',
+    opts = {
+      servers = {
+        hls = {
+          managed = false,
+          owner = 'haskell-tools',
+        },
+      },
+    },
+  },
+
   -- [haskell-tools] - Extension for Haskell LSP.
   -- see: `:h haskell-tools`
   -- link: https://github.com/mrcjkb/haskell-tools.nvim

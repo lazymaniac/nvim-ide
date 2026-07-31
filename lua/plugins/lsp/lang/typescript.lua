@@ -48,7 +48,12 @@ return {
             {
               'gD',
               function()
-                local params = vim.lsp.util.make_position_params()
+                local clients = require('util').lsp.get_clients {
+                  bufnr = 0,
+                  filter = function(client) return client.name == 'vtsls' end,
+                }
+                local encoding = clients[1] and clients[1].offset_encoding or 'utf-16'
+                local params = vim.lsp.util.make_position_params(0, encoding)
                 require('util').lsp.execute {
                   command = 'typescript.goToSourceDefinition',
                   arguments = { params.textDocument.uri, params.position },

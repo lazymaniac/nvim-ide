@@ -10,13 +10,7 @@ vim.lsp.buf.hover = function()
     })
 end
 
-M._keys = nil
-
-function M.get()
-  if M._keys then
-    return M._keys
-  end
-  M._keys = {
+local base_keys = {
     { 'K', vim.lsp.buf.hover, desc = 'Hover Documentation <K>' },
     { 'gK', vim.lsp.buf.signature_help, desc = 'Signature Documentation <gK>', has = 'signatureHelp' },
     { '<C-k>', vim.lsp.buf.signature_help, mode = 'i', desc = 'Signature Help <C-k>', has = 'signatureHelp' },
@@ -38,49 +32,81 @@ function M.get()
       desc = 'Rename [cr]',
       mode = { 'n' },
     },
-  }
-  return M._keys
+}
+
+function M.get()
+  return vim.deepcopy(base_keys)
 end
 
 ---@param method string
-function M.has(buffer, method)
+function M.has(buffer, method, deps)
   method = method:find '/' and method or 'textDocument/' .. method
-  local clients = require('util').lsp.get_clients { bufnr = buffer }
+  local clients = deps and deps.clients or require('util').lsp.get_clients { bufnr = buffer }
   for _, client in ipairs(clients) do
-    if client:supports_method(method) then
+    if client:supports_method(method, { bufnr = buffer }) then
       return true
     end
   end
   return false
 end
 
-function M.resolve(buffer)
-  local Keys = require 'lazy.core.handler.keys'
-  if not Keys.resolve then
+function M.resolve(buffer, deps)
+  deps = deps or {}
+  local Keys = deps.Keys
+  if not Keys and not deps.resolve then Keys = require 'lazy.core.handler.keys' end
+  local resolve = deps.resolve or Keys.resolve
+  if not resolve then
     return {}
   end
   local spec = M.get()
-  local opts = require('util').opts 'nvim-lspconfig'
-  local clients = require('util').lsp.get_clients { bufnr = buffer }
+  local opts = deps.server_opts and { servers = deps.server_opts } or require('util').opts 'nvim-lspconfig'
+  local clients = deps.clients or require('util').lsp.get_clients { bufnr = buffer }
   for _, client in ipairs(clients) do
-    local maps = opts.servers[client.name] and opts.servers[client.name].keys or {}
-    vim.list_extend(spec, maps)
+    local maps = opts.servers and opts.servers[client.name] and opts.servers[client.name].keys or {}
+    vim.list_extend(spec, vim.deepcopy(maps))
   end
-  return Keys.resolve(spec)
+  return resolve(spec)
 end
 
-function M.on_attach(_, buffer)
-  local Keys = require 'lazy.core.handler.keys'
-  local keymaps = M.resolve(buffer)
+function M.on_attach(_, buffer, deps)
+  deps = deps or {}
+  local Keys = deps.Keys or require 'lazy.core.handler.keys'
+  local keymaps = M.resolve(buffer, deps)
 
   for _, keys in pairs(keymaps) do
-    if not keys.has or M.has(buffer, keys.has) then
+    if not keys.has or M.has(buffer, keys.has, deps) then
       local opts = Keys.opts(keys)
       opts.has = nil
       opts.silent = opts.silent ~= false
       opts.buffer = buffer
-      vim.keymap.set(keys.mode or 'n', keys.lhs, keys.rhs, opts)
+      local set = deps.set or vim.keymap.set
+      set(keys.mode or 'n', keys.lhs, keys.rhs, opts)
     end
+  end
+end
+
+function M.setup(deps)
+  deps = deps or {}
+  local handlers = deps.handlers or vim.lsp.handlers
+  local register_on_attach = deps.register_on_attach or require('util').lsp.on_attach
+  local get_client_by_id = deps.get_client_by_id or vim.lsp.get_client_by_id
+  local apply = deps.apply or function(client, buffer)
+    M.on_attach(client, buffer)
+  end
+
+  register_on_attach(apply)
+
+  local register_capability = handlers['client/registerCapability']
+  handlers['client/registerCapability'] = function(err, res, ctx, config)
+    local ret
+    if register_capability then ret = register_capability(err, res, ctx, config) end
+    local client = ctx and get_client_by_id(ctx.client_id)
+    if client then
+      for buffer in pairs(client.attached_buffers or {}) do
+        apply(client, buffer)
+      end
+    end
+    return ret
   end
 end
 

@@ -1,3 +1,35 @@
+local extension_opts = {
+  ast = {
+    -- These are unicode, should be available in any font
+    role_icons = {
+      type = '🄣',
+      declaration = '🄓',
+      expression = '🄔',
+      statement = ';',
+      specifier = '🄢',
+      ['template argument'] = '🆃',
+    },
+    kind_icons = {
+      Compound = '🄲',
+      Recovery = '🅁',
+      TranslationUnit = '🅄',
+      PackExpansion = '🄿',
+      TemplateTypeParm = '🅃',
+      TemplateTemplateParm = '🅃',
+      TemplateParamObject = '🅃',
+    },
+    highlights = {
+      detail = 'Comment',
+    },
+  },
+  memory_usage = {
+    border = 'rounded',
+  },
+  symbol_info = {
+    border = 'rounded',
+  },
+}
+
 return {
 
   -- [clangd_extensions] - Extend native LSP functionality.
@@ -6,39 +38,9 @@ return {
   {
     'p00f/clangd_extensions.nvim',
     branch = 'main',
-    lazy = true,
+    ft = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
     config = function() end,
-    opts = {
-      ast = {
-        -- These are unicode, should be available in any font
-        role_icons = {
-          type = '🄣',
-          declaration = '🄓',
-          expression = '🄔',
-          statement = ';',
-          specifier = '🄢',
-          ['template argument'] = '🆃',
-        },
-        kind_icons = {
-          Compound = '🄲',
-          Recovery = '🅁',
-          TranslationUnit = '🅄',
-          PackExpansion = '🄿',
-          TemplateTypeParm = '🅃',
-          TemplateTemplateParm = '🅃',
-          TemplateParamObject = '🅃',
-        },
-        highlights = {
-          detail = 'Comment',
-        },
-      },
-      memory_usage = {
-        border = 'rounded',
-      },
-      symbol_info = {
-        border = 'rounded',
-      },
-    },
+    opts = extension_opts,
   },
 
   {
@@ -85,9 +87,8 @@ return {
         },
       },
       setup = {
-        clangd = function(_, opts)
-          require('clangd_extensions').setup(vim.tbl_deep_extend('force', clangd_ext_opts or {}, { server = opts }))
-          return false
+        clangd = function()
+          require('clangd_extensions').setup(vim.deepcopy(extension_opts))
         end,
       },
     },
