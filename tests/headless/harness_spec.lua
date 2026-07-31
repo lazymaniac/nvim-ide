@@ -1,6 +1,10 @@
 local h = require('tests.headless.harness')
 
 h.describe('headless harness', function()
+  h.it('disables plugin loading in the minimal init', function()
+    h.falsy(vim.o.loadplugins, 'minimal_init.lua must disable user and start plugins')
+  end)
+
   h.describe('nested suites', function()
     h.it('retains the complete test name', function()
       h.equal(h.current_test_name(), 'headless harness > nested suites > retains the complete test name')
