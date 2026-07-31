@@ -18,7 +18,23 @@ return {
   {
     'mfussenegger/nvim-dap',
     branch = 'master',
-    event = 'LspAttach',
+    cmd = {
+      'DapContinue',
+      'DapClearBreakpoints',
+      'DapDisconnect',
+      'DapEval',
+      'DapNew',
+      'DapPause',
+      'DapRestartFrame',
+      'DapSetLogLevel',
+      'DapShowLog',
+      'DapStepInto',
+      'DapStepOut',
+      'DapStepOver',
+      'DapTerminate',
+      'DapToggleBreakpoint',
+      'DapToggleRepl',
+    },
     dependencies = {
       -- [nvim-dap-view] - Visualize nvim-dap sessions
       -- see: `:h nvim-dap-view`
@@ -170,13 +186,12 @@ return {
       {
         'jay-babu/mason-nvim-dap.nvim',
         branch = 'main',
-        event = 'LspAttach',
         dependencies = { 'mason-org/mason.nvim' },
         cmd = { 'DapInstall', 'DapUninstall' },
         opts = {
           -- Makes a best effort to setup the various debuggers with
           -- reasonable debug configurations
-          automatic_installation = true,
+          automatic_installation = false,
           -- You can provide additional configuration to the handlers,
           -- see mason-nvim-dap README for more information
           handlers = {},
@@ -206,7 +221,14 @@ return {
       { '<leader>da', function() require('dap').continue { before = get_args } end, desc = 'Run with Args [da]' },
       { '<leader>dC', function() require('dap').run_to_cursor() end, desc = 'Run to Cursor [dC]' },
     },
-    config = function()
+    opts = { setup = {} },
+    config = function(_, opts)
+      local setup_names = vim.tbl_keys(opts.setup or {})
+      table.sort(setup_names)
+      for _, name in ipairs(setup_names) do
+        opts.setup[name]()
+      end
+
       local dap = require 'dap'
       dap.configurations.java = {
         {
@@ -246,7 +268,6 @@ return {
   {
     'Weissle/persistent-breakpoints.nvim',
     branch = 'main',
-    lazy = false,
     keys = {
       { '<leader>dB', '<cmd>PBSetConditionalBreakpoint<cr>', desc = 'Conditional Breakpoint [dB]' },
       { '<leader>db', '<cmd>PBToggleBreakpoint<cr>', desc = 'Toggle Breakpoint [db]' },
@@ -267,10 +288,12 @@ return {
   {
     'lucaSartore/nvim-dap-exception-breakpoints',
     dependencies = { 'mfussenegger/nvim-dap' },
-    event = 'LspAttach',
-    config = function()
-      local set_exception_breakpoints = require 'nvim-dap-exception-breakpoints'
-      vim.api.nvim_set_keymap('n', '<leader>dE', '', { desc = '[D]ebug [C]ondition breakpoints', callback = set_exception_breakpoints })
-    end,
+    keys = {
+      {
+        '<leader>dE',
+        function() require('nvim-dap-exception-breakpoints')() end,
+        desc = 'Exception Breakpoints [dE]',
+      },
+    },
   },
 }
