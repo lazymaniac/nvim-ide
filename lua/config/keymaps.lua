@@ -100,9 +100,6 @@ map('v', '>', '>gv^')
 map('n', '<leader>ml', '<cmd>Lazy<cr>', { desc = 'Lazy [ml]' })
 map('n', '<leader>mm', '<cmd>Mason<cr>', { desc = 'Mason [mm]' })
 
-map('n', '[q', vim.cmd.cprev, { desc = 'Previous quickfix <[q>' })
-map('n', ']q', vim.cmd.cnext, { desc = 'Next quickfix <]q>' })
-
 -- diagnostic
 local diagnostic_goto = function(next, severity)
   local go = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
