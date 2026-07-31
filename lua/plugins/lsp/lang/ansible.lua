@@ -5,7 +5,7 @@ return {
     branch = 'main',
     keys = {
       {
-        "<leader>ta",
+        "<leader>ra",
         function()
           require("ansible").run()
         end,
