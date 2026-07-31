@@ -86,6 +86,12 @@ local config = {
           description = 'OpenAI Codex CLI',
           provider = 'terminal',
         },
+        cline = {
+          cmd = 'cline',
+          args = {},
+          description = 'Cline CLI',
+          provider = 'terminal',
+        },
       },
     },
   },
@@ -176,6 +182,9 @@ return {
       { '<leader>ac', '<cmd>CodeCompanionChat<cr>', mode = { 'n', 'v' }, desc = 'Open Chat [ac]' },
       { '<leader>at', '<cmd>CodeCompanionChat Toggle<cr>', mode = { 'n', 'v' }, desc = 'Toggle Chat [at]' },
       { '<leader>aa', '<cmd>CodeCompanionActions<cr>', mode = { 'n', 'v' }, desc = 'Actions [aa]' },
+      { '<leader>au', '<cmd>CodeCompanionCLI claude_code<cr>', mode = { 'n', 'v' }, desc = 'Claude Code CLI [au]' },
+      { '<leader>ad', '<cmd>CodeCompanionCLI codex<cr>', mode = { 'n', 'v' }, desc = 'Codex CLI [ad]' },
+      { '<leader>al', '<cmd>CodeCompanionCLI cline<cr>', mode = { 'n', 'v' }, desc = 'Cline CLI [al]' },
     },
     config = function()
       local wk = require 'which-key'
