@@ -1,5 +1,3 @@
-local Util = require 'util'
-
 local M = {}
 
 M.action = setmetatable({}, {
@@ -32,11 +30,14 @@ function M.get_clients(opts)
   return opts and opts.filter and vim.tbl_filter(opts.filter, ret) or ret
 end
 
-function M.on_attach(on_attach)
+function M.on_attach(on_attach, filter)
   vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(args)
       local buffer = args.buf ---@type number
       local client = vim.lsp.get_client_by_id(args.data.client_id)
+      if not client then return end
+      if type(filter) == 'string' and client.name ~= filter then return end
+      if type(filter) == 'function' and not filter(client, buffer) then return end
       on_attach(client, buffer)
     end,
   })
