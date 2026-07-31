@@ -43,7 +43,7 @@ function M.has(buffer, method, deps)
   method = method:find '/' and method or 'textDocument/' .. method
   local clients = deps and deps.clients or require('util').lsp.get_clients { bufnr = buffer }
   for _, client in ipairs(clients) do
-    if client:supports_method(method, { bufnr = buffer }) then
+    if client:supports_method(method, buffer) then
       return true
     end
   end

@@ -49,8 +49,8 @@ h.describe('LSP keymaps', function()
     local supported = keymaps.has(37, 'signatureHelp', {
       clients = {
         {
-          supports_method = function(_, method, opts)
-            seen = { method = method, opts = opts }
+          supports_method = function(_, method, buffer)
+            seen = { method = method, buffer = buffer }
             return true
           end,
         },
@@ -59,7 +59,37 @@ h.describe('LSP keymaps', function()
 
     h.truthy(supported)
     h.equal(seen.method, 'textDocument/signatureHelp')
-    h.equal(seen.opts.bufnr, 37)
+    h.equal(seen.buffer, 37)
+  end)
+
+  h.it('passes an integer buffer through the legacy client-list fallback', function()
+    local previous_util = package.loaded.util
+    local previous_module = package.loaded['util.lsp']
+    local previous_get_clients = vim.lsp.get_clients
+    local previous_active_clients = vim.lsp.get_active_clients
+    local seen
+    package.loaded.util = {}
+    package.loaded['util.lsp'] = nil
+    vim.lsp.get_clients = nil
+    vim.lsp.get_active_clients = function()
+      return {
+        {
+          supports_method = function(_, method, buffer)
+            seen = { method, buffer }
+            return true
+          end,
+        },
+      }
+    end
+
+    local clients = require('util.lsp').get_clients { bufnr = 41, method = 'textDocument/hover' }
+
+    vim.lsp.get_clients = previous_get_clients
+    vim.lsp.get_active_clients = previous_active_clients
+    package.loaded['util.lsp'] = previous_module
+    package.loaded.util = previous_util
+    h.equal(#clients, 1)
+    h.deep_equal(seen, { 'textDocument/hover', 41 })
   end)
 
   h.it('reapplies mappings to every buffer after dynamic registration', function()

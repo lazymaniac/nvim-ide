@@ -16,6 +16,19 @@ local function lsp_opts(module)
   end
 end
 
+local function composed_opts(modules)
+  local result = {}
+  for _, module in ipairs(modules) do
+    local opts = lsp_opts(module)
+    if type(opts) == 'function' then
+      opts(nil, result)
+    else
+      result = vim.tbl_deep_extend('force', result, vim.deepcopy(opts or {}))
+    end
+  end
+  return result
+end
+
 h.describe('LSP registry', function()
   h.it('composes every centrally owned server once', function()
     local registry = load_registry()
@@ -50,6 +63,7 @@ h.describe('LSP registry', function()
         disabled = {
           enabled = false,
         },
+        claimed = {},
       },
       setup = {
         ['*'] = function(server, config)
@@ -59,6 +73,10 @@ h.describe('LSP registry', function()
         gopls = function(server, config)
           hook_calls[server] = (hook_calls[server] or 0) + 1
           config.settings.gopls.completeUnimported = true
+        end,
+        claimed = function()
+          hook_calls.claimed = (hook_calls.claimed or 0) + 1
+          return true
         end,
       },
     }, {
@@ -83,10 +101,13 @@ h.describe('LSP registry', function()
     h.equal(#configured.vtsls, 1)
     h.falsy(configured.hls, 'externally owned HLS must not be registered centrally')
     h.falsy(configured.disabled, 'disabled servers must not be registered')
+    h.falsy(configured.claimed, 'a setup hook returning true owns registration')
     h.equal(enabled.gopls, 1)
     h.equal(enabled.clangd, 1)
     h.equal(enabled.vtsls, 1)
     h.falsy(enabled.hls)
+    h.falsy(enabled.claimed)
+    h.equal(hook_calls.claimed, 1)
 
     local gopls = configured.gopls[1]
     h.truthy(gopls.settings.gopls.gofumpt)
@@ -107,6 +128,71 @@ h.describe('LSP registry', function()
       h.falsy(config.enabled, 'enable metadata must not reach vim.lsp.config')
       h.falsy(config.managed, 'ownership metadata must not reach vim.lsp.config')
       h.falsy(config.owner, 'ownership metadata must not reach vim.lsp.config')
+    end
+  end)
+
+  h.it('registers effective options composed from the real language modules', function()
+    local previous_util = package.loaded.util
+    package.loaded.util = {
+      lsp = {
+        action = setmetatable({}, { __index = function() return function() end end }),
+        execute = function() end,
+        get_clients = function() return {} end,
+        on_attach = function() end,
+      },
+      get_pkg_path = function() return '/tmp/mason-package' end,
+      toggle = { inlay_hints = function() end },
+    }
+    local opts = composed_opts {
+      'plugins.lsp',
+      'plugins.lsp.lang.go',
+      'plugins.lsp.lang.clangd',
+      'plugins.lsp.lang.typescript',
+      'plugins.lsp.lang.haskell',
+    }
+    local configured = {}
+    local enabled = {}
+    local extension_calls = 0
+    local previous_extension = package.loaded.clangd_extensions
+    package.loaded.clangd_extensions = {
+      setup = function()
+        extension_calls = extension_calls + 1
+      end,
+    }
+
+    load_registry().setup(opts, {
+      protocol_capabilities = function() return {} end,
+      blink_capabilities = function(capabilities) return capabilities end,
+      config = function(server, config)
+        h.falsy(configured[server], server .. ' configured more than once')
+        configured[server] = vim.deepcopy(config)
+      end,
+      enable = function(server)
+        enabled[server] = (enabled[server] or 0) + 1
+      end,
+    })
+    package.loaded.clangd_extensions = previous_extension
+    package.loaded['plugins.lsp'] = nil
+    package.loaded.util = previous_util
+
+    h.truthy(configured.gopls.settings.gopls.gofumpt)
+    h.truthy(configured.gopls.settings.gopls.codelenses.run_govulncheck)
+    h.truthy(configured.gopls.settings.gopls.analyses.nilness)
+    h.truthy(vim.tbl_contains(configured.clangd.cmd, '--background-index'))
+    h.truthy(vim.tbl_contains(configured.clangd.cmd, '--clang-tidy'))
+    h.truthy(configured.clangd.init_options.usePlaceholders)
+    h.truthy(configured.vtsls.settings.vtsls.autoUseWorkspaceTsdk)
+    h.truthy(configured.vtsls.settings.vtsls.experimental.completion.enableServerSideFuzzyMatch)
+    h.truthy(configured.vtsls.settings.typescript.suggest.completeFunctionCalls)
+    h.truthy(configured.vtsls.settings.javascript.suggest.completeFunctionCalls)
+    h.equal(enabled.gopls, 1)
+    h.equal(enabled.clangd, 1)
+    h.equal(enabled.vtsls, 1)
+    h.equal(extension_calls, 1)
+
+    for _, external in ipairs { 'hls', 'jdtls', 'rust_analyzer' } do
+      h.falsy(configured[external], external .. ' must remain externally owned')
+      h.falsy(enabled[external], external .. ' must never be centrally enabled')
     end
   end)
 
