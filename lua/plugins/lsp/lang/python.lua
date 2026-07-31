@@ -1,17 +1,16 @@
 return {
   {
-    'mfussenegger/nvim-dap',
-    dependencies = {
-      'mfussenegger/nvim-dap-python',
-      -- stylua: ignore
-      keys = {
-        { "<leader>dM", function() require('dap-python').test_method() end, desc = "Debug Method [dM]", ft = "python" },
-        { "<leader>dS", function() require('dap-python').test_class() end,  desc = "Debug Class [dS]",  ft = "python" },
-      },
-      config = function()
-        require('dap-python').setup '.venv/bin/python'
-      end,
+    'mfussenegger/nvim-dap-python',
+    dependencies = { 'mfussenegger/nvim-dap' },
+    ft = { 'python' },
+    -- stylua: ignore
+    keys = {
+      { '<leader>dM', function() require('dap-python').test_method() end, desc = 'Debug Method [dM]', ft = 'python' },
+      { '<leader>dS', function() require('dap-python').test_class() end, desc = 'Debug Class [dS]', ft = 'python' },
     },
+    config = function()
+      require('dap-python').setup(require('util.dap').resolve_python())
+    end,
   },
 
   -- [venv-selector.nvim] - Python Virtual Env selector.
