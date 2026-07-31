@@ -30,6 +30,10 @@ return {
 
   {
     url = "https://codeberg.org/andyg/leap.nvim",
+    keys = {
+      { 's', '<Plug>(leap)', mode = { 'n', 'x', 'o' }, desc = 'Leap forward' },
+      { 'S', '<Plug>(leap-from-window)', mode = 'n', desc = 'Leap from window' },
+    },
     config = function()
       -- require('leap').set_default_mappings()
       -- Exclude whitespace and the middle of alphabetic words from preview:
@@ -39,7 +43,6 @@ return {
         return not (ch1:match '%s' or ch0:match '%a' and ch1:match '%a' and ch2:match '%a')
       end
       require('leap').opts.equivalence_classes = { ' \t\r\n', '([{', ')]}', '\'"`' }
-      require('leap.user').set_repeat_keys('<enter>', '<backspace>')
     end,
   },
 }

@@ -102,10 +102,15 @@ return {
           -- replicate `highlight = { enable = true }`
           vim.treesitter.start(buf, language)
 
+          vim.keymap.set({ 'n', 'x' }, '<C-Space>', function()
+            vim.treesitter.select('parent', vim.v.count1)
+          end, { buffer = buf, desc = 'Grow Tree-sitter selection' })
+          vim.keymap.set('x', '<BS>', function()
+            vim.treesitter.select('child', vim.v.count1)
+          end, { buffer = buf, desc = 'Shrink Tree-sitter selection' })
+
           -- replicate `indent = { enable = true }`
           vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-
-          -- `incremental_selection = { enable = true }` covered by 0.12.0
         end,
       })
     end,
