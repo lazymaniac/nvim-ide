@@ -2,30 +2,9 @@ local config = {
   adapters = {
     http = {
       opts = {
-        show_defaults = false,
+        show_presets = false,
         show_model_choices = true,
       },
-      anthropic = function()
-        return require('codecompanion.adapters').extend('anthropic', {
-          env = {
-            api_key = 'cmd:cat ~/.anthropic',
-          },
-        })
-      end,
-      openai = function()
-        return require('codecompanion.adapters').extend('openai', {
-          env = {
-            api_key = 'cmd:cat ~/.gpt',
-          },
-        })
-      end,
-      tavily = function()
-        return require('codecompanion.adapters').extend('tavily', {
-          env = {
-            api_key = 'cmd:cat ~/.tavily',
-          },
-        })
-      end,
       ollama = function()
         return require('codecompanion.adapters').extend('ollama', {
           schema = {
@@ -36,8 +15,16 @@ local config = {
         })
       end,
     },
+    acp = {
+      opts = {
+        show_presets = false,
+      },
+    },
   },
   interactions = {
+    background = {
+      adapter = 'ollama',
+    },
     -- CHAT STRATEGY ----------------------------------------------------------
     chat = {
       adapter = 'ollama',
@@ -56,8 +43,6 @@ local config = {
       },
       tools = {
         opts = {
-          auto_submit_errors = true, -- Send any errors to the LLM automatically?
-          auto_submit_success = true, -- Send any successful output to the LLM automatically?
           default_tools = {
             'agent',
           },
@@ -100,11 +85,8 @@ local config = {
     action_palette = {
       width = 95,
       height = 10,
-      prompt = 'Prompt ', -- Prompt used for interactive LLM calls
       provider = 'default', -- default|telescope
       opts = {
-        show_preset_actions = true, -- Show the default actions in the action palette?
-        show_preset_prompts = true, -- Show the default prompt library in the action palette?
         title = 'AI Actions',
       },
     },
@@ -112,27 +94,25 @@ local config = {
       window = {
         layout = 'vertical', -- float|vertical|horizontal|buffer
         border = 'rounded',
-        height = 0.3,
-        width = 0.3,
+        height = 0.8,
+        width = 0.4,
         relative = 'editor',
-        opts = {
-          breakindent = true,
-          cursorcolumn = false,
-          cursorline = false,
-          foldcolumn = '0',
-          linebreak = true,
-          list = false,
-          signcolumn = 'no',
-          spell = false,
-          wrap = true,
-        },
       },
-      intro_message = 'Press ? for help',
-      show_header_separator = false, -- Show header separators in the chat buffer? Set this to false if you're using an external markdown formatting plugin
-      show_references = true, -- Show references (from slash commands and variables) in the chat buffer?
+      auto_scroll = true, -- Automatically scroll down and place the cursor at the end?
+      intro_message = 'Press ? for options',
+
       separator = '─', -- The separator between the different messages in the chat buffer
-      show_settings = false, -- Show LLM settings at the top of the chat buffer?
+      show_header_separator = false, -- Show header separators in the chat buffer? Set this to false if you're using an external markdown formatting plugin
+
+      fold_context = false, -- Fold context in the chat buffer?
+      show_context = true, -- Show context that you've shared with the LLM in the chat buffer?
+
+      fold_reasoning = false, -- Fold the reasoning content in the chat buffer?
+      show_reasoning = true, -- Show reasoning content in the chat buffer?
+
+      show_settings = false, -- Show an LLM's settings at the top of the chat buffer?
       show_token_count = true, -- Show the token count for each response?
+      show_tools_processing = true, -- Show the loading message when tools are being executed?
       start_in_insert_mode = false, -- Open the chat buffer in insert mode?
     },
     diff = {
@@ -182,9 +162,9 @@ return {
       { '<leader>ac', '<cmd>CodeCompanionChat<cr>', mode = { 'n', 'v' }, desc = 'Open Chat [ac]' },
       { '<leader>at', '<cmd>CodeCompanionChat Toggle<cr>', mode = { 'n', 'v' }, desc = 'Toggle Chat [at]' },
       { '<leader>aa', '<cmd>CodeCompanionActions<cr>', mode = { 'n', 'v' }, desc = 'Actions [aa]' },
-      { '<leader>au', '<cmd>CodeCompanionCLI claude_code<cr>', mode = { 'n', 'v' }, desc = 'Claude Code CLI [au]' },
-      { '<leader>ad', '<cmd>CodeCompanionCLI codex<cr>', mode = { 'n', 'v' }, desc = 'Codex CLI [ad]' },
-      { '<leader>al', '<cmd>CodeCompanionCLI cline<cr>', mode = { 'n', 'v' }, desc = 'Cline CLI [al]' },
+      { '<leader>au', '<cmd>CodeCompanionCLI agent=claude_code<cr>', mode = { 'n', 'v' }, desc = 'Claude Code CLI [au]' },
+      { '<leader>ad', '<cmd>CodeCompanionCLI agent=codex<cr>', mode = { 'n', 'v' }, desc = 'Codex CLI [ad]' },
+      { '<leader>al', '<cmd>CodeCompanionCLI agent=cline<cr>', mode = { 'n', 'v' }, desc = 'Cline CLI [al]' },
     },
     config = function()
       local wk = require 'which-key'
