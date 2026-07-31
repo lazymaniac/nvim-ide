@@ -10,19 +10,52 @@ return {
     branch = 'master',
     event = 'BufReadPost',
     config = function()
-      require('lint').linters_by_ft = {
+      local lint = require 'lint'
+
+      local function available(names)
+        return vim.tbl_filter(function(name)
+          return vim.fn.executable(name) == 1
+        end, names)
+      end
+
+      lint.linters.kube_linter = {
+        cmd = 'kube-linter',
+        args = { 'lint', '--format', 'plain' },
+        append_fname = true,
+        stream = 'both',
+        ignore_exitcode = true,
+        parser = function(output)
+          local diagnostics = {}
+          for _, line in ipairs(vim.split(output, '\n', { plain = true, trimempty = true })) do
+            local filename, message = line:match '^(.-):%s+(.+)$'
+            if message and filename ~= 'Error' then
+              diagnostics[#diagnostics + 1] = {
+                lnum = 0,
+                col = 0,
+                severity = vim.diagnostic.severity.WARN,
+                source = 'kube-linter',
+                code = message:match '%(check:%s*([^,%)]+)',
+                message = message,
+              }
+            end
+          end
+          return diagnostics
+        end,
+      }
+
+      lint.linters_by_ft = {
         angular = { 'djlint' },
-        ansible = { 'ansible-lint' },
+        ansible = { 'ansible_lint' },
         clojure = { 'clj-kondo' },
         cmake = { 'cmakelint' },
-        go = { 'golangci-lint' },
+        go = { 'golangcilint' },
         haskell = { 'hlint' },
-        helm = { 'kube-linter' },
+        helm = { 'kube_linter' },
         html = { 'htmlhint' },
         java = { 'trivy' },
         kotlin = { 'ktlint', 'detekt' },
         markdown = { 'markdownlint' },
-        python = { 'ruff', 'pylint', 'flake8', 'mypy' },
+        python = available { 'ruff', 'pylint', 'flake8', 'mypy' },
         ruby = { 'erb_lint', 'rubocop', 'trivy' },
         terraform = { 'tfsec', 'trivy' },
         tf = { 'tfsec', 'trivy' },
@@ -35,7 +68,8 @@ return {
       }
       vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufEnter' }, {
         callback = function()
-          require('lint').try_lint()
+          lint.linters_by_ft.python = available { 'ruff', 'pylint', 'flake8', 'mypy' }
+          lint.try_lint()
         end,
       })
     end,
@@ -89,12 +123,11 @@ return {
   {
     'stevearc/conform.nvim',
     branch = 'master',
-    dependencies = { 'mason-org/mason.nvim', 'frostplexx/mason-bridge.nvim' },
     cmd = 'ConformInfo',
     -- stylua: ignore
     keys = {
-      { '<leader>cf', function() require('conform').format { async = true, lsp_fallback = true } end, mode = { 'n', 'v' }, desc = 'Format [cf]' },
-      { '<leader>cF', function() require('conform').format { async = true, lsp_fallback = true, formatters = { 'injected' } } end, mode = { 'n', 'v' }, desc = 'Format Injected Langs [cF]' },
+      { '<leader>cf', function() require('conform').format { async = true, lsp_format = 'fallback' } end, mode = { 'n', 'v' }, desc = 'Format [cf]' },
+      { '<leader>cF', function() require('conform').format { async = true, lsp_format = 'fallback', formatters = { 'injected' } } end, mode = { 'n', 'v' }, desc = 'Format Injected Langs [cF]' },
     },
     config = function()
       require('conform').setup {
@@ -116,7 +149,7 @@ return {
           scss = { 'prettierd' },
           sql = { 'sqlfmt', 'sqruff' },
           typescript = { 'prettierd' },
-          vuejs = { 'prettierd' },
+          vue = { 'prettierd' },
           kotlin = { 'ktlint' },
           markdown = { 'prettierd', 'markdownlint', 'markdown-toc' },
           yaml = { 'prettierd' },
