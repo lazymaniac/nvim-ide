@@ -1,17 +1,5 @@
 local config = {
   adapters = {
-    acp = {
-      kilo = function()
-        return require("codecompanion.adapters").extend("opencode", {
-          commands = {
-            default = {
-              "kilo",
-              "acp",
-            },
-          },
-        })
-      end,
-    },
     http = {
       opts = {
         show_defaults = false,
@@ -42,7 +30,7 @@ local config = {
         return require('codecompanion.adapters').extend('ollama', {
           schema = {
             model = {
-              default = 'qwen3-coder-next:q8_0',
+              default = 'ornith:35b-q8_0',
             },
           },
         })
@@ -70,6 +58,9 @@ local config = {
         opts = {
           auto_submit_errors = true, -- Send any errors to the LLM automatically?
           auto_submit_success = true, -- Send any successful output to the LLM automatically?
+          default_tools = {
+            'agent',
+          },
         },
       },
     },
@@ -79,6 +70,23 @@ local config = {
     },
     cmd = {
       adapter = 'ollama',
+    },
+    cli = {
+      agent = 'claude_code',
+      agents = {
+        claude_code = {
+          cmd = 'claude',
+          args = {},
+          description = 'Claude Code CLI',
+          provider = 'terminal',
+        },
+        codex = {
+          cmd = 'codex',
+          args = {},
+          description = 'OpenAI Codex CLI',
+          provider = 'terminal',
+        },
+      },
     },
   },
   -- DISPLAY OPTIONS ----------------------------------------------------------
@@ -123,36 +131,11 @@ local config = {
     },
     diff = {
       enabled = true,
-      provider = 'inline', -- mini_diff|split|inline
-
-      provider_opts = {
-        -- Options for inline diff provider
-        inline = {
-          layout = 'float', -- float|buffer - Where to display the diff
-
-          opts = {
-            context_lines = 4, -- Number of context lines in hunks
-            dim = 25, -- Background dim level for floating diff (0-100, [100 full transparent], only applies when layout = "float")
-            full_width_removed = true, -- Make removed lines span full width
-            show_keymap_hints = true, -- Show "gda: accept | gdr: reject" hints above diff
-            show_removed = true, -- Show removed lines as virtual text
-          },
-        },
-
-        -- Options for the split provider
-        split = {
-          close_chat_at = 240, -- Close an open chat buffer if the total columns of your display are less than...
-          layout = 'vertical', -- vertical|horizontal split
-          opts = {
-            'internal',
-            'filler',
-            'closeoff',
-            'algorithm:histogram', -- https://adamj.eu/tech/2024/01/18/git-improve-diff-histogram/
-            'indent-heuristic', -- https://blog.k-nut.eu/better-git-diffs
-            'followwrap',
-            'linematch:120',
-          },
-        },
+      -- At or below this diff size, always display the diff in the chat buffer
+      threshold_for_chat = 6,
+      word_highlights = {
+        additions = true,
+        deletions = true,
       },
     },
     inline = {

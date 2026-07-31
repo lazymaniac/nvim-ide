@@ -1633,7 +1633,7 @@ return {
       { '<leader>lc', function() Snacks.terminal.toggle 'nap' end, desc = 'Code snippets TUI [lc]' },
       { '<leader>ld', function() Snacks.terminal.toggle 'podman-tui' end, desc = 'Podman TUI [ld]' },
       { '<leader>lD', function() Snacks.terminal.toggle 'lazydocker' end, desc = 'Docker TUI [lD]' },
-      { '<leader>lg', function() Snacks.lazygit() end, desc = 'GIT TUI [lg]' },
+      { '<leader>lg', function() Snacks.terminal.toggle 'glab-tui' end, desc = 'GitHub TUI [lg]' },
       { '<leader>lh', function() Snacks.terminal.toggle 'clx' end, desc = 'Hackernews TUI [lh]' },
       { '<leader>lj', function() Snacks.terminal.toggle 'euporie-notebook' end, desc = 'Jupyter Notebooks TUI [lj]' },
       { '<leader>lk', function() Snacks.terminal.toggle 'tiki' end, desc = 'Kanban [lk]' },
