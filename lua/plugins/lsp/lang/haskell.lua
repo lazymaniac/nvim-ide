@@ -17,7 +17,7 @@ return {
   -- link: https://github.com/mrcjkb/haskell-tools.nvim
   {
     'mrcjkb/haskell-tools.nvim',
-    branch = 'master',
+    branch = 'main',
     ft = { 'haskell', 'lhaskell', 'cabal', 'cabalproject' },
     config = function() end,
   },
@@ -27,7 +27,7 @@ return {
   -- link: https://github.com/mrcjkb/haskell-snippets.nvim
   {
     'mrcjkb/haskell-snippets.nvim',
-    branch = 'master',
+    branch = 'main',
     dependencies = { 'L3MON4D3/LuaSnip' },
     ft = { 'haskell', 'lhaskell', 'cabal', 'cabalproject' },
     config = function()
