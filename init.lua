@@ -31,6 +31,7 @@ if vim.g.neovide then
 end
 
 vim.g.base46_cache = vim.fn.stdpath 'data' .. '/base46_cache/'
+require('nv_ide.toolchain').early()
 ---@diagnostic disable-next-line: different-requires
 require 'config.lazy'
 require('config').setup {}

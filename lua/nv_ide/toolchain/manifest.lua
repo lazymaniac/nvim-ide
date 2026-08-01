@@ -1,0 +1,299 @@
+local M = {
+  schema_version = 1,
+  mason = {
+    tools = {
+      'actionlint',
+      'ansible-lint',
+      'bash-debug-adapter',
+      'beautysh',
+      'black',
+      'clj-kondo',
+      'cmakelang',
+      'cmakelint',
+      'codelldb',
+      'cypher-language-server',
+      'debugpy',
+      'delve',
+      'detekt',
+      'djlint',
+      'docformatter',
+      'erb-formatter',
+      'erb-lint',
+      'eslint_d',
+      'gofumpt',
+      'goimports',
+      'golangci-lint',
+      'graphql-language-service-cli',
+      'hadolint',
+      'haskell-debug-adapter',
+      'hlint',
+      'htmlhint',
+      'java-debug-adapter',
+      'java-test',
+      'jq',
+      'js-debug-adapter',
+      'jsonlint',
+      'kotlin-debug-adapter',
+      'ktlint',
+      'kube-linter',
+      'luacheck',
+      'markdown-toc',
+      'markdownlint',
+      'postgres-language-server',
+      'prettierd',
+      'pydocstyle',
+      'pylint',
+      'rubocop',
+      'shellcheck',
+      'shellharden',
+      'sonarlint-language-server',
+      'sqlfluff',
+      'sqlfmt',
+      'sqruff',
+      'staticcheck',
+      'stylelint',
+      'stylua',
+      'tfsec',
+      'trivy',
+      'vscode-java-decompiler',
+      'vscode-java-dependency',
+      'vscode-spring-boot-tools',
+      'write-good',
+      'xmlformatter',
+      'yamllint',
+    },
+  },
+  lsp = {
+    servers = {
+      'angularls',
+      'ansiblels',
+      'bashls',
+      'clangd',
+      'clojure_lsp',
+      'cmake',
+      'cssls',
+      'cucumber_language_server',
+      'docker_compose_language_service',
+      'dockerls',
+      'emmet_ls',
+      'gopls',
+      'gradle_ls',
+      'groovyls',
+      'helm_ls',
+      'hls',
+      'html',
+      'jdtls',
+      'jsonls',
+      'kotlin_language_server',
+      'lua_ls',
+      'marksman',
+      'puppet',
+      'pyright',
+      'rubocop',
+      'ruby_lsp',
+      'rust_analyzer',
+      'sqls',
+      'svelte',
+      'taplo',
+      'terraformls',
+      'vtsls',
+      'yamlls',
+    },
+  },
+  treesitter = {
+    parsers = {
+      'angular',
+      'bash',
+      'c',
+      'clojure',
+      'cmake',
+      'cpp',
+      'css',
+      'dap_repl',
+      'diff',
+      'dockerfile',
+      'dot',
+      'git_config',
+      'git_rebase',
+      'gitattributes',
+      'gitcommit',
+      'gitignore',
+      'go',
+      'gomod',
+      'gosum',
+      'gowork',
+      'groovy',
+      'haskell',
+      'hcl',
+      'helm',
+      'html',
+      'http',
+      'java',
+      'javascript',
+      'jsdoc',
+      'json',
+      'json5',
+      'kotlin',
+      'latex',
+      'lua',
+      'luadoc',
+      'luap',
+      'markdown',
+      'markdown_inline',
+      'mermaid',
+      'ninja',
+      'properties',
+      'python',
+      'query',
+      'r',
+      'regex',
+      'ron',
+      'rst',
+      'ruby',
+      'rust',
+      'scala',
+      'scss',
+      'sql',
+      'svelte',
+      'terraform',
+      'toml',
+      'tsx',
+      'typescript',
+      'vim',
+      'vimdoc',
+      'vue',
+      'xml',
+      'yaml',
+    },
+  },
+  runtimes = {
+    { id = 'ansible', executables = { 'ansible', 'ansible-playbook' } },
+    { id = 'clojure', executables = { 'clojure', 'lein', 'bb' }, any = true },
+    { id = 'cmake', executables = { 'cmake', 'ninja' } },
+    { id = 'containers', executables = { 'docker', 'podman' }, any = true },
+    { id = 'dart', executables = { 'dart', 'flutter' } },
+    { id = 'go', executables = { 'go' } },
+    { id = 'haskell', executables = { 'ghc', 'cabal', 'stack' }, any = true },
+    { id = 'java', executables = { 'java', 'javac', 'mvn', 'gradle' } },
+    { id = 'javascript', executables = { 'node', 'npm' } },
+    { id = 'kotlin', executables = { 'kotlinc' } },
+    { id = 'lua', executables = { 'lua', 'luajit' }, any = true },
+    { id = 'python', executables = { 'python3' } },
+    { id = 'r', executables = { 'R' } },
+    { id = 'ruby', executables = { 'ruby', 'bundle' } },
+    { id = 'rust', executables = { 'rustc', 'cargo' } },
+    { id = 'scala', executables = { 'scala', 'sbt' } },
+    { id = 'sql', executables = { 'psql' } },
+    { id = 'terraform', executables = { 'terraform' } },
+  },
+  external_actions = {
+    { id = 'btop', command = { 'btop' } },
+    { id = 'cloudlens', command = { 'cloudlens' } },
+    { id = 'clx', command = { 'clx' } },
+    { id = 'dua', command = { 'dua', 'i' } },
+    { id = 'euporie-notebook', command = { 'euporie-notebook' } },
+    { id = 'glab-tui', command = { 'glab-tui' } },
+    { id = 'harlequin', command = { 'harlequin' } },
+    { id = 'jshell', command = { 'jshell' } },
+    { id = 'k9s', command = { 'k9s' } },
+    { id = 'lazydocker', command = { 'lazydocker' } },
+    { id = 'nap', command = { 'nap' } },
+    { id = 'omm', command = { 'omm', '--editor', 'nvim' } },
+    { id = 'podman-tui', command = { 'podman-tui' } },
+    { id = 'posting', command = { 'posting' } },
+    { id = 'python3', command = { 'python3' } },
+    { id = 'termscp', command = { 'termscp' } },
+    { id = 'tiki', command = { 'tiki' } },
+    { id = 'zellij', command = { 'zellij', 'attach', '-c', 'options' } },
+  },
+  ai = {
+    cli = { 'claude', 'cline', 'codex' },
+    backends = {
+      { id = 'ollama', executable = 'ollama', url = 'http://127.0.0.1:11434' },
+    },
+    credentials = { 'ANTHROPIC_API_KEY', 'OPENAI_API_KEY' },
+  },
+  plugin_branches = {
+    ['linux-cultist/venv-selector.nvim'] = 'regexp',
+    ['nvim-treesitter/nvim-treesitter'] = 'main',
+    ['nvim-treesitter/nvim-treesitter-textobjects'] = 'main',
+  },
+}
+
+local server_packages = {
+  angularls = 'angular-language-server',
+  ansiblels = 'ansible-language-server',
+  bashls = 'bash-language-server',
+  clojure_lsp = 'clojure-lsp',
+  cmake = 'cmake-language-server',
+  cssls = 'css-lsp',
+  cucumber_language_server = 'cucumber-language-server',
+  docker_compose_language_service = 'docker-compose-language-service',
+  dockerls = 'dockerfile-language-server',
+  emmet_ls = 'emmet-language-server',
+  gradle_ls = 'gradle-language-server',
+  groovyls = 'groovy-language-server',
+  helm_ls = 'helm-ls',
+  hls = 'haskell-language-server',
+  html = 'html-lsp',
+  jsonls = 'json-lsp',
+  kotlin_language_server = 'kotlin-language-server',
+  lua_ls = 'lua-language-server',
+  puppet = 'puppet-editor-services',
+  ruby_lsp = 'ruby-lsp',
+  rust_analyzer = 'rust-analyzer',
+  svelte = 'svelte-language-server',
+  terraformls = 'terraform-ls',
+  yamlls = 'yaml-language-server',
+}
+
+local function sorted_unique(values)
+  local seen, result = {}, {}
+  for _, value in ipairs(values) do
+    if not seen[value] then
+      seen[value] = true
+      result[#result + 1] = value
+    end
+  end
+  table.sort(result)
+  return result
+end
+
+local mason = vim.deepcopy(M.mason.tools)
+for _, server in ipairs(M.lsp.servers) do
+  mason[#mason + 1] = server_packages[server] or server:gsub('_', '-')
+end
+M.mason.packages = sorted_unique(mason)
+
+local function canonical(value)
+  if type(value) ~= 'table' then
+    return vim.json.encode(value)
+  end
+  if vim.islist(value) then
+    local parts = {}
+    for _, item in ipairs(value) do parts[#parts + 1] = canonical(item) end
+    return '[' .. table.concat(parts, ',') .. ']'
+  end
+  local keys = vim.tbl_keys(value)
+  table.sort(keys)
+  local parts = {}
+  for _, key in ipairs(keys) do
+    parts[#parts + 1] = canonical(key) .. ':' .. canonical(value[key])
+  end
+  return '{' .. table.concat(parts, ',') .. '}'
+end
+
+function M.fingerprint()
+  return vim.fn.sha256(canonical {
+    schema_version = M.schema_version,
+    mason = M.mason,
+    lsp = M.lsp,
+    treesitter = M.treesitter,
+    runtimes = M.runtimes,
+    external_actions = M.external_actions,
+    ai = M.ai,
+    plugin_branches = M.plugin_branches,
+  })
+end
+
+return M

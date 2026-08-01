@@ -2,7 +2,6 @@
 -- See `:help mapleader`
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-vim.o.shell = "/bin/zsh"
 vim.opt.winaltkeys = 'yes'
 vim.g.autoformat = false
 
