@@ -251,7 +251,7 @@ M.newest_stable_release = newest_stable_release
 function M.new(options)
   options = options or {}
   return setmetatable({
-    path = options.path or vim.fs.joinpath(vim.fn.stdpath 'data', 'lazy', 'lazy.nvim'),
+    path = options.path or vim.env.LAZY or vim.fs.joinpath(vim.fn.stdpath 'data', 'lazy', 'lazy.nvim'),
     lockfile = options.lockfile or vim.fs.joinpath(vim.fn.stdpath 'config', 'lazy-lock.json'),
     system = options.system or vim.system,
     timeout_ms = options.timeout_ms or 120000,
