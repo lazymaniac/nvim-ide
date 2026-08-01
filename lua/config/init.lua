@@ -1,6 +1,7 @@
 local Util = require 'util'
 
 local M = {}
+local loaded = {}
 
 local options = {
   -- load the default settings
@@ -78,12 +79,15 @@ local options = {
 }
 
 function M.setup(opts)
-  M.load 'autocmds'
-  M.load 'keymaps'
+  options = vim.tbl_deep_extend('force', options, opts or {})
+  if options.defaults.autocmds then M.load 'autocmds' end
+  if options.defaults.keymaps then M.load 'keymaps' end
   Util.root.setup()
 end
 
 function M.load(name)
+  if loaded[name] then return end
+  loaded[name] = true
   local function _load(mod)
     if require('lazy.core.cache').find(mod)[1] then
       Util.try(function()
@@ -94,7 +98,6 @@ function M.load(name)
   if M.defaults[name] or name == 'options' then
     _load('config.' .. name)
   end
-  _load('config.' .. name)
   if vim.bo.filetype == 'lazy' then
     vim.cmd [[do VimResized]]
   end
@@ -120,9 +123,6 @@ end
 
 setmetatable(M, {
   __index = function(_, key)
-    if options == nil then
-      return vim.deepcopy(defaults)[key]
-    end
     return options[key]
   end,
 })
