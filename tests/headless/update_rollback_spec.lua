@@ -257,6 +257,61 @@ h.describe('latest-first plugin update and rollback', function()
     end)
   end)
 
+  h.it('contains manager lock recording failures and completes exact rollback', function()
+    h.with_temp_dir(function(dir)
+      local lockfile = vim.fs.joinpath(dir, 'lazy-lock.json')
+      local original = '{"known":"good"}'
+      write(lockfile, original)
+      local restored = {}
+      local updater = reload('nv_ide.toolchain.plugins').new {
+        lockfile = lockfile,
+        snapshot_dir = vim.fs.joinpath(dir, 'snapshots'),
+        manager = {
+          update = function(_, _, done)
+            done {
+              ok = true,
+              before = string.rep('1', 40),
+              commit = string.rep('2', 40),
+              tag = 'v11.17.5',
+            }
+          end,
+          record = function()
+            error 'record exploded'
+          end,
+          restore = function(_, options, done)
+            restored[#restored + 1] = 'manager-' .. options.commit
+            done { ok = true }
+          end,
+        },
+        lazy_update = function(_, done)
+          write(lockfile, '{"updated":true}')
+          done { ok = true }
+        end,
+        treesitter_update = function(_, done)
+          done { ok = true }
+        end,
+        lazy_restore = function(_, done)
+          restored[#restored + 1] = 'plugins'
+          done { ok = true }
+        end,
+        smoke = { run = function()
+          error 'smoke must not run'
+        end },
+        receipt_probe = function()
+          return { mason_receipts = {}, treesitter_parser_info = {} }
+        end,
+      }
+
+      local result = updater:update { wait = true }
+
+      h.equal(result.status, 'failed')
+      h.truthy(result.rolled_back)
+      h.matches(table.concat(result.errors, '\n'), 'record exploded')
+      h.deep_equal(restored, { 'manager-' .. string.rep('1', 40), 'plugins' })
+      h.equal(read(lockfile), original)
+    end)
+  end)
+
   h.it('snapshots the lock, blocks for Lazy and parsers, validates smoke, and retains recovery evidence', function()
     h.with_temp_dir(function(dir)
       local lockfile = vim.fs.joinpath(dir, 'config', 'lazy-lock.json')

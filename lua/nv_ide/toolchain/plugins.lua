@@ -617,7 +617,11 @@ function Plugins:update(options)
 
   local function validate_smoke()
     if self.manager and manager_after then
-      local recorded, record_error = self.manager:record(manager_after)
+      local called, recorded, record_error = pcall(self.manager.record, self.manager, manager_after)
+      if not called then
+        rollback { 'lazy.nvim manager lock recording: ' .. tostring(recorded) }
+        return
+      end
       if not recorded then
         rollback { 'lazy.nvim manager lock recording: ' .. tostring(record_error) }
         return
