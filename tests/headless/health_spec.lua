@@ -31,6 +31,8 @@ local function complete_probe(options)
     parser = {},
     backend = {},
     credential = {},
+    version = {},
+    capability = {},
   }
   local unavailable = options.unavailable or {}
   local probe = {
@@ -41,6 +43,23 @@ local function complete_probe(options)
     executable = function(name)
       calls.executable[name] = (calls.executable[name] or 0) + 1
       return unavailable[name] ~= true
+    end,
+    version = function(id, constraint)
+      calls.version[id] = (calls.version[id] or 0) + 1
+      local versions = options.versions or {}
+      local version = versions[id]
+        or id == 'go' and '1.26.0'
+        or id == 'javascript' and '24.15.0'
+        or id == 'python' and '3.13.11'
+      return {
+        version = version,
+        supported = not (options.unsupported_versions or {})[id],
+      }
+    end,
+    capability = function(id, capability)
+      local key = id .. ':' .. capability.id
+      calls.capability[key] = (calls.capability[key] or 0) + 1
+      return { available = unavailable[key] ~= true }
     end,
     mason_status = function(name)
       calls.mason[name] = (calls.mason[name] or 0) + 1
@@ -117,13 +136,85 @@ h.describe('nv_ide health collection', function()
     for _, record in ipairs(manifest.prerequisites) do
       by_id[record.id] = record
     end
-    for _, id in ipairs { 'archive', 'c_compiler', 'curl', 'git', 'ripgrep', 'tree_sitter_cli' } do
+    for _, id in ipairs {
+      'archive',
+      'bash',
+      'c_compiler',
+      'curl',
+      'git',
+      'gzip',
+      'lua_package_manager',
+      'ripgrep',
+      'ruby_package_manager',
+      'tree_sitter_cli',
+    } do
       h.truthy(by_id[id], 'missing manifest prerequisite: ' .. id)
       h.truthy(by_id[id].required, id .. ' must be classified as required')
     end
     h.deep_equal(by_id.archive.executables, { 'tar', 'unzip' })
+    h.deep_equal(by_id.bash.executables, { 'bash' })
+    h.deep_equal(by_id.gzip.executables, { 'gzip' })
+    h.deep_equal(by_id.lua_package_manager.executables, { 'luarocks' })
     h.deep_equal(by_id.ripgrep.executables, { 'rg' })
+    h.deep_equal(by_id.ruby_package_manager.executables, { 'gem' })
     h.deep_equal(by_id.tree_sitter_cli.executables, { 'tree-sitter' })
+  end)
+
+  h.it('requires installer-compatible Go, Node, and Python runtimes plus Python venv support', function()
+    local health = require 'nv_ide.health'
+    local probe, calls = complete_probe {
+      versions = { go = '1.25.9', javascript = '24.14.0', python = '3.14.0' },
+      unsupported_versions = { go = true, javascript = true, python = true },
+      unavailable = { ['python:venv'] = true },
+    }
+    local report = health.collect(probe)
+    local go = find(report.runtimes, 'go')
+    local javascript = find(report.runtimes, 'javascript')
+    local python = find(report.runtimes, 'python')
+
+    h.falsy(go.available)
+    h.equal(go.version, '1.25.9')
+    h.equal(go.minimum_version, '1.26.0')
+    h.falsy(go.version_supported)
+    h.falsy(javascript.available)
+    h.equal(javascript.minimum_version, '24.15.0')
+    h.falsy(python.available)
+    h.equal(python.minimum_version, '3.10.0')
+    h.equal(python.maximum_version_exclusive, '3.14.0')
+    h.falsy(python.capabilities[1].available)
+    h.equal(python.capabilities[1].id, 'venv')
+    h.equal(calls.version.go, 1)
+    h.equal(calls.version.javascript, 1)
+    h.equal(calls.version.python, 1)
+    h.equal(calls.capability['python:venv'], 1)
+
+    h.truthy(health.version_supported('3.10.0', '3.10.0', '3.14.0'))
+    h.truthy(health.version_supported('3.13.11', '3.10.0', '3.14.0'))
+    h.falsy(health.version_supported('3.9.20', '3.10.0', '3.14.0'))
+    h.falsy(health.version_supported('3.14.0', '3.10.0', '3.14.0'))
+    h.falsy(health.version_supported('not-a-version', '3.10.0', '3.14.0'))
+  end)
+
+  h.it('probes Python venv by creating and cleaning a temporary environment', function()
+    local health = require 'nv_ide.health'
+    local commands, deleted = {}, {}
+    local available = health.python_venv_capability('python3', {
+      tempname = function()
+        return '/tmp/nv-ide-health-python-venv'
+      end,
+      run = function(command, timeout_ms)
+        commands[#commands + 1] = command
+        h.equal(timeout_ms, 30000)
+        return { code = 0 }
+      end,
+      delete = function(path)
+        deleted[#deleted + 1] = path
+        return 0
+      end,
+    })
+    h.truthy(available)
+    h.deep_equal(commands, { { 'python3', '-m', 'venv', '/tmp/nv-ide-health-python-venv' } })
+    h.deep_equal(deleted, { '/tmp/nv-ide-health-python-venv' })
   end)
 
   h.it('classifies and probes the complete manifest inventory without retaining credential values', function()
@@ -527,7 +618,7 @@ h.describe('nv_ide health collection', function()
     end
     health.check(probe, reporter)
     local output = table.concat(messages, '\n')
-    h.matches(output, 'sudo apt install golang-go')
+    h.matches(output, 'Install Go >= 1.26.0')
     h.matches(output, 'sudo apt install openjdk-21-jdk maven gradle')
     h.matches(output, 'sudo apt install btop')
     h.matches(output, 'npm install --global @anthropic-ai/claude-code')
@@ -539,5 +630,28 @@ h.describe('nv_ide health collection', function()
     output = table.concat(messages, '\n')
     h.matches(output, 'brew install go')
     h.matches(output, 'brew install openjdk maven gradle')
+  end)
+
+  h.it('renders version and capability constraints with exact platform remediation', function()
+    local health = require 'nv_ide.health'
+    local probe = complete_probe {
+      versions = { go = '1.25.9', javascript = '24.14.0', python = '3.14.0' },
+      unsupported_versions = { go = true, javascript = true, python = true },
+      unavailable = { ['python:venv'] = true },
+    }
+    local messages = {}
+    local reporter = {}
+    for _, level in ipairs { 'start', 'ok', 'info', 'warn', 'error' } do
+      reporter[level] = function(message)
+        messages[#messages + 1] = tostring(message)
+      end
+    end
+    health.check(probe, reporter)
+    local output = table.concat(messages, '\n')
+    h.matches(output, 'Go 1.25.9 requires >= 1.26.0')
+    h.matches(output, 'Node.js 24.14.0 requires >= 24.15.0')
+    h.matches(output, 'Python 3.14.0 requires >= 3.10.0 and < 3.14.0')
+    h.matches(output, 'Python venv capability is unavailable')
+    h.matches(output, 'python3 -m venv')
   end)
 end)

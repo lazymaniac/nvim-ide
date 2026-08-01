@@ -167,11 +167,20 @@ local M = {
     },
   },
   prerequisites = {
+    { id = 'archive', executables = { 'tar', 'unzip' }, required = true },
+    { id = 'bash', executables = { 'bash' }, required = true },
     { id = 'c_compiler', executables = { 'cc', 'clang', 'gcc' }, any = true, required = true },
+    { id = 'curl', executables = { 'curl' }, required = true },
+    { id = 'git', executables = { 'git' }, required = true },
+    { id = 'gzip', executables = { 'gzip' }, required = true },
+    { id = 'lua_package_manager', executables = { 'luarocks' }, required = true },
+    { id = 'ripgrep', executables = { 'rg' }, required = true },
+    { id = 'ruby_package_manager', executables = { 'gem' }, required = true },
     { id = 'snacks_image_ghostscript', executables = { 'gs' }, required = false },
     { id = 'snacks_image_latex', executables = { 'tectonic', 'pdflatex' }, any = true, required = false },
     { id = 'snacks_image_mermaid', executables = { 'mmdc' }, required = false },
     { id = 'snacks_image_raster', executables = { 'magick' }, required = false },
+    { id = 'tree_sitter_cli', executables = { 'tree-sitter' }, required = true },
   },
   runtimes = {
     { id = 'ansible', executables = { 'ansible', 'ansible-playbook' } },
@@ -179,13 +188,31 @@ local M = {
     { id = 'cmake', executables = { 'cmake', 'ninja' } },
     { id = 'containers', executables = { 'docker', 'podman' }, any = true },
     { id = 'dart', executables = { 'dart', 'flutter' } },
-    { id = 'go', executables = { 'go' } },
-    { id = 'haskell', executables = { 'ghc', 'cabal', 'stack' }, any = true },
+    {
+      id = 'go',
+      executables = { 'go' },
+      version = { command = { 'go', 'version' }, pattern = 'go(%d+%.%d+%.%d+)', minimum = '1.26.0' },
+    },
+    { id = 'haskell', executables = { 'ghcup', 'cabal', 'ghc' } },
     { id = 'java', executables = { 'java', 'javac', 'mvn', 'gradle' } },
-    { id = 'javascript', executables = { 'node', 'npm' } },
+    {
+      id = 'javascript',
+      executables = { 'node', 'npm' },
+      version = { command = { 'node', '--version' }, pattern = 'v?(%d+%.%d+%.%d+)', minimum = '24.15.0' },
+    },
     { id = 'kotlin', executables = { 'kotlinc' } },
     { id = 'lua', executables = { 'lua', 'luajit' }, any = true },
-    { id = 'python', executables = { 'python3' } },
+    {
+      id = 'python',
+      executables = { 'python3' },
+      version = {
+        command = { 'python3', '--version' },
+        pattern = 'Python%s+(%d+%.%d+%.%d+)',
+        minimum = '3.10.0',
+        maximum_exclusive = '3.14.0',
+      },
+      capabilities = { { id = 'venv', kind = 'python_venv', executable = 'python3' } },
+    },
     { id = 'r', executables = { 'R' } },
     { id = 'ruby', executables = { 'ruby', 'bundle' } },
     { id = 'rust', executables = { 'rustc', 'cargo' } },
@@ -281,7 +308,9 @@ local function canonical(value)
   end
   if vim.islist(value) then
     local parts = {}
-    for _, item in ipairs(value) do parts[#parts + 1] = canonical(item) end
+    for _, item in ipairs(value) do
+      parts[#parts + 1] = canonical(item)
+    end
     return '[' .. table.concat(parts, ',') .. ']'
   end
   local keys = vim.tbl_keys(value)
