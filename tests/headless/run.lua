@@ -22,4 +22,3 @@ local result = harness.run(specs)
 if result.failed > 0 then
   error(('%d headless spec(s) failed'):format(result.failed), 0)
 end
-
