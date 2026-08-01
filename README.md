@@ -4,7 +4,7 @@ NV-IDE is a personal, full polyglot Neovim configuration for Java, Go, Rust, web
 
 ## Requirements
 
-NV-IDE targets Neovim 0.12 or newer. Git, curl, tar, gzip, unzip, ripgrep, Bash, a C compiler, LuaRocks, RubyGems, and Tree-sitter CLI 0.26.1 or newer are required for a complete first run. The full configuration also requires the declared language runtimes; optional terminal programs remain operator-owned. `:checkhealth nv_ide` reports every missing executable, version, capability, and platform-specific repair without exposing credentials.
+NV-IDE targets Neovim 0.12 or newer. Git 2.31 or newer, curl, tar, gzip, unzip, ripgrep, Bash, a C compiler, LuaRocks, RubyGems, and Tree-sitter CLI 0.26.1 or newer are required for a complete first run. The full configuration also requires the declared language runtimes; optional terminal programs remain operator-owned. `:checkhealth nv_ide` reports every missing executable, version, capability, and platform-specific repair without exposing credentials.
 
 The versioned runtime floor is Go 1.26, Node.js 24.15, JDK/Javac 21, Python 3.10–3.13 with `venv`, Ruby 3 with development headers, Rust 1.42, GHC 8.10, and Cabal 3.0. The complete inventory also includes Ansible, one Clojure runtime, CMake/Ninja, a container runtime, Dart/Flutter, Maven, Gradle, Kotlin, Lua, R, Scala/SBT, PostgreSQL client tools, and Terraform. These are intentionally not hidden behind profiles.
 
@@ -47,6 +47,22 @@ cargo install tree-sitter-cli --version 0.26.3 --locked
 Ubuntu's packaged Neovim and language runtimes may be below the supported floors. Install compatible releases using their official installers or your preferred version manager, then use `:checkhealth nv_ide` as the authoritative verification. Install a current Neovim from the [official Neovim installation page](https://neovim.io/doc/install/) when the distro package is older than 0.12. Wayland users should install `wl-clipboard`; X11 users can use `xclip`.
 
 These are deliberate operator commands. Neovim never invokes `sudo`, Homebrew, apt, dnf, or pacman in the background.
+
+### Optional Just and Delta integrations
+
+Install the optional task runner and LazyGit diff pager:
+
+- macOS: `brew install just git-delta`
+- Debian 13/Ubuntu 24.04+: `sudo apt install just`; install Delta's release `.deb` or use `cargo install git-delta`
+- Fedora: `sudo dnf install just git-delta`
+- Arch: `sudo pacman -S just git-delta`
+
+Overseer's builtin provider discovers justfiles and exposes recipes through
+`<leader>rr` / `:OverseerRun`; opening a project never runs a recipe.
+
+The tracked LazyGit configuration uses `delta --dark --paging=never`.
+This does not write or require a global `~/.gitconfig`; command-line Git users
+may configure Delta separately.
 
 ## Install
 

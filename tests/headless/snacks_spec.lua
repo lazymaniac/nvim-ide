@@ -215,4 +215,20 @@ h.describe('Snacks ownership', function()
     h.falsy(ui:find('function M.get_signs', 1, true))
     h.falsy(ui:find('function M.get_mark', 1, true))
   end)
+
+  h.it('uses Delta only inside the tracked LazyGit configuration', function()
+    local lazygit = read 'dotfiles/.config/lazygit/config.yml'
+    h.matches(lazygit, 'pagers:')
+    h.matches(lazygit, 'pager: delta --dark --paging=never')
+
+    local source = {}
+    for _, path in ipairs(vim.fn.glob('lua/**/*.lua', false, true)) do
+      source[#source + 1] = read(path)
+    end
+    for _, path in ipairs(vim.fn.glob('lua/*.lua', false, true)) do
+      source[#source + 1] = read(path)
+    end
+    local rendered = table.concat(source, '\n')
+    h.falsy(rendered:find('git config', 1, true), 'Neovim must not mutate global Git configuration')
+  end)
 end)

@@ -236,4 +236,28 @@ h.describe('plugin ownership', function()
       'DiffviewRefresh',
     })
   end)
+
+  h.it('keeps Just recipes reachable through Overseer builtins', function()
+    local overseer = plugin(dofile 'lua/plugins/async-tasks.lua', 'stevearc/overseer.nvim')
+    h.truthy(overseer, 'Overseer is missing')
+
+    local run
+    for _, key in ipairs(overseer.keys or {}) do
+      if key[1] == '<leader>rr' then
+        run = key
+        break
+      end
+    end
+    h.truthy(run, 'OverseerRun mapping is missing')
+    h.equal(run[2], '<cmd>OverseerRun<cr>')
+
+    local previous = package.loaded.overseer
+    local configured
+    package.loaded.overseer = { setup = function(opts) configured = opts end }
+    local ok, err = xpcall(overseer.config, debug.traceback)
+    package.loaded.overseer = previous
+    if not ok then error(err, 0) end
+
+    h.deep_equal(configured.templates, { 'builtin', 'user' })
+  end)
 end)
