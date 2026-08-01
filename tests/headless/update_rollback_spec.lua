@@ -129,7 +129,7 @@ h.describe('latest-first plugin update and rollback', function()
       h.deep_equal(result.manager, { before = old_commit, commit = new_commit, tag = 'v11.17.5' })
       h.deep_equal(vim.tbl_map(function(call)
         return call.name
-      end, calls), { 'manager-update', 'lazy-update', 'treesitter-update', 'manager-record', 'smoke' })
+      end, calls), { 'lazy-update', 'treesitter-update', 'manager-update', 'manager-record', 'smoke' })
     end)
   end)
 
@@ -199,14 +199,61 @@ h.describe('latest-first plugin update and rollback', function()
       h.deep_equal(vim.tbl_map(function(call)
         return call.name
       end, calls), {
-        'manager-update',
         'lazy-update',
         'treesitter-update',
+        'manager-update',
         'manager-record',
         'smoke',
         'manager-restore',
         'lazy-restore',
       })
+    end)
+  end)
+
+  h.it('loads the current Lazy update generation before switching its checkout', function()
+    h.with_temp_dir(function(dir)
+      local lockfile = vim.fs.joinpath(dir, 'lazy-lock.json')
+      write(lockfile, '{}')
+      local generation = 'current-process'
+      local calls = {}
+      local updater = reload('nv_ide.toolchain.plugins').new {
+        lockfile = lockfile,
+        snapshot_dir = vim.fs.joinpath(dir, 'snapshots'),
+        manager = {
+          update = function(_, _, done)
+            calls[#calls + 1] = 'manager-checkout'
+            generation = 'new-checkout'
+            done {
+              ok = true,
+              before = string.rep('1', 40),
+              commit = string.rep('2', 40),
+              tag = 'v11.17.5',
+            }
+          end,
+          record = function()
+            return true
+          end,
+        },
+        lazy_update = function(_, done)
+          calls[#calls + 1] = 'lazy-update-' .. generation
+          done { ok = true }
+        end,
+        treesitter_update = function(_, done)
+          done { ok = true }
+        end,
+        lazy_restore = function()
+          error 'successful update must not restore'
+        end,
+        smoke = { run = function()
+          return { ok = true }
+        end },
+        receipt_probe = function()
+          return { mason_receipts = {}, treesitter_parser_info = {} }
+        end,
+      }
+
+      h.equal(updater:update({ wait = true }).status, 'success')
+      h.deep_equal(calls, { 'lazy-update-current-process', 'manager-checkout' })
     end)
   end)
 

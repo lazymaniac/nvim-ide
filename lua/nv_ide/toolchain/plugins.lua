@@ -615,66 +615,47 @@ function Plugins:update(options)
     restore_plugins()
   end
 
-  local function update_plugins()
-    self:_invoke('Lazy update', self.lazy_update, {
-      wait = wait,
-      show = options.show,
-      fresh = options.fresh == true,
-    }, function(lazy_result)
-      local errors = result_errors('Lazy update', lazy_result)
+  local function validate_smoke()
+    if self.manager and manager_after then
+      local recorded, record_error = self.manager:record(manager_after)
+      if not recorded then
+        rollback { 'lazy.nvim manager lock recording: ' .. tostring(record_error) }
+        return
+      end
+    end
+
+    local smoke_settled = false
+    local function finish_smoke(smoke_result)
+      if smoke_settled then
+        return
+      end
+      smoke_settled = true
+      local errors = result_errors('smoke validation', smoke_result)
       if #errors > 0 then
         rollback(errors)
         return
       end
+      observe 'after'
+      complete { status = 'success', rolled_back = false, checks = smoke_result.checks or {} }
+    end
 
-      self:_invoke('Tree-sitter update', self.treesitter_update, {
-        wait = wait,
-        timeout_ms = options.timeout_ms,
-      }, function(treesitter_result)
-        errors = result_errors('Tree-sitter update', treesitter_result)
-        if #errors > 0 then
-          rollback(errors)
-          return
-        end
-
-        if self.manager and manager_after then
-          local recorded, record_error = self.manager:record(manager_after)
-          if not recorded then
-            rollback { 'lazy.nvim manager lock recording: ' .. tostring(record_error) }
-            return
-          end
-        end
-
-        local smoke_settled = false
-        local function finish_smoke(smoke_result)
-          if smoke_settled then
-            return
-          end
-          smoke_settled = true
-          errors = result_errors('smoke validation', smoke_result)
-          if #errors > 0 then
-            rollback(errors)
-            return
-          end
-          observe 'after'
-          complete { status = 'success', rolled_back = false, checks = smoke_result.checks or {} }
-        end
-
-        local smoked, smoke_result = pcall(self.smoke.run, self.smoke, {
-          wait = wait,
-          lock_owner = options.lock_owner,
-          on_complete = finish_smoke,
-        })
-        if not smoked then
-          rollback { tostring(smoke_result) }
-        elseif not smoke_settled and (type(smoke_result) ~= 'table' or smoke_result.pending ~= true) then
-          finish_smoke(smoke_result)
-        end
-      end)
-    end)
+    local smoked, smoke_result = pcall(self.smoke.run, self.smoke, {
+      wait = wait,
+      lock_owner = options.lock_owner,
+      on_complete = finish_smoke,
+    })
+    if not smoked then
+      rollback { tostring(smoke_result) }
+    elseif not smoke_settled and (type(smoke_result) ~= 'table' or smoke_result.pending ~= true) then
+      finish_smoke(smoke_result)
+    end
   end
 
-  if self.manager then
+  local function update_manager()
+    if not self.manager then
+      validate_smoke()
+      return
+    end
     self:_invoke('lazy.nvim manager update', function(manager_options, done)
       return self.manager:update(manager_options, done)
     end, {
@@ -705,11 +686,33 @@ function Plugins:update(options)
       end
       manager_before = manager_before:lower()
       manager_after = manager_after:lower()
-      update_plugins()
+      validate_smoke()
     end)
-  else
-    update_plugins()
   end
+
+  self:_invoke('Lazy update', self.lazy_update, {
+    wait = wait,
+    show = options.show,
+    fresh = options.fresh == true,
+  }, function(lazy_result)
+    local errors = result_errors('Lazy update', lazy_result)
+    if #errors > 0 then
+      rollback(errors)
+      return
+    end
+
+    self:_invoke('Tree-sitter update', self.treesitter_update, {
+      wait = wait,
+      timeout_ms = options.timeout_ms,
+    }, function(treesitter_result)
+      errors = result_errors('Tree-sitter update', treesitter_result)
+      if #errors > 0 then
+        rollback(errors)
+        return
+      end
+      update_manager()
+    end)
+  end)
 
   if wait then
     return final
