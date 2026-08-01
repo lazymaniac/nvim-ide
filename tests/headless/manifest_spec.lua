@@ -200,7 +200,20 @@ local expected_runtimes = {
     executables = { 'go' },
     version = { command = { 'go', 'version' }, pattern = 'go(%d+%.%d+%.%d+)', minimum = '1.26.0' },
   },
-  { id = 'haskell', executables = { 'ghcup', 'cabal', 'ghc' } },
+  {
+    id = 'haskell',
+    executables = { 'ghcup', 'cabal', 'ghc' },
+    version = { command = { 'ghc', '--numeric-version' }, pattern = '(%d+%.%d+%.%d+)', minimum = '8.10.0' },
+    capabilities = {
+      {
+        id = 'cabal_version',
+        kind = 'command_version',
+        command = { 'cabal', '--numeric-version' },
+        pattern = '(%d+%.%d+%.%d+)',
+        minimum = '3.0.0',
+      },
+    },
+  },
   {
     id = 'java',
     executables = { 'java', 'javac', 'mvn', 'gradle' },
@@ -242,8 +255,33 @@ local expected_runtimes = {
     id = 'ruby',
     executables = { 'ruby', 'bundle' },
     version = { command = { 'ruby', '--version' }, pattern = 'ruby%s+(%d+%.%d+%.%d+)', minimum = '3.0.0' },
+    capabilities = {
+      {
+        id = 'development_headers',
+        kind = 'command',
+        command = {
+          'ruby',
+          '-rrbconfig',
+          '-e',
+          "header = File.join(RbConfig::CONFIG.fetch('rubyhdrdir'), 'ruby.h'); exit(File.file?(header) ? 0 : 1)",
+        },
+      },
+    },
   },
-  { id = 'rust', executables = { 'rustc', 'cargo' } },
+  {
+    id = 'rust',
+    executables = { 'rustc', 'cargo' },
+    version = { command = { 'rustc', '--version' }, pattern = 'rustc%s+(%d+%.%d+%.%d+)', minimum = '1.42.0' },
+    capabilities = {
+      {
+        id = 'cargo_version',
+        kind = 'command_version',
+        command = { 'cargo', '--version' },
+        pattern = 'cargo%s+(%d+%.%d+%.%d+)',
+        minimum = '1.42.0',
+      },
+    },
+  },
   { id = 'scala', executables = { 'scala', 'sbt' } },
   { id = 'sql', executables = { 'psql' } },
   { id = 'terraform', executables = { 'terraform' } },
