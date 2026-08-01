@@ -56,17 +56,18 @@ return {
             { '<leader>ch', '<cmd>ClangdTypeHierarchy<cr>', desc = 'Type Hierarchy [ch]' },
             { '<leader>cm', '<cmd>ClangdMemoryUsage<cr>', desc = 'Memory Usage [cm]' },
           },
-          root_dir = function(fname)
-            return require('lspconfig.util').root_pattern(
+          root_markers = {
+            {
               'Makefile',
               'configure.ac',
               'configure.in',
               'config.h.in',
               'meson.build',
               'meson_options.txt',
-              'build.ninja'
-            )(fname) or require('lspconfig.util').root_pattern('compile_commands.json', 'compile_flags.txt')(fname)
-          end,
+              'build.ninja',
+            },
+            { 'compile_commands.json', 'compile_flags.txt' },
+          },
           capabilities = {
             offsetEncoding = { 'utf-16' },
           },
