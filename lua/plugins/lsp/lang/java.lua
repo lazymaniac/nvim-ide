@@ -407,6 +407,15 @@ return {
               { '<leader>cu', require('jdtls').update_projects_config, desc = 'Update Projects Config [cu]', mode = 'n', buffer = args.buf },
               { '<leader>cp', require('jdtls').javap, desc = 'Run javap [cp]', mode = 'n', buffer = args.buf },
               { '<leader>cj', require('jdtls').jshell, desc = 'Run jshell [cj]', mode = 'n', buffer = args.buf },
+              {
+                '<leader>cJ',
+                function()
+                  require('nv_ide.java').run_current_class { bufnr = args.buf, client_id = client.id }
+                end,
+                desc = 'Run Current Class in JShell [cJ]',
+                mode = 'n',
+                buffer = args.buf,
+              },
               { '<leader>cl', require('jdtls').jol, desc = 'Run jol [cl]', mode = 'n', buffer = args.buf },
               { '<leader>ce', require('jdtls').set_runtime, desc = 'Set Runtime [ce]', mode = 'n', buffer = args.buf },
               { '<leader>cxm', [[<ESC><CMD>lua require('jdtls').extract_method(true)<CR>]], desc = 'Extract Method [cxm]', mode = 'v', buffer = args.buf },
