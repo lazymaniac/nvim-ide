@@ -173,6 +173,12 @@ function Smoke:run(options)
         if settled then
           return
         end
+        if vim.in_fast_event() then
+          vim.schedule(function()
+            settle(ok, detail)
+          end)
+          return
+        end
         settled = true
         if ok == false then
           errors[#errors + 1] = ('%s: %s'):format(check.name, detail or 'failed')

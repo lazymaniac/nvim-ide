@@ -228,6 +228,10 @@ local function lazy_step(method)
     end
 
     local function finish()
+      if vim.in_fast_event() then
+        vim.schedule(finish)
+        return
+      end
       local errors = lazy_errors(method)
       done { ok = #errors == 0, errors = errors }
     end
@@ -285,7 +289,13 @@ local function treesitter_step(manifest, timeout_ms, repair, provided_runtime)
       return
     end
 
-    local awaited, await_error = pcall(task.await, task, function(err, result)
+    local function after_update(err, result)
+      if vim.in_fast_event() then
+        vim.schedule(function()
+          after_update(err, result)
+        end)
+        return
+      end
       if err ~= nil or result == false then
         done {
           ok = false,
@@ -294,7 +304,8 @@ local function treesitter_step(manifest, timeout_ms, repair, provided_runtime)
         return
       end
       repair_stale_parsers()
-    end)
+    end
+    local awaited, await_error = pcall(task.await, task, after_update)
     if not awaited then
       done { ok = false, error = tostring(await_error) }
     end
@@ -368,6 +379,12 @@ function Plugins:_invoke(stage, operation, options, done)
   local completed = false
   local function finish(result)
     if completed then
+      return
+    end
+    if vim.in_fast_event() then
+      vim.schedule(function()
+        finish(result)
+      end)
       return
     end
     completed = true
@@ -479,6 +496,10 @@ function Plugins:install(options)
 
   local index = 0
   local function next_operation()
+    if vim.in_fast_event() then
+      vim.schedule(next_operation)
+      return
+    end
     index = index + 1
     local operation = operations[index]
     if not operation then
