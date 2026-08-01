@@ -332,4 +332,22 @@ h.describe('LSP registry', function()
     h.truthy(extension_spec)
     h.truthy(extension_spec.ft or extension_spec.event or extension_spec.cmd or extension_spec.keys)
   end)
+
+  h.it('declares clangd roots through the native Neovim 0.12 contract', function()
+    local opts = lsp_opts('plugins.lsp.lang.clangd')
+    local clangd = opts.servers.clangd
+    h.falsy(clangd.root_dir, 'a legacy return-value root callback prevents native LSP startup')
+    h.deep_equal(clangd.root_markers, {
+      {
+        'Makefile',
+        'configure.ac',
+        'configure.in',
+        'config.h.in',
+        'meson.build',
+        'meson_options.txt',
+        'build.ninja',
+      },
+      { 'compile_commands.json', 'compile_flags.txt' },
+    })
+  end)
 end)
