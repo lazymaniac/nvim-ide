@@ -21,6 +21,15 @@ local function command_output(command, timeout_ms)
   return vim.trim(result.stdout or '')
 end
 
+local function command_result(command, timeout_ms)
+  local ok, process = pcall(vim.system, command, { text = true })
+  if not ok then
+    return nil
+  end
+  local waited, result = pcall(process.wait, process, timeout_ms or 1000)
+  return waited and result or nil
+end
+
 local function default_watcher()
   local supported = false
   local ok, handle = pcall(vim.uv.new_fs_event)
@@ -182,23 +191,72 @@ local function default_treesitter_cli_version()
   return output and output:match '[vV]?(%d+%.%d+%.%d+[%w%._%-]*)' or nil
 end
 
-local function version_at_least(value, minimum)
-  local function parts(version)
-    local major, minor, patch = tostring(version or ''):match '^(%d+)%.(%d+)%.(%d+)'
-    return tonumber(major), tonumber(minor), tonumber(patch)
+local function version_parts(version)
+  local major, minor, patch = tostring(version or ''):match '^(%d+)%.(%d+)%.(%d+)'
+  if not major then
+    return nil
   end
-  local major, minor, patch = parts(value)
-  local min_major, min_minor, min_patch = parts(minimum)
-  if not major or not min_major then
+  return { tonumber(major), tonumber(minor), tonumber(patch) }
+end
+
+local function compare_versions(left, right)
+  left, right = version_parts(left), version_parts(right)
+  if not left or not right then
+    return nil
+  end
+  for index = 1, 3 do
+    if left[index] ~= right[index] then
+      return left[index] < right[index] and -1 or 1
+    end
+  end
+  return 0
+end
+
+function M.version_supported(value, minimum, maximum_exclusive)
+  local minimum_comparison = compare_versions(value, minimum)
+  if minimum_comparison == nil or minimum_comparison < 0 then
     return false
   end
-  if major ~= min_major then
-    return major > min_major
+  if maximum_exclusive then
+    local maximum_comparison = compare_versions(value, maximum_exclusive)
+    if maximum_comparison == nil or maximum_comparison >= 0 then
+      return false
+    end
   end
-  if minor ~= min_minor then
-    return minor > min_minor
+  return true
+end
+
+local function version_at_least(value, minimum)
+  return M.version_supported(value, minimum)
+end
+
+function M.python_venv_capability(executable_name, dependencies)
+  dependencies = dependencies or {}
+  local tempname = dependencies.tempname or vim.fn.tempname
+  local delete = dependencies.delete or function(path)
+    return vim.fn.delete(path, 'rf')
   end
-  return patch >= min_patch
+  local run = dependencies.run or command_result
+  local path = tempname()
+  local ok, result = pcall(run, { executable_name, '-m', 'venv', path }, 30000)
+  pcall(delete, path)
+  return ok and type(result) == 'table' and result.code == 0
+end
+
+local function default_version(_, constraint)
+  local output = command_output(constraint.command, 3000)
+  local version = output and output:match(constraint.pattern) or nil
+  return {
+    version = version,
+    supported = M.version_supported(version, constraint.minimum, constraint.maximum_exclusive),
+  }
+end
+
+local function default_capability(_, capability)
+  if capability.kind == 'python_venv' then
+    return { available = M.python_venv_capability(capability.executable) }
+  end
+  return { available = false }
 end
 
 local function default_probe()
@@ -214,6 +272,8 @@ local function default_probe()
       }
     end,
     executable = executable,
+    version = default_version,
+    capability = default_capability,
     mason_status = default_mason_status,
     parser_status = function(name)
       if not installed_parsers then
@@ -256,13 +316,32 @@ local function dependency(record, probe, required)
       available = available and present
     end
   end
-  return {
+  local result = {
     id = record.id,
     required = required == true,
     available = available,
     any = record.any == true,
     executables = executables,
   }
+  if record.version then
+    local ok, observed = pcall(probe.version or default_version, record.id, record.version)
+    observed = ok and type(observed) == 'table' and observed or {}
+    result.version = type(observed.version) == 'string' and observed.version or nil
+    result.version_supported = observed.supported == true
+    result.minimum_version = record.version.minimum
+    result.maximum_version_exclusive = record.version.maximum_exclusive
+    result.available = result.available and result.version_supported
+  end
+  if record.capabilities then
+    result.capabilities = {}
+    for _, capability in ipairs(record.capabilities) do
+      local ok, observed = pcall(probe.capability or default_capability, record.id, capability)
+      local capability_available = ok and type(observed) == 'table' and observed.available == true
+      result.capabilities[#result.capabilities + 1] = { id = capability.id, available = capability_available }
+      result.available = result.available and capability_available
+    end
+  end
+  return result
 end
 
 local function sanitize_watcher(value)
@@ -350,10 +429,14 @@ end
 local PREREQUISITE_FIXES = {
   Darwin = {
     archive = 'brew install unzip',
+    bash = 'brew install bash',
     c_compiler = 'xcode-select --install',
     curl = 'brew install curl',
     git = 'brew install git',
+    gzip = 'brew install gzip',
+    lua_package_manager = 'brew install luarocks',
     ripgrep = 'brew install ripgrep',
+    ruby_package_manager = 'brew install ruby; add Homebrew Ruby to PATH so gem is available',
     snacks_image_ghostscript = 'brew install ghostscript',
     snacks_image_latex = 'brew install tectonic',
     snacks_image_mermaid = 'npm install --global @mermaid-js/mermaid-cli',
@@ -362,10 +445,14 @@ local PREREQUISITE_FIXES = {
   },
   Linux = {
     archive = 'Debian/Ubuntu: sudo apt install tar unzip; Fedora: sudo dnf install tar unzip; Arch: sudo pacman -S tar unzip',
+    bash = 'Debian/Ubuntu: sudo apt install bash; Fedora: sudo dnf install bash; Arch: sudo pacman -S bash',
     c_compiler = 'Debian/Ubuntu: sudo apt install build-essential; Fedora: sudo dnf group install development-tools; Arch: sudo pacman -S base-devel',
     curl = 'Debian/Ubuntu: sudo apt install curl; Fedora: sudo dnf install curl; Arch: sudo pacman -S curl',
     git = 'Debian/Ubuntu: sudo apt install git; Fedora: sudo dnf install git; Arch: sudo pacman -S git',
+    gzip = 'Debian/Ubuntu: sudo apt install gzip; Fedora: sudo dnf install gzip; Arch: sudo pacman -S gzip',
+    lua_package_manager = 'Debian/Ubuntu: sudo apt install luarocks; Fedora: sudo dnf install luarocks; Arch: sudo pacman -S luarocks',
     ripgrep = 'Debian/Ubuntu: sudo apt install ripgrep; Fedora: sudo dnf install ripgrep; Arch: sudo pacman -S ripgrep',
+    ruby_package_manager = 'Debian/Ubuntu: sudo apt install ruby-dev; Fedora: sudo dnf install ruby-devel; Arch: sudo pacman -S ruby (gem is included)',
     snacks_image_ghostscript = 'Debian/Ubuntu: sudo apt install ghostscript; Fedora: sudo dnf install ghostscript; Arch: sudo pacman -S ghostscript',
     snacks_image_latex = 'Install tectonic or a TeX distribution with pdflatex using your Linux package manager',
     snacks_image_mermaid = 'npm install --global @mermaid-js/mermaid-cli',
@@ -381,13 +468,13 @@ local RUNTIME_FIXES = {
     cmake = 'brew install cmake ninja',
     containers = 'brew install podman',
     dart = 'brew install --cask flutter',
-    go = 'brew install go',
-    haskell = 'brew install ghc cabal-install',
+    go = 'brew install go; verify that go version reports >= 1.26.0',
+    haskell = 'brew install ghcup; run ghcup install ghc recommended && ghcup set ghc recommended && ghcup install cabal recommended && ghcup set cabal recommended',
     java = 'brew install openjdk maven gradle',
-    javascript = 'brew install node',
+    javascript = 'brew install node; verify that node --version reports >= 24.15.0',
     kotlin = 'brew install kotlin',
     lua = 'brew install lua luajit',
-    python = 'brew install python',
+    python = 'brew install python@3.13; verify with python3 --version and python3 -m venv /tmp/nv-ide-venv-test',
     r = 'brew install --cask r',
     ruby = 'brew install ruby',
     rust = 'brew install rustup-init && rustup-init -y',
@@ -401,13 +488,13 @@ local RUNTIME_FIXES = {
     cmake = 'Debian/Ubuntu: sudo apt install cmake ninja-build; Fedora: sudo dnf install cmake ninja-build; Arch: sudo pacman -S cmake ninja',
     containers = 'Debian/Ubuntu: sudo apt install podman; Fedora: sudo dnf install podman; Arch: sudo pacman -S podman',
     dart = 'asdf plugin add flutter && asdf install flutter latest && asdf set -u flutter latest',
-    go = 'Debian/Ubuntu: sudo apt install golang-go; Fedora: sudo dnf install golang; Arch: sudo pacman -S go',
-    haskell = 'Debian/Ubuntu: sudo apt install ghc cabal-install; Fedora: sudo dnf install ghc cabal-install; Arch: sudo pacman -S ghc cabal-install',
+    go = 'Install Go >= 1.26.0 from https://go.dev/doc/install, then verify with: go version',
+    haskell = 'Install GHCup from https://www.haskell.org/ghcup/; then install and select recommended GHC and cabal releases',
     java = 'Debian/Ubuntu: sudo apt install openjdk-21-jdk maven gradle; Fedora: sudo dnf install java-21-openjdk-devel maven gradle; Arch: sudo pacman -S jdk21-openjdk maven gradle',
-    javascript = 'Debian/Ubuntu: sudo apt install nodejs npm; Fedora: sudo dnf install nodejs npm; Arch: sudo pacman -S nodejs npm',
+    javascript = 'Install Node.js >= 24.15.0 with npm from https://nodejs.org/en/download, then verify with: node --version && npm --version',
     kotlin = 'curl -s https://get.sdkman.io | bash && sdk install kotlin',
     lua = 'Debian/Ubuntu: sudo apt install lua5.4 luajit; Fedora: sudo dnf install lua luajit; Arch: sudo pacman -S lua luajit',
-    python = 'Debian/Ubuntu: sudo apt install python3; Fedora: sudo dnf install python3; Arch: sudo pacman -S python',
+    python = 'Install Python 3.10-3.13 with venv support; Debian/Ubuntu: sudo apt install python3 python3-venv; Fedora: sudo dnf install python3; Arch: sudo pacman -S python; verify with python3 -m venv /tmp/nv-ide-venv-test',
     r = 'Debian/Ubuntu: sudo apt install r-base; Fedora: sudo dnf install R; Arch: sudo pacman -S r',
     ruby = 'Debian/Ubuntu: sudo apt install ruby-full; Fedora: sudo dnf install ruby; Arch: sudo pacman -S ruby',
     rust = 'curl --proto =https --tlsv1.2 -sSf https://sh.rustup.rs | sh',
@@ -682,6 +769,31 @@ local function render_records(reporter, title, records, options)
     end, record.executables) or nil
     local state = record.status and (' [%s]'):format(record.status) or ''
     local message = detail and ('%s%s (%s)'):format(record.id, state, table.concat(detail, ', ')) or record.id .. state
+    local constraints = {}
+    if record.minimum_version and not record.version_supported then
+      local labels = { go = 'Go', javascript = 'Node.js', python = 'Python' }
+      local requirement = ('%s %s requires >= %s'):format(
+        labels[record.id] or record.id,
+        record.version or 'version unknown',
+        record.minimum_version
+      )
+      if record.maximum_version_exclusive then
+        requirement = requirement .. ' and < ' .. record.maximum_version_exclusive
+      end
+      constraints[#constraints + 1] = requirement
+    end
+    for _, capability in ipairs(record.capabilities or {}) do
+      if not capability.available then
+        local labels = { python = 'Python' }
+        constraints[#constraints + 1] = ('%s %s capability is unavailable'):format(
+          labels[record.id] or record.id,
+          capability.id
+        )
+      end
+    end
+    if #constraints > 0 then
+      message = message .. ': ' .. table.concat(constraints, '; ')
+    end
     local fix = dependency_fix(record, options.kind, options.os)
     if fix then
       message = message .. '. Fix: ' .. fix
