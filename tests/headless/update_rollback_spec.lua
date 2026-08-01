@@ -1221,6 +1221,11 @@ h.describe('update orchestration', function()
         update = function(_, options)
           invocations[#invocations + 1] = vim.deepcopy(options)
           local result = { status = 'success', snapshot = '/state/known-good.json' }
+          result.manager = {
+            before = string.rep('1', 40),
+            commit = string.rep('2', 40),
+            tag = 'v11.17.5',
+          }
           result.observed = {
             before = { mason_receipts = { stylua = '1.0.0' }, treesitter_parser_info = { lua = 'before' } },
             after = { mason_receipts = { stylua = '1.1.0' }, treesitter_parser_info = { lua = 'after' } },
@@ -1257,6 +1262,11 @@ h.describe('update orchestration', function()
     h.equal(saved.value.plugin_update.status, 'success')
     h.equal(saved.value.plugin_update.fingerprint, 'fingerprint')
     h.equal(saved.value.plugin_update.last_success, 789)
+    h.deep_equal(saved.value.plugin_update.manager, {
+      before = string.rep('1', 40),
+      commit = string.rep('2', 40),
+      tag = 'v11.17.5',
+    })
     h.deep_equal(saved.value.plugin_update.observed, {
       before = { mason_receipts = { stylua = '1.0.0' }, treesitter_parser_info = { lua = 'before' } },
       after = { mason_receipts = { stylua = '1.1.0' }, treesitter_parser_info = { lua = 'after' } },

@@ -100,7 +100,7 @@ h.describe('portable early environment', function()
 
   h.it('runs before Lazy bootstrap', function()
     local source = table.concat(vim.fn.readfile('init.lua'), '\n')
-    local early = assert(source:find("require('nv_ide.toolchain').early()", 1, true))
+    local early = assert(source:find('toolchain.early()', 1, true))
     local lazy = assert(source:find("require 'config.lazy'", 1, true))
     h.truthy(early < lazy, 'portable environment must initialize before Lazy')
   end)
