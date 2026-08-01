@@ -1,16 +1,16 @@
-local path = require 'plenary.path'
 local builders = require 'overseer.template.user.builders'
 
 local goals_file_path = '/.mvn_goals'
 local profiles_file_path = '/.mvn_profiles'
 local sdk_man_candidates_java = '~/.sdkman/candidates/java/'
 
-local function is_pom_xml_in_cwd()
-  return path:new(vim.fn.getcwd() .. '/pom.xml'):exists()
+local function find_project_dir(search_dir)
+  local pom_file = vim.fs.find('pom.xml', { path = search_dir, upward = true, type = 'file' })[1]
+  return pom_file and vim.fs.dirname(pom_file) or nil
 end
 
-local function find_dirs_with_pom_xml()
-  local pom_files = vim.fn.globpath(vim.fn.getcwd(), '**/pom.xml', false, true)
+local function find_dirs_with_pom_xml(project_dir)
+  local pom_files = vim.fn.globpath(project_dir, '**/pom.xml', false, true)
   local directories = {}
   for _, file_path in ipairs(pom_files) do
     local directory = vim.fn.fnamemodify(file_path, ':h')
@@ -48,20 +48,19 @@ end
 
 local function read_values_file(directory, file_name)
   local file_path = directory .. file_name
-  if path:new(file_path):exists() then
+  if vim.fn.filereadable(file_path) == 1 then
     return split_string_by_comma(vim.fn.readfile(file_path))
   end
   return {}
 end
 
 return builders.maven_provider {
-  has_root_pom = is_pom_xml_in_cwd,
+  find_project_dir = find_project_dir,
   executable = function(command)
     return vim.fn.executable(command)
   end,
   notify = function(message)
-    local notify = require 'notify'
-    notify(message)
+    vim.notify(message, vim.log.levels.INFO, { title = 'Overseer' })
   end,
   find_pom_dirs = find_dirs_with_pom_xml,
   find_java_sdks = find_sdk_java_candidates,

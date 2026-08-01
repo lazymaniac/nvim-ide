@@ -121,8 +121,15 @@ function M.maven_provider(probes)
   local notification_displayed = false
 
   return {
-    generator = function(_, cb)
-      if not probes.has_root_pom() then
+    generator = function(search, cb)
+      local search_dir = search and search.dir
+      if type(search_dir) ~= 'string' or search_dir == '' then
+        cb 'Maven task discovery requires a search directory'
+        return
+      end
+
+      local project_dir = probes.find_project_dir(search_dir)
+      if not project_dir then
         cb {}
         return
       end
@@ -137,7 +144,7 @@ function M.maven_provider(probes)
 
       local definitions = {}
       local java_sdks = probes.find_java_sdks()
-      for priority, directory in ipairs(probes.find_pom_dirs()) do
+      for priority, directory in ipairs(probes.find_pom_dirs(project_dir)) do
         local task = {
           name = probes.basename(directory),
           pom_file = probes.joinpath(directory, 'pom.xml'),
@@ -197,7 +204,7 @@ function M.maven_provider(probes)
             },
           },
           builder = function(params)
-            return M.maven {
+            local command = M.maven {
               pom_file = task.pom_file,
               clean = params.clean,
               skip_test = params.skip_test,
@@ -206,6 +213,8 @@ function M.maven_provider(probes)
               sdks = params.sdks,
               extra_params = params.extra_params,
             }
+            command.cwd = directory
+            return command
           end,
           priority = priority,
         }
@@ -320,13 +329,13 @@ function M.docker_provider(probes)
   }
 end
 
-function M.gradle(params)
+function M.gradle(params, command)
   assert(type(params) == 'table', 'Gradle parameters must be a table')
   local arguments = {}
   append(arguments, params.tasks)
   append(arguments, M.split_argv(params.extra_params))
   return {
-    cmd = gradle_command,
+    cmd = command or gradle_command,
     args = arguments,
     env = {},
   }
@@ -358,7 +367,7 @@ function M.parse_gradle_tasks(output)
   return tasks
 end
 
-local function run_gradle_tasks(probes, timeout_ms, callback)
+local function run_gradle_tasks(probes, command, cwd, timeout_ms, callback)
   local output = {}
   local errors = {}
   local completed = false
@@ -377,6 +386,7 @@ local function run_gradle_tasks(probes, timeout_ms, callback)
   end
 
   local options = {
+    cwd = cwd,
     stdout_buffered = true,
     stderr_buffered = true,
     on_stdout = function(_, data)
@@ -407,7 +417,7 @@ local function run_gradle_tasks(probes, timeout_ms, callback)
     end,
   }
 
-  local started, result = pcall(probes.jobstart, { gradle_command, 'tasks', '--console=plain' }, options)
+  local started, result = pcall(probes.jobstart, { command, 'tasks', '--console=plain' }, options)
   if not started then
     finish(nil, 'Gradle task discovery jobstart failed: ' .. tostring(result))
     return
@@ -453,17 +463,29 @@ function M.gradle_provider(probes, options)
   local notification_displayed = false
 
   return {
-    generator = function(_, cb)
-      if not is_executable(probes.executable(gradle_command)) then
+    generator = function(search, cb)
+      local search_dir = search and search.dir
+      if type(search_dir) ~= 'string' or search_dir == '' then
+        cb 'Gradle task discovery requires a search directory'
+        return
+      end
+
+      local wrapper = probes.find_gradle_wrapper(search_dir)
+      if not wrapper then
+        cb 'Gradle task discovery failed: gradlew was not found'
+        return
+      end
+      if not is_executable(probes.executable(wrapper)) then
         cb 'Gradle task discovery failed: gradlew is not executable'
         return
       end
+      local project_dir = probes.dirname(wrapper)
       if not notification_displayed then
         probes.notify 'Found Gradle. Creating task'
         notification_displayed = true
       end
 
-      run_gradle_tasks(probes, options.timeout_ms, function(tasks_output, err)
+      run_gradle_tasks(probes, wrapper, project_dir, options.timeout_ms, function(tasks_output, err)
         if err then
           cb(err)
           return
@@ -490,7 +512,11 @@ function M.gradle_provider(probes, options)
                 order = 2,
               },
             },
-            builder = M.gradle,
+            builder = function(params)
+              local command = M.gradle(params, wrapper)
+              command.cwd = project_dir
+              return command
+            end,
             priority = 40,
           },
         }
