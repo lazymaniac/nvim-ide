@@ -1,5 +1,6 @@
 return {
-  'user.mvn-workflow',
-  'user.gradle-workflow',
-  'user.docker-compose',
+  name = 'User Overseer workflow collection',
+  generator = function()
+    return {}
+  end,
 }
