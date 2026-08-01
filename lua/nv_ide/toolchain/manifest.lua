@@ -174,6 +174,15 @@ local M = {
     { id = 'git', executables = { 'git' }, required = true },
     { id = 'gzip', executables = { 'gzip' }, required = true },
     { id = 'lua_package_manager', executables = { 'luarocks' }, required = true },
+    {
+      id = 'mason_hlint_rosetta',
+      executables = { 'arch' },
+      required = true,
+      platform = { os = 'Darwin', arches = { 'arm64', 'aarch64' } },
+      capabilities = {
+        { id = 'x86_64_translation', kind = 'command', command = { 'arch', '-x86_64', '/usr/bin/true' } },
+      },
+    },
     { id = 'ripgrep', executables = { 'rg' }, required = true },
     { id = 'ruby_package_manager', executables = { 'gem' }, required = true },
     { id = 'snacks_image_ghostscript', executables = { 'gs' }, required = false },
@@ -194,7 +203,24 @@ local M = {
       version = { command = { 'go', 'version' }, pattern = 'go(%d+%.%d+%.%d+)', minimum = '1.26.0' },
     },
     { id = 'haskell', executables = { 'ghcup', 'cabal', 'ghc' } },
-    { id = 'java', executables = { 'java', 'javac', 'mvn', 'gradle' } },
+    {
+      id = 'java',
+      executables = { 'java', 'javac', 'mvn', 'gradle' },
+      version = {
+        command = { 'java', '-version' },
+        pattern = 'version%s+"?(%d+%.%d+%.%d+)',
+        minimum = '21.0.0',
+      },
+      capabilities = {
+        {
+          id = 'javac_version',
+          kind = 'command_version',
+          command = { 'javac', '-version' },
+          pattern = 'javac%s+(%d+%.%d+%.%d+)',
+          minimum = '21.0.0',
+        },
+      },
+    },
     {
       id = 'javascript',
       executables = { 'node', 'npm' },
@@ -214,7 +240,11 @@ local M = {
       capabilities = { { id = 'venv', kind = 'python_venv', executable = 'python3' } },
     },
     { id = 'r', executables = { 'R' } },
-    { id = 'ruby', executables = { 'ruby', 'bundle' } },
+    {
+      id = 'ruby',
+      executables = { 'ruby', 'bundle' },
+      version = { command = { 'ruby', '--version' }, pattern = 'ruby%s+(%d+%.%d+%.%d+)', minimum = '3.0.0' },
+    },
     { id = 'rust', executables = { 'rustc', 'cargo' } },
     { id = 'scala', executables = { 'scala', 'sbt' } },
     { id = 'sql', executables = { 'psql' } },

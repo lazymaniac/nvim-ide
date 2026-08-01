@@ -18,7 +18,7 @@ local function command_output(command, timeout_ms)
   if not waited or result.code ~= 0 then
     return nil
   end
-  return vim.trim(result.stdout or '')
+  return vim.trim(table.concat { result.stdout or '', result.stderr or '' })
 end
 
 local function command_result(command, timeout_ms)
@@ -255,6 +255,14 @@ end
 local function default_capability(_, capability)
   if capability.kind == 'python_venv' then
     return { available = M.python_venv_capability(capability.executable) }
+  elseif capability.kind == 'command' then
+    local result = command_result(capability.command, 3000)
+    return { available = result ~= nil and result.code == 0 }
+  elseif capability.kind == 'command_version' then
+    local output = command_output(capability.command, 3000)
+    local version = output and output:match(capability.pattern) or nil
+    local supported = M.version_supported(version, capability.minimum, capability.maximum_exclusive)
+    return { available = supported, supported = supported, version = version }
   end
   return { available = false }
 end
@@ -305,7 +313,30 @@ local function default_probe()
   }
 end
 
-local function dependency(record, probe, required)
+local function platform_applies(record, system)
+  if type(record.platform) ~= 'table' then
+    return true
+  end
+  if record.platform.os and record.platform.os ~= system.os then
+    return false
+  end
+  if type(record.platform.arches) == 'table' and not vim.tbl_contains(record.platform.arches, system.arch) then
+    return false
+  end
+  return true
+end
+
+local function dependency(record, probe, required, system)
+  if not platform_applies(record, system) then
+    return {
+      id = record.id,
+      required = false,
+      available = true,
+      applicable = false,
+      any = record.any == true,
+      executables = {},
+    }
+  end
   local executables, available = {}, record.any ~= true
   for _, name in ipairs(record.executables) do
     local present = probe.executable(name) == true
@@ -320,6 +351,7 @@ local function dependency(record, probe, required)
     id = record.id,
     required = required == true,
     available = available,
+    applicable = true,
     any = record.any == true,
     executables = executables,
   }
@@ -337,7 +369,14 @@ local function dependency(record, probe, required)
     for _, capability in ipairs(record.capabilities) do
       local ok, observed = pcall(probe.capability or default_capability, record.id, capability)
       local capability_available = ok and type(observed) == 'table' and observed.available == true
-      result.capabilities[#result.capabilities + 1] = { id = capability.id, available = capability_available }
+      result.capabilities[#result.capabilities + 1] = {
+        id = capability.id,
+        available = capability_available,
+        version = type(observed.version) == 'string' and observed.version or nil,
+        supported = observed.supported == true,
+        minimum_version = capability.minimum,
+        maximum_version_exclusive = capability.maximum_exclusive,
+      }
       result.available = result.available and capability_available
     end
   end
@@ -435,6 +474,7 @@ local PREREQUISITE_FIXES = {
     git = 'brew install git',
     gzip = 'brew install gzip',
     lua_package_manager = 'brew install luarocks',
+    mason_hlint_rosetta = 'softwareupdate --install-rosetta --agree-to-license; verify with: arch -x86_64 /usr/bin/true',
     ripgrep = 'brew install ripgrep',
     ruby_package_manager = 'brew install ruby; add Homebrew Ruby to PATH so gem is available',
     snacks_image_ghostscript = 'brew install ghostscript',
@@ -470,13 +510,13 @@ local RUNTIME_FIXES = {
     dart = 'brew install --cask flutter',
     go = 'brew install go; verify that go version reports >= 1.26.0',
     haskell = 'brew install ghcup; run ghcup install ghc recommended && ghcup set ghc recommended && ghcup install cabal recommended && ghcup set cabal recommended',
-    java = 'brew install openjdk maven gradle',
+    java = 'brew install openjdk@21 maven gradle; ensure java and javac both report >= 21.0.0',
     javascript = 'brew install node; verify that node --version reports >= 24.15.0',
     kotlin = 'brew install kotlin',
     lua = 'brew install lua luajit',
     python = 'brew install python@3.13; verify with python3 --version and python3 -m venv /tmp/nv-ide-venv-test',
     r = 'brew install --cask r',
-    ruby = 'brew install ruby',
+    ruby = 'brew install ruby; ensure ruby reports >= 3.0.0 and gem is on PATH',
     rust = 'brew install rustup-init && rustup-init -y',
     scala = 'brew install scala sbt',
     sql = 'brew install libpq',
@@ -490,13 +530,13 @@ local RUNTIME_FIXES = {
     dart = 'asdf plugin add flutter && asdf install flutter latest && asdf set -u flutter latest',
     go = 'Install Go >= 1.26.0 from https://go.dev/doc/install, then verify with: go version',
     haskell = 'Install GHCup from https://www.haskell.org/ghcup/; then install and select recommended GHC and cabal releases',
-    java = 'Debian/Ubuntu: sudo apt install openjdk-21-jdk maven gradle; Fedora: sudo dnf install java-21-openjdk-devel maven gradle; Arch: sudo pacman -S jdk21-openjdk maven gradle',
+    java = 'Debian/Ubuntu: sudo apt install openjdk-21-jdk maven gradle; Fedora: sudo dnf install java-21-openjdk-devel maven gradle; Arch: sudo pacman -S jdk21-openjdk maven gradle; ensure java and javac both report >= 21.0.0',
     javascript = 'Install Node.js >= 24.15.0 with npm from https://nodejs.org/en/download, then verify with: node --version && npm --version',
     kotlin = 'curl -s https://get.sdkman.io | bash && sdk install kotlin',
     lua = 'Debian/Ubuntu: sudo apt install lua5.4 luajit; Fedora: sudo dnf install lua luajit; Arch: sudo pacman -S lua luajit',
     python = 'Install Python 3.10-3.13 with venv support; Debian/Ubuntu: sudo apt install python3 python3-venv; Fedora: sudo dnf install python3; Arch: sudo pacman -S python; verify with python3 -m venv /tmp/nv-ide-venv-test',
     r = 'Debian/Ubuntu: sudo apt install r-base; Fedora: sudo dnf install R; Arch: sudo pacman -S r',
-    ruby = 'Debian/Ubuntu: sudo apt install ruby-full; Fedora: sudo dnf install ruby; Arch: sudo pacman -S ruby',
+    ruby = 'Install Ruby >= 3.0 with gem and Bundler; Debian/Ubuntu: sudo apt install ruby-full ruby-dev; Fedora: sudo dnf install ruby ruby-devel; Arch: sudo pacman -S ruby',
     rust = 'curl --proto =https --tlsv1.2 -sSf https://sh.rustup.rs | sh',
     scala = 'curl -fL https://github.com/coursier/launchers/raw/master/cs-x86_64-pc-linux.gz | gzip -d > cs && chmod +x cs && ./cs setup',
     sql = 'Debian/Ubuntu: sudo apt install postgresql-client; Fedora: sudo dnf install postgresql; Arch: sudo pacman -S postgresql-libs',
@@ -689,7 +729,7 @@ function M.collect(probe)
   report.treesitter.cli.supported = report.treesitter.cli.available and version_at_least(report.treesitter.cli.version, '0.26.1')
 
   for _, record in ipairs(manifest.prerequisites) do
-    report.prerequisites[#report.prerequisites + 1] = dependency(record, probe, record.required)
+    report.prerequisites[#report.prerequisites + 1] = dependency(record, probe, record.required, report.system)
   end
   for _, name in ipairs(manifest.mason.packages) do
     report.mason[#report.mason + 1] = mason_record(name, probe)
@@ -698,7 +738,7 @@ function M.collect(probe)
     report.parsers[#report.parsers + 1] = parser_record(name, probe)
   end
   for _, record in ipairs(manifest.runtimes) do
-    report.runtimes[#report.runtimes + 1] = dependency(record, probe, record.optional ~= true)
+    report.runtimes[#report.runtimes + 1] = dependency(record, probe, record.optional ~= true, report.system)
   end
   for _, action in ipairs(manifest.external_actions) do
     report.external_actions[#report.external_actions + 1] = {
@@ -771,7 +811,7 @@ local function render_records(reporter, title, records, options)
     local message = detail and ('%s%s (%s)'):format(record.id, state, table.concat(detail, ', ')) or record.id .. state
     local constraints = {}
     if record.minimum_version and not record.version_supported then
-      local labels = { go = 'Go', javascript = 'Node.js', python = 'Python' }
+      local labels = { go = 'Go', java = 'Java', javascript = 'Node.js', python = 'Python', ruby = 'Ruby' }
       local requirement = ('%s %s requires >= %s'):format(
         labels[record.id] or record.id,
         record.version or 'version unknown',
@@ -783,7 +823,18 @@ local function render_records(reporter, title, records, options)
       constraints[#constraints + 1] = requirement
     end
     for _, capability in ipairs(record.capabilities or {}) do
-      if not capability.available then
+      if capability.minimum_version and not capability.supported then
+        local labels = { javac_version = 'javac' }
+        local requirement = ('%s %s requires >= %s'):format(
+          labels[capability.id] or capability.id,
+          capability.version or 'version unknown',
+          capability.minimum_version
+        )
+        if capability.maximum_version_exclusive then
+          requirement = requirement .. ' and < ' .. capability.maximum_version_exclusive
+        end
+        constraints[#constraints + 1] = requirement
+      elseif not capability.available then
         local labels = { python = 'Python' }
         constraints[#constraints + 1] = ('%s %s capability is unavailable'):format(
           labels[record.id] or record.id,
