@@ -10,3 +10,5 @@ git:
   log:
     showWholeGraph: true
   disableForcePushing: true
+  pagers:
+    - pager: delta --dark --paging=never
