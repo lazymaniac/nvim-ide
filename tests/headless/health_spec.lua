@@ -38,7 +38,7 @@ local function complete_probe(options)
   local probe = {
     manifest = manifest,
     system = function()
-      return { os = options.os or 'Linux', arch = options.arch or 'x86_64', nvim = '0.12.4' }
+      return { os = options.os or 'Linux', arch = options.arch or 'x86_64', nvim = options.nvim or '0.12.4' }
     end,
     executable = function(name)
       calls.executable[name] = (calls.executable[name] or 0) + 1
@@ -256,6 +256,36 @@ h.describe('nv_ide health collection', function()
     h.matches(output, 'Ruby 2.7.8 requires >= 3.0.0')
   end)
 
+  h.it('parses Java versions emitted exclusively on stderr', function()
+    local health = require 'nv_ide.health'
+    local status = health.command_version_status({
+      command = { 'java', '-version' },
+      pattern = 'version%s+"?(%d+%.%d+%.%d+)',
+      minimum = '21.0.0',
+    }, function(command, timeout_ms)
+      h.deep_equal(command, { 'java', '-version' })
+      h.equal(timeout_ms, 3000)
+      return { code = 0, stdout = '', stderr = 'openjdk version "21.0.8" 2026-07-15' }
+    end)
+    h.deep_equal(status, { version = '21.0.8', supported = true })
+  end)
+
+  h.it('reports Neovim older than 0.12 as an unsupported required runtime', function()
+    local health = require 'nv_ide.health'
+    local probe = complete_probe { nvim = '0.11.4' }
+    local messages, reporter = {}, {}
+    for _, level in ipairs { 'start', 'ok', 'info', 'warn', 'error' } do
+      reporter[level] = function(message)
+        messages[#messages + 1] = { level = level, message = tostring(message) }
+      end
+    end
+    local report = health.check(probe, reporter)
+    h.falsy(report.system.nvim_supported)
+    local output = vim.inspect(messages)
+    h.matches(output, 'NV-IDE requires Neovim >= 0.12.0')
+    h.matches(output, 'https://neovim.io/doc/install/')
+  end)
+
   h.it('requires Rosetta translation only for Mason hlint on Darwin arm64', function()
     local health = require 'nv_ide.health'
     local linux = health.collect((complete_probe { os = 'Linux', arch = 'x86_64', unavailable = { arch = true } }))
@@ -292,7 +322,7 @@ h.describe('nv_ide health collection', function()
     local report = health.collect(probe)
     local manifest = probe.manifest
 
-    h.deep_equal(report.system, { os = 'Linux', arch = 'x86_64', nvim = '0.12.4' })
+    h.deep_equal(report.system, { os = 'Linux', arch = 'x86_64', nvim = '0.12.4', nvim_supported = true })
     h.truthy(find(report.prerequisites, 'archive').required)
     h.falsy(find(report.prerequisites, 'archive').available)
     h.falsy(find(report.prerequisites, 'snacks_image_mermaid').required)

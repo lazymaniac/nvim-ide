@@ -1,3 +1,5 @@
+require('nv_ide.requirements').assert_supported()
+
 if vim.g.neovide then
   -- text
   vim.o.guifont = 'Maple Mono NF:h13'
