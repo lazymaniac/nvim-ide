@@ -2,6 +2,7 @@ local Orchestrator = {}
 Orchestrator.__index = Orchestrator
 
 local DEFAULT_TIMEOUT_MS = 1800000
+local DEFAULT_STARTUP_LOCK_TIMEOUT_MS = 5000
 
 local function is_empty(value)
   return next(value or {}) == nil
@@ -609,6 +610,7 @@ function M.new(options)
     notify = options.notify or default_notify,
     debounce_seconds = options.debounce_seconds or 21600,
     timeout_ms = operation_timeout_ms,
+    startup_lock_timeout_ms = positive_integer(options.startup_lock_timeout_ms) or DEFAULT_STARTUP_LOCK_TIMEOUT_MS,
     poll_ms = options.poll_ms or 250,
     running = false,
   }, Orchestrator)

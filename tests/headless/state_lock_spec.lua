@@ -187,7 +187,8 @@ h.describe('toolchain state and process lock', function()
     end, {
       instance = {
         lock = process_lock,
-        timeout_ms = 123,
+        timeout_ms = 1800000,
+        startup_lock_timeout_ms = 123,
         poll_ms = 7,
       },
     })
@@ -197,6 +198,34 @@ h.describe('toolchain state and process lock', function()
       { 'acquire', 123, 7 },
       { 'lazy-setup' },
       { 'release', 'bootstrap-token' },
+    })
+  end)
+
+  h.it('bounds cold-start contention independently from the installer timeout', function()
+    local acquire_options
+    local operation_ran = false
+    local ok, failure = pcall(reload('nv_ide.toolchain').with_startup_lock, function()
+      operation_ran = true
+    end, {
+      instance = {
+        lock = {
+          acquire_wait = function(_, options)
+            acquire_options = vim.deepcopy(options)
+            return nil, 'timed out behind live owner'
+          end,
+        },
+        timeout_ms = 1800000,
+        startup_lock_timeout_ms = 750,
+        poll_ms = 25,
+      },
+    })
+
+    h.falsy(ok)
+    h.matches(failure, 'failed to acquire cold-start toolchain lock')
+    h.falsy(operation_ran)
+    h.deep_equal(acquire_options, {
+      timeout_ms = 750,
+      poll_ms = 25,
     })
   end)
 
