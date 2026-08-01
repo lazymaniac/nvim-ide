@@ -169,6 +169,24 @@ h.describe('lint and format policy', function()
     end
     h.deep_equal(calls.setup.formatters_by_ft.vue, { 'prettierd' })
     h.falsy(calls.setup.formatters_by_ft.vuejs, 'vuejs is not a Neovim filetype')
+    local ft = calls.setup.formatters_by_ft
+    h.truthy(ft.sh, 'sh formatter alias is missing')
+    h.deep_equal({ ft.sh[1], ft.sh[2] }, { 'beautysh', 'shellharden' })
+    h.truthy(ft.sh.stop_after_first)
+    h.truthy(ft.bash.stop_after_first)
+    h.deep_equal(ft.javascriptreact, { 'prettierd' })
+    h.deep_equal(ft.typescriptreact, { 'prettierd' })
+    h.deep_equal(ft.svelte, { 'prettierd' })
+    h.deep_equal(ft.jsonc, { 'prettierd' })
+    h.deep_equal(ft.eruby, { 'erb_format' })
+    h.deep_equal(ft.cmake, { 'cmake_format' })
+    h.deep_equal(ft.xml, { 'xmlformatter' })
+    for _, filetype in ipairs { 'angular', 'json', 'sql' } do
+      h.truthy(ft[filetype].stop_after_first)
+    end
+    h.deep_equal(ft.python, { 'black', 'docformatter' })
+    h.falsy(ft.python.stop_after_first)
+    h.equal(calls.setup.formatters.prettierd.env.PRETTIERD_LOCAL_PRETTIER_ONLY, '1')
     h.equal(type(calls.setup.format_on_save), 'function')
     local previous_autoformat = vim.g.autoformat
     vim.g.autoformat = false
