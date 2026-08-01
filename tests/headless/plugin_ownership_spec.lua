@@ -219,4 +219,21 @@ h.describe('plugin ownership', function()
     h.equal(surround.version, '*')
     h.equal(surround.event, 'VeryLazy')
   end)
+
+  h.it('lazy-loads Diffview+ through its standard command API', function()
+    local diffview = with_util_stub(function()
+      return plugin(dofile 'lua/plugins/git.lua', 'dlyongemallo/diffview-plus.nvim')
+    end)
+    h.truthy(diffview, 'Diffview+ is missing')
+    h.equal(diffview.version, '*')
+    h.equal(diffview.main, 'diffview')
+    h.deep_equal(diffview.cmd, {
+      'DiffviewOpen',
+      'DiffviewFileHistory',
+      'DiffviewClose',
+      'DiffviewToggleFiles',
+      'DiffviewFocusFiles',
+      'DiffviewRefresh',
+    })
+  end)
 end)
