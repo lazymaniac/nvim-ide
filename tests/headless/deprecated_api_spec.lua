@@ -177,6 +177,86 @@ h.describe('Neovim 0.12 portability', function()
     for _, runtime in ipairs(discovered.runtimes) do h.equal(runtime.default, nil) end
   end)
 
+  h.it('bounds both external Java home probes', function()
+    local java = require 'nv_ide.java'
+    local function timeout_case(os_name, exepaths, expected_argv, expected_error)
+      local calls = {}
+      local discovered = java.discover {
+        env = {},
+        os = os_name,
+        exepath = function(command) return exepaths[command] or '' end,
+        stdpath = function(kind) return '/xdg/' .. kind end,
+        realpath = function(path) return path end,
+        glob = function() return {} end,
+        is_executable = function() return false end,
+        read_file = function() return nil end,
+        command_executable = function(path) return path == expected_argv[1] end,
+        probe_timeout_ms = 25,
+        system = function(argv, opts)
+          h.deep_equal(opts, { text = true })
+          return {
+            wait = function(_, timeout)
+              calls[#calls + 1] = { argv = vim.deepcopy(argv), timeout = timeout }
+              return { code = 124, stdout = '', stderr = '' }
+            end,
+          }
+        end,
+      }
+      h.deep_equal(calls, { { argv = expected_argv, timeout = 25 } })
+      h.truthy(vim.tbl_contains(discovered.errors, expected_error))
+    end
+
+    timeout_case(
+      'Linux',
+      { asdf = '/tools/asdf' },
+      { '/tools/asdf', 'where', 'java' },
+      'asdf where java timed out after 25 ms'
+    )
+    timeout_case(
+      'Darwin',
+      {},
+      { '/usr/libexec/java_home' },
+      'macOS java_home timed out after 25 ms'
+    )
+  end)
+
+  h.it('reports Java probe spawn, wait, and exit failures', function()
+    local java = require 'nv_ide.java'
+    local cases = {
+      {
+        expected = 'failed to start',
+        system = function() error 'spawn denied' end,
+      },
+      {
+        expected = 'failed while waiting',
+        system = function()
+          return { wait = function() error 'wait broke' end }
+        end,
+      },
+      {
+        expected = 'exited 7: broken probe',
+        system = function()
+          return { wait = function() return { code = 7, stderr = 'broken probe\n' } end }
+        end,
+      },
+    }
+    for _, case in ipairs(cases) do
+      local discovered = java.discover {
+        env = {},
+        os = 'Linux',
+        exepath = function(command) return command == 'asdf' and '/tools/asdf' or '' end,
+        stdpath = function(kind) return '/xdg/' .. kind end,
+        realpath = function(path) return path end,
+        glob = function() return {} end,
+        is_executable = function() return false end,
+        read_file = function() return nil end,
+        command_executable = function(path) return path == '/tools/asdf' end,
+        system = case.system,
+      }
+      h.matches(table.concat(discovered.errors, '\n'), case.expected)
+    end
+  end)
+
   h.it('keeps tracked shell fragments free of personal home paths', function()
     for _, path in ipairs({ 'dotfiles/.zprofile', 'dotfiles/.zshrc' }) do
       local source = table.concat(vim.fn.readfile(path), '\n')
