@@ -18,6 +18,11 @@ local function existing_paths(paths, fs_stat)
   return result
 end
 
+local function supports_command(client, command)
+  local provider = client.server_capabilities and client.server_capabilities.executeCommandProvider
+  return type(provider) == 'table' and vim.tbl_contains(provider.commands or {}, command)
+end
+
 local function default_client(client_id, bufnr)
   if client_id then
     local client = vim.lsp.get_client_by_id(client_id)
@@ -62,6 +67,14 @@ local function default_dependencies()
     exepath = vim.fn.exepath,
     path_separator = vim.fn.has('win32') == 1 and ';' or ':',
     notify = vim.notify,
+    cmd = vim.cmd,
+    current_buf = vim.api.nvim_get_current_buf,
+    set_bufhidden = function(bufnr) vim.bo[bufnr].bufhidden = 'wipe' end,
+    buf_delete = function(bufnr) vim.api.nvim_buf_delete(bufnr, { force = true }) end,
+    jobstart = vim.fn.jobstart,
+    jobstop = vim.fn.jobstop,
+    chan_send = vim.api.nvim_chan_send,
+    startinsert = function() vim.cmd.startinsert() end,
   }
 end
 
@@ -200,6 +213,29 @@ function M.run_current_class(options)
   options = options or {}
   local bufnr = options.bufnr or vim.api.nvim_get_current_buf()
   local deps = vim.tbl_extend('force', default_dependencies(), options.deps or {})
+  deps.open_terminal = deps.open_terminal or function(argv, input, cwd)
+    local opened, open_error = pcall(deps.cmd, 'botright 12new')
+    if not opened then return false, 'could not open terminal split: ' .. tostring(open_error) end
+    local terminal_buf = deps.current_buf()
+    local hidden, hidden_error = pcall(deps.set_bufhidden, terminal_buf)
+    if not hidden then
+      pcall(deps.buf_delete, terminal_buf)
+      return false, 'could not prepare terminal buffer: ' .. tostring(hidden_error)
+    end
+    local started, job = pcall(deps.jobstart, argv, { term = true, cwd = cwd })
+    if not started or type(job) ~= 'number' or job <= 0 then
+      pcall(deps.buf_delete, terminal_buf)
+      return false, 'terminal job failed to start: ' .. tostring(job)
+    end
+    local sent, send_error = pcall(deps.chan_send, job, input)
+    if not sent then
+      pcall(deps.jobstop, job)
+      pcall(deps.buf_delete, terminal_buf)
+      return false, 'could not send main invocation: ' .. tostring(send_error)
+    end
+    pcall(deps.startinsert)
+    return true
+  end
 
   if active_jshell_runs[bufnr] then
     deps.notify('Java JShell: a run is already in progress for this buffer', vim.log.levels.WARN)
@@ -285,17 +321,35 @@ function M.run_current_class(options)
   end
 
   local function resolve_java(main, paths)
+    local project = main.projectName or ''
+    if supports_command(client, 'vscode.java.resolveJavaExecutable') then
+      local params = {
+        command = 'vscode.java.resolveJavaExecutable',
+        arguments = { main.mainClass, project },
+      }
+      return request('workspace/executeCommand', params, function(err, java_exec)
+        if err then return finish('Java executable resolution failed: ' .. (err.message or vim.inspect(err))) end
+        if type(java_exec) ~= 'string' or java_exec == '' then
+          return finish('JDTLS returned no Java executable')
+        end
+        launch(paths, java_exec)
+      end, 'Java executable resolution')
+    end
+
+    local setting = 'org.eclipse.jdt.ls.core.vm.location'
     local params = {
-      command = 'vscode.java.resolveJavaExecutable',
-      arguments = { main.mainClass, main.projectName or '' },
+      command = 'java.project.getSettings',
+      arguments = { deps.buf_uri(bufnr), { setting } },
     }
-    return request('workspace/executeCommand', params, function(err, java_exec)
-      if err then return finish('Java executable resolution failed: ' .. (err.message or vim.inspect(err))) end
-      if type(java_exec) ~= 'string' or java_exec == '' then
-        return finish('JDTLS returned no Java executable')
+    return request('workspace/executeCommand', params, function(err, settings)
+      if err then return finish('Java runtime setting failed: ' .. (err.message or vim.inspect(err))) end
+      local java_home = type(settings) == 'table' and settings[setting] or nil
+      if type(java_home) ~= 'string' or java_home == '' then
+        return finish('JDTLS returned no Java runtime setting')
       end
-      launch(paths, java_exec)
-    end, 'Java executable resolution')
+      local suffix = vim.fn.has('win32') == 1 and '.exe' or ''
+      launch(paths, vim.fs.joinpath(java_home, 'bin', 'java' .. suffix))
+    end, 'Java runtime setting')
   end
 
   local function resolve_paths(main)
