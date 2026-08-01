@@ -1,5 +1,6 @@
 local java_filetypes = { 'java' }
 local root_markers = { 'gradlew', 'mvnw', 'gradle', 'mvn', '.git' }
+local java_paths = require('nv_ide.java').discover()
 
 local function extend_or_override(config, custom, ...)
   if type(custom) == 'function' then
@@ -25,30 +26,12 @@ local jdtls_settings = {
         notCoveredPluginExecutionSeverity = 'warning',
         defaultMojoExecutionAction = 'ignore',
       },
-      runtimes = {
-        {
-          name = 'JavaSE-11',
-          path = '~/.asdf/installs/java/temurin-11.0.27+6/',
-        },
-        {
-          name = 'JavaSE-17',
-          path = '~/.asdf/installs/java/temurin-17.0.15+6/',
-        },
-        {
-          name = 'JavaSE-21',
-          path = '~/.asdf/installs/java/temurin-21.0.7+6.0.LTS/',
-          default = true,
-        },
-        {
-          name = 'JavaSE-24',
-          path = '~/.asdf/installs/java/temurin-24.0.1+9/',
-        },
-      },
+      runtimes = java_paths.runtimes,
       updateBuildConfiguration = 'interactive',
     },
     jdt = {
       ls = {
-        vmargs = '-javaagent:/home/seba/.local/share/nvim/mason/packages/jdtls/lombok.jar -XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx4G -Xms100m -Xlog:enable',
+        vmargs = '-javaagent:' .. java_paths.lombok .. ' -XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx4G -Xms100m -Xlog:enable',
         protobufSupport = {
           enabled = true,
         },
@@ -205,7 +188,7 @@ local jdtls_settings = {
         enabled = true,
       },
       settings = {
-        url = '~/.config/nvim/java-formatter.xml',
+        url = java_paths.formatter,
       },
     },
     implementationsCodeLens = {
@@ -329,12 +312,10 @@ return {
         jdtls_workspace_dir = function(project_name)
           return vim.fn.stdpath 'cache' .. '/jdtls/' .. project_name .. '/workspace'
         end,
-        cmd = { 'jdtls' },
+        cmd = { java_paths.jdtls },
         full_cmd = function(opts)
           local root_dir = opts.root_dir(root_markers)
-          local jdtls_dir = vim.fn.expand '$MASON/share/jdtls'
-          local lombok_path = jdtls_dir .. '/lombok.jar'
-          local lombok_agent_param = '--jvm-arg=-javaagent:' .. lombok_path
+          local lombok_agent_param = '--jvm-arg=-javaagent:' .. java_paths.lombok
           local xmx_param = '--jvm-arg=-Xmx4g'
           local project_name = opts.project_name(root_dir)
           local cmd = vim.deepcopy(opts.cmd)
