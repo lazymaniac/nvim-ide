@@ -117,7 +117,7 @@ return {
   {
     'axkirillov/unified.nvim',
     keys = {
-      { '<leader>gd', '<cmd>Unified<cr>', mode = { 'n' }, desc = 'Diff current file [gd]' },
+      { '<leader>gU', '<cmd>Unified<cr>', mode = { 'n' }, desc = 'Unified diff [gU]' },
     },
     opts = {
       signs = {

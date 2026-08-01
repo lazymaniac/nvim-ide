@@ -1,6 +1,6 @@
 return {
   -- Add s-exp mappings
-  { "PaterJason/nvim-treesitter-sexp", opts = {}, },
+  { "PaterJason/nvim-treesitter-sexp", ft = { "clojure", "fennel" }, opts = {}, },
 
   -- Colorize the output of the log buffer
   {

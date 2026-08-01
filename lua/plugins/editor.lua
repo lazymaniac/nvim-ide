@@ -216,21 +216,6 @@ return {
   -- link: https://github.com/tpope/vim-repeat
   { 'tpope/vim-repeat', event = 'BufReadPost', branch = 'master' },
 
-  -- [gx.nvim] - Open link in browser
-  -- see: `:h gx.nvim`
-  -- link: https://github.com/chrishrb/gx.nvim
-  {
-    'chrishrb/gx.nvim',
-    branch = 'main',
-    event = 'BufReadPost',
-    dependencies = { 'nvim-lua/plenary.nvim' },
-    opts = {
-      handler_options = {
-        search_engine = 'google',
-      },
-    },
-  },
-
   -- [modes.nvim] - Highlights current line accordingly to mode
   -- see: `:h modes.nvim`
   -- link: https://github.com/mvllow/modes.nvim
@@ -282,6 +267,7 @@ return {
   -- link: https://github.com/chrisgrieser/nvim-recorder
   {
     'chrisgrieser/nvim-recorder',
+    event = 'VeryLazy',
     opts = {
       slots = { 'a', 'b' },
       mapping = {
