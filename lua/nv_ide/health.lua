@@ -230,6 +230,20 @@ local function version_at_least(value, minimum)
   return M.version_supported(value, minimum)
 end
 
+function M.command_version_status(constraint, runner)
+  runner = runner or command_result
+  local ok, result = pcall(runner, constraint.command, 3000)
+  if not ok or type(result) ~= 'table' or result.code ~= 0 then
+    return { supported = false }
+  end
+  local output = vim.trim(table.concat { result.stdout or '', result.stderr or '' })
+  local version = output:match(constraint.pattern)
+  return {
+    version = version,
+    supported = M.version_supported(version, constraint.minimum, constraint.maximum_exclusive),
+  }
+end
+
 function M.python_venv_capability(executable_name, dependencies)
   dependencies = dependencies or {}
   local tempname = dependencies.tempname or vim.fn.tempname
@@ -244,12 +258,7 @@ function M.python_venv_capability(executable_name, dependencies)
 end
 
 local function default_version(_, constraint)
-  local output = command_output(constraint.command, 3000)
-  local version = output and output:match(constraint.pattern) or nil
-  return {
-    version = version,
-    supported = M.version_supported(version, constraint.minimum, constraint.maximum_exclusive),
-  }
+  return M.command_version_status(constraint)
 end
 
 local function default_capability(_, capability)
@@ -259,10 +268,9 @@ local function default_capability(_, capability)
     local result = command_result(capability.command, 3000)
     return { available = result ~= nil and result.code == 0 }
   elseif capability.kind == 'command_version' then
-    local output = command_output(capability.command, 3000)
-    local version = output and output:match(capability.pattern) or nil
-    local supported = M.version_supported(version, capability.minimum, capability.maximum_exclusive)
-    return { available = supported, supported = supported, version = version }
+    local status = M.command_version_status(capability)
+    status.available = status.supported
+    return status
   end
   return { available = false }
 end
@@ -713,6 +721,7 @@ function M.collect(probe)
     clipboard = sanitize_clipboard(probe.clipboard()),
     ai = { cli = {}, backends = {}, credentials = {} },
   }
+  report.system.nvim_supported = M.version_supported(report.system.nvim, '0.12.0')
 
   local state_ok, state = pcall(probe.toolchain_state or function()
     return nil
@@ -871,7 +880,15 @@ function M.check(probe, reporter)
   local report = M.collect(probe)
 
   reporter.start 'nv_ide system'
-  reporter.info(('Neovim %s on %s/%s'):format(report.system.nvim, report.system.os, report.system.arch))
+  local system_message = ('Neovim %s on %s/%s'):format(report.system.nvim, report.system.os, report.system.arch)
+  if report.system.nvim_supported then
+    reporter.info(system_message)
+  else
+    reporter.error(
+      system_message
+        .. '. NV-IDE requires Neovim >= 0.12.0. Fix: install a supported release from https://neovim.io/doc/install/'
+    )
+  end
   render_records(reporter, 'Required and optional prerequisites', report.prerequisites, {
     kind = 'prerequisite',
     os = report.system.os,
