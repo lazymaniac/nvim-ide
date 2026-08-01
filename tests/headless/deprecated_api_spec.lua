@@ -83,6 +83,22 @@ h.describe('Neovim 0.12 portability', function()
     h.equal(discovered.runtimes[1].name, 'JavaSE-17')
   end)
 
+  h.it('uses the Eclipse execution environment name for Java 8', function()
+    local java = require('nv_ide.java')
+    local discovered = java.discover {
+      env = { JAVA_HOME = '/opt/jdk8' },
+      exepath = function(command) return command == 'java' and '/opt/jdk8/bin/java' or '' end,
+      stdpath = function(kind) return '/xdg/' .. kind end,
+      realpath = function(path) return path end,
+      is_executable = function(path) return path == '/opt/jdk8/bin/java' end,
+      read_file = function(path)
+        if path == '/opt/jdk8/release' then return 'JAVA_VERSION="1.8.0_442"' end
+      end,
+    }
+
+    h.equal(discovered.runtimes[1].name, 'JavaSE-1.8')
+  end)
+
   h.it('rejects the macOS java launcher shim and resolves a real JDK home', function()
     local java = require('nv_ide.java')
     local home = '/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home'

@@ -10,7 +10,10 @@ local function nonempty(value)
 end
 
 local function runtime_name(contents)
-  local major = contents and contents:match('JAVA_VERSION%s*=%s*["\']?(%d+)')
+  local version = contents and contents:match('JAVA_VERSION%s*=%s*["\']?([%d%.]+)')
+  local legacy = version and version:match('^1%.(%d+)')
+  if legacy then return 'JavaSE-1.' .. legacy end
+  local major = version and version:match('^(%d+)')
   return major and ('JavaSE-' .. major) or nil
 end
 
