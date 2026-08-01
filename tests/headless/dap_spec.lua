@@ -221,4 +221,35 @@ h.describe('DAP ownership and lazy loading', function()
     h.equal(dap.adapters.kotlin.command, 'kotlin-debug-adapter')
     h.truthy(#dap.configurations.kotlin == 2)
   end)
+
+  h.it('renders DAP status without triggering its loader', function()
+    local previous_loaded = package.loaded.dap
+    local previous_preload = package.preload.dap
+    local loads, status_calls = 0, 0
+    package.loaded.dap = nil
+    package.preload.dap = function()
+      loads = loads + 1
+      return { status = function() return 'unexpected' end }
+    end
+
+    local ok, err = xpcall(function()
+      local render = dofile('lua/chadrc.lua').ui.statusline.modules.dap
+      local rendered = render()
+      h.equal(loads, 0, 'statusline rendering loaded nvim-dap')
+      h.equal(rendered, nil)
+
+      package.loaded.dap = {
+        status = function()
+          status_calls = status_calls + 1
+          return 'running'
+        end,
+      }
+      h.equal(render(), '   running ')
+      h.equal(status_calls, 1)
+    end, debug.traceback)
+
+    package.loaded.dap = previous_loaded
+    package.preload.dap = previous_preload
+    if not ok then error(err, 0) end
+  end)
 end)
