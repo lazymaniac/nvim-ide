@@ -34,24 +34,67 @@ h.describe('portable early environment', function()
       path = '/usr/bin:/home/tester/.local/bin',
       existing = {
         '/home/tester/.local/bin',
+        '/home/tester/.cargo/bin',
+        '/home/tester/go/bin',
+        '/home/tester/.ghcup/bin',
         '/home/tester/.asdf/shims',
         '/data/nvim/mason/bin',
+        '/opt/homebrew/opt/python@3.13/libexec/bin',
+        '/opt/homebrew/opt/ruby/bin',
+        '/opt/homebrew/opt/openjdk/bin',
+        '/opt/homebrew/opt/libpq/bin',
         '/opt/homebrew/bin',
       },
     }
     h.equal(path, table.concat({
+      '/home/tester/.cargo/bin',
+      '/home/tester/go/bin',
+      '/home/tester/.ghcup/bin',
       '/home/tester/.asdf/shims',
       '/data/nvim/mason/bin',
+      '/opt/homebrew/opt/python@3.13/libexec/bin',
+      '/opt/homebrew/opt/ruby/bin',
+      '/opt/homebrew/opt/openjdk/bin',
+      '/opt/homebrew/opt/libpq/bin',
       '/opt/homebrew/bin',
       '/usr/bin',
       '/home/tester/.local/bin',
     }, ':'))
     h.deep_equal(result.added, {
+      '/home/tester/.cargo/bin',
+      '/home/tester/go/bin',
+      '/home/tester/.ghcup/bin',
       '/home/tester/.asdf/shims',
       '/data/nvim/mason/bin',
+      '/opt/homebrew/opt/python@3.13/libexec/bin',
+      '/opt/homebrew/opt/ruby/bin',
+      '/opt/homebrew/opt/openjdk/bin',
+      '/opt/homebrew/opt/libpq/bin',
       '/opt/homebrew/bin',
     })
     h.falsy(path:find('/usr/local/bin', 1, true), 'nonexistent directories must not be inserted')
+  end)
+
+  h.it('hydrates Intel Homebrew keg-only paths before its generic bin directory', function()
+    local _, path = run {
+      os = 'Darwin',
+      path = '/usr/bin',
+      existing = {
+        '/usr/local/opt/python@3.13/libexec/bin',
+        '/usr/local/opt/ruby/bin',
+        '/usr/local/opt/openjdk/bin',
+        '/usr/local/opt/libpq/bin',
+        '/usr/local/bin',
+      },
+    }
+    h.equal(path, table.concat({
+      '/usr/local/opt/python@3.13/libexec/bin',
+      '/usr/local/opt/ruby/bin',
+      '/usr/local/opt/openjdk/bin',
+      '/usr/local/opt/libpq/bin',
+      '/usr/local/bin',
+      '/usr/bin',
+    }, ':'))
   end)
 
   h.it('hydrates deterministic existing Linux paths without running a shell', function()
@@ -62,6 +105,7 @@ h.describe('portable early environment', function()
         '/home/tester/.local/bin',
         '/home/tester/.cargo/bin',
         '/home/tester/go/bin',
+        '/home/tester/.ghcup/bin',
         '/home/linuxbrew/.linuxbrew/bin',
         '/usr/local/bin',
       },
@@ -70,6 +114,7 @@ h.describe('portable early environment', function()
       '/home/tester/.local/bin',
       '/home/tester/.cargo/bin',
       '/home/tester/go/bin',
+      '/home/tester/.ghcup/bin',
       '/home/linuxbrew/.linuxbrew/bin',
       '/usr/local/bin',
       '/usr/bin',
