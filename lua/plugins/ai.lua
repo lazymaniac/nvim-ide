@@ -131,11 +131,17 @@ local config = {
   },
   -- GENERAL OPTIONS ----------------------------------------------------------
   opts = {
-    log_level = 'TRACE', -- TRACE|DEBUG|ERROR|INFO
+    log_level = 'ERROR', -- TRACE|DEBUG|ERROR|INFO
     -- If this is false then any default prompt that is marked as containing code
     -- will not be sent to the LLM. Please note that whilst I have made every
     -- effort to ensure no code leakage, using this is at your own risk
-    send_code = true,
+    send_code = false,
+    -- Project overrides are loaded through vim.secure.read() below. Keeping
+    -- CodeCompanion's direct dofile loader disabled prevents untrusted files
+    -- from executing before Neovim records an explicit trust decision.
+    per_project_config = {
+      enabled = false,
+    },
   },
 }
 
@@ -148,10 +154,6 @@ return {
   -- link: https://github.com/olimorris/codecompanion.nvim
   {
     'olimorris/codecompanion.nvim',
-    -- dir = '/Users/sebastian/workspace/codecompanion.nvim/',
-    -- dev = true,
-    -- 'lazymaniac/codecompanion.nvim',
-    -- branch = 'feature/lsp-tool',
     dependencies = {
       'nvim-lua/plenary.nvim',
       'nvim-treesitter/nvim-treesitter',
@@ -166,13 +168,15 @@ return {
       { '<leader>ad', '<cmd>CodeCompanionCLI agent=codex<cr>', mode = { 'n', 'v' }, desc = 'Codex CLI [ad]' },
       { '<leader>al', '<cmd>CodeCompanionCLI agent=cline<cr>', mode = { 'n', 'v' }, desc = 'Cline CLI [al]' },
     },
-    config = function()
+    opts = config,
+    config = function(_, opts)
       local wk = require 'which-key'
       local defaults = {
         { '<leader>a', group = '+[AI]' },
       }
       wk.add(defaults)
-      require('codecompanion').setup(config)
+      local trusted = require('nv_ide.codecompanion').resolve(opts)
+      require('codecompanion').setup(trusted)
     end,
   },
 }
