@@ -109,4 +109,27 @@ h.describe('language loading boundaries', function()
     h.truthy(vim.tbl_contains(sexp.ft or {}, 'clojure'))
     h.truthy(vim.tbl_contains(sexp.ft or {}, 'fennel'))
   end)
+
+  h.it('enables Rust inlay hints only for the attached buffer', function()
+    local rust = plugin(dofile('lua/plugins/lsp/lang/rust.lua'), 'mrcjkb/rustaceanvim')
+    local previous_which_key = package.loaded['which-key']
+    local previous_enable = vim.lsp.inlay_hint.enable
+    local previous_config = vim.g.rustaceanvim
+    local calls = {}
+    package.loaded['which-key'] = { add = function() end }
+    vim.lsp.inlay_hint.enable = function(enabled, opts)
+      calls[#calls + 1] = { enabled, opts }
+    end
+
+    local ok, err = xpcall(function()
+      rust.config()
+      vim.g.rustaceanvim.server.on_attach({}, 42)
+    end, debug.traceback)
+
+    package.loaded['which-key'] = previous_which_key
+    vim.lsp.inlay_hint.enable = previous_enable
+    vim.g.rustaceanvim = previous_config
+    if not ok then error(err, 0) end
+    h.deep_equal(calls, { { true, { bufnr = 42 } } })
+  end)
 end)

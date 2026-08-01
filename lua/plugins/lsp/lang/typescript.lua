@@ -106,50 +106,70 @@ return {
       setup = {
         vtsls = function(_, opts)
           require('util').lsp.on_attach(function(client, buffer)
-            client.commands['_typescript.moveToFileRefactoring'] = function(command, ctx)
-              ---@type string, string, lsp.Range
-              local action, uri, range = unpack(command.arguments)
-
+            local function warn(message)
+              vim.notify('TypeScript move-to-file: ' .. tostring(message), vim.log.levels.WARN)
+            end
+            client.commands['_typescript.moveToFileRefactoring'] = function(command)
+              local args = type(command) == 'table' and command.arguments
+              local action, uri, range
+              if type(args) == 'table' then action, uri, range = unpack(args) end
+              local function valid_string(value) return type(value) == 'string' and value ~= '' end
+              local function valid_position(position)
+                return type(position) == 'table'
+                  and type(position.line) == 'number' and position.line >= 0
+                  and type(position.character) == 'number' and position.character >= 0
+              end
+              local valid_range = type(range) == 'table'
+                and valid_position(range.start) and valid_position(range['end'])
+              if type(command) ~= 'table' or not valid_string(command.command)
+                or not valid_string(action) or not valid_string(uri) or not valid_range
+              then
+                warn 'invalid command arguments'
+                return
+              end
               local function move(newf)
                 client:request('workspace/executeCommand', {
                   command = command.command,
                   arguments = { action, uri, range, newf },
-                })
+                }, function(err)
+                  if err then warn(err.message or tostring(err)) end
+                end)
               end
-
-              local fname = vim.uri_to_fname(uri)
+              local converted, fname = pcall(vim.uri_to_fname, uri)
+              if not converted then warn('invalid document URI: ' .. tostring(fname)); return end
               client:request('workspace/executeCommand', {
                 command = 'typescript.tsserverRequest',
-                arguments = {
-                  'getMoveToRefactoringFileSuggestions',
-                  {
-                    file = fname,
-                    startLine = range.start.line + 1,
-                    startOffset = range.start.character + 1,
-                    endLine = range['end'].line + 1,
-                    endOffset = range['end'].character + 1,
-                  },
-                },
-              }, function(_, result)
-                ---@type string[]
-                local files = result.body.files
+                arguments = { 'getMoveToRefactoringFileSuggestions', {
+                  file = fname,
+                  startLine = range.start.line + 1, startOffset = range.start.character + 1,
+                  endLine = range['end'].line + 1, endOffset = range['end'].character + 1,
+                } },
+              }, function(err, result)
+                if err then warn(err.message or tostring(err)); return end
+                local files = result and result.body and result.body.files
+                local valid_files = vim.islist(files) and #files > 0
+                if valid_files then
+                  for _, file in ipairs(files) do
+                    if type(file) ~= 'string' or file == '' then valid_files = false; break end
+                  end
+                end
+                if not valid_files then warn 'server returned no destinations'; return end
+                files = vim.deepcopy(files)
                 table.insert(files, 1, 'Enter new path...')
                 vim.ui.select(files, {
                   prompt = 'Select move destination:',
-                  format_item = function(f)
-                    return vim.fn.fnamemodify(f, ':~:.')
-                  end,
-                }, function(f)
-                  if f and f:find '^Enter new path' then
+                  format_item = function(file) return vim.fn.fnamemodify(file, ':~:.') end,
+                }, function(file)
+                  if file and file:find('^Enter new path') then
                     vim.ui.input({
                       prompt = 'Enter move destination:',
                       default = vim.fn.fnamemodify(fname, ':h') .. '/',
                       completion = 'file',
                     }, function(newf)
-                      return newf and move(newf)
+                      if type(newf) == 'string' and newf ~= '' then move(newf) end
                     end)
-                  elseif f then
-                    move(f)
+                  elseif file then
+                    move(file)
                   end
                 end)
               end)
