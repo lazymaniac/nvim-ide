@@ -8,7 +8,6 @@ return {
     'nvim-treesitter/nvim-treesitter',
     branch = 'main',
     lazy = false,
-    build = ':TSUpdate',
     cmd = { 'TSUpdateSync', 'TSUpdate', 'TSInstall' },
     ---@diagnostic disable-next-line: missing-fields
     opts = {
