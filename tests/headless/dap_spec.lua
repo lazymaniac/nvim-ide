@@ -40,6 +40,30 @@ h.describe('DAP ownership and lazy loading', function()
     h.deep_equal(mason.opts.ensure_installed or {}, {})
   end)
 
+  h.it('lets Mason DAP own only the otherwise-unowned Bash adapter', function()
+    local dap = plugin(dofile('lua/plugins/dap.lua'), 'mfussenegger/nvim-dap')
+    local mason = dependency(dap, 'jay-babu/mason-nvim-dap.nvim')
+    local handlers = mason.opts.handlers
+    h.truthy(type(handlers[1]) == 'function', 'Mason DAP needs an explicit default skip handler')
+
+    local configured = {}
+    local previous = package.loaded['mason-nvim-dap']
+    package.loaded['mason-nvim-dap'] = {
+      default_setup = function(config)
+        configured[#configured + 1] = config.name
+      end,
+    }
+    local ok, err = xpcall(function()
+      for _, name in ipairs { 'codelldb', 'python', 'delve', 'js', 'kotlin', 'javadbg', 'javatest', 'haskell', 'bash' } do
+        (handlers[name] or handlers[1]) { name = name }
+      end
+    end, debug.traceback)
+    package.loaded['mason-nvim-dap'] = previous
+    if not ok then error(err, 0) end
+
+    h.deep_equal(configured, { 'bash' })
+  end)
+
   h.it('gives Python and Ruby adapters their own filetype plugin specs', function()
     local python = plugin(dofile('lua/plugins/lsp/lang/python.lua'), 'mfussenegger/nvim-dap-python')
     h.truthy(python.config)
@@ -147,5 +171,19 @@ h.describe('DAP ownership and lazy loading', function()
     if not ok then error(err, 0) end
 
     h.equal(calls, 1)
+  end)
+
+  h.it('configures the explicitly owned Kotlin adapter and launch configurations', function()
+    local kotlin = plugin(dofile('lua/plugins/lsp/lang/kotlin.lua'), 'mfussenegger/nvim-dap')
+    local previous = package.loaded.dap
+    local dap = { adapters = {}, configurations = {} }
+    package.loaded.dap = dap
+    local ok, err = xpcall(kotlin.opts.setup.kotlin_debug_adapter, debug.traceback)
+    package.loaded.dap = previous
+    if not ok then error(err, 0) end
+
+    h.equal(dap.adapters.kotlin.type, 'executable')
+    h.equal(dap.adapters.kotlin.command, 'kotlin-debug-adapter')
+    h.truthy(#dap.configurations.kotlin == 2)
   end)
 end)
