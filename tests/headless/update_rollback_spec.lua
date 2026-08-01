@@ -706,6 +706,8 @@ h.describe('latest-first plugin update and rollback', function()
       local calls = {}
       local update_done
       local repair_done
+      local repair_fast
+      local producer_fast
       local completed
       package.loaded['nvim-treesitter'] = {
         update = function()
@@ -731,6 +733,7 @@ h.describe('latest-first plugin update and rollback', function()
           end,
           treesitter = {
             install = function(_, options)
+              repair_fast = vim.in_fast_event()
               calls[#calls + 1] = 'dap-repl-repair'
               h.falsy(options.wait)
               repair_done = options.on_complete
@@ -759,7 +762,18 @@ h.describe('latest-first plugin update and rollback', function()
         }
         h.equal(started.status, 'started')
         h.deep_equal(calls, { 'lazy-update', 'treesitter-update' })
-        update_done(nil, true)
+        local timer = assert(vim.uv.new_timer())
+        timer:start(0, 0, function()
+          producer_fast = vim.in_fast_event()
+          timer:stop()
+          timer:close()
+          update_done(nil, true)
+        end)
+        h.truthy(vim.wait(1000, function()
+          return repair_done ~= nil
+        end, 10), 'Tree-sitter update completion must start local parser repair')
+        h.truthy(producer_fast, 'the update producer must execute in a real libuv fast event')
+        h.falsy(repair_fast, 'local parser repair must start on the main loop')
         h.deep_equal(calls, { 'lazy-update', 'treesitter-update', 'dap-repl-repair' })
         h.equal(completed, nil)
         repair_done { ok = true, missing = {} }
@@ -821,11 +835,13 @@ h.describe('latest-first plugin update and rollback', function()
     end)
   end)
 
-  h.it('runs the isolated startup check asynchronously without waiting on the main loop', function()
+  h.it('runs the isolated startup check asynchronously and resumes on the main loop', function()
     h.with_temp_dir(function(dir)
       local callback
       local completed
+      local completion_fast
       local invocation_options
+      local producer_fast
       local smoke = reload('nv_ide.toolchain.smoke').new {
         root = dir,
         lockfile = vim.fs.joinpath(dir, 'lazy-lock.json'),
@@ -846,6 +862,7 @@ h.describe('latest-first plugin update and rollback', function()
         wait = false,
         lock_owner = { pid = 313, token = string.rep('e', 64) },
         on_complete = function(result)
+          completion_fast = vim.in_fast_event()
           completed = result
         end,
       }
@@ -856,7 +873,18 @@ h.describe('latest-first plugin update and rollback', function()
       h.equal(invocation_options.env.NV_IDE_TOOLCHAIN_READONLY_CHILD, '1')
       h.equal(invocation_options.env.NV_IDE_TOOLCHAIN_PARENT_LOCK_PID, '313')
       h.equal(invocation_options.env.NV_IDE_TOOLCHAIN_PARENT_LOCK_TOKEN, string.rep('e', 64))
-      callback { code = 0, stdout = '', stderr = '' }
+      local timer = assert(vim.uv.new_timer())
+      timer:start(0, 0, function()
+        producer_fast = vim.in_fast_event()
+        timer:stop()
+        timer:close()
+        callback { code = 0, stdout = '', stderr = '' }
+      end)
+      h.truthy(vim.wait(1000, function()
+        return completed ~= nil
+      end, 10), 'isolated startup completion must settle')
+      h.truthy(producer_fast, 'the process callback must execute in a real libuv fast event')
+      h.falsy(completion_fast, 'smoke completion must run on the main loop')
       h.truthy(completed.ok)
       h.deep_equal(completed.checks, { 'isolated-startup' })
     end)
@@ -894,11 +922,13 @@ h.describe('latest-first plugin update and rollback', function()
     end)
   end)
 
-  h.it('discovers and installs only missing configured plugins at their locked revisions', function()
+  h.it('installs locked missing plugins and resumes a fast Lazy runner on the main loop', function()
     h.with_temp_dir(function(dir)
       local install_options
       local runner_callback
       local completed
+      local completion_fast
+      local producer_fast
       local lockfile = vim.fs.joinpath(dir, 'lazy-lock.json')
       write(lockfile, vim.json.encode {
         missing = { branch = 'main', commit = string.rep('a', 40) },
@@ -931,6 +961,7 @@ h.describe('latest-first plugin update and rollback', function()
         wait = true,
         show = false,
         on_complete = function(value)
+          completion_fast = vim.in_fast_event()
           completed = value
         end,
       }
@@ -941,7 +972,18 @@ h.describe('latest-first plugin update and rollback', function()
       h.equal(completed, nil)
 
       plugin_specs.missing._.installed = true
-      runner_callback()
+      local timer = assert(vim.uv.new_timer())
+      timer:start(0, 0, function()
+        producer_fast = vim.in_fast_event()
+        timer:stop()
+        timer:close()
+        runner_callback()
+      end)
+      h.truthy(vim.wait(1000, function()
+        return completed ~= nil
+      end, 10), 'Lazy runner completion must settle')
+      h.truthy(producer_fast, 'the Lazy runner must execute in a real libuv fast event')
+      h.falsy(completion_fast, 'plugin installation completion must run on the main loop')
       h.truthy(completed.ok)
       h.deep_equal(completed.missing, {})
     end)
@@ -1304,6 +1346,91 @@ h.describe('update orchestration', function()
       end,
     }
   end
+
+  h.it('returns libuv update completion to the main loop before validation and persistence', function()
+    h.with_temp_dir(function(dir)
+      local lockfile = vim.fs.joinpath(dir, 'lazy-lock.json')
+      write(lockfile, '{}')
+
+      local smoke = reload('nv_ide.toolchain.smoke').new {
+        root = dir,
+        lockfile = lockfile,
+      }
+      smoke.checks = { smoke.checks[1], smoke.checks[2] }
+
+      local producer_fast
+      local updater = reload('nv_ide.toolchain.plugins').new {
+        lockfile = lockfile,
+        snapshot_dir = vim.fs.joinpath(dir, 'snapshots'),
+        lazy_update = function(_, done)
+          local timer = assert(vim.uv.new_timer())
+          timer:start(0, 0, function()
+            producer_fast = vim.in_fast_event()
+            timer:stop()
+            timer:close()
+            done { ok = true }
+          end)
+        end,
+        treesitter_update = function(_, done)
+          done { ok = true }
+        end,
+        lazy_restore = function(_, done)
+          done { ok = true }
+        end,
+        receipt_probe = function()
+          return { mason_receipts = {}, treesitter_parser_info = {} }
+        end,
+        smoke = smoke,
+      }
+
+      local saved = reload('nv_ide.toolchain.state').new {
+        dir = vim.fs.joinpath(dir, 'state'),
+      }
+      saved:write {
+        schema_version = 1,
+        fingerprint = 'fingerprint',
+        status = 'success',
+      }
+      local process_lock = reload('nv_ide.toolchain.lock').new {
+        dir = vim.fs.joinpath(dir, 'lock'),
+      }
+      local instance = reload('nv_ide.toolchain.orchestrator').new {
+        manifest = {
+          schema_version = 1,
+          fingerprint = function()
+            return 'fingerprint'
+          end,
+        },
+        state = saved,
+        lock = process_lock,
+        mason = { discover = function() return {} end },
+        treesitter = { discover = function() return {} end },
+        plugins = updater,
+        notify = function() end,
+      }
+
+      local completed
+      local completion_fast
+      local started = instance:update {
+        wait = false,
+        on_complete = function(result)
+          completion_fast = vim.in_fast_event()
+          completed = result
+        end,
+      }
+
+      h.equal(started.status, 'started')
+      h.truthy(vim.wait(1000, function()
+        return completed ~= nil
+      end, 10), 'libuv completion must settle the update')
+      h.truthy(producer_fast, 'the producer must execute in a real libuv fast event')
+      h.equal(completed.status, 'success', table.concat(completed.errors or {}, '\n'))
+      h.falsy(completion_fast, 'public completion must run on the main loop')
+      h.equal(saved:read().plugin_update.status, 'success')
+      h.falsy(vim.uv.fs_stat(process_lock.path), 'the process lock must be released')
+      h.falsy(instance.running)
+    end)
+  end)
 
   h.it('registers ToolchainUpdate and records first-run success through the shared lock and state', function()
     local orchestrator = reload 'nv_ide.toolchain.orchestrator'

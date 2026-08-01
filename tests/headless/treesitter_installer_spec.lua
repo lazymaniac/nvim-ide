@@ -79,6 +79,54 @@ h.describe('Tree-sitter installation adapter', function()
     h.deep_equal(completed.missing, {})
   end)
 
+  h.it('returns parser await completion to the main loop before receipts and discovery', function()
+    local completed
+    local completion_fast
+    local installed = {}
+    local producer_fast
+    local record_fast
+    local adapter = adapter_with {
+      parsers = { 'lua' },
+      installed = function()
+        return installed
+      end,
+      record = function()
+        record_fast = vim.in_fast_event()
+        installed = { 'lua' }
+        return true
+      end,
+      install = function()
+        return {
+          await = function(_, callback)
+            local timer = assert(vim.uv.new_timer())
+            timer:start(0, 0, function()
+              producer_fast = vim.in_fast_event()
+              timer:stop()
+              timer:close()
+              callback(nil, true)
+            end)
+          end,
+        }
+      end,
+    }
+
+    h.truthy(adapter:install {
+      wait = false,
+      on_complete = function(result)
+        completion_fast = vim.in_fast_event()
+        completed = result
+      end,
+    }.pending)
+    h.truthy(vim.wait(1000, function()
+      return completed ~= nil
+    end, 10), 'parser completion must settle')
+    h.truthy(producer_fast, 'the parser producer must execute in a real libuv fast event')
+    h.falsy(record_fast, 'parser receipts must be recorded on the main loop')
+    h.falsy(completion_fast, 'parser completion must run on the main loop')
+    h.truthy(completed.ok)
+    h.deep_equal(completed.missing, {})
+  end)
+
   h.it('waits with a timeout and verifies availability for bang or headless runs', function()
     local installed = { 'vim' }
     local waited_with

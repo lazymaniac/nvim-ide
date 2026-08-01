@@ -112,7 +112,13 @@ function TreeSitter:install(options)
   end
   if not options.wait then
     if options.on_complete then
-      local awaited, await_error = pcall(task_or_error.await, task_or_error, function(error, result)
+      local function complete_install(error, result)
+        if vim.in_fast_event() then
+          vim.schedule(function()
+            complete_install(error, result)
+          end)
+          return
+        end
         local record_error
         if error == nil and result ~= false then
           local recorded
@@ -127,7 +133,8 @@ function TreeSitter:install(options)
           error = error and tostring(error) or record_error or (result == false and 'parser installation failed' or nil),
           missing = remaining,
         }
-      end)
+      end
+      local awaited, await_error = pcall(task_or_error.await, task_or_error, complete_install)
       if not awaited then
         return { ok = false, error = tostring(await_error), missing = missing }
       end
