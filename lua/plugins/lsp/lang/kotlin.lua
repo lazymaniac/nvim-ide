@@ -7,6 +7,12 @@ return {
         kotlin_debug_adapter = function()
           local dap = require 'dap'
 
+          dap.adapters.kotlin = {
+            type = 'executable',
+            command = 'kotlin-debug-adapter',
+            args = { '--interpreter=vscode' },
+          }
+
           -- Configuration
           dap.configurations.kotlin = {
             {

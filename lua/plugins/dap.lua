@@ -194,7 +194,10 @@ return {
           automatic_installation = false,
           -- You can provide additional configuration to the handlers,
           -- see mason-nvim-dap README for more information
-          handlers = {},
+          handlers = {
+            function() end,
+            bash = function(config) require('mason-nvim-dap').default_setup(config) end,
+          },
         },
       },
       { 'stevearc/overseer.nvim', branch = 'master' },
