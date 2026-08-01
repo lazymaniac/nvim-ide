@@ -299,4 +299,168 @@ h.describe('DAP ownership and lazy loading', function()
     package.loaded['nv_ide.project'] = previous_project
     if not ok then error(err, 0) end
   end)
+
+  h.it('resolves Kotlin project and attach inputs when a session launches', function()
+    local kotlin = plugin(dofile('lua/plugins/lsp/lang/kotlin.lua'), 'mfussenegger/nvim-dap')
+    local previous_dap = package.loaded.dap
+    local previous_project = package.loaded['nv_ide.project']
+    local previous_input = vim.fn.input
+    local dap = { adapters = {}, configurations = {} }
+    local root_calls, input_calls = {}, {}
+    package.loaded.dap = dap
+    package.loaded['nv_ide.project'] = {
+      root = function(target, markers)
+        root_calls[#root_calls + 1] = { target = target, markers = markers }
+        return '/repo/service'
+      end,
+    }
+    vim.fn.input = function(prompt, default)
+      input_calls[#input_calls + 1] = { prompt = prompt, default = default }
+      return default
+    end
+
+    local ok, err = xpcall(function()
+      kotlin.opts.setup.kotlin_debug_adapter()
+      local launch, attach = unpack(dap.configurations.kotlin)
+      h.equal(type(launch.projectRoot), 'function')
+      h.equal(type(attach.projectRoot), 'function')
+      h.equal(launch.projectRoot(), '/repo/service')
+      h.equal(attach.projectRoot(), '/repo/service')
+      h.equal(attach.hostName(), 'localhost')
+      h.equal(attach.port(), 5005)
+      h.equal(#root_calls, 2)
+      for _, call in ipairs(root_calls) do
+        h.equal(call.target, 0)
+        h.truthy(vim.tbl_contains(call.markers, 'settings.gradle.kts'))
+        h.truthy(vim.tbl_contains(call.markers, 'gradlew'))
+        h.truthy(vim.tbl_contains(call.markers, 'mvnw'))
+      end
+      h.deep_equal(input_calls, {
+        { prompt = 'Kotlin debug host: ', default = 'localhost' },
+        { prompt = 'Kotlin debug port: ', default = '5005' },
+      })
+
+      vim.fn.input = function(prompt)
+        return prompt:find('host', 1, true) and 'debug.example' or '6006'
+      end
+      h.equal(attach.hostName(), 'debug.example')
+      h.equal(attach.port(), 6006)
+    end, debug.traceback)
+
+    package.loaded.dap = previous_dap
+    package.loaded['nv_ide.project'] = previous_project
+    vim.fn.input = previous_input
+    if not ok then error(err, 0) end
+  end)
+
+  h.it('aggregates JavaScript debug configs once from the active project', function()
+    local previous_dap = package.loaded.dap
+    local previous_vscode = package.loaded['dap.ext.vscode']
+    local previous_utils = package.loaded['dap.utils']
+    local previous_project = package.loaded['nv_ide.project']
+    local previous_util = package.loaded.util
+    local queried = {}
+    local vscode = {
+      type_to_filetypes = {},
+      getconfigs = function(path)
+        queried[#queried + 1] = path
+        if path == '/unrelated/.vscode/launch.json' then
+          return { { type = 'pwa-node', request = 'launch', name = 'Unrelated' } }
+        end
+        h.equal(path, '/repo/web/.vscode/launch.json')
+        return {
+          { type = 'pwa-node', request = 'launch', name = 'Workspace launch' },
+          { type = 'python', request = 'launch', name = 'Wrong adapter' },
+        }
+      end,
+    }
+    local dap = { adapters = {}, configurations = {}, providers = { configs = {} } }
+    dap.providers.configs['dap.global'] = function(bufnr)
+      return dap.configurations[vim.bo[bufnr].filetype] or {}
+    end
+    dap.providers.configs['dap.launch.json'] = function()
+      return vscode.getconfigs '/unrelated/.vscode/launch.json'
+    end
+    package.loaded.dap = dap
+    package.loaded['dap.ext.vscode'] = vscode
+    package.loaded['dap.utils'] = { pick_process = function() return 17 end }
+    package.loaded['nv_ide.project'] = {
+      javascript = function()
+        return {
+          root = '/repo/web',
+          launch_json = '/repo/web/.vscode/launch.json',
+          package_manager = 'pnpm',
+          executables = { jest = '/repo/web/node_modules/.bin/jest' },
+          configs = {
+            jest = '/repo/web/jest.config.ts',
+            mocha = '/repo/web/.mocharc.json',
+            karma = '/repo/web/karma.conf.ts',
+            jasmine = '/repo/web/spec/support/jasmine.json',
+          },
+        }
+      end,
+    }
+    package.loaded.util = {
+      get_pkg_path = function(package, path)
+        h.equal(package, 'js-debug-adapter')
+        h.equal(path, 'js-debug/src/dapDebugServer.js')
+        return '/mason/js-debug/src/dapDebugServer.js'
+      end,
+      lsp = {
+        action = setmetatable({}, { __index = function() return function() end end }),
+        execute = function() end,
+        get_clients = function() return {} end,
+        on_attach = function() end,
+      },
+    }
+
+    local jsbuf = vim.api.nvim_create_buf(false, true)
+    local luabuf = vim.api.nvim_create_buf(false, true)
+    vim.bo[jsbuf].filetype = 'typescript'
+    vim.bo[luabuf].filetype = 'lua'
+    local ok, err = xpcall(function()
+      local typescript = plugin(dofile('lua/plugins/lsp/lang/typescript.lua'), 'mfussenegger/nvim-dap')
+      typescript.opts()
+      for _, filetype in ipairs { 'typescript', 'javascript', 'typescriptreact', 'javascriptreact', 'vue' } do
+        h.equal(#dap.configurations[filetype], 2)
+      end
+
+      local aggregated = {}
+      for _, provider in pairs(dap.providers.configs) do
+        vim.list_extend(aggregated, provider(jsbuf))
+      end
+      local by_name = {}
+      for _, config in ipairs(aggregated) do
+        by_name[config.name] = (by_name[config.name] or 0) + 1
+      end
+      h.equal(by_name['Workspace launch'], 1)
+      h.falsy(by_name['Wrong adapter'])
+      h.falsy(by_name.Unrelated)
+      h.equal(by_name['Jest Current File'], 1)
+      h.equal(by_name['Mocha Current File'], 1)
+      h.equal(by_name['Karma All Tests'], 1)
+      h.equal(by_name['Jasmine Current File'], 1)
+      h.deep_equal(queried, { '/repo/web/.vscode/launch.json' })
+
+      local frameworks = dap.providers.configs.nv_ide_javascript(jsbuf)
+      local framework_by_name = {}
+      for _, config in ipairs(frameworks) do framework_by_name[config.name] = config end
+      h.equal(framework_by_name['Jest Current File'].program, '/repo/web/node_modules/.bin/jest')
+      h.equal(framework_by_name['Mocha Current File'].runtimeExecutable, 'pnpm')
+      h.deep_equal(framework_by_name['Mocha Current File'].runtimeArgs, { 'exec', 'mocha' })
+
+      h.deep_equal(dap.providers.configs['dap.launch.json'](luabuf), {
+        { type = 'pwa-node', request = 'launch', name = 'Unrelated' },
+      })
+    end, debug.traceback)
+
+    vim.api.nvim_buf_delete(jsbuf, { force = true })
+    vim.api.nvim_buf_delete(luabuf, { force = true })
+    package.loaded.dap = previous_dap
+    package.loaded['dap.ext.vscode'] = previous_vscode
+    package.loaded['dap.utils'] = previous_utils
+    package.loaded['nv_ide.project'] = previous_project
+    package.loaded.util = previous_util
+    if not ok then error(err, 0) end
+  end)
 end)
