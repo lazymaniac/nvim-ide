@@ -1,5 +1,12 @@
 local h = require 'tests.headless.harness'
 
+local function plugin(specs, name)
+  for _, spec in ipairs(specs) do
+    if spec[1] == name then return spec end
+  end
+  error('plugin spec not found: ' .. name)
+end
+
 local function load_java()
   package.loaded['nv_ide.java'] = nil
   return require 'nv_ide.java'
@@ -371,5 +378,87 @@ h.describe('Java current-class JShell runner', function()
       h.matches(state.notifications[1].message, case.message, case.label)
       h.truthy(java.run_current_class { bufnr = 17, client_id = 7, deps = deps }, case.label)
     end
+  end)
+
+  h.it('preserves interactive JShell and maps the current class separately', function()
+    local previous = {
+      blink = package.loaded['blink.cmp'],
+      dap = package.loaded['jdtls.dap'],
+      java = package.loaded['nv_ide.java'],
+      jdtls = package.loaded.jdtls,
+      tests = package.loaded['jdtls.tests'],
+      util = package.loaded.util,
+      which_key = package.loaded['which-key'],
+      create_autocmd = vim.api.nvim_create_autocmd,
+      get_client = vim.lsp.get_client_by_id,
+      glob = vim.fn.glob,
+    }
+    local autocmds, mappings, runs = {}, {}, {}
+    local function noop() end
+    local interactive_jshell = function() end
+    local fake_jdtls = setmetatable({
+      extendedClientCapabilities = {},
+      jshell = interactive_jshell,
+    }, { __index = function() return noop end })
+    package.loaded.jdtls = fake_jdtls
+    package.loaded['jdtls.tests'] = setmetatable({}, { __index = function() return noop end })
+    package.loaded['jdtls.dap'] = setmetatable({}, { __index = function() return noop end })
+    package.loaded['blink.cmp'] = { get_lsp_capabilities = function() return {} end }
+    package.loaded.util = { mason_root = function() return '/mason' end }
+    package.loaded['nv_ide.java'] = {
+      bundle_patterns = function() return {} end,
+      run_current_class = function(options) runs[#runs + 1] = options end,
+    }
+    package.loaded['which-key'] = {
+      add = function(entries)
+        for _, entry in ipairs(entries) do mappings[#mappings + 1] = entry end
+      end,
+    }
+    vim.fn.glob = function() return '' end
+    vim.api.nvim_create_autocmd = function(event, options)
+      autocmds[event] = options.callback
+      return 1
+    end
+    vim.lsp.get_client_by_id = function(client_id)
+      h.equal(client_id, 7)
+      return { id = client_id, name = 'jdtls' }
+    end
+
+    local ok, err = xpcall(function()
+      local java = plugin(dofile('lua/plugins/lsp/lang/java.lua'), 'mfussenegger/nvim-jdtls')
+      java.config(nil, {
+        full_cmd = function() return { 'jdtls' } end,
+        root_dir = function() return '/repo' end,
+        settings = {},
+        dap = {},
+      })
+      autocmds.LspAttach { buf = 41, data = { client_id = 7 } }
+
+      local interactive, current
+      for _, mapping in ipairs(mappings) do
+        if mapping[1] == '<leader>cj' then interactive = mapping end
+        if mapping[1] == '<leader>cJ' then current = mapping end
+      end
+      h.truthy(interactive)
+      h.equal(interactive[2], interactive_jshell)
+      h.truthy(current)
+      h.equal(current.mode, 'n')
+      h.equal(current.buffer, 41)
+      h.equal(current.desc, 'Run Current Class in JShell [cJ]')
+      current[2]()
+      h.deep_equal(runs, { { bufnr = 41, client_id = 7 } })
+    end, debug.traceback)
+
+    package.loaded['blink.cmp'] = previous.blink
+    package.loaded['jdtls.dap'] = previous.dap
+    package.loaded['nv_ide.java'] = previous.java
+    package.loaded.jdtls = previous.jdtls
+    package.loaded['jdtls.tests'] = previous.tests
+    package.loaded.util = previous.util
+    package.loaded['which-key'] = previous.which_key
+    vim.api.nvim_create_autocmd = previous.create_autocmd
+    vim.lsp.get_client_by_id = previous.get_client
+    vim.fn.glob = previous.glob
+    if not ok then error(err, 0) end
   end)
 end)
