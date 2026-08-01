@@ -12,12 +12,6 @@ return {
     config = function()
       local lint = require 'lint'
 
-      local function available(names)
-        return vim.tbl_filter(function(name)
-          return vim.fn.executable(name) == 1
-        end, names)
-      end
-
       lint.linters.kube_linter = {
         cmd = 'kube-linter',
         args = { 'lint', '--format', 'plain' },
@@ -52,24 +46,43 @@ return {
         haskell = { 'hlint' },
         helm = { 'kube_linter' },
         html = { 'htmlhint' },
-        java = { 'trivy' },
         kotlin = { 'ktlint', 'detekt' },
+        javascript = { 'eslint_d' },
+        javascriptreact = { 'eslint_d' },
         markdown = { 'markdownlint' },
-        python = available { 'ruff', 'pylint', 'flake8', 'mypy' },
-        ruby = { 'erb_lint', 'rubocop', 'trivy' },
-        terraform = { 'tfsec', 'trivy' },
-        tf = { 'tfsec', 'trivy' },
-        typescript = { 'eslint_d', 'trivy' },
-        yaml = { 'yamllint', 'actionlint' },
+        python = { 'ruff' },
+        ruby = { 'erb_lint', 'rubocop' },
+        typescript = { 'eslint_d' },
+        typescriptreact = { 'eslint_d' },
+        yaml = { 'yamllint' },
         -- Use the "*" filetype to run linters on all filetypes.
         -- ['*'] = { 'typos' },
         -- Use the "_" filetype to run linters on filetypes that don't have other linters configured.
         -- ['_'] = { 'fallback linter' },
       }
-      vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufEnter' }, {
-        callback = function()
-          lint.linters_by_ft.python = available { 'ruff', 'pylint', 'flake8', 'mypy' }
-          lint.try_lint()
+      lint.linters.eslint_d.env = vim.tbl_extend('force', lint.linters.eslint_d.env or {}, {
+        ESLINT_D_MISS = 'fail',
+      })
+
+      local project = require 'nv_ide.project'
+      local group = vim.api.nvim_create_augroup('nvide_lint', { clear = true })
+      vim.api.nvim_create_autocmd('BufWritePost', {
+        group = group,
+        callback = function(event)
+          local path = vim.api.nvim_buf_get_name(event.buf)
+          local root = project.root(path)
+          if not root or not project.trusted(root) then return end
+          local names = vim.deepcopy(lint.linters_by_ft[vim.bo[event.buf].filetype] or {})
+          if vim.bo[event.buf].filetype == 'yaml'
+            and project.contains(vim.fs.joinpath(root, '.github', 'workflows'), path)
+          then
+            names[#names + 1] = 'actionlint'
+          end
+          if #names > 0 then
+            vim.api.nvim_buf_call(event.buf, function()
+              lint.try_lint(names, { cwd = root })
+            end)
+          end
         end,
       })
     end,

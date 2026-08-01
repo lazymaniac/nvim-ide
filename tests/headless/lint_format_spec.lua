@@ -9,54 +9,73 @@ local function plugin(specs, name)
   error('plugin spec not found: ' .. name)
 end
 
-local function contains(values, expected)
-  for _, value in ipairs(values or {}) do
-    if value == expected then
-      return true
-    end
-  end
-  return false
-end
-
-local function configure_lint(executables)
+local function configure_lint()
+  local calls = {}
+  local trusted = false
+  local registration = {}
   local lint = {
-    linters = {},
+    linters = { eslint_d = { env = {} } },
     linters_by_ft = {},
-    try_lint = function() end,
+    try_lint = function(names, opts)
+      calls[#calls + 1] = { names = vim.deepcopy(names), opts = vim.deepcopy(opts) }
+    end,
   }
-  local autocmd
+  local project = {
+    root = function(path)
+      h.truthy(vim.startswith(path, '/repo/'))
+      return '/repo'
+    end,
+    trusted = function(root)
+      h.equal(root, '/repo')
+      return trusted
+    end,
+    contains = function(root, path)
+      local relative = vim.fs.relpath(root, path)
+      return relative ~= nil and relative ~= '..' and not vim.startswith(relative, '../')
+    end,
+  }
   local previous_lint = package.loaded.lint
-  local previous_executable = vim.fn.executable
+  local previous_project = package.loaded['nv_ide.project']
+  local previous_augroup = vim.api.nvim_create_augroup
   local previous_autocmd = vim.api.nvim_create_autocmd
   package.loaded.lint = lint
-  vim.fn.executable = function(command)
-    return executables[command] and 1 or 0
+  package.loaded['nv_ide.project'] = project
+  vim.api.nvim_create_augroup = function(name, opts)
+    h.equal(name, 'nvide_lint')
+    h.deep_equal(opts, { clear = true })
+    return 71
   end
-  vim.api.nvim_create_autocmd = function(_, opts)
-    autocmd = opts.callback
-    return 1
+  vim.api.nvim_create_autocmd = function(events, opts)
+    registration = { events = events, opts = opts }
+    return 72
   end
 
   local spec = plugin(dofile('lua/plugins/lint_and_format.lua'), 'mfussenegger/nvim-lint')
   local ok, err = xpcall(spec.config, debug.traceback)
 
   package.loaded.lint = previous_lint
-  vim.fn.executable = previous_executable
+  package.loaded['nv_ide.project'] = previous_project
+  vim.api.nvim_create_augroup = previous_augroup
   vim.api.nvim_create_autocmd = previous_autocmd
-  if not ok then
-    error(err, 0)
+  if not ok then error(err, 0) end
+
+  local function save(path, filetype)
+    local bufnr = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_buf_set_name(bufnr, path)
+    vim.bo[bufnr].filetype = filetype
+    local saved, failure = xpcall(function()
+      registration.opts.callback { buf = bufnr }
+    end, debug.traceback)
+    vim.api.nvim_buf_delete(bufnr, { force = true })
+    if not saved then error(failure, 0) end
   end
-  return lint, autocmd
+
+  return lint, calls, registration, save, function(value) trusted = value end
 end
 
 h.describe('lint and format policy', function()
   h.it('uses real nvim-lint identifiers and an explicit kube-linter', function()
-    local lint = configure_lint({
-      ruff = true,
-      flake8 = true,
-      mypy = true,
-      pylint = true,
-    })
+    local lint = configure_lint()
 
     h.deep_equal(lint.linters_by_ft.ansible, { 'ansible_lint' })
     h.deep_equal(lint.linters_by_ft.go, { 'golangcilint' })
@@ -83,21 +102,27 @@ h.describe('lint and format policy', function()
     h.truthy(diagnostics[1].message:find('missing limits', 1, true))
   end)
 
-  h.it('registers Python linters only while their executables are available', function()
-    local lint, refresh = configure_lint({ ruff = true, mypy = true })
-    h.deep_equal(lint.linters_by_ft.python, { 'ruff', 'mypy' })
+  h.it('runs deterministic lint only after a trusted project save', function()
+    local lint, calls, registration, save, set_trusted = configure_lint()
+    save('/repo/app.py', 'python')
+    h.equal(#calls, 0, 'automatic lint must skip untrusted projects')
+    h.equal(registration.events, 'BufWritePost')
+    h.equal(registration.opts.group, 71)
 
-    local previous_executable = vim.fn.executable
-    vim.fn.executable = function(command)
-      return ({ flake8 = 1, pylint = 1 })[command] or 0
-    end
-    local ok, err = xpcall(refresh, debug.traceback)
-    vim.fn.executable = previous_executable
-    if not ok then error(err, 0) end
-
-    h.deep_equal(lint.linters_by_ft.python, { 'pylint', 'flake8' })
-    h.falsy(contains(lint.linters_by_ft.python, 'ruff'))
-    h.falsy(contains(lint.linters_by_ft.python, 'mypy'))
+    set_trusted(true)
+    save('/repo/app.py', 'python')
+    save('/repo/config.yml', 'yaml')
+    save('/repo/.github/workflows/ci.yml', 'yaml')
+    h.deep_equal(calls, {
+      { names = { 'ruff' }, opts = { cwd = '/repo' } },
+      { names = { 'yamllint' }, opts = { cwd = '/repo' } },
+      { names = { 'yamllint', 'actionlint' }, opts = { cwd = '/repo' } },
+    })
+    h.deep_equal(lint.linters_by_ft.python, { 'ruff' })
+    h.deep_equal(lint.linters_by_ft.javascript, { 'eslint_d' })
+    h.deep_equal(lint.linters_by_ft.javascriptreact, { 'eslint_d' })
+    h.falsy(vim.inspect(lint.linters_by_ft):find('trivy', 1, true))
+    h.equal(lint.linters.eslint_d.env.ESLINT_D_MISS, 'fail')
   end)
 
   h.it('adapts Conform to global and buffer-local format policy', function()
