@@ -39,7 +39,7 @@ function M.with_startup_lock(operation, options)
   else
     local lock_error
     token, lock_error = instance.lock:acquire_wait {
-      timeout_ms = instance.timeout_ms,
+      timeout_ms = instance.startup_lock_timeout_ms,
       poll_ms = instance.poll_ms,
     }
     if not token then

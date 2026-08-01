@@ -85,6 +85,7 @@ local function new(options)
     wait = options.wait,
     clock_ms = options.clock_ms,
     timeout_ms = options.timeout_ms,
+    startup_lock_timeout_ms = options.startup_lock_timeout_ms,
     env = options.env or {},
     poll_ms = options.poll_ms,
     plugins = options.plugins or {
@@ -104,6 +105,7 @@ h.describe('toolchain orchestration', function()
     local instance = new {}
 
     h.equal(instance.timeout_ms, 1800000)
+    h.equal(instance.startup_lock_timeout_ms, 5000)
   end)
 
   h.it('uses a valid environment timeout unless an explicit timeout is injected', function()
