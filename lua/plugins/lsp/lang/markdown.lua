@@ -13,8 +13,8 @@ return {
       mappings = {
         inline_surround_toggle = 'gs', -- (string|boolean) toggle inline style
         inline_surround_toggle_line = 'gss', -- (string|boolean) line-wise toggle inline style
-        inline_surround_delete = 'ds', -- (string|boolean) delete emphasis surrounding cursor
-        inline_surround_change = 'cs', -- (string|boolean) change emphasis surrounding cursor
+        inline_surround_delete = false, -- MiniSurround owns ds globally
+        inline_surround_change = false, -- MiniSurround owns cs globally
         link_add = 'gl', -- (string|boolean) add link
         link_follow = 'gx', -- (string|boolean) follow link
         go_curr_heading = ']c', -- (string|boolean) set cursor to current section heading
