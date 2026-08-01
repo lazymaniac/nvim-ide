@@ -111,6 +111,28 @@ return {
     end,
   },
 
+  -- [diffview-plus.nvim] - Repository diff and file-history views.
+  -- see: `:h diffview.nvim`
+  -- link: https://github.com/dlyongemallo/diffview-plus.nvim
+  {
+    'dlyongemallo/diffview-plus.nvim',
+    version = '*',
+    main = 'diffview',
+    cmd = {
+      'DiffviewOpen',
+      'DiffviewFileHistory',
+      'DiffviewClose',
+      'DiffviewToggleFiles',
+      'DiffviewFocusFiles',
+      'DiffviewRefresh',
+    },
+    keys = {
+      { '<leader>gv', '<cmd>DiffviewOpen<cr>', desc = 'Diff view [gv]' },
+      { '<leader>gh', '<cmd>DiffviewFileHistory %<cr>', desc = 'File history [gh]' },
+    },
+    opts = {},
+  },
+
   -- [unified.nvim] - Single file diff viewer
   -- see: `:h unified.nvim`
   -- link: https://github.com/axkirillov/unified.nvim
