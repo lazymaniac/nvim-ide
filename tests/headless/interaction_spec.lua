@@ -243,4 +243,22 @@ h.describe('editor interactions', function()
       h.falsy(command:find('autocmd!', 1, true), 'terminal setup must not clear another TermOpen handler')
     end
   end)
+
+  h.it('gives MiniSurround sole ownership of ys, ds, and cs', function()
+    local surround = plugin(dofile('lua/plugins/coding.lua'), 'nvim-mini/mini.surround')
+    h.deep_equal(surround.opts.mappings, {
+      add = 'ys',
+      delete = 'ds',
+      find = '',
+      find_left = '',
+      highlight = '',
+      replace = 'cs',
+      suffix_last = '',
+      suffix_next = '',
+    })
+
+    local markdown = plugin(dofile('lua/plugins/lsp/lang/markdown.lua'), 'tadmccorkle/markdown.nvim')
+    h.equal(markdown.opts.mappings.inline_surround_delete, false)
+    h.equal(markdown.opts.mappings.inline_surround_change, false)
+  end)
 end)
