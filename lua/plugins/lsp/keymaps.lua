@@ -1,4 +1,5 @@
 local M = {}
+local configured_handlers = setmetatable({}, { __mode = 'k' })
 
 local hover = vim.lsp.buf.hover
 ---@diagnostic disable-next-line: duplicate-set-field
@@ -88,6 +89,8 @@ end
 function M.setup(deps)
   deps = deps or {}
   local handlers = deps.handlers or vim.lsp.handlers
+  if configured_handlers[handlers] then return end
+  configured_handlers[handlers] = true
   local register_on_attach = deps.register_on_attach or require('util').lsp.on_attach
   local get_client_by_id = deps.get_client_by_id or vim.lsp.get_client_by_id
   local apply = deps.apply or function(client, buffer)
