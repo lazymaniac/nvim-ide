@@ -20,7 +20,7 @@ return {
       },
       {
         'mrcjkb/neotest-haskell',
-        branch = 'master',
+        branch = 'main',
       },
       {
         'rcasia/neotest-java',
