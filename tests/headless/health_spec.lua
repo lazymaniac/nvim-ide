@@ -256,6 +256,64 @@ h.describe('nv_ide health collection', function()
     h.matches(output, 'Ruby 2.7.8 requires >= 3.0.0')
   end)
 
+  h.it('requires Ruby development headers and a Rust 1.42 compiler and package manager', function()
+    local health = require 'nv_ide.health'
+    local probe = complete_probe {
+      os = 'Darwin',
+      versions = { rust = '1.41.1', ['rust:cargo_version'] = '1.41.0' },
+      unsupported_versions = { rust = true, ['rust:cargo_version'] = true },
+      unavailable = { ['ruby:development_headers'] = true },
+    }
+    local report = health.collect(probe)
+    local ruby = find(report.runtimes, 'ruby')
+    local rust = find(report.runtimes, 'rust')
+
+    h.falsy(ruby.available)
+    h.equal(ruby.capabilities[1].id, 'development_headers')
+    h.falsy(ruby.capabilities[1].available)
+    h.falsy(rust.available)
+    h.equal(rust.minimum_version, '1.42.0')
+    h.equal(rust.capabilities[1].id, 'cargo_version')
+    h.equal(rust.capabilities[1].minimum_version, '1.42.0')
+    h.falsy(rust.capabilities[1].supported)
+
+    local messages, reporter = {}, {}
+    for _, level in ipairs { 'start', 'ok', 'info', 'warn', 'error' } do
+      reporter[level] = function(message)
+        messages[#messages + 1] = tostring(message)
+      end
+    end
+    health.check(probe, reporter)
+    local output = table.concat(messages, '\n')
+    h.matches(output, 'Ruby development_headers capability is unavailable')
+    h.matches(output, 'Rust 1.41.1 requires >= 1.42.0')
+    h.matches(output, 'cargo 1.41.0 requires >= 1.42.0')
+    h.matches(output, 'rubyhdrdir contains ruby.h')
+  end)
+
+  h.it('requires GHC 8.10 and cabal-install 3.0 for the Haskell debug adapter', function()
+    local health = require 'nv_ide.health'
+    local probe = complete_probe {
+      versions = { haskell = '8.8.4', ['haskell:cabal_version'] = '2.4.1' },
+      unsupported_versions = { haskell = true, ['haskell:cabal_version'] = true },
+    }
+    local haskell = find(health.collect(probe).runtimes, 'haskell')
+    h.falsy(haskell.available)
+    h.equal(haskell.minimum_version, '8.10.0')
+    h.equal(haskell.capabilities[1].minimum_version, '3.0.0')
+
+    local messages, reporter = {}, {}
+    for _, level in ipairs { 'start', 'ok', 'info', 'warn', 'error' } do
+      reporter[level] = function(message)
+        messages[#messages + 1] = tostring(message)
+      end
+    end
+    health.check(probe, reporter)
+    local output = table.concat(messages, '\n')
+    h.matches(output, 'GHC 8.8.4 requires >= 8.10.0')
+    h.matches(output, 'cabal-install 2.4.1 requires >= 3.0.0')
+  end)
+
   h.it('parses Java versions emitted exclusively on stderr', function()
     local health = require 'nv_ide.health'
     local status = health.command_version_status({

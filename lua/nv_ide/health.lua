@@ -524,7 +524,7 @@ local RUNTIME_FIXES = {
     lua = 'brew install lua luajit',
     python = 'brew install python@3.13; verify with python3 --version and python3 -m venv /tmp/nv-ide-venv-test',
     r = 'brew install --cask r',
-    ruby = 'brew install ruby; ensure ruby reports >= 3.0.0 and gem is on PATH',
+    ruby = "brew install ruby; ensure Homebrew Ruby's bin is before /usr/bin, ruby reports >= 3.0.0, RbConfig rubyhdrdir contains ruby.h, and Xcode Command Line Tools provide a C compiler",
     rust = 'brew install rustup-init && rustup-init -y',
     scala = 'brew install scala sbt',
     sql = 'brew install libpq',
@@ -544,7 +544,7 @@ local RUNTIME_FIXES = {
     lua = 'Debian/Ubuntu: sudo apt install lua5.4 luajit; Fedora: sudo dnf install lua luajit; Arch: sudo pacman -S lua luajit',
     python = 'Install Python 3.10-3.13 with venv support; Debian/Ubuntu: sudo apt install python3 python3-venv; Fedora: sudo dnf install python3; Arch: sudo pacman -S python; verify with python3 -m venv /tmp/nv-ide-venv-test',
     r = 'Debian/Ubuntu: sudo apt install r-base; Fedora: sudo dnf install R; Arch: sudo pacman -S r',
-    ruby = 'Install Ruby >= 3.0 with gem and Bundler; Debian/Ubuntu: sudo apt install ruby-full ruby-dev; Fedora: sudo dnf install ruby ruby-devel; Arch: sudo pacman -S ruby',
+    ruby = 'Install Ruby >= 3.0 with gem, Bundler, development headers, and a C compiler; Debian/Ubuntu: sudo apt install build-essential ruby-full ruby-dev; Fedora: sudo dnf install gcc ruby ruby-devel; Arch: sudo pacman -S base-devel ruby',
     rust = 'curl --proto =https --tlsv1.2 -sSf https://sh.rustup.rs | sh',
     scala = 'curl -fL https://github.com/coursier/launchers/raw/master/cs-x86_64-pc-linux.gz | gzip -d > cs && chmod +x cs && ./cs setup',
     sql = 'Debian/Ubuntu: sudo apt install postgresql-client; Fedora: sudo dnf install postgresql; Arch: sudo pacman -S postgresql-libs',
@@ -820,7 +820,15 @@ local function render_records(reporter, title, records, options)
     local message = detail and ('%s%s (%s)'):format(record.id, state, table.concat(detail, ', ')) or record.id .. state
     local constraints = {}
     if record.minimum_version and not record.version_supported then
-      local labels = { go = 'Go', java = 'Java', javascript = 'Node.js', python = 'Python', ruby = 'Ruby' }
+      local labels = {
+        go = 'Go',
+        haskell = 'GHC',
+        java = 'Java',
+        javascript = 'Node.js',
+        python = 'Python',
+        ruby = 'Ruby',
+        rust = 'Rust',
+      }
       local requirement = ('%s %s requires >= %s'):format(
         labels[record.id] or record.id,
         record.version or 'version unknown',
@@ -833,7 +841,7 @@ local function render_records(reporter, title, records, options)
     end
     for _, capability in ipairs(record.capabilities or {}) do
       if capability.minimum_version and not capability.supported then
-        local labels = { javac_version = 'javac' }
+        local labels = { cabal_version = 'cabal-install', cargo_version = 'cargo', javac_version = 'javac' }
         local requirement = ('%s %s requires >= %s'):format(
           labels[capability.id] or capability.id,
           capability.version or 'version unknown',
@@ -844,7 +852,7 @@ local function render_records(reporter, title, records, options)
         end
         constraints[#constraints + 1] = requirement
       elseif not capability.available then
-        local labels = { python = 'Python' }
+        local labels = { python = 'Python', ruby = 'Ruby' }
         constraints[#constraints + 1] = ('%s %s capability is unavailable'):format(
           labels[record.id] or record.id,
           capability.id
