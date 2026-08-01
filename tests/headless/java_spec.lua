@@ -14,10 +14,13 @@ end
 
 local function fixture(overrides)
   local state = {
+    cancelled_requests = {},
     events = {},
     launches = {},
+    lifecycles = {},
     notifications = {},
     requests = {},
+    timeouts = {},
   }
   local client = {
     id = 7,
@@ -34,10 +37,10 @@ local function fixture(overrides)
     },
   }
   state.client = client
-  local readable = {
-    ['/repo/out'] = { type = 'directory' },
-    ['/repo/lib/runtime.jar'] = { type = 'file' },
-    ['/repo/modules'] = { type = 'directory' },
+  local usable = {
+    ['/repo/out'] = true,
+    ['/repo/lib/runtime.jar'] = true,
+    ['/repo/modules'] = true,
   }
   local deps = {
     buf_is_valid = function(bufnr) return bufnr == 17 end,
@@ -62,6 +65,11 @@ local function fixture(overrides)
       state.events[#state.events + 1] = 'class'
       return 'demo.Current'
     end,
+    standard_main_invocation = function(bufnr, class_name)
+      h.equal(bufnr, 17)
+      h.equal(class_name, 'demo.Current')
+      return 'demo.Current.main(new String[0]);\n'
+    end,
     get_client = function(client_id, bufnr)
       h.equal(client_id, 7)
       h.equal(bufnr, 17)
@@ -79,7 +87,23 @@ local function fixture(overrides)
       }
       return true, #state.requests
     end,
-    fs_stat = function(path) return readable[path] end,
+    cancel_request = function(request_client, request_id)
+      h.equal(request_client, client)
+      state.cancelled_requests[#state.cancelled_requests + 1] = request_id
+    end,
+    start_timeout = function(timeout_ms, callback)
+      local timeout = { timeout_ms = timeout_ms, callback = callback, cancelled = false }
+      state.timeouts[#state.timeouts + 1] = timeout
+      return function() timeout.cancelled = true end
+    end,
+    watch_lifecycle = function(bufnr, client_id, callback)
+      h.equal(bufnr, 17)
+      h.equal(client_id, 7)
+      local lifecycle = { callback = callback, cancelled = false }
+      state.lifecycles[#state.lifecycles + 1] = lifecycle
+      return function() lifecycle.cancelled = true end
+    end,
+    path_usable = function(path) return usable[path] == true end,
     is_executable = function(path) return path == '/jdk/bin/jshell' end,
     exepath = function() return '' end,
     path_separator = ':',
@@ -102,6 +126,100 @@ end
 local function respond(state, index, err, result)
   local request = assert(state.requests[index], 'request ' .. index .. ' is missing')
   request.callback(err, result)
+end
+
+local function syntax_node(kind, text, children, fields, is_named)
+  local node = {
+    _children = children or {},
+    _fields = fields or {},
+    _kind = kind,
+    _named = is_named ~= false,
+    _text = text,
+  }
+  function node:type() return self._kind end
+  function node:named() return self._named end
+  function node:field(name) return self._fields[name] or {} end
+  function node:iter_children()
+    local index = 0
+    return function()
+      index = index + 1
+      return self._children[index]
+    end
+  end
+  function node:named_child_count()
+    local count = 0
+    for _, child in ipairs(self._children) do
+      if child:named() then count = count + 1 end
+    end
+    return count
+  end
+  function node:named_child(index)
+    for _, child in ipairs(self._children) do
+      if child:named() then
+        if index == 0 then return child end
+        index = index - 1
+      end
+    end
+  end
+  return node
+end
+
+local function syntax_tree_for(parameter, options)
+  options = options or {}
+  local public = syntax_node('public', 'public', {}, {}, false)
+  local static = syntax_node('static', 'static', {}, {}, false)
+  local modifier_children = {}
+  if options.method_public ~= false then modifier_children[#modifier_children + 1] = public end
+  if options.is_static ~= false then modifier_children[#modifier_children + 1] = static end
+  local modifiers = syntax_node('modifiers', 'method modifiers', modifier_children)
+  local return_type = syntax_node('void_type', 'void')
+  local method_name = syntax_node('identifier', 'main')
+  local open = syntax_node('(', '(', {}, {}, false)
+  local close = syntax_node(')', ')', {}, {}, false)
+  local parameter_children = { open }
+  if parameter then parameter_children[#parameter_children + 1] = parameter end
+  parameter_children[#parameter_children + 1] = close
+  local parameters = syntax_node('formal_parameters', parameter and '(...)' or '()', parameter_children)
+  local method = syntax_node(
+    'method_declaration',
+    'public static void main(...) {}',
+    { modifiers, return_type, method_name, parameters },
+    { name = { method_name }, parameters = { parameters }, type = { return_type } }
+  )
+  local body = syntax_node('class_body', '{...}', { method })
+  local class_name = syntax_node('identifier', 'Current')
+  local type_children = {}
+  if options.type_public ~= false then
+    local type_public = syntax_node('public', 'public', {}, {}, false)
+    type_children[#type_children + 1] = syntax_node('modifiers', 'public', { type_public })
+  end
+  type_children[#type_children + 1] = class_name
+  type_children[#type_children + 1] = body
+  local declaration = syntax_node(
+    options.declaration_kind or 'class_declaration',
+    'class Current {...}',
+    type_children,
+    { body = { body }, name = { class_name } }
+  )
+  return syntax_node('program', 'class Current {...}', { declaration })
+end
+
+local function with_syntax_tree(root, callback)
+  local previous_parser = vim.treesitter.get_parser
+  local previous_node_text = vim.treesitter.get_node_text
+  vim.treesitter.get_parser = function()
+    return {
+      parse = function()
+        return { { root = function() return root end } }
+      end,
+    }
+  end
+  vim.treesitter.get_node_text = function(node) return node._text end
+
+  local ok, err = xpcall(callback, debug.traceback)
+  vim.treesitter.get_parser = previous_parser
+  vim.treesitter.get_node_text = previous_node_text
+  if not ok then error(err, 0) end
 end
 
 h.describe('Java current-class JShell runner', function()
@@ -150,6 +268,7 @@ h.describe('Java current-class JShell runner', function()
       },
     })
     h.equal(#state.notifications, 0)
+    h.truthy(state.timeouts[1].cancelled)
   end)
 
   h.it('rejects invalid buffers before saving or building', function()
@@ -226,6 +345,39 @@ h.describe('Java current-class JShell runner', function()
     h.equal(#state.requests, 2)
   end)
 
+  h.it('times out a stalled request, cancels it, and ignores its late response', function()
+    local java = load_java()
+    local state, deps = fixture()
+
+    h.truthy(java.run_current_class { bufnr = 17, client_id = 7, deps = deps })
+    h.equal(state.timeouts[1].timeout_ms, 120000)
+    h.falsy(java.run_current_class { bufnr = 17, client_id = 7, deps = deps })
+
+    state.timeouts[1].callback()
+    h.deep_equal(state.cancelled_requests, { 1 })
+    h.matches(state.notifications[2].message, 'timed out')
+    h.truthy(java.run_current_class { bufnr = 17, client_id = 7, deps = deps })
+    h.equal(#state.requests, 2)
+
+    respond(state, 1, nil, 1)
+    h.equal(#state.requests, 2)
+  end)
+
+  h.it('releases the guard when JDTLS detaches and ignores its late response', function()
+    local java = load_java()
+    local state, deps = fixture()
+
+    h.truthy(java.run_current_class { bufnr = 17, client_id = 7, deps = deps })
+    state.lifecycles[1].callback('JDTLS detached before the run completed')
+    h.deep_equal(state.cancelled_requests, { 1 })
+    h.matches(state.notifications[1].message, 'JDTLS detached')
+    h.truthy(java.run_current_class { bufnr = 17, client_id = 7, deps = deps })
+    h.equal(#state.requests, 2)
+
+    respond(state, 1, nil, 1)
+    h.equal(#state.requests, 2)
+  end)
+
   h.it('stops when main, paths, runtime, JShell, or terminal resolution fails', function()
     local function begin(overrides)
       local java = load_java()
@@ -268,6 +420,296 @@ h.describe('Java current-class JShell runner', function()
     h.matches(terminal.notifications[1].message, 'terminal job returned -1')
   end)
 
+  h.it('rejects a classpath response with no usable runtime paths', function()
+    local java = load_java()
+    local state, deps = fixture()
+    java.run_current_class { bufnr = 17, client_id = 7, deps = deps }
+    respond(state, 1, nil, 1)
+    respond(state, 2, nil, { { mainClass = 'demo.Current', projectName = 'demo' } })
+    respond(state, 3, nil, { { '/repo/missing-module' }, { '/repo/missing.jar' } })
+    respond(state, 4, nil, '/jdk/bin/java')
+
+    h.equal(#state.launches, 0)
+    h.matches(state.notifications[1].message, 'no usable runtime paths')
+  end)
+
+  h.it('rejects ambiguous matching main classes instead of choosing a project arbitrarily', function()
+    local java = load_java()
+    local state, deps = fixture()
+    java.run_current_class { bufnr = 17, client_id = 7, deps = deps }
+    respond(state, 1, nil, 1)
+    respond(state, 2, nil, {
+      { mainClass = 'demo.Current', projectName = 'service-a' },
+      { mainClass = 'demo.module/demo.Current', projectName = 'service-b' },
+    })
+
+    h.equal(#state.requests, 2)
+    h.equal(#state.launches, 0)
+    h.matches(state.notifications[1].message, 'multiple projects contain demo.Current')
+  end)
+
+  h.it('rejects a recognized main signature that JShell cannot invoke directly', function()
+    local java = load_java()
+    local checks = 0
+    local state, deps = fixture {
+      standard_main_invocation = function(bufnr, class_name)
+        h.equal(bufnr, 17)
+        h.equal(class_name, 'demo.Current')
+        checks = checks + 1
+        return nil, 'only public static void main(String[]) or main(String...) is supported'
+      end,
+    }
+
+    java.run_current_class { bufnr = 17, client_id = 7, deps = deps }
+    respond(state, 1, nil, 1)
+    respond(state, 2, nil, { { mainClass = 'demo.Current', projectName = 'demo' } })
+
+    h.equal(checks, 1)
+    h.equal(#state.requests, 2)
+    h.equal(#state.launches, 0)
+    h.matches(state.notifications[1].message, 'only public static void main')
+  end)
+
+  h.it('validates the Java main parameter type from syntax, not the variable name', function()
+    local java = load_java()
+    local wrong_type = syntax_node('integral_type', 'int')
+    local misleading_name = syntax_node('variable_declarator', 'String')
+    local ellipsis = syntax_node('...', '...', {}, {}, false)
+    local parameter = syntax_node('spread_parameter', 'int... String', {
+      wrong_type,
+      ellipsis,
+      misleading_name,
+    })
+    local root = syntax_tree_for(parameter)
+    with_syntax_tree(root, function()
+      local state, deps = fixture()
+      deps.standard_main_invocation = nil
+      java.run_current_class { bufnr = 17, client_id = 7, deps = deps }
+      respond(state, 1, nil, 1)
+      respond(state, 2, nil, { { mainClass = 'demo.Current', projectName = 'demo' } })
+
+      h.equal(#state.requests, 2)
+      h.matches(state.notifications[1].message, 'only public static void main')
+    end)
+  end)
+
+  h.it('accepts a conventional String-array main signature from syntax', function()
+    local java = load_java()
+    local string_type = syntax_node('type_identifier', 'String')
+    local dimensions = syntax_node('dimensions', '[]')
+    local array_type = syntax_node('array_type', 'String[]', { string_type, dimensions })
+    local parameter_name = syntax_node('identifier', 'args')
+    local parameter = syntax_node(
+      'formal_parameter',
+      'String[] args',
+      { array_type, parameter_name },
+      { name = { parameter_name }, type = { array_type } }
+    )
+
+    with_syntax_tree(syntax_tree_for(parameter), function()
+      local state, deps = fixture()
+      deps.standard_main_invocation = nil
+      java.run_current_class { bufnr = 17, client_id = 7, deps = deps }
+      respond(state, 1, nil, 1)
+      respond(state, 2, nil, { { mainClass = 'demo.Current', projectName = 'demo' } })
+
+      h.equal(#state.requests, 3)
+      h.equal(#state.notifications, 0)
+    end)
+  end)
+
+  h.it('accepts Java array dimensions written after the main parameter name', function()
+    local java = load_java()
+    local string_type = syntax_node('type_identifier', 'String')
+    local parameter_name = syntax_node('identifier', 'args')
+    local dimensions = syntax_node('dimensions', '[]')
+    local parameter = syntax_node(
+      'formal_parameter',
+      'String args[]',
+      { string_type, parameter_name, dimensions },
+      { name = { parameter_name }, type = { string_type } }
+    )
+
+    with_syntax_tree(syntax_tree_for(parameter), function()
+      local state, deps = fixture()
+      deps.standard_main_invocation = nil
+      java.run_current_class { bufnr = 17, client_id = 7, deps = deps }
+      respond(state, 1, nil, 1)
+      respond(state, 2, nil, { { mainClass = 'demo.Current', projectName = 'demo' } })
+
+      h.equal(#state.requests, 3)
+      h.equal(#state.notifications, 0)
+    end)
+  end)
+
+  h.it('rejects Java flexible no-argument and instance main declarations', function()
+    local string_type = syntax_node('type_identifier', 'String')
+    local dimensions = syntax_node('dimensions', '[]')
+    local array_type = syntax_node('array_type', 'String[]', { string_type, dimensions })
+    local parameter_name = syntax_node('identifier', 'args')
+    local parameter = syntax_node(
+      'formal_parameter',
+      'String[] args',
+      { array_type, parameter_name },
+      { name = { parameter_name }, type = { array_type } }
+    )
+    local cases = {
+      { label = 'no arguments', root = syntax_tree_for(nil) },
+      { label = 'instance', root = syntax_tree_for(parameter, { is_static = false }) },
+    }
+
+    for _, case in ipairs(cases) do
+      local java = load_java()
+      with_syntax_tree(case.root, function()
+        local state, deps = fixture()
+        deps.standard_main_invocation = nil
+        java.run_current_class { bufnr = 17, client_id = 7, deps = deps }
+        respond(state, 1, nil, 1)
+        respond(state, 2, nil, { { mainClass = 'demo.Current', projectName = 'demo' } })
+
+        h.equal(#state.requests, 2, case.label)
+        h.matches(state.notifications[1].message, 'only public static void main', case.label)
+      end)
+    end
+  end)
+
+  h.it('accepts a final String varargs main parameter', function()
+    local java = load_java()
+    local final = syntax_node('final', 'final', {}, {}, false)
+    local modifiers = syntax_node('modifiers', 'final', { final })
+    local string_type = syntax_node('scoped_type_identifier', 'java.lang.String')
+    local ellipsis = syntax_node('...', '...', {}, {}, false)
+    local parameter_name = syntax_node('variable_declarator', 'args')
+    local parameter = syntax_node('spread_parameter', 'final java.lang.String... args', {
+      modifiers,
+      string_type,
+      ellipsis,
+      parameter_name,
+    })
+
+    with_syntax_tree(syntax_tree_for(parameter), function()
+      local state, deps = fixture()
+      deps.standard_main_invocation = nil
+      java.run_current_class { bufnr = 17, client_id = 7, deps = deps }
+      respond(state, 1, nil, 1)
+      respond(state, 2, nil, { { mainClass = 'demo.Current', projectName = 'demo' } })
+
+      h.equal(#state.requests, 3)
+      h.equal(#state.notifications, 0)
+    end)
+  end)
+
+  h.it('accepts an implicitly public static main on a public interface', function()
+    local java = load_java()
+    local string_type = syntax_node('type_identifier', 'String')
+    local dimensions = syntax_node('dimensions', '[]')
+    local array_type = syntax_node('array_type', 'String[]', { string_type, dimensions })
+    local parameter_name = syntax_node('identifier', 'args')
+    local parameter = syntax_node(
+      'formal_parameter',
+      'String[] args',
+      { array_type, parameter_name },
+      { name = { parameter_name }, type = { array_type } }
+    )
+    local root = syntax_tree_for(parameter, {
+      declaration_kind = 'interface_declaration',
+      method_public = false,
+    })
+
+    with_syntax_tree(root, function()
+      local state, deps = fixture()
+      deps.standard_main_invocation = nil
+      java.run_current_class { bufnr = 17, client_id = 7, deps = deps }
+      respond(state, 1, nil, 1)
+      respond(state, 2, nil, { { mainClass = 'demo.Current', projectName = 'demo' } })
+
+      h.equal(#state.requests, 3)
+      h.equal(#state.notifications, 0)
+    end)
+  end)
+
+  h.it('rejects a package-private top-level class that JShell cannot access', function()
+    local java = load_java()
+    local string_type = syntax_node('type_identifier', 'String')
+    local dimensions = syntax_node('dimensions', '[]')
+    local array_type = syntax_node('array_type', 'String[]', { string_type, dimensions })
+    local parameter_name = syntax_node('identifier', 'args')
+    local parameter = syntax_node(
+      'formal_parameter',
+      'String[] args',
+      { array_type, parameter_name },
+      { name = { parameter_name }, type = { array_type } }
+    )
+
+    with_syntax_tree(syntax_tree_for(parameter, { type_public = false }), function()
+      local state, deps = fixture()
+      deps.standard_main_invocation = nil
+      java.run_current_class { bufnr = 17, client_id = 7, deps = deps }
+      respond(state, 1, nil, 1)
+      respond(state, 2, nil, { { mainClass = 'demo.Current', projectName = 'demo' } })
+
+      h.equal(#state.requests, 2)
+      h.matches(state.notifications[1].message, 'top-level type must be public')
+    end)
+  end)
+
+  h.it('rejects a two-dimensional String main parameter split across declarators', function()
+    local java = load_java()
+    local string_type = syntax_node('type_identifier', 'String')
+    local type_dimensions = syntax_node('dimensions', '[]')
+    local array_type = syntax_node('array_type', 'String[]', { string_type, type_dimensions })
+    local parameter_name = syntax_node('identifier', 'args')
+    local declarator_dimensions = syntax_node('dimensions', '[]')
+    local parameter = syntax_node(
+      'formal_parameter',
+      'String[] args[]',
+      { array_type, parameter_name, declarator_dimensions },
+      { name = { parameter_name }, type = { array_type } }
+    )
+
+    with_syntax_tree(syntax_tree_for(parameter), function()
+      local state, deps = fixture()
+      deps.standard_main_invocation = nil
+      java.run_current_class { bufnr = 17, client_id = 7, deps = deps }
+      respond(state, 1, nil, 1)
+      respond(state, 2, nil, { { mainClass = 'demo.Current', projectName = 'demo' } })
+
+      h.equal(#state.requests, 2)
+      h.matches(state.notifications[1].message, 'only public static void main')
+    end)
+  end)
+
+  h.it('contains asynchronous callback failures and releases the run guard', function()
+    local java = load_java()
+    local state, deps = fixture {
+      path_usable = function() error 'permission probe exploded' end,
+    }
+    java.run_current_class { bufnr = 17, client_id = 7, deps = deps }
+    respond(state, 1, nil, 1)
+    respond(state, 2, nil, { { mainClass = 'demo.Current', projectName = 'demo' } })
+    respond(state, 3, nil, { {}, { '/repo/out' } })
+
+    local callback_ok, callback_error = pcall(respond, state, 4, nil, '/jdk/bin/java')
+    h.truthy(callback_ok, callback_error)
+    h.matches(state.notifications[1].message, 'callback failed')
+    h.matches(state.notifications[1].message, 'permission probe exploded')
+    h.truthy(java.run_current_class { bufnr = 17, client_id = 7, deps = deps })
+  end)
+
+  h.it('excludes runtime paths that are present but unreadable', function()
+    local java = load_java()
+    local state, deps = fixture()
+    java.run_current_class { bufnr = 17, client_id = 7, deps = deps }
+    respond(state, 1, nil, 1)
+    respond(state, 2, nil, { { mainClass = 'demo.Current', projectName = 'demo' } })
+    respond(state, 3, nil, { {}, { '/repo/out', '/repo/lib/unreadable.jar' } })
+    respond(state, 4, nil, '/jdk/bin/java')
+
+    h.deep_equal(state.launches[1].argv, {
+      '/jdk/bin/jshell', '--class-path', '/repo/out',
+    })
+  end)
+
   h.it('uses Windows separators and jshell.exe beside java.exe', function()
     local java = load_java()
     local state, deps = fixture {
@@ -304,6 +746,35 @@ h.describe('Java current-class JShell runner', function()
     respond(state, 4, nil, {
       ['org.eclipse.jdt.ls.core.vm.location'] = '/jdk',
     })
+    h.equal(state.launches[1].argv[1], '/jdk/bin/jshell')
+  end)
+
+  h.it('captures the buffer URI before asynchronous runtime fallback', function()
+    local java = load_java()
+    local deleted, uri_calls = false, 0
+    local state, deps = fixture {
+      buf_uri = function()
+        uri_calls = uri_calls + 1
+        if deleted then error 'buffer was deleted' end
+        return 'file:///repo/src/demo/Current.java'
+      end,
+    }
+    state.client.server_capabilities.executeCommandProvider.commands = {
+      'vscode.java.resolveMainClass',
+      'vscode.java.resolveClasspath',
+    }
+
+    java.run_current_class { bufnr = 17, client_id = 7, deps = deps }
+    h.equal(uri_calls, 1)
+    deleted = true
+    respond(state, 1, nil, 1)
+    respond(state, 2, nil, { { mainClass = 'demo.Current', projectName = 'demo' } })
+    respond(state, 3, nil, { {}, { '/repo/out' } })
+    respond(state, 4, nil, {
+      ['org.eclipse.jdt.ls.core.vm.location'] = '/jdk',
+    })
+
+    h.equal(uri_calls, 1)
     h.equal(state.launches[1].argv[1], '/jdk/bin/jshell')
   end)
 
