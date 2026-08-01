@@ -245,7 +245,8 @@ return {
           diagnostics_buffer = { layout = bottom(), filter = { buf = true } },
           explorer = {
             hidden = true,
-            ignored = true,
+            ignored = false,
+            follow = false,
             auto_close = true,
             layout = { preset = 'sidebar', preview = false, layout = { position = 'right', width = 60 } },
             formatters = { file = { filename_only = true }, severity = { pos = 'right' } },
@@ -269,7 +270,7 @@ return {
               },
             },
           },
-          files = { layout = bottom(), show_empty = true, hidden = true, ignored = true, follow = true },
+          files = { layout = bottom(), show_empty = true, hidden = true, ignored = false, follow = false },
           git_files = { layout = bottom(), untracked = false, submodules = false },
           grep = { layout = bottom(), regex = true, show_empty = true, live = true },
           grep_buffers = { layout = bottom(), live = true, buffers = true, need_search = false },
@@ -358,6 +359,7 @@ return {
       { '<leader>sB', function() Snacks.picker.grep_buffers() end, desc = 'Grep Open Buffers [sB]' },
       { '<leader>sw', function() Snacks.picker.grep_word() end, desc = 'Visual selection or word [sw]', mode = { 'n', 'x' } },
       { '<leader>sf', function() Snacks.picker.files() end, desc = 'Find Files [sf]' },
+      { '<leader>sF', function() Snacks.picker.files { hidden = true, ignored = true, follow = false } end, desc = 'Find All Files [sF]' },
       { '<leader>sg', function() Snacks.picker.git_files() end, desc = 'Find Git Files [sg]' },
       { '<leader>sp', function() Snacks.picker.projects() end, desc = 'Projects [sp]' },
       { '<leader>sr', function() Snacks.picker.recent() end, desc = 'Recent [sr]' },
@@ -419,7 +421,8 @@ return {
       { '<leader>lt', terminal('omm'), desc = 'TODO TUI [lt]' },
       { '<leader>lu', terminal('dua'), desc = 'Disk Usage TUI [lu]' },
       { '<leader>lv', terminal('jshell'), desc = 'JShell Terminal [lv]' },
-      { '<c-/>', terminal('zellij'), desc = 'Toggle Terminal (c-/)', mode = { 'n', 't' } },
+      { '<c-/>', function() Snacks.terminal() end, desc = 'Toggle Terminal (c-/)', mode = { 'n', 't' } },
+      { '<leader>lz', terminal('zellij'), desc = 'Zellij Terminal [lz]' },
     },
     init = function()
       vim.api.nvim_create_autocmd('User', {

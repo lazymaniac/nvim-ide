@@ -51,6 +51,62 @@ h.describe('Snacks ownership', function()
     h.equal(#mapping(snacks, '<leader>sb'), 1)
   end)
 
+  h.it('bounds default file sources and makes all-files search explicit', function()
+    local snacks = plugin(dofile 'lua/plugins/snacks.lua', 'folke/snacks.nvim')
+    local sources = snacks.opts.picker.sources
+    h.falsy(sources.files.ignored)
+    h.falsy(sources.files.follow)
+    h.falsy(sources.explorer.ignored)
+    h.falsy(sources.explorer.follow)
+
+    local all_files = mapping(snacks, '<leader>sF')
+    h.equal(#all_files, 1)
+    h.matches(all_files[1].desc, 'All Files')
+    local previous_snacks = _G.Snacks
+    local all_files_options
+    _G.Snacks = {
+      picker = {
+        files = function(opts) all_files_options = opts end,
+      },
+    }
+    local ok, err = xpcall(all_files[1][2], debug.traceback)
+    _G.Snacks = previous_snacks
+    if not ok then error(err, 0) end
+    h.deep_equal(all_files_options, { hidden = true, ignored = true, follow = false })
+  end)
+
+  h.it('keeps the ordinary shell and Zellij on separate mappings', function()
+    local previous_external = package.loaded['util.external']
+    local previous_snacks = _G.Snacks
+    local ordinary_calls, zellij_calls = 0, 0
+    package.loaded['util.external'] = {
+      terminal = function(action)
+        return function()
+          if action.id == 'zellij' then zellij_calls = zellij_calls + 1 end
+        end
+      end,
+    }
+    _G.Snacks = {
+      terminal = function() ordinary_calls = ordinary_calls + 1 end,
+    }
+
+    local ok, err = xpcall(function()
+      local snacks = plugin(dofile 'lua/plugins/snacks.lua', 'folke/snacks.nvim')
+      local shell = mapping(snacks, '<c-/>')
+      local zellij = mapping(snacks, '<leader>lz')
+      h.equal(#shell, 1)
+      h.equal(#zellij, 1)
+      shell[1][2]()
+      zellij[1][2]()
+    end, debug.traceback)
+
+    package.loaded['util.external'] = previous_external
+    _G.Snacks = previous_snacks
+    if not ok then error(err, 0) end
+    h.equal(ordinary_calls, 1)
+    h.equal(zellij_calls, 1)
+  end)
+
   h.it('keeps Gitsigns and Unified on distinct mappings', function()
     local git = git_specs()
     local unified = plugin(git, 'axkirillov/unified.nvim')
