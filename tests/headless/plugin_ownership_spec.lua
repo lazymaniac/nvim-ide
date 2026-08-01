@@ -212,4 +212,52 @@ h.describe('plugin ownership', function()
     h.falsy(plugin(flutter.dependencies or {}, 'stevearc/dressing.nvim'))
     h.truthy(flutter.config, 'Flutter setup must remain enabled')
   end)
+
+  h.it('loads MiniSurround only at its explicit stable boundary', function()
+    local surround = plugin(dofile 'lua/plugins/coding.lua', 'nvim-mini/mini.surround')
+    h.truthy(surround, 'MiniSurround is missing')
+    h.equal(surround.version, '*')
+    h.equal(surround.event, 'VeryLazy')
+  end)
+
+  h.it('lazy-loads Diffview+ through its standard command API', function()
+    local diffview = with_util_stub(function()
+      return plugin(dofile 'lua/plugins/git.lua', 'dlyongemallo/diffview-plus.nvim')
+    end)
+    h.truthy(diffview, 'Diffview+ is missing')
+    h.equal(diffview.version, '*')
+    h.equal(diffview.main, 'diffview')
+    h.deep_equal(diffview.cmd, {
+      'DiffviewOpen',
+      'DiffviewFileHistory',
+      'DiffviewClose',
+      'DiffviewToggleFiles',
+      'DiffviewFocusFiles',
+      'DiffviewRefresh',
+    })
+  end)
+
+  h.it('keeps Just recipes reachable through Overseer builtins', function()
+    local overseer = plugin(dofile 'lua/plugins/async-tasks.lua', 'stevearc/overseer.nvim')
+    h.truthy(overseer, 'Overseer is missing')
+
+    local run
+    for _, key in ipairs(overseer.keys or {}) do
+      if key[1] == '<leader>rr' then
+        run = key
+        break
+      end
+    end
+    h.truthy(run, 'OverseerRun mapping is missing')
+    h.equal(run[2], '<cmd>OverseerRun<cr>')
+
+    local previous = package.loaded.overseer
+    local configured
+    package.loaded.overseer = { setup = function(opts) configured = opts end }
+    local ok, err = xpcall(overseer.config, debug.traceback)
+    package.loaded.overseer = previous
+    if not ok then error(err, 0) end
+
+    h.deep_equal(configured.templates, { 'builtin', 'user' })
+  end)
 end)

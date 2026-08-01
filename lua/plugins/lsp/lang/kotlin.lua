@@ -6,6 +6,13 @@ return {
       setup = {
         kotlin_debug_adapter = function()
           local dap = require 'dap'
+          local markers = {
+            'settings.gradle', 'settings.gradle.kts', 'build.gradle', 'build.gradle.kts',
+            'gradlew', 'mvnw', 'pom.xml', '.git',
+          }
+          local function project_root()
+            return require('nv_ide.project').root(0, markers)
+          end
 
           dap.adapters.kotlin = {
             type = 'executable',
@@ -19,7 +26,7 @@ return {
               type = 'kotlin',
               name = 'launch - kotlin',
               request = 'launch',
-              projectRoot = vim.fn.getcwd() .. '/app',
+              projectRoot = project_root,
               mainClass = function()
                 return vim.fn.input('Path to main class > ', '', 'file')
               end,
@@ -28,9 +35,9 @@ return {
               type = 'kotlin',
               name = 'attach - kotlin',
               request = 'attach',
-              projectRoot = vim.fn.getcwd() .. '/app',
-              hostName = 'localhost',
-              port = 5005,
+              projectRoot = project_root,
+              hostName = function() return vim.fn.input('Kotlin debug host: ', 'localhost') end,
+              port = function() return tonumber(vim.fn.input('Kotlin debug port: ', '5005')) end,
               timeout = 1000,
             },
           }

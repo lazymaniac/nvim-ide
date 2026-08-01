@@ -67,6 +67,27 @@ return {
     },
   },
 
+  -- [mini.surround] - Add, delete, and replace surrounding characters.
+  -- see: `:h MiniSurround`
+  -- link: https://github.com/nvim-mini/mini.surround
+  {
+    'nvim-mini/mini.surround',
+    version = '*',
+    event = 'VeryLazy',
+    opts = {
+      mappings = {
+        add = 'ys',
+        delete = 'ds',
+        find = '',
+        find_left = '',
+        highlight = '',
+        replace = 'cs',
+        suffix_last = '',
+        suffix_next = '',
+      },
+    },
+  },
+
   -- [csvview.nvim] - CSV/TSV file viewer with syntax highlighting and navigation.
   -- see: `:h csvview.nvim`
   -- link: https://github.com/hat0uma/csvview.nvim

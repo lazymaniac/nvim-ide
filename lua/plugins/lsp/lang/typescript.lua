@@ -106,50 +106,70 @@ return {
       setup = {
         vtsls = function(_, opts)
           require('util').lsp.on_attach(function(client, buffer)
-            client.commands['_typescript.moveToFileRefactoring'] = function(command, ctx)
-              ---@type string, string, lsp.Range
-              local action, uri, range = unpack(command.arguments)
-
+            local function warn(message)
+              vim.notify('TypeScript move-to-file: ' .. tostring(message), vim.log.levels.WARN)
+            end
+            client.commands['_typescript.moveToFileRefactoring'] = function(command)
+              local args = type(command) == 'table' and command.arguments
+              local action, uri, range
+              if type(args) == 'table' then action, uri, range = unpack(args) end
+              local function valid_string(value) return type(value) == 'string' and value ~= '' end
+              local function valid_position(position)
+                return type(position) == 'table'
+                  and type(position.line) == 'number' and position.line >= 0
+                  and type(position.character) == 'number' and position.character >= 0
+              end
+              local valid_range = type(range) == 'table'
+                and valid_position(range.start) and valid_position(range['end'])
+              if type(command) ~= 'table' or not valid_string(command.command)
+                or not valid_string(action) or not valid_string(uri) or not valid_range
+              then
+                warn 'invalid command arguments'
+                return
+              end
               local function move(newf)
                 client:request('workspace/executeCommand', {
                   command = command.command,
                   arguments = { action, uri, range, newf },
-                })
+                }, function(err)
+                  if err then warn(err.message or tostring(err)) end
+                end)
               end
-
-              local fname = vim.uri_to_fname(uri)
+              local converted, fname = pcall(vim.uri_to_fname, uri)
+              if not converted then warn('invalid document URI: ' .. tostring(fname)); return end
               client:request('workspace/executeCommand', {
                 command = 'typescript.tsserverRequest',
-                arguments = {
-                  'getMoveToRefactoringFileSuggestions',
-                  {
-                    file = fname,
-                    startLine = range.start.line + 1,
-                    startOffset = range.start.character + 1,
-                    endLine = range['end'].line + 1,
-                    endOffset = range['end'].character + 1,
-                  },
-                },
-              }, function(_, result)
-                ---@type string[]
-                local files = result.body.files
+                arguments = { 'getMoveToRefactoringFileSuggestions', {
+                  file = fname,
+                  startLine = range.start.line + 1, startOffset = range.start.character + 1,
+                  endLine = range['end'].line + 1, endOffset = range['end'].character + 1,
+                } },
+              }, function(err, result)
+                if err then warn(err.message or tostring(err)); return end
+                local files = result and result.body and result.body.files
+                local valid_files = vim.islist(files) and #files > 0
+                if valid_files then
+                  for _, file in ipairs(files) do
+                    if type(file) ~= 'string' or file == '' then valid_files = false; break end
+                  end
+                end
+                if not valid_files then warn 'server returned no destinations'; return end
+                files = vim.deepcopy(files)
                 table.insert(files, 1, 'Enter new path...')
                 vim.ui.select(files, {
                   prompt = 'Select move destination:',
-                  format_item = function(f)
-                    return vim.fn.fnamemodify(f, ':~:.')
-                  end,
-                }, function(f)
-                  if f and f:find '^Enter new path' then
+                  format_item = function(file) return vim.fn.fnamemodify(file, ':~:.') end,
+                }, function(file)
+                  if file and file:find('^Enter new path') then
                     vim.ui.input({
                       prompt = 'Enter move destination:',
                       default = vim.fn.fnamemodify(fname, ':h') .. '/',
                       completion = 'file',
                     }, function(newf)
-                      return newf and move(newf)
+                      if type(newf) == 'string' and newf ~= '' then move(newf) end
                     end)
-                  elseif f then
-                    move(f)
+                  elseif file then
+                    move(file)
                   end
                 end)
               end)
@@ -197,193 +217,102 @@ return {
       vscode.type_to_filetypes['node'] = js_filetypes
       vscode.type_to_filetypes['pwa-node'] = js_filetypes
 
+      local generic = {
+        { type = 'pwa-node', request = 'launch', name = 'Launch file', program = '${file}', cwd = '${workspaceFolder}' },
+        {
+          type = 'pwa-node', request = 'attach', name = 'Attach to Node process',
+          processId = require('dap.utils').pick_process, cwd = '${workspaceFolder}',
+        },
+      }
       for _, language in ipairs(js_filetypes) do
-        dap.configurations[language] = {
-          {
-            type = 'pwa-node',
-            request = 'launch',
-            name = 'Launch file',
-            program = '${file}',
-            cwd = '${workspaceFolder}',
-          },
-          {
-            type = 'pwa-node',
-            request = 'attach',
-            name = 'Attach to Node process',
-            processId = require('dap.utils').pick_process,
-            cwd = '${workspaceFolder}',
-          },
-          {
-            type = 'pwa-node',
-            request = 'launch',
-            name = 'Mocha All',
-            program = '${workspaceFolder}/node_modules/mocha/bin/_mocha',
-            args = {
-              '--timeout',
-              '999999',
-              '--colors',
-              '${workspaceFolder}/test',
-            },
-            console = 'integratedTerminal',
-            internalConsoleOptions = 'neverOpen',
-            skipFiles = {
-              '<node_internals>/**',
-              '${workspaceFolder}/node_modules/**',
-            },
-          },
-          {
-            type = 'pwa-node',
-            request = 'launch',
-            name = 'Mocha Current File',
-            program = '${workspaceFolder}/node_modules/mocha/bin/_mocha',
-            args = {
-              '--timeout',
-              '999999',
-              '--colors',
-              '${file}',
-            },
-            console = 'integratedTerminal',
-            internalConsoleOptions = 'neverOpen',
-            skipFiles = {
-              '<node_internals>/**',
-              '${workspaceFolder}/node_modules/**',
-            },
-          },
-          {
-            type = 'pwa-node',
-            request = 'launch',
-            name = 'Jest Current File',
-            program = '${workspaceFolder}/node_modules/.bin/jest',
-            args = {
-              '--runInBand',
-              '${relativeFile}',
-              '--config',
-              'jest.config.js',
-            },
-            rootPath = '${workspaceFolder}',
-            cwd = '${workspaceFolder}',
-            console = 'integratedTerminal',
-            internalConsoleOptions = 'neverOpen',
-          },
-          {
-            type = 'pwa-node',
-            request = 'launch',
-            name = 'Jest All',
-            program = '${workspaceFolder}/node_modules/.bin/jest',
-            args = {
-              '--runInBand',
-            },
-            console = 'integratedTerminal',
-            internalConsoleOptions = 'neverOpen',
-          },
-          {
-            type = 'pwa-node',
-            request = 'launch',
-            name = 'Karma All Tests',
-            program = '${workspaceFolder}/node_modules/karma/bin/karma',
-            args = {
-              'start',
-              -- '${workspaceFolder}/karma.conf.js',
-              -- '--single-run',
-              '--browsers',
-              'ChromeHeadless',
-            },
-            cwd = '${workspaceFolder}',
-            console = 'integratedTerminal',
-            internalConsoleOptions = 'neverOpen',
-            skipFiles = {
-              '<node_internals>/**',
-              '${workspaceFolder}/node_modules/**',
-            },
-          },
-          {
-            type = 'pwa-node',
-            request = 'launch',
-            name = 'Karma Current File',
-            program = '${workspaceFolder}/node_modules/karma/bin/karma',
-            args = {
-              'start',
-              -- '${workspaceFolder}/karma.conf.js',
-              -- '--single-run',
-              '--browsers',
-              'ChromeHeadless',
-              '--grep',
-              '${file}',
-            },
-            cwd = '${workspaceFolder}',
-            console = 'integratedTerminal',
-            internalConsoleOptions = 'neverOpen',
-            skipFiles = {
-              '<node_internals>/**',
-              '${workspaceFolder}/node_modules/**',
-            },
-          },
-          {
-            type = 'pwa-node',
-            request = 'launch',
-            name = 'Jasmine All Tests',
-            program = '${workspaceFolder}/node_modules/.bin/jasmine',
-            args = {
-              -- '--config=spec/support/jasmine.json', -- Path to Jasmine configuration file
-            },
-            cwd = '${workspaceFolder}',
-            console = 'integratedTerminal',
-            internalConsoleOptions = 'neverOpen',
-            skipFiles = {
-              '<node_internals>/**',
-              '${workspaceFolder}/node_modules/**',
-            },
-          },
-          {
-            type = 'pwa-node',
-            request = 'launch',
-            name = 'Jasmine Current File',
-            program = '${workspaceFolder}/node_modules/.bin/jasmine',
-            args = {
-              '${file}', -- Run the currently open file
-              -- '--config=spec/support/jasmine.json', -- Path to Jasmine configuration file
-            },
-            cwd = '${workspaceFolder}',
-            console = 'integratedTerminal',
-            internalConsoleOptions = 'neverOpen',
-            skipFiles = {
-              '<node_internals>/**',
-              '${workspaceFolder}/node_modules/**',
-            },
-          },
-          {
-            type = 'pwa-node',
-            request = 'launch',
-            name = 'Debug npm test (alternative)',
-            program = 'npm',
-            args = {
-              'test',
-            },
-            cwd = '${workspaceFolder}',
-            console = 'integratedTerminal',
-            internalConsoleOptions = 'neverOpen',
-            skipFiles = {
-              '<node_internals>/**',
-              '${workspaceFolder}/node_modules/**',
-            },
-          },
-          {
-            type = 'pwa-node',
-            request = 'launch',
-            name = 'Debug npm test',
-            runtimeExecutable = 'npm',
-            runtimeArgs = {
-              'test',
-            },
-            cwd = '${workspaceFolder}',
-            console = 'integratedTerminal',
-            internalConsoleOptions = 'neverOpen',
-            skipFiles = {
-              '<node_internals>/**',
-              '${workspaceFolder}/node_modules/**',
-            },
-          },
-        }
+        dap.configurations[language] = vim.deepcopy(generic)
+      end
+
+      local default_launch_provider = dap.providers.configs['dap.launch.json']
+      dap.providers.configs['dap.launch.json'] = function(bufnr)
+        if not vim.tbl_contains(js_filetypes, vim.bo[bufnr].filetype) then
+          return default_launch_provider and default_launch_provider(bufnr) or {}
+        end
+        local context = require('nv_ide.project').javascript(bufnr)
+        if not context.launch_json then return {} end
+        local ok, configs = pcall(require('dap.ext.vscode').getconfigs, context.launch_json)
+        if not ok then
+          vim.notify('JavaScript launch.json: ' .. tostring(configs), vim.log.levels.WARN)
+          return {}
+        end
+        return vim.tbl_filter(function(config)
+          return config.type == 'node' or config.type == 'pwa-node'
+        end, configs or {})
+      end
+
+      local package_exec_args = {
+        npm = { 'exec', '--' },
+        pnpm = { 'exec' },
+        yarn = { 'exec' },
+        bun = { 'x' },
+      }
+
+      local function framework_command(context, name)
+        local executable = context.executables[name]
+        if executable then return { program = executable } end
+        local prefix = context.package_manager and package_exec_args[context.package_manager]
+        if not context.configs[name] or not prefix then return nil end
+        local runtime_args = vim.deepcopy(prefix)
+        runtime_args[#runtime_args + 1] = name
+        return { runtimeExecutable = context.package_manager, runtimeArgs = runtime_args }
+      end
+
+      local function configured_args(context, name, args, flag)
+        args = vim.deepcopy(args)
+        local config = context.configs[name]
+        if config and flag then
+          args[#args + 1] = flag
+          args[#args + 1] = config
+        end
+        return args
+      end
+
+      local function add_framework(configs, context, name, config)
+        local command = framework_command(context, name)
+        if command then
+          configs[#configs + 1] = vim.tbl_deep_extend('force', config, command)
+        end
+      end
+
+      dap.providers.configs.nv_ide_javascript = function(bufnr)
+        if not vim.tbl_contains(js_filetypes, vim.bo[bufnr].filetype) then return {} end
+        local context = require('nv_ide.project').javascript(bufnr)
+        if not context.root then return {} end
+        local configs = {}
+
+        add_framework(configs, context, 'jest', {
+          type = 'pwa-node', request = 'launch', name = 'Jest Current File',
+          args = configured_args(context, 'jest', { '--runInBand', '${relativeFile}' }, '--config'),
+          cwd = context.root, console = 'integratedTerminal', internalConsoleOptions = 'neverOpen',
+        })
+        add_framework(configs, context, 'mocha', {
+          type = 'pwa-node', request = 'launch', name = 'Mocha Current File',
+          args = configured_args(context, 'mocha', { '--timeout', '999999', '--colors', '${file}' }, '--config'),
+          cwd = context.root, console = 'integratedTerminal', internalConsoleOptions = 'neverOpen',
+        })
+        local karma_args = { 'start' }
+        if context.configs.karma then karma_args[#karma_args + 1] = context.configs.karma end
+        vim.list_extend(karma_args, { '--browsers', 'ChromeHeadless' })
+        add_framework(configs, context, 'karma', {
+          type = 'pwa-node', request = 'launch', name = 'Karma All Tests',
+          args = karma_args,
+          cwd = context.root, console = 'integratedTerminal', internalConsoleOptions = 'neverOpen',
+        })
+        local jasmine_args = { '${file}' }
+        if context.configs.jasmine then
+          jasmine_args[#jasmine_args + 1] = '--config=' .. context.configs.jasmine
+        end
+        add_framework(configs, context, 'jasmine', {
+          type = 'pwa-node', request = 'launch', name = 'Jasmine Current File',
+          args = jasmine_args,
+          cwd = context.root, console = 'integratedTerminal', internalConsoleOptions = 'neverOpen',
+        })
+        return configs
       end
     end,
   },

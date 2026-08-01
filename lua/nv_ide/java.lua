@@ -17,21 +17,6 @@ local function runtime_name(contents)
   return major and ('JavaSE-' .. major) or nil
 end
 
-local function default_macos_java_home()
-  if vim.fn.executable('/usr/libexec/java_home') ~= 1 then return nil end
-  local result = vim.system({ '/usr/libexec/java_home' }, { text = true }):wait()
-  if result.code ~= 0 then return nil end
-  return nonempty(vim.trim(result.stdout or ''))
-end
-
-local function default_asdf_java_home(exepath)
-  local asdf = nonempty(exepath('asdf'))
-  if not asdf then return nil end
-  local result = vim.system({ asdf, 'where', 'java' }, { text = true }):wait()
-  if result.code ~= 0 then return nil end
-  return nonempty(vim.trim(result.stdout or ''))
-end
-
 function M.discover(options)
   options = options or {}
   local env = options.env or vim.env
@@ -42,8 +27,42 @@ function M.discover(options)
   local glob = options.glob or function(path) return vim.fn.glob(path, false, true) end
   local is_executable = options.is_executable or function(path) return vim.fn.executable(path) == 1 end
   local os_name = options.os or vim.uv.os_uname().sysname
-  local macos_java_home = options.macos_java_home or default_macos_java_home
-  local asdf_java_home = options.asdf_java_home or function() return default_asdf_java_home(exepath) end
+  local probe_timeout_ms = options.probe_timeout_ms or 2000
+  local system = options.system or vim.system
+  local command_executable = options.command_executable or function(path) return vim.fn.executable(path) == 1 end
+  local errors = {}
+
+  local function probe(argv, label)
+    if not command_executable(argv[1]) then return nil end
+    local spawned, process = pcall(system, argv, { text = true })
+    if not spawned then
+      errors[#errors + 1] = ('%s failed to start: %s'):format(label, tostring(process))
+      return nil
+    end
+    local waited, result = pcall(function() return process:wait(probe_timeout_ms) end)
+    if not waited then
+      errors[#errors + 1] = ('%s failed while waiting: %s'):format(label, tostring(result))
+      return nil
+    end
+    if result.code == 124 then
+      errors[#errors + 1] = ('%s timed out after %d ms'):format(label, probe_timeout_ms)
+      return nil
+    end
+    if result.code ~= 0 then
+      local stderr = vim.trim(result.stderr or '')
+      errors[#errors + 1] = ('%s exited %d%s'):format(label, result.code, stderr ~= '' and ': ' .. stderr or '')
+      return nil
+    end
+    return nonempty(vim.trim(result.stdout or ''))
+  end
+
+  local macos_java_home = options.macos_java_home or function()
+    return probe({ '/usr/libexec/java_home' }, 'macOS java_home')
+  end
+  local asdf_java_home = options.asdf_java_home or function()
+    local asdf = nonempty(exepath('asdf'))
+    return asdf and probe({ asdf, 'where', 'java' }, 'asdf where java') or nil
+  end
 
   local homes = {}
   local seen = {}
@@ -97,6 +116,26 @@ function M.discover(options)
     lombok = vim.fs.joinpath(mason, 'share', 'jdtls', 'lombok.jar'),
     formatter = vim.fs.joinpath(stdpath('config'), 'java-formatter.xml'),
     runtimes = runtimes,
+    errors = errors,
+  }
+end
+
+function M.workspace_id(root, deps)
+  if not root then return nil end
+  deps = deps or {}
+  local realpath = deps.realpath or vim.uv.fs_realpath
+  local abspath = deps.abspath or vim.fs.abspath
+  local absolute = abspath(root)
+  local normalized = vim.fs.normalize(realpath(absolute) or absolute)
+  local name = vim.fs.basename(normalized):gsub('[^%w_.-]', '_')
+  return ('%s-%s'):format(name, vim.fn.sha256(normalized):sub(1, 12))
+end
+
+function M.bundle_patterns(mason)
+  return {
+    vim.fs.joinpath(mason, 'share', 'java-debug-adapter', 'com.microsoft.java.debug.plugin-*.jar'),
+    vim.fs.joinpath(mason, 'share', 'vscode-java-decompiler', 'bundles', '*.jar'),
+    vim.fs.joinpath(mason, 'share', 'java-test', '*.jar'),
   }
 end
 

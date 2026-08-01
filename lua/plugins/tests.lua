@@ -65,13 +65,8 @@ return {
       { '<leader>tc', function() require('neotest').output_panel.clear() end, desc = 'Clear Output Panel [tc]', },
       { "<leader>tw", function() require("neotest").watch.toggle(vim.fn.expand("%")) end, desc = "Toggle Watch [tw]" },
     },
-    config = function()
-      local wk = require 'which-key'
-      local defaults = {
-        { '<leader>t', group = '+[test]' },
-      }
-      wk.add(defaults)
-      local opts = {
+    opts = function()
+      return {
         adapters = {
           ['neotest-java'] = { ignore_wrapper = false },
           ['rustaceanvim.neotest'] = {},
@@ -81,7 +76,9 @@ return {
             dap = { justMyCode = false },
             args = { '--log-level', 'DEBUG' },
             runner = 'pytest',
-            python = '.venv/bin/python',
+            python = function(root)
+              return require('util.dap').resolve_python { cwd = root }
+            end,
             pytest_discover_instances = true,
           },
           ['neotest-playwright'] = {
@@ -100,11 +97,15 @@ return {
             end,
           },
           ['neotest-jest'] = {
-            jestCommand = 'npm test --',
-            jestConfigFile = 'custom.jest.config.ts',
+            jestCommand = function(path)
+              return require('nv_ide.project').javascript(path).executables.jest or 'jest'
+            end,
+            jestConfigFile = function(path)
+              return require('nv_ide.project').javascript(path).configs.jest or ''
+            end,
             env = { CI = true },
             cwd = function(path)
-              return vim.fn.getcwd()
+              return require('nv_ide.project').javascript(path).root
             end,
           },
           ['neotest-vitest'] = {
@@ -208,6 +209,13 @@ return {
           enabled = true,
         },
       }
+    end,
+    config = function(_, opts)
+      local wk = require 'which-key'
+      local defaults = {
+        { '<leader>t', group = '+[test]' },
+      }
+      wk.add(defaults)
       local neotest_ns = vim.api.nvim_create_namespace 'neotest'
       vim.diagnostic.config({
         virtual_text = {

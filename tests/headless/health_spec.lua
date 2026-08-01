@@ -48,6 +48,7 @@ local function complete_probe(options)
       calls.version[id] = (calls.version[id] or 0) + 1
       local versions = options.versions or {}
       local version = versions[id]
+        or id == 'git' and '2.50.1'
         or id == 'go' and '1.26.0'
         or id == 'javascript' and '24.15.0'
         or id == 'python' and '3.13.11'
@@ -166,6 +167,26 @@ h.describe('nv_ide health collection', function()
     h.deep_equal(by_id.ripgrep.executables, { 'rg' })
     h.deep_equal(by_id.ruby_package_manager.executables, { 'gem' })
     h.deep_equal(by_id.tree_sitter_cli.executables, { 'tree-sitter' })
+  end)
+
+  h.it('requires Diffview-compatible Git and reports optional Just and Delta', function()
+    local health = require 'nv_ide.health'
+    local probe = complete_probe {
+      versions = { git = '2.30.9' },
+      unsupported_versions = { git = true },
+      unavailable = { just = true, delta = true },
+    }
+    local report = health.collect(probe)
+    local git = find(report.prerequisites, 'git')
+    local just = find(report.prerequisites, 'just')
+    local delta = find(report.prerequisites, 'delta')
+
+    h.falsy(git.available)
+    h.equal(git.minimum_version, '2.31.0')
+    h.falsy(just.required)
+    h.falsy(just.available)
+    h.falsy(delta.required)
+    h.falsy(delta.available)
   end)
 
   h.it('requires installer-compatible Go, Node, and Python runtimes plus Python venv support', function()
@@ -813,5 +834,25 @@ h.describe('nv_ide health collection', function()
     h.matches(output, 'Python 3.14.0 requires >= 3.10.0 and < 3.14.0')
     h.matches(output, 'Python venv capability is unavailable')
     h.matches(output, 'python3 -m venv')
+  end)
+
+  h.it('renders Git, Just, and Delta remediation exactly', function()
+    local health = require 'nv_ide.health'
+    local probe = complete_probe {
+      os = 'Darwin',
+      versions = { git = '2.30.9' },
+      unsupported_versions = { git = true },
+      unavailable = { just = true, delta = true },
+    }
+    local messages, reporter = {}, {}
+    for _, level in ipairs { 'start', 'ok', 'info', 'warn', 'error' } do
+      reporter[level] = function(message) messages[#messages + 1] = tostring(message) end
+    end
+
+    health.check(probe, reporter)
+    local output = table.concat(messages, '\n')
+    h.matches(output, 'Git 2.30.9 requires >= 2.31.0')
+    h.matches(output, 'brew install git-delta')
+    h.matches(output, 'brew install just')
   end)
 end)

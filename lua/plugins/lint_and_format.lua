@@ -12,12 +12,6 @@ return {
     config = function()
       local lint = require 'lint'
 
-      local function available(names)
-        return vim.tbl_filter(function(name)
-          return vim.fn.executable(name) == 1
-        end, names)
-      end
-
       lint.linters.kube_linter = {
         cmd = 'kube-linter',
         args = { 'lint', '--format', 'plain' },
@@ -52,24 +46,43 @@ return {
         haskell = { 'hlint' },
         helm = { 'kube_linter' },
         html = { 'htmlhint' },
-        java = { 'trivy' },
         kotlin = { 'ktlint', 'detekt' },
+        javascript = { 'eslint_d' },
+        javascriptreact = { 'eslint_d' },
         markdown = { 'markdownlint' },
-        python = available { 'ruff', 'pylint', 'flake8', 'mypy' },
-        ruby = { 'erb_lint', 'rubocop', 'trivy' },
-        terraform = { 'tfsec', 'trivy' },
-        tf = { 'tfsec', 'trivy' },
-        typescript = { 'eslint_d', 'trivy' },
-        yaml = { 'yamllint', 'actionlint' },
+        python = { 'ruff' },
+        ruby = { 'erb_lint', 'rubocop' },
+        typescript = { 'eslint_d' },
+        typescriptreact = { 'eslint_d' },
+        yaml = { 'yamllint' },
         -- Use the "*" filetype to run linters on all filetypes.
         -- ['*'] = { 'typos' },
         -- Use the "_" filetype to run linters on filetypes that don't have other linters configured.
         -- ['_'] = { 'fallback linter' },
       }
-      vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufEnter' }, {
-        callback = function()
-          lint.linters_by_ft.python = available { 'ruff', 'pylint', 'flake8', 'mypy' }
-          lint.try_lint()
+      lint.linters.eslint_d.env = vim.tbl_extend('force', lint.linters.eslint_d.env or {}, {
+        ESLINT_D_MISS = 'fail',
+      })
+
+      local project = require 'nv_ide.project'
+      local group = vim.api.nvim_create_augroup('nvide_lint', { clear = true })
+      vim.api.nvim_create_autocmd('BufWritePost', {
+        group = group,
+        callback = function(event)
+          local path = vim.api.nvim_buf_get_name(event.buf)
+          local root = project.root(path)
+          if not root or not project.trusted(root) then return end
+          local names = vim.deepcopy(lint.linters_by_ft[vim.bo[event.buf].filetype] or {})
+          if vim.bo[event.buf].filetype == 'yaml'
+            and project.contains(vim.fs.joinpath(root, '.github', 'workflows'), path)
+          then
+            names[#names + 1] = 'actionlint'
+          end
+          if #names > 0 then
+            vim.api.nvim_buf_call(event.buf, function()
+              lint.try_lint(names, { cwd = root })
+            end)
+          end
         end,
       })
     end,
@@ -82,20 +95,21 @@ return {
     'https://gitlab.com/schrieveslaach/sonarlint.nvim',
     ft = { 'java', 'javascript', 'typescript', 'c', 'go', 'kubernetes', 'css', 'docker', 'xml', 'html', 'python' },
     config = function()
+      local mason = require('util').mason_root()
       require('sonarlint').setup {
         server = {
           cmd = {
             'sonarlint-language-server',
             '-stdio',
             '-analyzers',
-            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonarjava.jar',
-            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonarjs.jar',
-            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonarxml.jar',
-            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonargo.jar',
-            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonarhtml.jar',
-            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonariac.jar',
-            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonarjavasymbolicexecution.jar',
-            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonarpython.jar',
+            vim.fs.joinpath(mason, 'share', 'sonarlint-analyzers', 'sonarjava.jar'),
+            vim.fs.joinpath(mason, 'share', 'sonarlint-analyzers', 'sonarjs.jar'),
+            vim.fs.joinpath(mason, 'share', 'sonarlint-analyzers', 'sonarxml.jar'),
+            vim.fs.joinpath(mason, 'share', 'sonarlint-analyzers', 'sonargo.jar'),
+            vim.fs.joinpath(mason, 'share', 'sonarlint-analyzers', 'sonarhtml.jar'),
+            vim.fs.joinpath(mason, 'share', 'sonarlint-analyzers', 'sonariac.jar'),
+            vim.fs.joinpath(mason, 'share', 'sonarlint-analyzers', 'sonarjavasymbolicexecution.jar'),
+            vim.fs.joinpath(mason, 'share', 'sonarlint-analyzers', 'sonarpython.jar'),
           },
         },
         filetypes = {
@@ -134,26 +148,34 @@ return {
         -- Map of filetype to formatters
         formatters_by_ft = {
           lua = { 'stylua' },
-          bash = { 'beautysh', 'shellharden' },
+          bash = { 'beautysh', 'shellharden', stop_after_first = true },
+          sh = { 'beautysh', 'shellharden', stop_after_first = true },
           css = { 'prettierd' },
           flow = { 'prettierd' },
           graphql = { 'prettierd' },
           html = { 'prettierd' },
           python = { 'black', 'docformatter' },
-          angular = { 'djlint', 'prettierd' },
+          angular = { 'djlint', 'prettierd', stop_after_first = true },
           ruby = { 'rubocop' },
           go = { 'goimports', 'gofumpt' },
-          json = { 'jq', 'prettierd' },
+          json = { 'jq', 'prettierd', stop_after_first = true },
+          jsonc = { 'prettierd' },
           javascript = { 'prettierd' },
+          javascriptreact = { 'prettierd' },
           less = { 'prettierd' },
           scss = { 'prettierd' },
-          sql = { 'sqlfmt', 'sqruff' },
+          sql = { 'sqlfmt', 'sqruff', stop_after_first = true },
           typescript = { 'prettierd' },
+          typescriptreact = { 'prettierd' },
           vue = { 'prettierd' },
+          svelte = { 'prettierd' },
           kotlin = { 'ktlint' },
           markdown = { 'prettierd', 'markdownlint', 'markdown-toc' },
           yaml = { 'prettierd' },
           rust = { 'rustfmt' },
+          eruby = { 'erb_format' },
+          cmake = { 'cmake_format' },
+          xml = { 'xmlformatter' },
           -- Conform will run multiple formatters sequentially
           -- go = { 'goimports', 'gofmt' },
           -- Use a sub-list to run only the first available formatter
@@ -164,10 +186,12 @@ return {
           -- Use the "_" filetype to run formatters on filetypes that don't
           -- have other formatters configured.
         },
-        format_on_save = nil,
+        format_on_save = require('util').format.format_on_save,
         format_after_save = nil,
         notify_on_error = true,
-        formatters = {},
+        formatters = {
+          prettierd = { env = { PRETTIERD_LOCAL_PRETTIER_ONLY = '1' } },
+        },
       }
     end,
   },

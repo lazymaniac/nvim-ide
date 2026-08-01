@@ -1,6 +1,5 @@
 local java_filetypes = { 'java' }
 local root_markers = { 'gradlew', 'mvnw', 'gradle', 'mvn', '.git' }
-local java_paths = require('nv_ide.java').discover()
 
 local function extend_or_override(config, custom, ...)
   if type(custom) == 'function' then
@@ -11,7 +10,8 @@ local function extend_or_override(config, custom, ...)
   return config
 end
 
-local jdtls_settings = {
+local function java_settings(paths)
+  return {
   redhat = {
     telemetry = {
       enabled = false,
@@ -26,12 +26,12 @@ local jdtls_settings = {
         notCoveredPluginExecutionSeverity = 'warning',
         defaultMojoExecutionAction = 'ignore',
       },
-      runtimes = java_paths.runtimes,
+      runtimes = paths.runtimes,
       updateBuildConfiguration = 'interactive',
     },
     jdt = {
       ls = {
-        vmargs = '-javaagent:' .. java_paths.lombok .. ' -XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx4G -Xms100m -Xlog:enable',
+        vmargs = '-javaagent:' .. paths.lombok .. ' -XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx4G -Xms100m -Xlog:enable',
         protobufSupport = {
           enabled = true,
         },
@@ -188,7 +188,7 @@ local jdtls_settings = {
         enabled = true,
       },
       settings = {
-        url = java_paths.formatter,
+        url = paths.formatter,
       },
     },
     implementationsCodeLens = {
@@ -288,7 +288,8 @@ local jdtls_settings = {
       },
     },
   },
-}
+  }
+end
 
 return {
 
@@ -301,28 +302,32 @@ return {
     ft = java_filetypes,
     dependencies = { 'folke/which-key.nvim' },
     opts = function()
+      local paths = require('nv_ide.java').discover()
+      for _, message in ipairs(paths.errors or {}) do
+        vim.notify('Java discovery: ' .. message, vim.log.levels.WARN)
+      end
       return {
+        paths = paths,
+        settings = java_settings(paths),
         root_dir = require('jdtls.setup').find_root,
         project_name = function(root_dir)
-          return root_dir and vim.fs.basename(root_dir)
+          return require('nv_ide.java').workspace_id(root_dir)
         end,
         jdtls_config_dir = function(project_name)
-          return vim.fn.stdpath 'cache' .. '/jdtls/' .. project_name .. '/config'
+          return vim.fs.joinpath(vim.fn.stdpath('cache'), 'jdtls', project_name, 'config')
         end,
         jdtls_workspace_dir = function(project_name)
-          return vim.fn.stdpath 'cache' .. '/jdtls/' .. project_name .. '/workspace'
+          return vim.fs.joinpath(vim.fn.stdpath('cache'), 'jdtls', project_name, 'workspace')
         end,
-        cmd = { java_paths.jdtls },
+        cmd = { paths.jdtls },
         full_cmd = function(opts)
           local root_dir = opts.root_dir(root_markers)
-          local lombok_agent_param = '--jvm-arg=-javaagent:' .. java_paths.lombok
-          local xmx_param = '--jvm-arg=-Xmx4g'
           local project_name = opts.project_name(root_dir)
           local cmd = vim.deepcopy(opts.cmd)
           if project_name then
             vim.list_extend(cmd, {
-              xmx_param,
-              lombok_agent_param,
+              '--jvm-arg=-Xmx4g',
+              '--jvm-arg=-javaagent:' .. opts.paths.lombok,
               '-configuration',
               opts.jdtls_config_dir(project_name),
               '-data',
@@ -340,19 +345,8 @@ return {
       -- Find the extra bundles that should be passed on the jdtls command-line
       -- if nvim-dap is enabled with java debug/test.
       local bundles = {} ---@type string[]
-      local java_dbg_path = vim.fn.expand '$MASON/share/java-debug-adapter'
-      local jar_patterns = {
-        java_dbg_path .. '/com.microsoft.java.debug.plugin-*.jar',
-      }
-      local java_decompiler_path = vim.fn.expand '$MASON/share/vscode-java-decompiler'
-      vim.list_extend(jar_patterns, {
-        java_decompiler_path .. '/bundles/*.jar',
-      })
-      -- java-test also depends on java-debug-adapter.
-      local java_test_path = vim.fn.expand '$MASON/share/java-test'
-      vim.list_extend(jar_patterns, {
-        java_test_path .. '/*.jar',
-      })
+      local mason = require('util').mason_root()
+      local jar_patterns = require('nv_ide.java').bundle_patterns(mason)
       for _, jar_pattern in ipairs(jar_patterns) do
         for _, bundle in ipairs(vim.split(vim.fn.glob(jar_pattern), '\n')) do
           table.insert(bundles, bundle)
@@ -376,7 +370,7 @@ return {
           flags = {
             allow_incremental_sync = true,
           },
-          settings = jdtls_settings,
+          settings = opts.settings,
           capabilities = capabilities,
         }, opts.jdtls)
         -- Existing server will be reused if the root_dir matches.

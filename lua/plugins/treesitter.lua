@@ -198,7 +198,7 @@ return {
         mode = { 'n', 'x', 'o' },
       },
       {
-        ']d',
+        ']C',
         function()
           require('nvim-treesitter-textobjects.move').goto_next('@conditional.outer', 'textobjects')
         end,
@@ -206,7 +206,7 @@ return {
         mode = { 'n', 'x', 'o' },
       },
       {
-        '[d',
+        '[C',
         function()
           require('nvim-treesitter-textobjects.move').goto_previous('@conditional.outer', 'textobjects')
         end,

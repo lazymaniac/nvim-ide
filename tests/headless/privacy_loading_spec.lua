@@ -109,4 +109,68 @@ h.describe('language loading boundaries', function()
     h.truthy(vim.tbl_contains(sexp.ft or {}, 'clojure'))
     h.truthy(vim.tbl_contains(sexp.ft or {}, 'fennel'))
   end)
+
+  h.it('enables Rust inlay hints only for the attached buffer', function()
+    local rust = plugin(dofile('lua/plugins/lsp/lang/rust.lua'), 'mrcjkb/rustaceanvim')
+    local previous_which_key = package.loaded['which-key']
+    local previous_enable = vim.lsp.inlay_hint.enable
+    local previous_config = vim.g.rustaceanvim
+    local calls = {}
+    package.loaded['which-key'] = { add = function() end }
+    vim.lsp.inlay_hint.enable = function(enabled, opts)
+      calls[#calls + 1] = { enabled, opts }
+    end
+
+    local ok, err = xpcall(function()
+      rust.config()
+      vim.g.rustaceanvim.server.on_attach({}, 42)
+    end, debug.traceback)
+
+    package.loaded['which-key'] = previous_which_key
+    vim.lsp.inlay_hint.enable = previous_enable
+    vim.g.rustaceanvim = previous_config
+    if not ok then error(err, 0) end
+    h.deep_equal(calls, { { true, { bufnr = 42 } } })
+  end)
+
+  h.it('discovers Java only at its filetype-triggered options boundary', function()
+    local previous_java = package.loaded['nv_ide.java']
+    local previous_setup = package.loaded['jdtls.setup']
+    local previous_notify = vim.notify
+    local discoveries, notifications = 0, {}
+    package.loaded['nv_ide.java'] = {
+      discover = function()
+        discoveries = discoveries + 1
+        return {
+          jdtls = '/tools/jdtls',
+          lombok = '/mason/share/jdtls/lombok.jar',
+          formatter = '/config/java-formatter.xml',
+          runtimes = {},
+          errors = { 'asdf where java timed out after 25 ms' },
+        }
+      end,
+    }
+    package.loaded['jdtls.setup'] = { find_root = function() return '/repo' end }
+    vim.notify = function(message, level)
+      notifications[#notifications + 1] = { message = message, level = level }
+    end
+
+    local ok, err = xpcall(function()
+      local java = plugin(dofile('lua/plugins/lsp/lang/java.lua'), 'mfussenegger/nvim-jdtls')
+      h.equal(discoveries, 0)
+      h.equal(#notifications, 0)
+      local opts = java.opts()
+      h.equal(discoveries, 1)
+      h.equal(opts.cmd[1], '/tools/jdtls')
+      h.equal(opts.paths.lombok, '/mason/share/jdtls/lombok.jar')
+      h.equal(#notifications, 1)
+      h.matches(notifications[1].message, 'asdf where java timed out after 25 ms')
+      h.equal(notifications[1].level, vim.log.levels.WARN)
+    end, debug.traceback)
+
+    package.loaded['nv_ide.java'] = previous_java
+    package.loaded['jdtls.setup'] = previous_setup
+    vim.notify = previous_notify
+    if not ok then error(err, 0) end
+  end)
 end)

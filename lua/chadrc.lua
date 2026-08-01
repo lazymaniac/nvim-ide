@@ -28,9 +28,10 @@ return {
       order = { 'mode', 'file', 'git', '%=', '%=', 'diagnostics', 'dap', 'lsp', 'cwd', 'cursor' },
       modules = {
         dap = function()
-          if require('dap').status() ~= '' then
-            return '   ' .. require('dap').status() .. ' '
-          end
+          local dap = package.loaded.dap
+          if not dap then return end
+          local status = dap.status()
+          if status ~= '' then return '   ' .. status .. ' ' end
         end,
       },
     },

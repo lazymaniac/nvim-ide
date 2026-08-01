@@ -234,12 +234,83 @@ h.describe('LSP registry', function()
 
       local client = { commands = {} }
       local calls = {}
+      attached(client, 1)
+
+      local responses = {
+        { { message = 'request failed' }, nil },
+        { nil, nil },
+        { nil, {} },
+        { nil, { body = {} } },
+        { nil, { body = { files = 'invalid' } } },
+        { nil, { body = { files = { false } } } },
+      }
+      local handler = client.commands['_typescript.moveToFileRefactoring']
+      local valid_command = {
+        command = 'typescript.moveToFile',
+        arguments = {
+          'move',
+          vim.uri_from_fname('/tmp/source.ts'),
+          { start = { line = 0, character = 0 }, ['end'] = { line = 0, character = 1 } },
+        },
+      }
+      local saved_select = vim.ui.select
+      local saved_notify = vim.notify
+      local notifications = {}
+      vim.notify = function(message, level)
+        notifications[#notifications + 1] = { message = message, level = level }
+      end
+
+      local negative_ok, negative_err = xpcall(function()
+        local requests = 0
+        client.request = function() requests = requests + 1 end
+        handler {}
+        h.equal(requests, 0)
+        h.equal(#notifications, 1)
+
+        for _, response in ipairs(responses) do
+          notifications = {}
+          local selections = 0
+          client.request = function(self, _, _, callback)
+            h.equal(self, client)
+            requests = requests + 1
+            callback(response[1], response[2])
+          end
+          vim.ui.select = function() selections = selections + 1 end
+          local invoked, invoke_error = pcall(handler, valid_command)
+          h.truthy(invoked, tostring(invoke_error))
+          h.equal(selections, 0)
+          h.equal(#notifications, 1)
+          h.truthy(vim.startswith(notifications[1].message, 'TypeScript move-to-file:'))
+          h.equal(notifications[1].level, vim.log.levels.WARN)
+        end
+
+        notifications = {}
+        requests = 0
+        client.request = function(self, _, params, callback)
+          h.equal(self, client)
+          requests = requests + 1
+          if params.command == 'typescript.tsserverRequest' then
+            callback(nil, { body = { files = { '/tmp/target.ts' } } })
+          else
+            callback({ message = 'move failed' })
+          end
+        end
+        vim.ui.select = function(_, _, callback) callback('/tmp/target.ts') end
+        handler(valid_command)
+        h.equal(requests, 2)
+        h.equal(#notifications, 1)
+        h.matches(notifications[1].message, 'move failed')
+      end, debug.traceback)
+
+      vim.ui.select = saved_select
+      vim.notify = saved_notify
+      if not negative_ok then error(negative_err, 0) end
+
       client.request = function(self, method, params, callback)
         h.equal(self, client)
         calls[#calls + 1] = { method, params.command }
         if callback then callback(nil, { body = { files = { '/tmp/target.ts' } } }) end
       end
-      attached(client, 1)
 
       local previous_select = vim.ui.select
       local ok, err = xpcall(function()
