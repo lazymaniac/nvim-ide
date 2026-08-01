@@ -22,10 +22,10 @@ The runner lives in `lua/nv_ide/java.lua` so the asynchronous behavior can be te
 2. Save pending changes with `:update`. If saving fails, stop before requesting a build.
 3. Resolve the fully qualified class name from the saved buffer.
 4. Ask the attached JDTLS client for an incremental `java/buildWorkspace` build and wait for its response. Continue only when the returned workspace-build status is `SUCCEED` (`1`).
-5. Execute `vscode.java.resolveMainClass` through the same JDTLS client and require an entry whose `mainClass` exactly matches the current class. This provides the project name and prevents launching a class without a recognized `main` method.
-6. Resolve that main class's runtime classpath/module path with `vscode.java.resolveClasspath` and its selected Java executable with nvim-jdtls's Java-executable resolver.
+5. Execute `vscode.java.resolveMainClass` through the same JDTLS client and require an entry whose class portion exactly matches the current class. A module-qualified result such as `module.name/package.Class` matches `package.Class`, while its original value is retained for later JDTLS requests. This provides the project name and prevents launching a class without a recognized `main` method.
+6. Resolve that main class's runtime classpath/module path with `vscode.java.resolveClasspath` and its selected Java executable with `vscode.java.resolveJavaExecutable`. The runner uses callback-total wrappers around the same commands used by nvim-jdtls so a failed resolution can always release its in-progress guard; the configured JDTLS runtime setting is the compatibility fallback.
 7. Derive `jshell` from the selected Java executable's `bin` directory. Fall back to `jshell` on `PATH` only when a sibling executable is unavailable.
-8. Open a terminal split with argument-vector process spawning. Supply the resolved classpath and module path with platform-aware path separators, then send the exact main invocation through the terminal channel.
+8. Open a terminal split with argument-vector process spawning. Supply the resolved classpath and module path with platform-aware path separators, add all application modules when a module path exists, then send the exact main invocation through the terminal channel.
 
 Every asynchronous callback uses the originally captured buffer and JDTLS client. Changing windows or buffers while the build runs must not redirect resolution to a different project.
 
@@ -37,6 +37,7 @@ Every asynchronous callback uses the originally captured buffer and JDTLS client
 - Only one run request is allowed per buffer at a time. A second keypress reports that the build is already in progress instead of starting an overlapping pipeline.
 - The runner uses runtime paths returned by JDTLS rather than Neovim's startup working directory or a globally assumed build directory.
 - Classpath and module-path lists are filtered to readable files/directories before launch.
+- Named-module launches use `--add-modules ALL-MODULE-PATH`; packages that are not exported by their module remain subject to Java's normal module-access rules.
 - The implementation targets the configuration's Neovim 0.12 minimum and uses terminal jobs without deprecated command-string APIs.
 
 ## Error handling
