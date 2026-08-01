@@ -31,9 +31,12 @@ if vim.g.neovide then
 end
 
 vim.g.base46_cache = vim.fn.stdpath 'data' .. '/base46_cache/'
-require('nv_ide.toolchain').early()
----@diagnostic disable-next-line: different-requires
-require 'config.lazy'
+local toolchain = require 'nv_ide.toolchain'
+toolchain.early()
+toolchain.with_startup_lock(function()
+  ---@diagnostic disable-next-line: different-requires
+  require 'config.lazy'
+end)
 require('config').setup {}
 
 for _, v in ipairs(vim.fn.readdir(vim.g.base46_cache)) do
