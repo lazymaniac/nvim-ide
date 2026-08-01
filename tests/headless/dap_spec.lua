@@ -124,11 +124,46 @@ h.describe('DAP ownership and lazy loading', function()
     end
 
     h.equal(resolve({ [selected] = true, [virtual] = true, [project] = true, [system] = true }, selected), selected)
+    h.equal(resolve({ [virtual] = true, [project] = true, [system] = true }, nil), virtual)
     h.equal(resolve({ [virtual] = true, [project] = true, [system] = true }, selected), virtual)
     h.equal(resolve({ [project] = true, [system] = true }, nil, {}), project)
     h.equal(resolve({ [system] = true }, nil, {}), system)
     h.raises('No executable Python interpreter', function()
       resolve({}, nil, {})
+    end)
+  end)
+
+  h.it('roots default Python resolution at the active buffer project', function()
+    h.with_temp_dir(function(tmp)
+      local source = vim.fs.joinpath(tmp, 'src', 'example.py')
+      local python = vim.fs.joinpath(tmp, '.venv', 'bin', 'python')
+      vim.fn.mkdir(vim.fs.dirname(source), 'p')
+      vim.fn.mkdir(vim.fs.dirname(python), 'p')
+      vim.fn.writefile({ '[project]' }, vim.fs.joinpath(tmp, 'pyproject.toml'))
+      vim.fn.writefile({ 'print("ok")' }, source)
+      vim.fn.writefile({}, python)
+      local canonical_python = assert(vim.uv.fs_realpath(python))
+      local previous_buffer = vim.api.nvim_get_current_buf()
+      local previous_resolver = package.loaded['util.dap']
+      local bufnr = vim.fn.bufadd(source)
+      vim.fn.bufload(bufnr)
+      vim.api.nvim_set_current_buf(bufnr)
+
+      package.loaded['util.dap'] = nil
+      local ok, result = xpcall(function()
+        return require('util.dap').resolve_python {
+          selected = function() return nil end,
+          env = {},
+          executable = function(path) return path == canonical_python end,
+          exepath = function() return '' end,
+        }
+      end, debug.traceback)
+
+      vim.api.nvim_set_current_buf(previous_buffer)
+      vim.api.nvim_buf_delete(bufnr, { force = true })
+      package.loaded['util.dap'] = previous_resolver
+      if not ok then error(result, 0) end
+      h.equal(result, canonical_python)
     end)
   end)
 
