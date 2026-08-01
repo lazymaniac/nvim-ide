@@ -232,6 +232,50 @@ h.describe('toolchain state and process lock', function()
     )
   end)
 
+  h.it('lets a verified read-only fresh Neovim child run while its parent owns the lock', function()
+    h.with_temp_dir(function(dir)
+      local state_dir = vim.fs.joinpath(dir, 'state')
+      local marker = vim.fs.joinpath(dir, 'child-started')
+      local parent_pid = vim.uv.os_getpid()
+      local parent_token = string.rep('a', 64)
+      local parent = reload('nv_ide.toolchain.lock').new {
+        dir = state_dir,
+        pid = parent_pid,
+        token = function()
+          return parent_token
+        end,
+      }
+      h.equal(parent:acquire(), parent_token)
+
+      local result = vim.system({
+        vim.v.progpath,
+        '--clean',
+        '--headless',
+        '-u',
+        'tests/minimal_init.lua',
+        '-i',
+        'NONE',
+        '-l',
+        'tests/headless/locked_startup_child.lua',
+        state_dir,
+        marker,
+      }, {
+        cwd = vim.fn.getcwd(),
+        text = true,
+        timeout = 2000,
+        env = {
+          NV_IDE_TOOLCHAIN_READONLY_CHILD = '1',
+          NV_IDE_TOOLCHAIN_PARENT_LOCK_PID = tostring(parent_pid),
+          NV_IDE_TOOLCHAIN_PARENT_LOCK_TOKEN = parent_token,
+        },
+      }):wait()
+
+      h.equal(result.code, 0, vim.trim(result.stderr or result.stdout or ''))
+      h.equal(vim.fn.filereadable(marker), 1)
+      h.truthy(parent:release(parent_token))
+    end)
+  end)
+
   h.it('recognizes libuv ESRCH results in the default PID verifier', function()
     h.with_temp_dir(function(dir)
       local lock_dir = vim.fs.joinpath(dir, 'install.lock')

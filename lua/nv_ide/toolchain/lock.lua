@@ -273,6 +273,14 @@ function Lock:acquire_wait(options)
   end
 end
 
+function Lock:held_by(pid, token)
+  local owner = self:_read_owner()
+  if not owner_matches(owner, { pid = pid, token = token }) then
+    return false
+  end
+  return self.pid_alive(pid) == true
+end
+
 function Lock:release(token)
   local owner = self:_read_owner()
   if not owner or owner.token ~= token then
