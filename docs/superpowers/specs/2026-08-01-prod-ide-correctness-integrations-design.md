@@ -45,10 +45,10 @@ Add a small `lua/nv_ide/project.lua` module that owns project-root and executabl
 
 The module exposes pure or dependency-injected helpers for:
 
-- deriving a normalized root from the current buffer and an ordered marker list;
+- deriving the nearest normalized root from the current buffer and a marker list;
 - testing whether a file is inside a root without string-prefix mistakes;
 - choosing an executable from an activated environment, project-local path, then ambient `PATH`;
-- locating common JavaScript package-manager and test configuration markers;
+- locating common JavaScript package-manager, launch, and test configuration markers, including hoisted tooling up to the containing Git boundary;
 - querying directory trust with `vim.secure.read(root)` and caching only a positive decision for the current process.
 
 Callers pass a buffer or path at execution time. No helper captures `vim.fn.getcwd()` while a plugin specification is evaluated.
@@ -78,7 +78,7 @@ The handler:
 2. asks Neovim's trust database about that directory;
 3. returns without executing a linter when trust is denied or unavailable;
 4. selects the exact linter set for the buffer and path;
-5. calls `lint.try_lint()` once with that set.
+5. calls `lint.try_lint()` once with that set and the resolved root as its process `cwd`.
 
 Policy is deterministic:
 
@@ -87,7 +87,7 @@ Policy is deterministic:
 - Trivy and other project-wide security scanners are removed from per-buffer lint lists and remain explicit Overseer/terminal work;
 - slow type or project analyzers do not run merely because a buffer receives focus.
 
-Ruff replaces Pylint in the Mason inventory. JavaScript formatter/linter daemons are required to resolve project-local Prettier/ESLint packages rather than silently using daemon-bundled versions.
+Ruff replaces Pylint in the Mason inventory. JavaScript formatter/linter daemons are required to resolve project-local Prettier/ESLint packages rather than silently using daemon-bundled versions; `eslint_d` treats a missing local ESLint as a failure.
 
 ### Project-aware tests and debugging
 
@@ -95,7 +95,7 @@ Neotest Python uses the same executable-resolution policy as Python DAP: activat
 
 Kotlin DAP computes `projectRoot` when a session launches. It uses the nearest Gradle/Maven/Kotlin project root and never appends `/app`. Host and port remain overridable inputs, with localhost and 5005 as attach defaults.
 
-JavaScript DAP retains generic launch-current-file and attach-process fallbacks. Workspace `.vscode/launch.json` configurations are loaded through `dap.ext.vscode`; framework-specific Mocha, Jest, Karma, or Jasmine entries are registered only when their project-local executable or configuration exists. Duplicate fields and global package assumptions are removed.
+JavaScript DAP retains generic launch-current-file and attach-process fallbacks. The built-in launch provider is narrowed to the active package or containing workspace `.vscode/launch.json` and filters unsupported adapter types; a second provider owns framework entries, so workspace configurations appear exactly once. Framework-specific Mocha, Jest, Karma, or Jasmine entries are registered only when a local or hoisted executable exists, or when a detected config can be launched through the detected package manager. Duplicate fields and global package assumptions are removed.
 
 TypeScript's move-file command validates command arguments, request errors, response shape, and `body.files` before opening selection UI. Invalid responses produce a concise warning instead of a Lua exception. Rust enables inlay hints for the attached buffer only.
 
