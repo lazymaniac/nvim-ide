@@ -127,7 +127,18 @@ return {
     'm-demare/hlargs.nvim',
     event = 'LspAttach',
     branch = 'main',
-    opts = {},
+    opts = {
+      disable = function(_, bufnr)
+        for _, client in ipairs(vim.lsp.get_clients { bufnr = bufnr }) do
+          local semantic = client.server_capabilities.semanticTokensProvider
+          local token_types = type(semantic) == 'table' and semantic.legend and semantic.legend.tokenTypes or {}
+          if vim.tbl_contains(token_types or {}, 'parameter') then
+            return true
+          end
+        end
+        return false
+      end,
+    },
   },
 
   -- [guess-indent.nvim] - Automatically detect and set indentation

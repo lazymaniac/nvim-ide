@@ -4,6 +4,7 @@ return {
   -- link: https://github.com/Civitasv/cmake-tools.nvim
   {
     "Civitasv/cmake-tools.nvim",
+    ft = { "cmake" },
     branch = 'master',
     lazy = true,
     init = function()

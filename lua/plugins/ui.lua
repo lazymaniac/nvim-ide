@@ -50,6 +50,8 @@ return {
   -- link: https://github.com/NvChad/ui
   {
     'nvchad/ui',
+    lazy = false,
+    priority = 900,
     config = function()
       require 'nvchad'
     end,
@@ -60,13 +62,15 @@ return {
   -- link: https://github.com/echasnovski/mini.icons
   {
     'echasnovski/mini.icons',
-    lazy = true,
+    lazy = false,
+    priority = 1200,
     opts = {},
     config = function(_, opts)
-      require('mini.icons').setup(opts)
+      local icons = require 'mini.icons'
+      icons.setup(opts)
+      icons.mock_nvim_web_devicons()
     end,
   },
-  { 'nvim-tree/nvim-web-devicons', lazy = true },
   -- [numb.nvim] - Show preview of location when jumping to line with `:{number}`
   -- see: `:h numb`
   -- link: https://github.com/nacro90/numb.nvim

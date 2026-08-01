@@ -76,7 +76,6 @@ vim.o.smoothscroll = true
 -- Folding
 vim.opt.foldlevel = 99
 vim.opt.foldtext = "v:lua.require'util'.ui.foldtext()"
-vim.opt.statuscolumn = [[%!v:lua.require'util'.ui.statuscolumn()]]
 vim.opt.foldmethod = 'expr'
 vim.opt.foldexpr = "v:lua.require'util'.ui.foldexpr()"
 vim.o.formatexpr = "v:lua.require'util'.format.formatexpr()"

@@ -4,7 +4,8 @@ return {
   -- link: https://github.com/NvChad/base46
   {
     'nvchad/base46',
-    lazy = true,
+    lazy = false,
+    priority = 1000,
     build = function()
       require('base46').load_all_highlights()
     end,
