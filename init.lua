@@ -41,6 +41,7 @@ toolchain.with_startup_lock(function()
 end)
 require('config').setup {}
 
-for _, v in ipairs(vim.fn.readdir(vim.g.base46_cache)) do
-  dofile(vim.g.base46_cache .. v)
-end
+require('nv_ide.cache').load {
+  dir = vim.g.base46_cache,
+  integrations = require('nvconfig').base46.integrations,
+}
