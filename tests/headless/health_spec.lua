@@ -1,0 +1,543 @@
+local h = require 'tests.headless.harness'
+
+local SENTINELS = {
+  ANTHROPIC_API_KEY = 'anthropic-super-secret-sentinel',
+  OPENAI_API_KEY = 'openai-super-secret-sentinel',
+}
+
+local function find(records, id)
+  for _, record in ipairs(records or {}) do
+    if record.id == id then
+      return record
+    end
+  end
+end
+
+local function ids(records)
+  local result = {}
+  for _, record in ipairs(records or {}) do
+    result[#result + 1] = record.id
+  end
+  table.sort(result)
+  return result
+end
+
+local function complete_probe(options)
+  options = options or {}
+  local manifest = require 'nv_ide.toolchain.manifest'
+  local calls = {
+    executable = {},
+    mason = {},
+    parser = {},
+    backend = {},
+    credential = {},
+  }
+  local unavailable = options.unavailable or {}
+  local probe = {
+    manifest = manifest,
+    system = function()
+      return { os = options.os or 'Linux', arch = 'x86_64', nvim = '0.12.4' }
+    end,
+    executable = function(name)
+      calls.executable[name] = (calls.executable[name] or 0) + 1
+      return unavailable[name] ~= true
+    end,
+    mason_status = function(name)
+      calls.mason[name] = (calls.mason[name] or 0) + 1
+      if name == manifest.mason.packages[1] then
+        return { status = 'failed' }
+      elseif name == manifest.mason.packages[2] then
+        return { status = 'installing' }
+      end
+      return { status = 'installed', version = '1.2.3' }
+    end,
+    parser_status = function(name)
+      calls.parser[name] = (calls.parser[name] or 0) + 1
+      if name == manifest.treesitter.parsers[1] then
+        return { status = 'missing' }
+      end
+      return { status = 'installed', revision = 'parser-revision-' .. name }
+    end,
+    treesitter_cli_version = function()
+      return options.treesitter_cli_version or '0.26.3'
+    end,
+    toolchain_state = function()
+      return {
+        plugin_update = {
+          status = 'success',
+          observed = {
+            before = { mason_receipts = { stylua = '1.0.0' }, treesitter_parser_info = { lua = 'before-rev' } },
+            after = { mason_receipts = { stylua = '1.1.0' }, treesitter_parser_info = { lua = 'after-rev' } },
+          },
+          rollback = {
+            lazy = 'exact',
+            mason = 'not-guaranteed',
+            treesitter = 'not-guaranteed',
+            limitation = 'Only Lazy rollback is exact; Mason and parser exact downgrades are not guaranteed',
+          },
+        },
+      }
+    end,
+    watcher = function()
+      return {
+        supported = true,
+        backend = 'fs_event',
+        inotify = {
+          max_user_watches = 524288,
+          max_user_instances = 128,
+          sufficient = true,
+        },
+      }
+    end,
+    clipboard = options.clipboard or function()
+      return {
+        session = 'ssh',
+        provider = 'OSC 52',
+        available = true,
+        tmux = { active = true, passthrough = false, set_clipboard = 'off', ms = false },
+        local_providers = { pbcopy = false, wl_copy = true, xclip = false, xsel = false },
+      }
+    end,
+    backend_available = function(backend)
+      calls.backend[backend.id] = (calls.backend[backend.id] or 0) + 1
+      return backend.id == 'ollama' and unavailable[backend.executable] ~= true
+    end,
+    credential = function(name)
+      calls.credential[name] = (calls.credential[name] or 0) + 1
+      return SENTINELS[name]
+    end,
+  }
+  return probe, calls
+end
+
+h.describe('nv_ide health collection', function()
+  h.it('keeps every required bootstrap and picker prerequisite in the manifest', function()
+    local manifest = require 'nv_ide.toolchain.manifest'
+    local by_id = {}
+    for _, record in ipairs(manifest.prerequisites) do
+      by_id[record.id] = record
+    end
+    for _, id in ipairs { 'archive', 'c_compiler', 'curl', 'git', 'ripgrep', 'tree_sitter_cli' } do
+      h.truthy(by_id[id], 'missing manifest prerequisite: ' .. id)
+      h.truthy(by_id[id].required, id .. ' must be classified as required')
+    end
+    h.deep_equal(by_id.archive.executables, { 'tar', 'unzip' })
+    h.deep_equal(by_id.ripgrep.executables, { 'rg' })
+    h.deep_equal(by_id.tree_sitter_cli.executables, { 'tree-sitter' })
+  end)
+
+  h.it('classifies and probes the complete manifest inventory without retaining credential values', function()
+    package.loaded['nv_ide.health'] = nil
+    local health = require 'nv_ide.health'
+    local probe, calls = complete_probe { unavailable = { unzip = true, mmdc = true } }
+    local report = health.collect(probe)
+    local manifest = probe.manifest
+
+    h.deep_equal(report.system, { os = 'Linux', arch = 'x86_64', nvim = '0.12.4' })
+    h.truthy(find(report.prerequisites, 'archive').required)
+    h.falsy(find(report.prerequisites, 'archive').available)
+    h.falsy(find(report.prerequisites, 'snacks_image_mermaid').required)
+    h.falsy(find(report.prerequisites, 'snacks_image_mermaid').available)
+
+    h.equal(#report.mason, #manifest.mason.packages)
+    h.equal(#report.parsers, #manifest.treesitter.parsers)
+    h.equal(#report.runtimes, #manifest.runtimes)
+    h.equal(#report.external_actions, #manifest.external_actions)
+    h.equal(#report.ai.cli, #manifest.ai.cli)
+    h.equal(#report.ai.backends, #manifest.ai.backends)
+    h.equal(#report.ai.credentials, #manifest.ai.credentials)
+    h.truthy(report.mason[1].required)
+    h.equal(report.mason[1].status, 'failed')
+    h.equal(report.mason[2].status, 'installing')
+    h.equal(report.mason[3].status, 'installed')
+    h.equal(report.mason[3].version, '1.2.3')
+    h.truthy(report.parsers[1].required)
+    h.equal(report.parsers[1].status, 'missing')
+    h.equal(report.parsers[2].status, 'installed')
+    h.equal(report.parsers[2].revision, 'parser-revision-' .. report.parsers[2].id)
+    h.equal(report.treesitter.cli.version, '0.26.3')
+    h.equal(report.update.status, 'success')
+    h.equal(report.update.observed.before.mason_receipts.stylua, '1.0.0')
+    h.equal(report.update.observed.after.treesitter_parser_info.lua, 'after-rev')
+    h.truthy(report.runtimes[1].required)
+    h.falsy(report.external_actions[1].required)
+
+    for _, record in ipairs(manifest.prerequisites) do
+      for _, executable in ipairs(record.executables) do
+        h.truthy(calls.executable[executable])
+      end
+    end
+    for _, record in ipairs(manifest.runtimes) do
+      for _, executable in ipairs(record.executables) do
+        h.truthy(calls.executable[executable])
+      end
+    end
+    for _, action in ipairs(manifest.external_actions) do
+      h.truthy(calls.executable[action.command[1]])
+    end
+    for _, name in ipairs(manifest.mason.packages) do
+      h.equal(calls.mason[name], 1)
+    end
+    for _, name in ipairs(manifest.treesitter.parsers) do
+      h.equal(calls.parser[name], 1)
+    end
+    for _, name in ipairs(manifest.ai.cli) do
+      h.truthy(calls.executable[name])
+    end
+    for _, backend in ipairs(manifest.ai.backends) do
+      h.equal(calls.backend[backend.id], 1)
+    end
+    for _, name in ipairs(manifest.ai.credentials) do
+      h.equal(calls.credential[name], 1)
+    end
+
+    h.deep_equal(ids(report.ai.credentials), { 'ANTHROPIC_API_KEY', 'OPENAI_API_KEY' })
+    for _, credential in ipairs(report.ai.credentials) do
+      h.equal(type(credential.present), 'boolean')
+      h.equal(credential.value, nil)
+    end
+    local rendered = vim.inspect(report)
+    for _, sentinel in pairs(SENTINELS) do
+      h.falsy(rendered:find(sentinel, 1, true), 'health collection leaked a credential')
+    end
+  end)
+
+  h.it('reports watcher, inotify, SSH OSC 52, and tmux constraints', function()
+    local health = require 'nv_ide.health'
+    local report = health.collect((complete_probe()))
+    h.truthy(report.watcher.supported)
+    h.equal(report.watcher.backend, 'fs_event')
+    h.truthy(report.watcher.inotify.sufficient)
+    h.equal(report.clipboard.session, 'ssh')
+    h.equal(report.clipboard.provider, 'OSC 52')
+    h.truthy(report.clipboard.tmux.active)
+    h.equal(report.clipboard.tmux.set_clipboard, 'off')
+    h.falsy(report.clipboard.tmux.ms)
+  end)
+
+  h.it('reports a local platform clipboard provider independently of SSH state', function()
+    local health = require 'nv_ide.health'
+    local probe = complete_probe {
+      clipboard = function()
+        return {
+          session = 'local',
+          provider = 'pbcopy',
+          available = true,
+          tmux = { active = false, passthrough = true, set_clipboard = 'on', ms = true },
+          local_providers = { pbcopy = true, wl_copy = false, xclip = false, xsel = false },
+        }
+      end,
+    }
+    local report = health.collect(probe)
+    h.equal(report.clipboard.session, 'local')
+    h.equal(report.clipboard.provider, 'pbcopy')
+    h.truthy(report.clipboard.available)
+    h.falsy(report.clipboard.tmux.active)
+  end)
+
+  h.it('applies tmux clipboard capability policy only to OSC 52 sessions', function()
+    local health = require 'nv_ide.health'
+    local probe = complete_probe {
+      clipboard = function()
+        return {
+          session = 'local',
+          provider = 'pbcopy',
+          available = true,
+          tmux = { active = true, set_clipboard = 'off', ms = false },
+          local_providers = { pbcopy = true, wl_copy = false, xclip = false, xsel = false },
+        }
+      end,
+    }
+    local messages = {}
+    local reporter = {}
+    for _, level in ipairs { 'start', 'ok', 'info', 'warn', 'error' } do
+      reporter[level] = function(message)
+        messages[#messages + 1] = tostring(message)
+      end
+    end
+    health.check(probe, reporter)
+    local output = table.concat(messages, '\n')
+    h.falsy(output:find('tmux set-clipboard is not on', 1, true))
+    h.falsy(output:find('tmux lacks the Ms clipboard capability', 1, true))
+  end)
+
+  h.it('renders required failures, optional warnings, and only credential-presence booleans', function()
+    local health = require 'nv_ide.health'
+    local probe = complete_probe { unavailable = { unzip = true, mmdc = true } }
+    local messages = {}
+    local reporter = {}
+    for _, level in ipairs { 'start', 'ok', 'info', 'warn', 'error' } do
+      reporter[level] = function(message)
+        messages[#messages + 1] = { level = level, message = tostring(message) }
+      end
+    end
+
+    local report = health.check(probe, reporter)
+    local output = vim.inspect(messages)
+    h.matches(output, 'archive')
+    h.matches(output, 'snacks_image_mermaid')
+    h.truthy(output:find('set -s set-clipboard on', 1, true))
+    h.truthy(output:find("terminal-features ',*:clipboard'", 1, true))
+    h.matches(output, ':ToolchainRepair!')
+    h.matches(output, ':MasonLog')
+    h.falsy(output:find(':MasonInstall', 1, true))
+    h.falsy(output:find(':TSInstall', 1, true))
+    h.matches(output, 'sudo apt install tar unzip')
+    h.matches(output, '1.2.3')
+    h.matches(output, 'parser-revision-bash')
+    h.matches(output, 'Tree-sitter CLI 0.26.3')
+    h.matches(output, 'Only Lazy rollback is exact')
+    h.matches(output, 'stylua@1.0.0')
+    h.matches(output, 'stylua@1.1.0')
+    h.matches(output, 'lua@before-rev')
+    h.matches(output, 'lua@after-rev')
+    h.matches(output, 'ANTHROPIC_API_KEY: present')
+    h.truthy(vim.tbl_contains(
+      vim.tbl_map(function(item)
+        return item.level
+      end, messages),
+      'error'
+    ))
+    h.truthy(vim.tbl_contains(
+      vim.tbl_map(function(item)
+        return item.level
+      end, messages),
+      'warn'
+    ))
+    for _, sentinel in pairs(SENTINELS) do
+      h.falsy(output:find(sentinel, 1, true), 'health renderer leaked a credential')
+      h.falsy(vim.inspect(report):find(sentinel, 1, true), 'health return leaked a credential')
+    end
+  end)
+
+  h.it('requires a completed Mason receipt before classifying an install directory as healthy', function()
+    local health = require 'nv_ide.health'
+    local function optional(value)
+      return {
+        or_else = function(_, fallback)
+          return value == nil and fallback or value
+        end,
+      }
+    end
+    local complete = {
+      is_installing = function()
+        return false
+      end,
+      is_installed = function()
+        return true
+      end,
+      get_receipt = function()
+        return optional { metrics = { completion_time = 123 } }
+      end,
+      get_installed_version = function()
+        return '2.0.0'
+      end,
+      get_install_handle = function()
+        return optional(nil)
+      end,
+    }
+    h.deep_equal(health.mason_package_status(complete), { status = 'installed', version = '2.0.0' })
+
+    local partial = vim.tbl_extend('force', complete, {
+      get_receipt = function()
+        return optional(nil)
+      end,
+    })
+    h.deep_equal(health.mason_package_status(partial), { status = 'failed' })
+
+    local installing = vim.tbl_extend('force', partial, {
+      is_installing = function()
+        return true
+      end,
+    })
+    h.deep_equal(health.mason_package_status(installing), { status = 'installing' })
+  end)
+
+  h.it('rejects completed Mason receipts without a readable non-empty installed version', function()
+    local health = require 'nv_ide.health'
+    local package = {
+      is_installing = function()
+        return false
+      end,
+      is_installed = function()
+        return true
+      end,
+      get_receipt = function()
+        return {
+          or_else = function()
+            return { metrics = { completion_time = 123 } }
+          end,
+        }
+      end,
+    }
+
+    for _, get_installed_version in ipairs {
+      function()
+        error 'unreadable installed version'
+      end,
+      function()
+        return ''
+      end,
+      function()
+        return nil
+      end,
+    } do
+      package.get_installed_version = get_installed_version
+      h.deep_equal(health.mason_package_status(package), { status = 'failed' })
+    end
+  end)
+
+  h.it('requires Tree-sitter parser revision evidence before classifying a parser as healthy', function()
+    local health = require 'nv_ide.health'
+    h.deep_equal(health.parser_install_status(false), { status = 'missing' })
+    h.deep_equal(health.parser_install_status(true), { status = 'failed' })
+    h.deep_equal(health.parser_install_status(true, 'abc123'), {
+      status = 'installed',
+      revision = 'abc123',
+    })
+  end)
+
+  h.it('uses the same dap_repl local-source receipt as installer discovery', function()
+    h.with_temp_dir(function(dir)
+      local parser_info = vim.fs.joinpath(dir, 'parser-info')
+      local provider = vim.fs.joinpath(dir, 'nvim-dap-repl-highlights')
+      vim.fn.mkdir(vim.fs.joinpath(provider, 'src'), 'p')
+      vim.fn.mkdir(parser_info, 'p')
+      vim.fn.writefile({ 'bundled dap repl parser' }, vim.fs.joinpath(provider, 'src', 'parser.c'), 'b')
+      vim.fn.writefile({}, vim.fs.joinpath(parser_info, 'dap_repl.revision'), 'b')
+
+      local config = {
+        get_install_dir = function(kind)
+          h.equal(kind, 'parser-info')
+          return parser_info
+        end,
+      }
+      local parser_registry = {
+        dap_repl = { install_info = { path = provider } },
+      }
+      local adapter = require('nv_ide.toolchain.treesitter').new {
+        parsers = { 'dap_repl' },
+        parser_registry = parser_registry,
+        config = vim.tbl_extend('force', config, {
+          get_installed = function()
+            return { 'dap_repl' }
+          end,
+        }),
+        install = function()
+          return { wait = function() return true end }
+        end,
+      }
+      h.truthy(adapter:install({ wait = true }).ok)
+
+      local health = require 'nv_ide.health'
+      local installed = health.parser_provider_status('dap_repl', true, {
+        config = config,
+        parser_registry = parser_registry,
+      })
+      h.equal(installed.status, 'installed')
+      h.truthy(installed.revision:match '^nv%-ide%-ts%-v1:source%-sha256:')
+
+      vim.fn.writefile({ 'new bundled dap repl parser' }, vim.fs.joinpath(provider, 'src', 'parser.c'), 'b')
+      h.deep_equal(health.parser_provider_status('dap_repl', true, {
+        config = config,
+        parser_registry = parser_registry,
+      }), { status = 'failed' })
+    end)
+  end)
+
+  h.it('rejects a Tree-sitter CLI older than the supported 0.26.1 minimum', function()
+    local health = require 'nv_ide.health'
+    local probe = complete_probe { treesitter_cli_version = '0.25.9' }
+    local messages = {}
+    local reporter = {}
+    for _, level in ipairs { 'start', 'ok', 'info', 'warn', 'error' } do
+      reporter[level] = function(message)
+        messages[#messages + 1] = { level = level, message = tostring(message) }
+      end
+    end
+    local report = health.check(probe, reporter)
+    h.falsy(report.treesitter.cli.supported)
+    local output = vim.inspect(messages)
+    h.matches(output, 'requires >= 0.26.1')
+    h.matches(output, 'cargo install tree-sitter-cli --version 0.26.3 --locked')
+  end)
+
+  h.it('recognizes xsel as a valid local Linux X11 clipboard provider', function()
+    local health = require 'nv_ide.health'
+    local probe = complete_probe {
+      clipboard = function()
+        return {
+          session = 'local',
+          provider = 'xsel',
+          available = true,
+          tmux = { active = false, set_clipboard = 'off', ms = false },
+          local_providers = { pbcopy = false, wl_copy = false, xclip = false, xsel = true },
+        }
+      end,
+    }
+    local report = health.collect(probe)
+    h.truthy(report.clipboard.available)
+    h.equal(report.clipboard.provider, 'xsel')
+    h.truthy(report.clipboard.local_providers.xsel)
+  end)
+
+  h.it('treats the full runtime inventory as required unless a runtime is explicitly optional', function()
+    local health = require 'nv_ide.health'
+    local probe = complete_probe { unavailable = { go = true } }
+    probe.manifest = vim.deepcopy(probe.manifest)
+    probe.manifest.runtimes = {
+      { id = 'go', executables = { 'go' } },
+      { id = 'optional_runtime', executables = { 'optional-runtime' }, optional = true },
+    }
+    local report = health.collect(probe)
+    h.truthy(find(report.runtimes, 'go').required)
+    h.falsy(find(report.runtimes, 'go').available)
+    h.falsy(find(report.runtimes, 'optional_runtime').required)
+  end)
+
+  h.it('renders platform-specific prerequisite remediation without exposing credentials', function()
+    local health = require 'nv_ide.health'
+    local probe = complete_probe { os = 'Darwin', unavailable = { git = true } }
+    local messages = {}
+    local reporter = {}
+    for _, level in ipairs { 'start', 'ok', 'info', 'warn', 'error' } do
+      reporter[level] = function(message)
+        messages[#messages + 1] = tostring(message)
+      end
+    end
+    health.check(probe, reporter)
+    local output = table.concat(messages, '\n')
+    h.matches(output, 'brew install git')
+    for _, sentinel in pairs(SENTINELS) do
+      h.falsy(output:find(sentinel, 1, true), 'remediation leaked a credential')
+    end
+  end)
+
+  h.it('renders exact platform commands for missing runtimes, terminal actions, and AI integrations', function()
+    local health = require 'nv_ide.health'
+    local probe = complete_probe {
+      unavailable = { go = true, java = true, btop = true, claude = true, ollama = true },
+    }
+    local messages = {}
+    local reporter = {}
+    for _, level in ipairs { 'start', 'ok', 'info', 'warn', 'error' } do
+      reporter[level] = function(message)
+        messages[#messages + 1] = tostring(message)
+      end
+    end
+    health.check(probe, reporter)
+    local output = table.concat(messages, '\n')
+    h.matches(output, 'sudo apt install golang-go')
+    h.matches(output, 'sudo apt install openjdk-21-jdk maven gradle')
+    h.matches(output, 'sudo apt install btop')
+    h.matches(output, 'npm install --global @anthropic-ai/claude-code')
+    h.matches(output, 'curl -fsSL https://ollama.com/install.sh | sh')
+
+    probe = complete_probe { os = 'Darwin', unavailable = { go = true, java = true } }
+    messages = {}
+    health.check(probe, reporter)
+    output = table.concat(messages, '\n')
+    h.matches(output, 'brew install go')
+    h.matches(output, 'brew install openjdk maven gradle')
+  end)
+end)
