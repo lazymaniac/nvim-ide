@@ -5,6 +5,13 @@ local function load_keymaps()
   return require('plugins.lsp.keymaps')
 end
 
+local function with_restored_state(capture, body)
+  local ok, result = xpcall(body, debug.traceback)
+  for _, restore in ipairs(capture) do restore() end
+  if not ok then error(result, 0) end
+  return result
+end
+
 h.describe('LSP keymaps', function()
   h.it('returns an immutable copy of the base mappings', function()
     local keymaps = load_keymaps()
@@ -68,28 +75,61 @@ h.describe('LSP keymaps', function()
     local previous_get_clients = vim.lsp.get_clients
     local previous_active_clients = vim.lsp.get_active_clients
     local seen
-    package.loaded.util = {}
-    package.loaded['util.lsp'] = nil
-    vim.lsp.get_clients = nil
-    vim.lsp.get_active_clients = function()
-      return {
-        {
-          supports_method = function(_, method, buffer)
-            seen = { method, buffer }
-            return true
-          end,
-        },
-      }
-    end
+    local clients = with_restored_state({
+      function() vim.lsp.get_clients = previous_get_clients end,
+      function() vim.lsp.get_active_clients = previous_active_clients end,
+      function() package.loaded['util.lsp'] = previous_module end,
+      function() package.loaded.util = previous_util end,
+    }, function()
+      package.loaded.util = {}
+      package.loaded['util.lsp'] = nil
+      vim.lsp.get_clients = nil
+      vim.lsp.get_active_clients = function()
+        return {
+          {
+            supports_method = function(_, method, buffer)
+              seen = { method, buffer }
+              return true
+            end,
+          },
+        }
+      end
+      return require('util.lsp').get_clients { bufnr = 41, method = 'textDocument/hover' }
+    end)
 
-    local clients = require('util.lsp').get_clients { bufnr = 41, method = 'textDocument/hover' }
-
-    vim.lsp.get_clients = previous_get_clients
-    vim.lsp.get_active_clients = previous_active_clients
-    package.loaded['util.lsp'] = previous_module
-    package.loaded.util = previous_util
     h.equal(#clients, 1)
     h.deep_equal(seen, { 'textDocument/hover', 41 })
+  end)
+
+  h.it('invokes rename client methods with the client as self', function()
+    local previous_get_clients = vim.lsp.get_clients
+    local previous_apply = vim.lsp.util.apply_workspace_edit
+    local previous_module = package.loaded['util.lsp']
+    local client = { offset_encoding = 'utf-8' }
+    local calls = {}
+    client.supports_method = function(self, method)
+      h.equal(self, client)
+      calls[#calls + 1] = method
+      return true
+    end
+    client.request_sync = function(self, method)
+      h.equal(self, client)
+      calls[#calls + 1] = method
+      return { result = { changes = {} } }
+    end
+
+    with_restored_state({
+      function() vim.lsp.get_clients = previous_get_clients end,
+      function() vim.lsp.util.apply_workspace_edit = previous_apply end,
+      function() package.loaded['util.lsp'] = previous_module end,
+    }, function()
+      vim.lsp.get_clients = function() return { client } end
+      vim.lsp.util.apply_workspace_edit = function() end
+      package.loaded['util.lsp'] = nil
+      require('util.lsp').on_rename('/tmp/old.lua', '/tmp/new.lua')
+    end)
+
+    h.deep_equal(calls, { 'workspace/willRenameFiles', 'workspace/willRenameFiles' })
   end)
 
   h.it('reapplies mappings to every buffer after dynamic registration', function()
@@ -125,6 +165,30 @@ h.describe('LSP keymaps', function()
     h.equal(result, 'registered')
     h.equal(callbacks.original, 1)
     h.deep_equal(applied, { 5, 7, 13 })
+  end)
+
+  h.it('installs the dynamic capability lifecycle once per handler table', function()
+    local keymaps = load_keymaps()
+    local attached = 0
+    local original = 0
+    local handlers = {
+      ['client/registerCapability'] = function()
+        original = original + 1
+      end,
+    }
+    local deps = {
+      handlers = handlers,
+      register_on_attach = function() attached = attached + 1 end,
+      get_client_by_id = function() return nil end,
+      apply = function() end,
+    }
+
+    keymaps.setup(deps)
+    keymaps.setup(deps)
+    handlers['client/registerCapability'](nil, {}, { client_id = 1 })
+
+    h.equal(attached, 1)
+    h.equal(original, 1)
   end)
 
   h.it('honors client-name filters registered through util.lsp.on_attach', function()

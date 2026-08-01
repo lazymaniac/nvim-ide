@@ -29,6 +29,21 @@ local function composed_opts(modules)
   return result
 end
 
+local NIL = {}
+
+local function with_restored_modules(modules, body)
+  local previous = {}
+  for _, module in ipairs(modules) do
+    previous[module] = package.loaded[module] == nil and NIL or package.loaded[module]
+  end
+  local ok, result = xpcall(body, debug.traceback)
+  for _, module in ipairs(modules) do
+    package.loaded[module] = previous[module] == NIL and nil or previous[module]
+  end
+  if not ok then error(result, 0) end
+  return result
+end
+
 h.describe('LSP registry', function()
   h.it('composes every centrally owned server once', function()
     local registry = load_registry()
@@ -132,48 +147,54 @@ h.describe('LSP registry', function()
   end)
 
   h.it('registers effective options composed from the real language modules', function()
-    local previous_util = package.loaded.util
-    package.loaded.util = {
-      lsp = {
-        action = setmetatable({}, { __index = function() return function() end end }),
-        execute = function() end,
-        get_clients = function() return {} end,
-        on_attach = function() end,
-      },
-      get_pkg_path = function() return '/tmp/mason-package' end,
-      toggle = { inlay_hints = function() end },
-    }
-    local opts = composed_opts {
+    local configured = {}
+    local enabled = {}
+    local extension_calls = 0
+    local modules = {
+      'util',
+      'clangd_extensions',
       'plugins.lsp',
       'plugins.lsp.lang.go',
       'plugins.lsp.lang.clangd',
       'plugins.lsp.lang.typescript',
       'plugins.lsp.lang.haskell',
     }
-    local configured = {}
-    local enabled = {}
-    local extension_calls = 0
-    local previous_extension = package.loaded.clangd_extensions
-    package.loaded.clangd_extensions = {
-      setup = function()
-        extension_calls = extension_calls + 1
-      end,
-    }
+    with_restored_modules(modules, function()
+      package.loaded.util = {
+        lsp = {
+          action = setmetatable({}, { __index = function() return function() end end }),
+          execute = function() end,
+          get_clients = function() return {} end,
+          on_attach = function() end,
+        },
+        get_pkg_path = function() return '/tmp/mason-package' end,
+        toggle = { inlay_hints = function() end },
+      }
+      package.loaded.clangd_extensions = {
+        setup = function()
+          extension_calls = extension_calls + 1
+        end,
+      }
+      local opts = composed_opts {
+        'plugins.lsp',
+        'plugins.lsp.lang.go',
+        'plugins.lsp.lang.clangd',
+        'plugins.lsp.lang.typescript',
+        'plugins.lsp.lang.haskell',
+      }
 
-    load_registry().setup(opts, {
-      protocol_capabilities = function() return {} end,
-      blink_capabilities = function(capabilities) return capabilities end,
-      config = function(server, config)
-        h.falsy(configured[server], server .. ' configured more than once')
-        configured[server] = vim.deepcopy(config)
-      end,
-      enable = function(server)
-        enabled[server] = (enabled[server] or 0) + 1
-      end,
-    })
-    package.loaded.clangd_extensions = previous_extension
-    package.loaded['plugins.lsp'] = nil
-    package.loaded.util = previous_util
+      load_registry().setup(opts, {
+        protocol_capabilities = function() return {} end,
+        blink_capabilities = function(capabilities) return capabilities end,
+        config = function(server, config)
+          h.falsy(configured[server], server .. ' configured more than once')
+          configured[server] = vim.deepcopy(config)
+        end,
+        enable = function(server)
+          enabled[server] = (enabled[server] or 0) + 1
+        end,
+      })
+    end)
 
     h.truthy(configured.gopls.settings.gopls.gofumpt)
     h.truthy(configured.gopls.settings.gopls.codelenses.run_govulncheck)
@@ -194,6 +215,52 @@ h.describe('LSP registry', function()
       h.falsy(configured[external], external .. ' must remain externally owned')
       h.falsy(enabled[external], external .. ' must never be centrally enabled')
     end
+  end)
+
+  h.it('invokes vtsls request methods with the client as self', function()
+    local attached
+    local modules = { 'util', 'plugins.lsp.lang.typescript' }
+    with_restored_modules(modules, function()
+      package.loaded.util = {
+        lsp = {
+          action = setmetatable({}, { __index = function() return function() end end }),
+          execute = function() end,
+          on_attach = function(callback) attached = callback end,
+        },
+        get_pkg_path = function() return '/tmp/mason-package' end,
+      }
+      local opts = lsp_opts('plugins.lsp.lang.typescript')
+      opts.setup.vtsls('vtsls', vim.deepcopy(opts.servers.vtsls))
+
+      local client = { commands = {} }
+      local calls = {}
+      client.request = function(self, method, params, callback)
+        h.equal(self, client)
+        calls[#calls + 1] = { method, params.command }
+        if callback then callback(nil, { body = { files = { '/tmp/target.ts' } } }) end
+      end
+      attached(client, 1)
+
+      local previous_select = vim.ui.select
+      local ok, err = xpcall(function()
+        vim.ui.select = function(_, _, callback) callback('/tmp/target.ts') end
+        client.commands['_typescript.moveToFileRefactoring']({
+          command = 'typescript.moveToFile',
+          arguments = {
+            'move',
+            vim.uri_from_fname('/tmp/source.ts'),
+            { start = { line = 0, character = 0 }, ['end'] = { line = 0, character = 1 } },
+          },
+        })
+      end, debug.traceback)
+      vim.ui.select = previous_select
+      if not ok then error(err, 0) end
+
+      h.deep_equal(calls, {
+        { 'workspace/executeCommand', 'typescript.tsserverRequest' },
+        { 'workspace/executeCommand', 'typescript.moveToFile' },
+      })
+    end)
   end)
 
   h.it('keeps Angular roots specific to Angular workspaces', function()
