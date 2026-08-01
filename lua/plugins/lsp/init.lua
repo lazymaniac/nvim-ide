@@ -1,79 +1,5 @@
 local Util = require 'util'
 
-local function ensure_installed(packages)
-  for _, package in ipairs(packages) do
-    if not require('mason-registry').is_installed(package) then
-      vim.cmd('MasonInstall ' .. package)
-    end
-  end
-end
-
-local packages = {
-  'stylua', -- lua
-  'hadolint', -- docker
-  'djlint', -- angular, go
-  'ansible-lint', -- ansible
-  'cmakelint', -- cmake
-  'cmakelang',
-  'codelldb', -- rust, c
-  'cypher-language-server', -- neo4j cypher language server
-  'graphql-language-service-cli',
-  'postgres-language-server',
-  'shellcheck', -- bash
-  'shellharden',
-  'beautysh',
-  'bash-debug-adapter',
-  'goimports', -- go
-  'gofumpt',
-  'staticcheck',
-  'trivy',
-  'delve',
-  'haskell-debug-adapter', -- haskell
-  'hlint',
-  'prettierd', -- html
-  'htmlhint',
-  'stylelint',
-  'eslint_d',
-  'java-debug-adapter', -- java
-  'java-test',
-  'vscode-java-decompiler',
-  'vscode-spring-boot-tools',
-  'vscode-java-dependency',
-  'jq', -- json
-  'jsonlint',
-  'prettierd',
-  'ktlint', -- kotlin
-  'kotlin-debug-adapter',
-  'markdown-toc', -- markdown
-  'markdownlint',
-  'write-good',
-  'black', -- python
-  'pydocstyle',
-  'pylint',
-  'docformatter',
-  'debugpy',
-  'erb-formatter', -- ruby
-  'erb-lint',
-  'rubocop',
-  'sqlfmt', -- sql
-  'sqlfluff',
-  'sqruff',
-  'tfsec', -- terraform
-  'trivy',
-  'js-debug-adapter', -- typrescript, javascript
-  'eslint_d',
-  'yamllint', -- yaml
-  'prettierd',
-  'sonarlint-language-server',
-  'clj-kondo',
-  'golangci-lint',
-  'kube-linter',
-  'detekt',
-  'luacheck',
-  'actionlint',
-  'xmlformatter',
-}
-
 return {
   --
   -- [mason.nvim] - LSP, formatter, dap, test tools installer
@@ -107,7 +33,19 @@ return {
     },
     config = function(_, opts)
       require('mason').setup(opts)
-      ensure_installed(packages)
+    end,
+  },
+
+  {
+    'WhoIsSethDaniel/mason-tool-installer.nvim',
+    branch = 'main',
+    lazy = false,
+    dependencies = { 'mason-org/mason.nvim' },
+    opts = function()
+      return require('nv_ide.toolchain.mason').options()
+    end,
+    config = function(_, opts)
+      require('nv_ide.toolchain.mason').setup(opts)
     end,
   },
 
@@ -116,41 +54,6 @@ return {
     branch = 'main',
     event = 'BufReadPre',
     opts = {
-      ensure_installed = {
-        'lua_ls',
-        'clangd',
-        'angularls',
-        'ansiblels',
-        'bashls',
-        'clojure_lsp',
-        'cmake',
-        'cucumber_language_server',
-        'dockerls',
-        'docker_compose_language_service',
-        'gopls',
-        'gradle_ls',
-        'groovyls',
-        'hls',
-        'yamlls',
-        'helm_ls',
-        'html',
-        'emmet_ls',
-        'cssls',
-        'jdtls',
-        'jsonls',
-        'kotlin_language_server',
-        'marksman',
-        'puppet',
-        'pyright',
-        'ruby_lsp',
-        'rubocop',
-        'rust_analyzer',
-        'taplo',
-        'sqls',
-        'svelte',
-        'terraformls',
-        'vtsls',
-      },
       automatic_enable = false,
     },
   },
