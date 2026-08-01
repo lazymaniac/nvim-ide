@@ -39,7 +39,42 @@ local function default_install(missing)
   return require('nvim-treesitter').install(missing, { force = true })
 end
 
+local function includes(values, expected)
+  for _, value in ipairs(values or {}) do
+    if value == expected then
+      return true
+    end
+  end
+  return false
+end
+
+local function default_prepare(parsers, provided_registry)
+  if not includes(parsers, 'dap_repl') then
+    return
+  end
+  local registry = provided_registry or require 'nvim-treesitter.parsers'
+  if registry.dap_repl then
+    return
+  end
+
+  -- nvim-dap-repl-highlights registers its main-branch local parser from a
+  -- User TSUpdate callback. First-run discovery precedes any TSUpdate, so
+  -- explicitly replay that registration event before inspecting providers.
+  pcall(vim.api.nvim_exec_autocmds, 'User', { pattern = 'TSUpdate', modeline = false })
+  if registry.dap_repl then
+    return
+  end
+
+  -- A freshly installed provider may not have run its plugin config yet.
+  local loaded, provider = pcall(require, 'nvim-dap-repl-highlights')
+  if loaded and type(provider.setup) == 'function' then
+    pcall(provider.setup)
+    pcall(vim.api.nvim_exec_autocmds, 'User', { pattern = 'TSUpdate', modeline = false })
+  end
+end
+
 function TreeSitter:discover()
+  self.prepare()
   local installed = {}
   for _, parser in ipairs(self.installed()) do
     installed[parser] = true
@@ -125,6 +160,7 @@ local M = {}
 function M.new(options)
   options = options or {}
   local manifest = options.manifest or require 'nv_ide.toolchain.manifest'
+  local parsers = sorted_unique(options.parsers or manifest.treesitter.parsers)
   local using_default_discovery = options.installed == nil
   local installed = options.installed or function()
     return default_installed(options.config, options.parser_registry)
@@ -136,7 +172,10 @@ function M.new(options)
     return default_record(parsers, options.config, options.parser_registry)
   end
   return setmetatable({
-    parsers = sorted_unique(options.parsers or manifest.treesitter.parsers),
+    parsers = parsers,
+    prepare = options.prepare or function()
+      default_prepare(parsers, options.parser_registry)
+    end,
     installed = installed,
     install_parsers = options.install or default_install,
     record = record,

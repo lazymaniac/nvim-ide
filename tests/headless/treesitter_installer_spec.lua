@@ -6,6 +6,38 @@ local function adapter_with(options)
 end
 
 h.describe('Tree-sitter installation adapter', function()
+  h.it('registers local parser providers before first fresh-process discovery', function()
+    local registry = {}
+    local group = vim.api.nvim_create_augroup('nv_ide_test_dap_repl_provider', { clear = true })
+    vim.api.nvim_create_autocmd('User', {
+      group = group,
+      pattern = 'TSUpdate',
+      callback = function()
+        registry.dap_repl = { install_info = { path = '/fresh/nvim-dap-repl-highlights' } }
+      end,
+    })
+
+    local adapter = adapter_with {
+      parsers = { 'dap_repl' },
+      parser_registry = registry,
+      installed = function()
+        h.truthy(registry.dap_repl, 'dap_repl must be registered before installed parser discovery')
+        return {}
+      end,
+      install = function()
+        error 'discovery must not install'
+      end,
+    }
+
+    local ok, result = xpcall(function()
+      h.deep_equal(adapter:discover(), { 'dap_repl' })
+    end, debug.traceback)
+    pcall(vim.api.nvim_del_augroup_by_id, group)
+    if not ok then
+      error(result, 0)
+    end
+  end)
+
   h.it('requests only missing deduplicated parsers without blocking startup', function()
     local requested
     local waited = false
