@@ -164,9 +164,10 @@ h.describe('plugin ownership', function()
     h.matches(tooling, "go = { 'golangcilint' }")
 
     local tests = plugin(dofile 'lua/plugins/tests.lua', 'nvim-neotest/neotest')
-    local dap = plugin(dofile 'lua/plugins/dap.lua', 'mfussenegger/nvim-dap')
+    local dap_go = plugin(dofile 'lua/plugins/lsp/lang/go.lua', 'leoluz/nvim-dap-go')
     h.truthy(plugin(tests.dependencies or {}, 'nvim-neotest/neotest-go'), 'Neotest-Go is missing')
-    h.truthy(plugin(dap.dependencies or {}, 'leoluz/nvim-dap-go'), 'DAP-Go is missing')
+    h.truthy(dap_go, 'DAP-Go is missing')
+    h.equal(dap_go.keys[1].ft, 'go')
   end)
 
   h.it('gives every standalone plugin an explicit load boundary', function()

@@ -68,6 +68,17 @@ h.describe('DAP ownership and lazy loading', function()
     h.truthy(dependency(ruby, 'mfussenegger/nvim-dap'))
   end)
 
+  h.it('keeps DAP-Go outside non-Go debug triggers', function()
+    local main = plugin(dofile('lua/plugins/dap.lua'), 'mfussenegger/nvim-dap')
+    h.falsy(dependency(main, 'leoluz/nvim-dap-go'), 'the main DAP trigger must not load DAP-Go')
+
+    local go = plugin(dofile('lua/plugins/lsp/lang/go.lua'), 'leoluz/nvim-dap-go')
+    h.truthy(dependency(go, 'mfussenegger/nvim-dap'))
+    h.equal(#(go.keys or {}), 1)
+    h.equal(go.keys[1][1], '<leader>td')
+    h.equal(go.keys[1].ft, 'go')
+  end)
+
   h.it('resolves an absolute executable Python in deterministic priority order', function()
     package.loaded['util.dap'] = nil
     local resolver = require 'util.dap'
