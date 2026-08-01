@@ -166,6 +166,13 @@ local M = {
       'yaml',
     },
   },
+  prerequisites = {
+    { id = 'c_compiler', executables = { 'cc', 'clang', 'gcc' }, any = true, required = true },
+    { id = 'snacks_image_ghostscript', executables = { 'gs' }, required = false },
+    { id = 'snacks_image_latex', executables = { 'tectonic', 'pdflatex' }, any = true, required = false },
+    { id = 'snacks_image_mermaid', executables = { 'mmdc' }, required = false },
+    { id = 'snacks_image_raster', executables = { 'magick' }, required = false },
+  },
   runtimes = {
     { id = 'ansible', executables = { 'ansible', 'ansible-playbook' } },
     { id = 'clojure', executables = { 'clojure', 'lein', 'bb' }, any = true },
@@ -204,7 +211,10 @@ local M = {
     { id = 'python3', command = { 'python3' } },
     { id = 'termscp', command = { 'termscp' } },
     { id = 'tiki', command = { 'tiki' } },
-    { id = 'zellij', command = { 'zellij', 'attach', '-c', 'options' } },
+    {
+      id = 'zellij',
+      command = { 'zellij', 'attach', '-c', 'options', '--theme', 'kanagawa', '--show-startup-tips', 'true' },
+    },
   },
   ai = {
     cli = { 'claude', 'cline', 'codex' },
@@ -289,6 +299,7 @@ function M.fingerprint()
     mason = M.mason,
     lsp = M.lsp,
     treesitter = M.treesitter,
+    prerequisites = M.prerequisites,
     runtimes = M.runtimes,
     external_actions = M.external_actions,
     ai = M.ai,

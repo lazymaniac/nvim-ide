@@ -28,6 +28,73 @@ local expected_parsers = {
   'vimdoc', 'vue', 'xml', 'yaml',
 }
 
+local expected_prerequisites = {
+  { id = 'c_compiler', executables = { 'cc', 'clang', 'gcc' }, any = true, required = true },
+  { id = 'snacks_image_ghostscript', executables = { 'gs' }, required = false },
+  { id = 'snacks_image_latex', executables = { 'tectonic', 'pdflatex' }, any = true, required = false },
+  { id = 'snacks_image_mermaid', executables = { 'mmdc' }, required = false },
+  { id = 'snacks_image_raster', executables = { 'magick' }, required = false },
+}
+
+local expected_runtimes = {
+  { id = 'ansible', executables = { 'ansible', 'ansible-playbook' } },
+  { id = 'clojure', executables = { 'clojure', 'lein', 'bb' }, any = true },
+  { id = 'cmake', executables = { 'cmake', 'ninja' } },
+  { id = 'containers', executables = { 'docker', 'podman' }, any = true },
+  { id = 'dart', executables = { 'dart', 'flutter' } },
+  { id = 'go', executables = { 'go' } },
+  { id = 'haskell', executables = { 'ghc', 'cabal', 'stack' }, any = true },
+  { id = 'java', executables = { 'java', 'javac', 'mvn', 'gradle' } },
+  { id = 'javascript', executables = { 'node', 'npm' } },
+  { id = 'kotlin', executables = { 'kotlinc' } },
+  { id = 'lua', executables = { 'lua', 'luajit' }, any = true },
+  { id = 'python', executables = { 'python3' } },
+  { id = 'r', executables = { 'R' } },
+  { id = 'ruby', executables = { 'ruby', 'bundle' } },
+  { id = 'rust', executables = { 'rustc', 'cargo' } },
+  { id = 'scala', executables = { 'scala', 'sbt' } },
+  { id = 'sql', executables = { 'psql' } },
+  { id = 'terraform', executables = { 'terraform' } },
+}
+
+local expected_external_actions = {
+  { id = 'btop', command = { 'btop' } },
+  { id = 'cloudlens', command = { 'cloudlens' } },
+  { id = 'clx', command = { 'clx' } },
+  { id = 'dua', command = { 'dua', 'i' } },
+  { id = 'euporie-notebook', command = { 'euporie-notebook' } },
+  { id = 'glab-tui', command = { 'glab-tui' } },
+  { id = 'harlequin', command = { 'harlequin' } },
+  { id = 'jshell', command = { 'jshell' } },
+  { id = 'k9s', command = { 'k9s' } },
+  { id = 'lazydocker', command = { 'lazydocker' } },
+  { id = 'nap', command = { 'nap' } },
+  { id = 'omm', command = { 'omm', '--editor', 'nvim' } },
+  { id = 'podman-tui', command = { 'podman-tui' } },
+  { id = 'posting', command = { 'posting' } },
+  { id = 'python3', command = { 'python3' } },
+  { id = 'termscp', command = { 'termscp' } },
+  { id = 'tiki', command = { 'tiki' } },
+  {
+    id = 'zellij',
+    command = { 'zellij', 'attach', '-c', 'options', '--theme', 'kanagawa', '--show-startup-tips', 'true' },
+  },
+}
+
+local expected_ai = {
+  cli = { 'claude', 'cline', 'codex' },
+  backends = {
+    { id = 'ollama', executable = 'ollama', url = 'http://127.0.0.1:11434' },
+  },
+  credentials = { 'ANTHROPIC_API_KEY', 'OPENAI_API_KEY' },
+}
+
+local expected_plugin_branches = {
+  ['linux-cultist/venv-selector.nvim'] = 'regexp',
+  ['nvim-treesitter/nvim-treesitter'] = 'main',
+  ['nvim-treesitter/nvim-treesitter-textobjects'] = 'main',
+}
+
 local function sorted_unique(values)
   local seen, result = {}, {}
   for _, value in ipairs(values) do
@@ -75,12 +142,6 @@ local function expected_mason()
   return sorted_unique(values)
 end
 
-local function names(records)
-  local result = {}
-  for _, record in ipairs(records or {}) do result[#result + 1] = record.id end
-  return result
-end
-
 h.describe('complete toolchain manifest', function()
   h.it('contains the exact deduplicated Mason and Tree-sitter inventories', function()
     package.loaded['nv_ide.toolchain.manifest'] = nil
@@ -94,25 +155,13 @@ h.describe('complete toolchain manifest', function()
     h.equal(#manifest.treesitter.parsers, 62)
   end)
 
-  h.it('describes every runtime, external action, and AI dependency without selectors', function()
+  h.it('describes every prerequisite, runtime, external action, and AI dependency exactly', function()
     local manifest = require 'nv_ide.toolchain.manifest'
-    local runtime_names = names(manifest.runtimes)
-    for _, runtime in ipairs {
-      'ansible', 'clojure', 'cmake', 'containers', 'dart', 'go', 'haskell', 'java', 'javascript', 'kotlin',
-      'lua', 'python', 'r', 'ruby', 'rust', 'scala', 'sql', 'terraform',
-    } do
-      h.truthy(vim.tbl_contains(runtime_names, runtime), 'missing runtime: ' .. runtime)
-    end
-
-    local action_names = names(manifest.external_actions)
-    h.deep_equal(action_names, {
-      'btop', 'cloudlens', 'clx', 'dua', 'euporie-notebook', 'glab-tui', 'harlequin', 'jshell', 'k9s',
-      'lazydocker', 'nap', 'omm', 'podman-tui', 'posting', 'python3', 'termscp', 'tiki', 'zellij',
-    })
-    h.deep_equal(manifest.ai.cli, { 'claude', 'cline', 'codex' })
-    h.deep_equal(names(manifest.ai.backends), { 'ollama' })
-    h.truthy(manifest.plugin_branches['nvim-treesitter/nvim-treesitter'] == 'main')
-    h.truthy(manifest.plugin_branches['linux-cultist/venv-selector.nvim'] == 'regexp')
+    h.deep_equal(manifest.prerequisites, expected_prerequisites)
+    h.deep_equal(manifest.runtimes, expected_runtimes)
+    h.deep_equal(manifest.external_actions, expected_external_actions)
+    h.deep_equal(manifest.ai, expected_ai)
+    h.deep_equal(manifest.plugin_branches, expected_plugin_branches)
 
     local rendered = vim.inspect(manifest):lower()
     h.falsy(rendered:find('profile', 1, true), 'runtime manifest must expose one inventory, not selectors')

@@ -196,8 +196,9 @@ h.describe('Overseer workflow executable validation', function()
   h.it('validates Maven inside its generator instead of an ignored callback condition', function()
     local builders = reload(builders_module)
     local provider = builders.maven_provider {
-      has_root_pom = function()
-        return true
+      find_project_dir = function(search_dir)
+        h.equal(search_dir, '/workspace/project')
+        return '/workspace/project'
       end,
       executable = function()
         return 0
@@ -208,7 +209,7 @@ h.describe('Overseer workflow executable validation', function()
     local result
 
     h.equal(provider.condition, nil)
-    provider.generator({}, function(value)
+    provider.generator({ dir = '/workspace/project' }, function(value)
       callbacks = callbacks + 1
       result = value
     end)
@@ -216,6 +217,63 @@ h.describe('Overseer workflow executable validation', function()
     h.equal(callbacks, 1)
     h.equal(type(result), 'string')
     h.matches(result, 'Maven executable')
+  end)
+
+  h.it('anchors Maven discovery and task execution to the requested search directory', function()
+    local builders = reload(builders_module)
+    local state = {}
+    local provider = builders.maven_provider {
+      find_project_dir = function(search_dir)
+        state.search_dir = search_dir
+        return '/workspace/project'
+      end,
+      executable = function(command)
+        h.equal(command, 'mvn')
+        return 1
+      end,
+      notify = function() end,
+      find_pom_dirs = function(project_dir)
+        state.project_dir = project_dir
+        return { '/workspace/project/module' }
+      end,
+      find_java_sdks = function()
+        return {}
+      end,
+      basename = function(path)
+        return path:match '[^/]+$'
+      end,
+      joinpath = function(...)
+        return table.concat({ ... }, '/')
+      end,
+      read_goals = function()
+        return { 'verify' }
+      end,
+      read_profiles = function()
+        return {}
+      end,
+    }
+    local result
+
+    provider.generator({ dir = '/workspace/project/src/main/java' }, function(value)
+      result = value
+    end)
+
+    h.equal(state.search_dir, '/workspace/project/src/main/java')
+    h.equal(state.project_dir, '/workspace/project')
+    h.equal(#result, 1)
+    h.deep_equal(result[1].builder {
+      clean = true,
+      skip_test = false,
+      goals = { 'verify' },
+      profiles = {},
+      sdks = '',
+      extra_params = {},
+    }, {
+      cmd = 'mvn',
+      args = { '-f', '/workspace/project/module/pom.xml', 'clean', 'verify' },
+      env = {},
+      cwd = '/workspace/project/module',
+    })
   end)
 
   h.it('validates Docker Compose once in its provider generator', function()
@@ -296,18 +354,6 @@ h.describe('Overseer plugin timeout configuration', function()
 end)
 
 h.describe('Gradle workflow discovery', function()
-  package.preload['plenary.path'] = package.preload['plenary.path']
-    or function()
-      local Path = {}
-      function Path:new(value)
-        return setmetatable({ value = value }, { __index = self })
-      end
-      function Path:exists()
-        return true
-      end
-      return Path
-    end
-
   local function scenario(overrides)
     local state = {
       callbacks = 0,
@@ -317,8 +363,13 @@ h.describe('Gradle workflow discovery', function()
       cancel_count = 0,
     }
     local probes = {
-      cwd = function()
-        return '/workspace'
+      find_gradle_wrapper = function(search_dir)
+        state.search_dir = search_dir
+        return '/workspace/project/gradlew'
+      end,
+      dirname = function(path)
+        h.equal(path, '/workspace/project/gradlew')
+        return '/workspace/project'
       end,
       executable = function()
         return 1
@@ -346,7 +397,7 @@ h.describe('Gradle workflow discovery', function()
 
     local builders = reload(builders_module)
     local provider = builders.gradle_provider(probes, { timeout_ms = 10000 })
-    provider.generator({}, function(result)
+    provider.generator({ dir = '/workspace/project/src/main/java' }, function(result)
       state.callbacks = state.callbacks + 1
       state.result = result
     end)
@@ -356,7 +407,9 @@ h.describe('Gradle workflow discovery', function()
   h.it('discovers tasks using argv and completes once on success', function()
     local state = scenario()
 
-    h.deep_equal(state.argv, { './gradlew', 'tasks', '--console=plain' })
+    h.equal(state.search_dir, '/workspace/project/src/main/java')
+    h.deep_equal(state.argv, { '/workspace/project/gradlew', 'tasks', '--console=plain' })
+    h.equal(state.job_options.cwd, '/workspace/project')
     h.truthy(
       state.timeout_ms > 0 and state.timeout_ms < 30000,
       'internal timeout must finish before Overseer\'s 30000ms provider timeout'
@@ -377,9 +430,10 @@ h.describe('Gradle workflow discovery', function()
         extra_params = { '--info' },
       },
       {
-        cmd = './gradlew',
+        cmd = '/workspace/project/gradlew',
         args = { ':app:test-task', '--info' },
         env = {},
+        cwd = '/workspace/project',
       }
     )
 
@@ -441,6 +495,59 @@ h.describe('Gradle workflow discovery', function()
     state.job_options.on_exit(nil, 143)
     state.timeout_callback()
     h.equal(state.callbacks, 1)
+  end)
+end)
+
+h.describe('Overseer production workflow integration', function()
+  h.it('uses Neovim notifications without requiring an undeclared notification plugin', function()
+    h.with_temp_dir(function(directory)
+      vim.fn.writefile({}, vim.fs.joinpath(directory, 'pom.xml'))
+
+      local previous_cwd = vim.fn.getcwd()
+      local previous_executable = vim.fn.executable
+      local previous_notify = vim.notify
+      local previous_notify_loaded = package.loaded.notify
+      local previous_notify_preload = package.preload.notify
+      local notifications = {}
+      local result
+
+      local ok, err = xpcall(function()
+        vim.fn.chdir(directory)
+        vim.fn.executable = function(command)
+          return command == 'mvn' and 1 or 0
+        end
+        vim.notify = function(message)
+          notifications[#notifications + 1] = message
+        end
+        package.loaded.notify = nil
+        package.preload.notify = nil
+
+        reload(maven_module).generator({ dir = directory }, function(value)
+          result = value
+        end)
+      end, debug.traceback)
+
+      vim.fn.chdir(previous_cwd)
+      vim.fn.executable = previous_executable
+      vim.notify = previous_notify
+      package.loaded.notify = previous_notify_loaded
+      package.preload.notify = previous_notify_preload
+
+      if not ok then
+        error(err, 0)
+      end
+      h.equal(type(result), 'table')
+      h.equal(#result, 1)
+      h.deep_equal(notifications, { 'Found Maven. Setting up tasks' })
+    end)
+
+    for _, file in ipairs {
+      'lua/overseer/template/user/mvn-workflow.lua',
+      'lua/overseer/template/user/gradle-workflow.lua',
+    } do
+      local source = table.concat(vim.fn.readfile(file), '\n')
+      h.falsy(source:find("require 'notify'", 1, true), file .. ' must use vim.notify')
+    end
   end)
 end)
 
