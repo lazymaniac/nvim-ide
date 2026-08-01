@@ -1,5 +1,70 @@
 local M = {}
 
+local active_jshell_runs = {}
+local BUILD_SUCCEEDED = 1
+
+local function class_portion(main_class)
+  return type(main_class) == 'string' and (main_class:match('/(.+)$') or main_class) or nil
+end
+
+local function existing_paths(paths, fs_stat)
+  local result = {}
+  for _, path in ipairs(type(paths) == 'table' and paths or {}) do
+    local stat = fs_stat(path)
+    if stat and (stat.type == 'file' or stat.type == 'directory') then
+      result[#result + 1] = path
+    end
+  end
+  return result
+end
+
+local function default_client(client_id, bufnr)
+  if client_id then
+    local client = vim.lsp.get_client_by_id(client_id)
+    if client
+      and client.name == 'jdtls'
+      and client.attached_buffers
+      and client.attached_buffers[bufnr]
+    then
+      return client
+    end
+    return nil
+  end
+  local clients = require('jdtls.util').get_clients { name = 'jdtls', bufnr = bufnr }
+  return #clients == 1 and clients[1] or nil
+end
+
+local function default_dependencies()
+  return {
+    buf_is_valid = vim.api.nvim_buf_is_valid,
+    buf_name = vim.api.nvim_buf_get_name,
+    buf_uri = vim.uri_from_bufnr,
+    buf_options = function(bufnr)
+      return {
+        buftype = vim.bo[bufnr].buftype,
+        filetype = vim.bo[bufnr].filetype,
+        modifiable = vim.bo[bufnr].modifiable,
+        readonly = vim.bo[bufnr].readonly,
+      }
+    end,
+    save = function(bufnr)
+      vim.api.nvim_buf_call(bufnr, function() vim.cmd.update() end)
+    end,
+    resolve_classname = function(bufnr)
+      return vim.api.nvim_buf_call(bufnr, require('jdtls.util').resolve_classname)
+    end,
+    get_client = default_client,
+    request = function(client, method, params, callback, bufnr)
+      return client:request(method, params, callback, bufnr)
+    end,
+    fs_stat = vim.uv.fs_stat,
+    is_executable = function(path) return vim.fn.executable(path) == 1 end,
+    exepath = vim.fn.exepath,
+    path_separator = vim.fn.has('win32') == 1 and ';' or ':',
+    notify = vim.notify,
+  }
+end
+
 local function read_file(path)
   local ok, lines = pcall(vim.fn.readfile, path)
   return ok and table.concat(lines, '\n') or nil
@@ -129,6 +194,149 @@ function M.workspace_id(root, deps)
   local normalized = vim.fs.normalize(realpath(absolute) or absolute)
   local name = vim.fs.basename(normalized):gsub('[^%w_.-]', '_')
   return ('%s-%s'):format(name, vim.fn.sha256(normalized):sub(1, 12))
+end
+
+function M.run_current_class(options)
+  options = options or {}
+  local bufnr = options.bufnr or vim.api.nvim_get_current_buf()
+  local deps = vim.tbl_extend('force', default_dependencies(), options.deps or {})
+
+  if active_jshell_runs[bufnr] then
+    deps.notify('Java JShell: a run is already in progress for this buffer', vim.log.levels.WARN)
+    return false
+  end
+
+  if not deps.buf_is_valid(bufnr) then
+    deps.notify('Java JShell: current buffer is invalid', vim.log.levels.ERROR)
+    return false
+  end
+  local buffer_options = deps.buf_options(bufnr)
+  local path = deps.buf_name(bufnr)
+  if buffer_options.filetype ~= 'java'
+    or buffer_options.buftype ~= ''
+    or path == ''
+    or not path:lower():match('%.java$')
+  then
+    deps.notify('Java JShell: current buffer is not a named Java source file', vim.log.levels.ERROR)
+    return false
+  end
+  if buffer_options.readonly or not buffer_options.modifiable then
+    deps.notify('Java JShell: current Java buffer is not writable', vim.log.levels.ERROR)
+    return false
+  end
+
+  local client = deps.get_client(options.client_id, bufnr)
+  if not client then
+    deps.notify('Java JShell: no JDTLS client is attached to this buffer', vim.log.levels.ERROR)
+    return false
+  end
+
+  active_jshell_runs[bufnr] = true
+  local finished = false
+  local function finish(message, level)
+    if finished then return false end
+    finished = true
+    active_jshell_runs[bufnr] = nil
+    if message then deps.notify('Java JShell: ' .. message, level or vim.log.levels.ERROR) end
+    return not message
+  end
+  local function request(method, params, callback, label)
+    local ok, accepted = pcall(deps.request, client, method, params, callback, bufnr)
+    if not ok then return finish(label .. ' failed: ' .. tostring(accepted)) end
+    if accepted ~= true then return finish(label .. ' request was rejected by JDTLS') end
+    return true
+  end
+
+  local saved, save_error = pcall(deps.save, bufnr)
+  if not saved then return finish('could not save the current file: ' .. tostring(save_error)) end
+  local resolved, class_name = pcall(deps.resolve_classname, bufnr)
+  if not resolved or type(class_name) ~= 'string' or class_name == '' then
+    return finish('could not resolve the current class name')
+  end
+
+  local function launch(paths, java_exec)
+    local module_paths = existing_paths(paths[1], deps.fs_stat)
+    local class_paths = existing_paths(paths[2], deps.fs_stat)
+    local suffix = java_exec:lower():match('%.exe$') and '.exe' or ''
+    local sibling = vim.fs.joinpath(vim.fs.dirname(java_exec), 'jshell' .. suffix)
+    local jshell = deps.is_executable(sibling) and sibling or deps.exepath('jshell')
+    if type(jshell) ~= 'string' or jshell == '' then return finish('could not find JShell') end
+
+    local argv = { jshell }
+    if #class_paths > 0 then
+      vim.list_extend(argv, { '--class-path', table.concat(class_paths, deps.path_separator) })
+    end
+    if #module_paths > 0 then
+      vim.list_extend(argv, {
+        '--module-path', table.concat(module_paths, deps.path_separator),
+        '--add-modules', 'ALL-MODULE-PATH',
+      })
+    end
+    local cwd = client.config and client.config.root_dir or nil
+    local called, ok, terminal_error = pcall(
+      deps.open_terminal,
+      argv,
+      class_name .. '.main(new String[0]);\n',
+      cwd
+    )
+    if not called then return finish('terminal launch failed: ' .. tostring(ok)) end
+    if not ok then return finish(terminal_error or 'could not start JShell') end
+    return finish()
+  end
+
+  local function resolve_java(main, paths)
+    local params = {
+      command = 'vscode.java.resolveJavaExecutable',
+      arguments = { main.mainClass, main.projectName or '' },
+    }
+    return request('workspace/executeCommand', params, function(err, java_exec)
+      if err then return finish('Java executable resolution failed: ' .. (err.message or vim.inspect(err))) end
+      if type(java_exec) ~= 'string' or java_exec == '' then
+        return finish('JDTLS returned no Java executable')
+      end
+      launch(paths, java_exec)
+    end, 'Java executable resolution')
+  end
+
+  local function resolve_paths(main)
+    local params = {
+      command = 'vscode.java.resolveClasspath',
+      arguments = { main.mainClass, main.projectName or '' },
+    }
+    return request('workspace/executeCommand', params, function(err, paths)
+      if err then return finish('classpath resolution failed: ' .. (err.message or vim.inspect(err))) end
+      if type(paths) ~= 'table' or type(paths[1]) ~= 'table' or type(paths[2]) ~= 'table' then
+        return finish('JDTLS returned an invalid classpath response')
+      end
+      resolve_java(main, paths)
+    end, 'classpath resolution')
+  end
+
+  local function resolve_main()
+    return request('workspace/executeCommand', {
+      command = 'vscode.java.resolveMainClass',
+    }, function(err, main_classes)
+      if err then return finish('main-class resolution failed: ' .. (err.message or vim.inspect(err))) end
+      local match
+      for _, main in ipairs(type(main_classes) == 'table' and main_classes or {}) do
+        if class_portion(main.mainClass) == class_name then
+          match = main
+          break
+        end
+      end
+      if not match then return finish('the current class has no recognized main(String[]) method') end
+      resolve_paths(match)
+    end, 'main-class resolution')
+  end
+
+  local started = request('java/buildWorkspace', false, function(err, status)
+    if err then return finish('incremental build failed: ' .. (err.message or vim.inspect(err))) end
+    if status ~= BUILD_SUCCEEDED then
+      return finish(('incremental build returned status %s; use <leader>cc for diagnostics'):format(tostring(status)))
+    end
+    resolve_main()
+  end, 'incremental build')
+  return started == true
 end
 
 function M.bundle_patterns(mason)
