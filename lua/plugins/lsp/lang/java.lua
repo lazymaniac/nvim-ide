@@ -311,7 +311,7 @@ return {
         settings = java_settings(paths),
         root_dir = require('jdtls.setup').find_root,
         project_name = function(root_dir)
-          return root_dir and vim.fs.basename(root_dir)
+          return require('nv_ide.java').workspace_id(root_dir)
         end,
         jdtls_config_dir = function(project_name)
           return vim.fs.joinpath(vim.fn.stdpath('cache'), 'jdtls', project_name, 'config')
@@ -345,19 +345,8 @@ return {
       -- Find the extra bundles that should be passed on the jdtls command-line
       -- if nvim-dap is enabled with java debug/test.
       local bundles = {} ---@type string[]
-      local java_dbg_path = vim.fn.expand '$MASON/share/java-debug-adapter'
-      local jar_patterns = {
-        java_dbg_path .. '/com.microsoft.java.debug.plugin-*.jar',
-      }
-      local java_decompiler_path = vim.fn.expand '$MASON/share/vscode-java-decompiler'
-      vim.list_extend(jar_patterns, {
-        java_decompiler_path .. '/bundles/*.jar',
-      })
-      -- java-test also depends on java-debug-adapter.
-      local java_test_path = vim.fn.expand '$MASON/share/java-test'
-      vim.list_extend(jar_patterns, {
-        java_test_path .. '/*.jar',
-      })
+      local mason = require('util').mason_root()
+      local jar_patterns = require('nv_ide.java').bundle_patterns(mason)
       for _, jar_pattern in ipairs(jar_patterns) do
         for _, bundle in ipairs(vim.split(vim.fn.glob(jar_pattern), '\n')) do
           table.insert(bundles, bundle)

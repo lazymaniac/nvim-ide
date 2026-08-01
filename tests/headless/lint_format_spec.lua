@@ -218,4 +218,47 @@ h.describe('lint and format policy', function()
     h.falsy(calls.setup.format_on_save(0), 'format-on-save must remain disabled by default')
     vim.g.autoformat = previous_autoformat
   end)
+
+  h.it('uses the portable Mason root for helpers and Sonar analyzers', function()
+    local previous_lazy = package.loaded['lazy.core.util']
+    local previous_util = package.loaded.util
+    package.loaded['lazy.core.util'] = {}
+    package.loaded.util = nil
+    local ok, err = xpcall(function()
+      local util = require 'util'
+      h.equal(util.mason_root {
+        env = {},
+        stdpath = function() return '/xdg/data/nvim' end,
+      }, '/xdg/data/nvim/mason')
+      h.equal(util.mason_root {
+        env = { MASON = '' },
+        stdpath = function() return '/xdg/data/nvim' end,
+      }, '/xdg/data/nvim/mason')
+      h.equal(util.mason_root {
+        env = { MASON = '/custom/mason' },
+        stdpath = function() return '/unused' end,
+      }, '/custom/mason')
+    end, debug.traceback)
+    package.loaded['lazy.core.util'] = previous_lazy
+    package.loaded.util = previous_util
+    if not ok then error(err, 0) end
+
+    local previous_sonarlint = package.loaded.sonarlint
+    local previous_util_module = package.loaded.util
+    local configured
+    package.loaded.util = { mason_root = function() return '/xdg/data/nvim/mason' end }
+    package.loaded.sonarlint = { setup = function(opts) configured = opts end }
+    local sonar = plugin(dofile('lua/plugins/lint_and_format.lua'), 'https://gitlab.com/schrieveslaach/sonarlint.nvim')
+    local configured_ok, configured_err = xpcall(sonar.config, debug.traceback)
+    package.loaded.sonarlint = previous_sonarlint
+    package.loaded.util = previous_util_module
+    if not configured_ok then error(configured_err, 0) end
+    for _, path in ipairs(vim.list_slice(configured.server.cmd, 4)) do
+      h.truthy(vim.startswith(path, '/xdg/data/nvim/mason/share/sonarlint-analyzers/'), path)
+    end
+
+    local source = table.concat(vim.fn.readfile('lua/plugins/lsp/lang/java.lua'), '\n')
+      .. table.concat(vim.fn.readfile('lua/plugins/lint_and_format.lua'), '\n')
+    h.falsy(source:find('$MASON', 1, true))
+  end)
 end)

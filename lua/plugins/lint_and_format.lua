@@ -95,20 +95,21 @@ return {
     'https://gitlab.com/schrieveslaach/sonarlint.nvim',
     ft = { 'java', 'javascript', 'typescript', 'c', 'go', 'kubernetes', 'css', 'docker', 'xml', 'html', 'python' },
     config = function()
+      local mason = require('util').mason_root()
       require('sonarlint').setup {
         server = {
           cmd = {
             'sonarlint-language-server',
             '-stdio',
             '-analyzers',
-            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonarjava.jar',
-            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonarjs.jar',
-            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonarxml.jar',
-            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonargo.jar',
-            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonarhtml.jar',
-            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonariac.jar',
-            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonarjavasymbolicexecution.jar',
-            vim.fn.expand '$MASON/share/sonarlint-analyzers/sonarpython.jar',
+            vim.fs.joinpath(mason, 'share', 'sonarlint-analyzers', 'sonarjava.jar'),
+            vim.fs.joinpath(mason, 'share', 'sonarlint-analyzers', 'sonarjs.jar'),
+            vim.fs.joinpath(mason, 'share', 'sonarlint-analyzers', 'sonarxml.jar'),
+            vim.fs.joinpath(mason, 'share', 'sonarlint-analyzers', 'sonargo.jar'),
+            vim.fs.joinpath(mason, 'share', 'sonarlint-analyzers', 'sonarhtml.jar'),
+            vim.fs.joinpath(mason, 'share', 'sonarlint-analyzers', 'sonariac.jar'),
+            vim.fs.joinpath(mason, 'share', 'sonarlint-analyzers', 'sonarjavasymbolicexecution.jar'),
+            vim.fs.joinpath(mason, 'share', 'sonarlint-analyzers', 'sonarpython.jar'),
           },
         },
         filetypes = {

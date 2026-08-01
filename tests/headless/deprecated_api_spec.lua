@@ -257,6 +257,30 @@ h.describe('Neovim 0.12 portability', function()
     end
   end)
 
+  h.it('builds absolute collision-free JDTLS workspace identities', function()
+    local java = require 'nv_ide.java'
+    local deps = {
+      abspath = function(path)
+        return path == 'service' and '/work/acme/service' or path
+      end,
+      realpath = function() return nil end,
+    }
+    local expected = java.workspace_id('/work/acme/service', deps)
+    h.equal(expected, java.workspace_id('/work/acme/team/../service', deps))
+    h.equal(expected, java.workspace_id('service', deps))
+    h.falsy(expected == java.workspace_id('/work/other/service', deps))
+    h.truthy(expected:match '^service%-%x%x%x%x%x%x%x%x%x%x%x%x$')
+  end)
+
+  h.it('derives Java bundle patterns from one Mason root', function()
+    local patterns = require('nv_ide.java').bundle_patterns '/xdg/data/nvim/mason'
+    h.deep_equal(patterns, {
+      '/xdg/data/nvim/mason/share/java-debug-adapter/com.microsoft.java.debug.plugin-*.jar',
+      '/xdg/data/nvim/mason/share/vscode-java-decompiler/bundles/*.jar',
+      '/xdg/data/nvim/mason/share/java-test/*.jar',
+    })
+  end)
+
   h.it('keeps tracked shell fragments free of personal home paths', function()
     for _, path in ipairs({ 'dotfiles/.zprofile', 'dotfiles/.zshrc' }) do
       local source = table.concat(vim.fn.readfile(path), '\n')
