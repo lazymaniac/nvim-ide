@@ -36,19 +36,28 @@ end
 local function candidates(deps)
   local common = {
     deps.home .. '/.local/bin',
+    deps.home .. '/.cargo/bin',
+    deps.home .. '/go/bin',
+    deps.home .. '/.ghcup/bin',
     deps.home .. '/.asdf/shims',
     deps.data .. '/mason/bin',
   }
   if deps.os == 'Darwin' then
     vim.list_extend(common, {
+      '/opt/homebrew/opt/python@3.13/libexec/bin',
+      '/opt/homebrew/opt/ruby/bin',
+      '/opt/homebrew/opt/openjdk/bin',
+      '/opt/homebrew/opt/libpq/bin',
       '/opt/homebrew/bin',
       '/opt/homebrew/sbin',
+      '/usr/local/opt/python@3.13/libexec/bin',
+      '/usr/local/opt/ruby/bin',
+      '/usr/local/opt/openjdk/bin',
+      '/usr/local/opt/libpq/bin',
       '/usr/local/bin',
       '/usr/local/sbin',
     })
   elseif deps.os == 'Linux' then
-    table.insert(common, 2, deps.home .. '/.cargo/bin')
-    table.insert(common, 3, deps.home .. '/go/bin')
     vim.list_extend(common, {
       '/home/linuxbrew/.linuxbrew/bin',
       '/home/linuxbrew/.linuxbrew/sbin',
