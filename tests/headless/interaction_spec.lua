@@ -173,4 +173,74 @@ h.describe('editor interactions', function()
 
     h.deep_equal(selections, { { 'parent', vim.v.count1 }, { 'child', vim.v.count1 } })
   end)
+
+  h.it('separates diagnostic, conditional, and terminal ownership', function()
+    local previous_util = package.loaded.util
+    local previous_augroup = vim.api.nvim_create_augroup
+    local previous_autocmd = vim.api.nvim_create_autocmd
+    local previous_keymap = vim.keymap.set
+    local previous_cmd = vim.cmd
+    local previous_global = _G.set_terminal_keymaps
+    local core, mapped, commands = {}, {}, {}
+    local registration
+
+    package.loaded.util = {
+      safe_keymap_set = function(_, lhs) core[lhs] = true end,
+      format = { toggle = function() end },
+    }
+    vim.api.nvim_create_augroup = function(name, opts)
+      h.equal(name, 'nvide_terminal')
+      h.deep_equal(opts, { clear = true })
+      return 81
+    end
+    vim.api.nvim_create_autocmd = function(event, opts)
+      registration = { event = event, opts = opts }
+      return 82
+    end
+    vim.keymap.set = function(mode, lhs, rhs, opts)
+      mapped[#mapped + 1] = { mode = mode, lhs = lhs, rhs = rhs, opts = opts }
+    end
+    vim.cmd = function(command) commands[#commands + 1] = command end
+
+    local ok, err = xpcall(function()
+      dofile 'lua/config/keymaps.lua'
+      if registration then registration.opts.callback { buf = 37 } end
+    end, debug.traceback)
+
+    package.loaded.util = previous_util
+    vim.api.nvim_create_augroup = previous_augroup
+    vim.api.nvim_create_autocmd = previous_autocmd
+    vim.keymap.set = previous_keymap
+    vim.cmd = previous_cmd
+    _G.set_terminal_keymaps = previous_global
+    if not ok then error(err, 0) end
+
+    local treesitter = plugin(
+      dofile('lua/plugins/treesitter.lua'),
+      'nvim-treesitter/nvim-treesitter-textobjects'
+    )
+    local owners = {}
+    for lhs in pairs(core) do owners[lhs] = { 'core' } end
+    for _, key in ipairs(treesitter.keys or {}) do
+      owners[key[1]] = owners[key[1]] or {}
+      owners[key[1]][#owners[key[1]] + 1] = 'treesitter'
+    end
+    h.deep_equal(owners['[d'], { 'core' }, 'conditional motions must not own [d')
+    h.deep_equal(owners[']d'], { 'core' }, 'conditional motions must not own ]d')
+    h.deep_equal(owners['[C'], { 'treesitter' })
+    h.deep_equal(owners[']C'], { 'treesitter' })
+
+    h.truthy(registration, 'terminal mappings must use nvim_create_autocmd')
+    h.equal(registration.event, 'TermOpen')
+    h.equal(registration.opts.group, 81)
+    h.equal(registration.opts.pattern, 'term://*')
+    h.equal(#mapped, 6)
+    for _, item in ipairs(mapped) do
+      h.equal(item.mode, 't')
+      h.equal(item.opts.buffer, 37)
+    end
+    for _, command in ipairs(commands) do
+      h.falsy(command:find('autocmd!', 1, true), 'terminal setup must not clear another TermOpen handler')
+    end
+  end)
 end)
