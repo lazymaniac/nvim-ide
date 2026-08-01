@@ -1,0 +1,248 @@
+name: Neovim
+
+on:
+  pull_request:
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+    inputs:
+      full:
+        description: Install and verify the complete declared toolchain
+        required: false
+        default: false
+        type: boolean
+  schedule:
+    - cron: '17 4 * * 1'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: neovim-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name != 'schedule' }}
+
+jobs:
+  verify:
+    if: github.event_name != 'schedule'
+    name: Verify (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    env:
+      NVIM_LOG_FILE: ${{ runner.temp }}/nvim-plan-ci.log
+      NV_IDE_SMOKE_CACHE_ROOT: ${{ runner.temp }}/nv-ide-smoke-cache
+      NV_IDE_SMOKE_LOCK_OUTPUT: ${{ runner.temp }}/lazy-lock-${{ runner.os }}.json
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install Neovim 0.12
+        uses: rhysd/action-setup-vim@v1
+        with:
+          version: v0.12.4
+          neovim: true
+
+      - name: Install Ubuntu prerequisites
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes build-essential cargo curl git ripgrep ruby tar unzip
+
+      - name: Install macOS prerequisites
+        if: runner.os == 'macOS'
+        run: brew install ripgrep tree-sitter-cli
+
+      - name: Install Tree-sitter CLI 0.26
+        if: runner.os == 'Linux'
+        run: cargo install tree-sitter-cli --version 0.26.3 --locked
+
+      - name: Parse workflow YAML
+        run: ruby -e "require 'yaml'; YAML.load_file('.github/workflows/neovim.yml')"
+
+      - name: Compute manifest fingerprint
+        id: manifest
+        shell: bash
+        run: |
+          fingerprint="$({ nvim --clean --headless -u tests/minimal_init.lua -i NONE \
+            -c "lua print(require('nv_ide.toolchain.manifest').fingerprint())" -c 'qa!'; } 2>&1 | tail -n 1)"
+          test "${#fingerprint}" -eq 64
+          printf 'fingerprint=%s\n' "$fingerprint" >> "$GITHUB_OUTPUT"
+
+      - name: Restore isolated tool cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.NV_IDE_SMOKE_CACHE_ROOT }}
+          key: neovim-${{ runner.os }}-${{ hashFiles('lazy-lock.json') }}-manifest-fingerprint-${{ steps.manifest.outputs.fingerprint }}
+
+      - name: Compile every Lua file
+        run: >-
+          nvim --clean --headless -u NONE -i NONE
+          -c "lua for _,f in ipairs(vim.fn.glob('**/*.lua', false, true)) do assert(loadfile(f), f) end"
+          -c 'qa!'
+
+      - name: Run all headless specs
+        run: nvim --clean --headless -u tests/minimal_init.lua -i NONE -l tests/headless/run.lua
+
+      - name: Run clean-XDG preflight
+        run: tests/headless/no-profile.sh preflight
+
+      - name: Representative install, checkhealth nv_ide, and checkhealth snacks
+        env:
+          NV_IDE_SMOKE_ALLOW_INSTALL: '1'
+        run: tests/headless/no-profile.sh representative
+
+      - name: Resolve latest allowed plugins from locked seed
+        env:
+          NV_IDE_SMOKE_ALLOW_INSTALL: '1'
+        run: tests/headless/no-profile.sh resolve
+
+      - name: Upload resolved plugin lockfile
+        uses: actions/upload-artifact@v4
+        with:
+          name: neovim-resolved-lock-${{ runner.os }}-${{ github.run_id }}
+          path: ${{ env.NV_IDE_SMOKE_LOCK_OUTPUT }}
+          if-no-files-found: error
+          retention-days: 14
+
+  full:
+    if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.full)
+    name: Full declaration (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    env:
+      NVIM_LOG_FILE: ${{ runner.temp }}/nvim-plan-full.log
+      NV_IDE_SMOKE_CACHE_ROOT: ${{ runner.temp }}/nv-ide-smoke-cache
+      NV_IDE_SMOKE_LOCK_OUTPUT: ${{ runner.temp }}/lazy-lock-full-${{ runner.os }}.json
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Validate full-runtime provisioning contract
+        run: |
+          ruby -e "require 'yaml'; YAML.load_file('.github/workflows/neovim.yml')"
+          bash -n tests/ci/install-full-system-runtimes.sh
+          bash -n tests/ci/verify-full-runtimes.sh
+          ruby tests/ci/assert-full-runtime-provisioning.rb
+
+      - name: Install Neovim 0.12
+        uses: rhysd/action-setup-vim@v1
+        with:
+          version: v0.12.4
+          neovim: true
+
+      - name: Install Python 3.13 with venv support
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Install Node 24.15
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24.15.0'
+          package-manager-cache: false
+
+      - name: Install Go 1.26
+        uses: actions/setup-go@v6
+        with:
+          go-version: '1.26.0'
+          cache: false
+
+      - name: Install Temurin JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Install Ruby 3.4 with development headers
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: false
+
+      - name: Install current stable Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install current stable GHC and Cabal
+        uses: haskell-actions/setup@v2
+        with:
+          ghc-version: latest
+          cabal-version: latest
+          cabal-update: false
+
+      - name: Install one complete Clojure runtime
+        uses: DeLaGuardo/setup-clojure@13
+        with:
+          cli: latest
+
+      - name: Install current stable Scala and sbt
+        uses: coursier/setup-action@v3
+        with:
+          apps: scala sbt
+
+      - name: Install current stable Gradle
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          gradle-version: current
+          cache-disabled: true
+
+      - name: Install current stable Dart and Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install current stable R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+          use-public-rspm: true
+
+      - name: Install current stable Terraform
+        uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: latest
+          terraform_wrapper: false
+
+      - name: Install remaining system runtimes and prerequisites
+        shell: bash
+        run: bash tests/ci/install-full-system-runtimes.sh
+
+      - name: Fail fast unless every declared runtime is usable
+        shell: bash
+        run: bash tests/ci/verify-full-runtimes.sh
+
+      - name: Compute manifest fingerprint
+        id: manifest
+        shell: bash
+        run: |
+          fingerprint="$({ nvim --clean --headless -u tests/minimal_init.lua -i NONE \
+            -c "lua print(require('nv_ide.toolchain.manifest').fingerprint())" -c 'qa!'; } 2>&1 | tail -n 1)"
+          test "${#fingerprint}" -eq 64
+          printf 'fingerprint=%s\n' "$fingerprint" >> "$GITHUB_OUTPUT"
+
+      - name: Restore full declaration cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.NV_IDE_SMOKE_CACHE_ROOT }}
+          key: neovim-full-${{ runner.os }}-${{ hashFiles('lazy-lock.json') }}-manifest-fingerprint-${{ steps.manifest.outputs.fingerprint }}
+
+      - name: Run full real-init autorun and assert persisted completion
+        env:
+          NV_IDE_SMOKE_ALLOW_INSTALL: '1'
+          NV_IDE_SMOKE_FULL: '1'
+          NV_IDE_TOOLCHAIN_TIMEOUT_MS: '7200000'
+          NVIM_TOOLCHAIN_AUTORUN: '1'
+        run: tests/headless/no-profile.sh full
+
+      - name: Upload full-run resolved plugin lockfile
+        uses: actions/upload-artifact@v4
+        with:
+          name: neovim-full-resolved-lock-${{ runner.os }}-${{ github.run_id }}
+          path: ${{ env.NV_IDE_SMOKE_LOCK_OUTPUT }}
+          if-no-files-found: error
+          retention-days: 14
