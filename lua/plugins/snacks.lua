@@ -7,7 +7,8 @@ for _, action in ipairs(manifest.external_actions) do
 end
 
 local function terminal(id)
-  return External.terminal(assert(actions[id], 'unknown external action: ' .. id))
+  local action = assert(actions[id], 'unknown external action: ' .. id)
+  return External.terminal(action)
 end
 
 local function bottom()

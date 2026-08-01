@@ -97,6 +97,42 @@ h.describe('Snacks ownership', function()
     h.deep_equal(command, { 'available-tui', '--flag' })
   end)
 
+  h.it('opens mapped external terminals with the default adapters', function()
+    local previous_external = package.loaded['util.external']
+    local previous_snacks = _G.Snacks
+    local previous_executable = vim.fn.executable
+    local toggled
+
+    local ok, failure = xpcall(function()
+      package.loaded['util.external'] = nil
+      vim.fn.executable = function(command)
+        h.equal(command, 'python3')
+        return 1
+      end
+      _G.Snacks = {
+        terminal = {
+          toggle = function(command)
+            toggled = command
+          end,
+        },
+      }
+
+      local snacks = plugin(dofile 'lua/plugins/snacks.lua', 'folke/snacks.nvim')
+      local terminals = mapping(snacks, '<leader>lp')
+      h.equal(#terminals, 1)
+      local invoked, invoke_error = pcall(terminals[1][2])
+      h.truthy(invoked, tostring(invoke_error))
+      h.deep_equal(toggled, { 'python3' })
+    end, debug.traceback)
+
+    package.loaded['util.external'] = previous_external
+    _G.Snacks = previous_snacks
+    vim.fn.executable = previous_executable
+    if not ok then
+      error(failure, 0)
+    end
+  end)
+
   h.it('contains deliberate overrides instead of a copied default schema', function()
     local lines = vim.fn.readfile 'lua/plugins/snacks.lua'
     h.truthy(#lines < 700, ('Snacks config still contains %d lines of copied schema'):format(#lines))
