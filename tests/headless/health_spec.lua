@@ -38,7 +38,7 @@ local function complete_probe(options)
   local probe = {
     manifest = manifest,
     system = function()
-      return { os = options.os or 'Linux', arch = 'x86_64', nvim = '0.12.4' }
+      return { os = options.os or 'Linux', arch = options.arch or 'x86_64', nvim = '0.12.4' }
     end,
     executable = function(name)
       calls.executable[name] = (calls.executable[name] or 0) + 1
@@ -51,6 +51,8 @@ local function complete_probe(options)
         or id == 'go' and '1.26.0'
         or id == 'javascript' and '24.15.0'
         or id == 'python' and '3.13.11'
+        or id == 'java' and '21.0.8'
+        or id == 'ruby' and '3.4.5'
       return {
         version = version,
         supported = not (options.unsupported_versions or {})[id],
@@ -59,7 +61,13 @@ local function complete_probe(options)
     capability = function(id, capability)
       local key = id .. ':' .. capability.id
       calls.capability[key] = (calls.capability[key] or 0) + 1
-      return { available = unavailable[key] ~= true }
+      local version = (options.versions or {})[key]
+      local supported = capability.kind ~= 'command_version' or not (options.unsupported_versions or {})[key]
+      return {
+        available = unavailable[key] ~= true and supported,
+        version = version,
+        supported = supported,
+      }
     end,
     mason_status = function(name)
       calls.mason[name] = (calls.mason[name] or 0) + 1
@@ -217,6 +225,66 @@ h.describe('nv_ide health collection', function()
     h.deep_equal(deleted, { '/tmp/nv-ide-health-python-venv' })
   end)
 
+  h.it('requires Java and javac 21 plus Ruby 3 for current Mason packages', function()
+    local health = require 'nv_ide.health'
+    local probe = complete_probe {
+      versions = { java = '20.0.2', ['java:javac_version'] = '20.0.2', ruby = '2.7.8' },
+      unsupported_versions = { java = true, ['java:javac_version'] = true, ruby = true },
+    }
+    local report = health.collect(probe)
+    local java = find(report.runtimes, 'java')
+    local ruby = find(report.runtimes, 'ruby')
+    h.falsy(java.available)
+    h.equal(java.minimum_version, '21.0.0')
+    h.equal(java.version, '20.0.2')
+    h.equal(java.capabilities[1].id, 'javac_version')
+    h.equal(java.capabilities[1].version, '20.0.2')
+    h.falsy(java.capabilities[1].supported)
+    h.falsy(ruby.available)
+    h.equal(ruby.minimum_version, '3.0.0')
+
+    local messages, reporter = {}, {}
+    for _, level in ipairs { 'start', 'ok', 'info', 'warn', 'error' } do
+      reporter[level] = function(message)
+        messages[#messages + 1] = tostring(message)
+      end
+    end
+    health.check(probe, reporter)
+    local output = table.concat(messages, '\n')
+    h.matches(output, 'Java 20.0.2 requires >= 21.0.0')
+    h.matches(output, 'javac 20.0.2 requires >= 21.0.0')
+    h.matches(output, 'Ruby 2.7.8 requires >= 3.0.0')
+  end)
+
+  h.it('requires Rosetta translation only for Mason hlint on Darwin arm64', function()
+    local health = require 'nv_ide.health'
+    local linux = health.collect((complete_probe { os = 'Linux', arch = 'x86_64', unavailable = { arch = true } }))
+    local linux_rosetta = find(linux.prerequisites, 'mason_hlint_rosetta')
+    h.falsy(linux_rosetta.applicable)
+    h.truthy(linux_rosetta.available)
+    h.falsy(linux_rosetta.required)
+
+    local probe = complete_probe {
+      os = 'Darwin',
+      arch = 'arm64',
+      unavailable = { ['mason_hlint_rosetta:x86_64_translation'] = true },
+    }
+    local report = health.collect(probe)
+    local rosetta = find(report.prerequisites, 'mason_hlint_rosetta')
+    h.truthy(rosetta.applicable)
+    h.truthy(rosetta.required)
+    h.falsy(rosetta.available)
+
+    local messages, reporter = {}, {}
+    for _, level in ipairs { 'start', 'ok', 'info', 'warn', 'error' } do
+      reporter[level] = function(message)
+        messages[#messages + 1] = tostring(message)
+      end
+    end
+    health.check(probe, reporter)
+    h.matches(table.concat(messages, '\n'), 'softwareupdate --install-rosetta --agree-to-license')
+  end)
+
   h.it('classifies and probes the complete manifest inventory without retaining credential values', function()
     package.loaded['nv_ide.health'] = nil
     local health = require 'nv_ide.health'
@@ -255,7 +323,11 @@ h.describe('nv_ide health collection', function()
 
     for _, record in ipairs(manifest.prerequisites) do
       for _, executable in ipairs(record.executables) do
-        h.truthy(calls.executable[executable])
+        if record.platform then
+          h.equal(calls.executable[executable], nil)
+        else
+          h.truthy(calls.executable[executable])
+        end
       end
     end
     for _, record in ipairs(manifest.runtimes) do
@@ -629,7 +701,7 @@ h.describe('nv_ide health collection', function()
     health.check(probe, reporter)
     output = table.concat(messages, '\n')
     h.matches(output, 'brew install go')
-    h.matches(output, 'brew install openjdk maven gradle')
+    h.matches(output, 'brew install openjdk@21 maven gradle')
   end)
 
   h.it('renders version and capability constraints with exact platform remediation', function()
