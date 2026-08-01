@@ -1,57 +1,22 @@
-return {
-  name = 'Docker Compose',
-  params = {
-    file = {
-      type = 'string',
-      desc = 'Name of docker-compose file. Empty means docker-compose.yml',
-      order = 1,
-    },
-    task = {
-      type = 'string',
-      desc = 'Action',
-      subtype = {
-        type = 'enum',
-        choices = { 'build', 'create', 'down', 'images', 'kill', 'logs', 'pause', 'ps', 'pull', 'restart', 'rm', 'start', 'stop', 'top', 'unpause', 'up' },
-      },
-      order = 2,
-    },
-    detached = {
-      type = 'boolean',
-      desc = 'Run as detached?',
-      default = true,
-      order = 3,
-    },
-    extra_params = {
-      type = 'string',
-      desc = 'Add extra parameter(s)',
-      optional = true,
-      order = 4,
-    },
-  },
-  builder = function(params)
-    local args = {}
+local builders = require 'overseer.template.user.builders'
 
-    if params.file then
-      table.insert(args, '-f')
-      table.insert(args, params.file)
-    end
+local probe_timeout_ms = 2000
 
-    if params.task then
-      table.insert(args, params.task)
-    end
+local function command_succeeds(argv)
+  if vim.fn.executable(argv[1]) ~= 1 then
+    return false
+  end
 
-    if params.detached and params.task == 'up' and params.task == 'start' then
-      table.insert(args, '-d')
-    end
+  local started, process = pcall(vim.system, argv, { text = true, timeout = probe_timeout_ms })
+  if not started then
+    return false
+  end
+  local completed, result = pcall(function()
+    return process:wait()
+  end)
+  return completed and result.code == 0
+end
 
-    if params.extra_params then
-      table.insert(args, params.extra_params)
-    end
-
-    return {
-      cmd = 'docker-compose',
-      args = args,
-    }
-  end,
-  priority = 40,
+return builders.docker_provider {
+  command_succeeds = command_succeeds,
 }
