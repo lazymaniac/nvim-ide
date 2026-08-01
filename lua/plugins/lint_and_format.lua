@@ -164,7 +164,7 @@ return {
           -- Use the "_" filetype to run formatters on filetypes that don't
           -- have other formatters configured.
         },
-        format_on_save = nil,
+        format_on_save = require('util').format.format_on_save,
         format_after_save = nil,
         notify_on_error = true,
         formatters = {},

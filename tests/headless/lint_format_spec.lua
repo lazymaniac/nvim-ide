@@ -100,6 +100,42 @@ h.describe('lint and format policy', function()
     h.falsy(contains(lint.linters_by_ft.python, 'mypy'))
   end)
 
+  h.it('adapts Conform to global and buffer-local format policy', function()
+    local bufnr = vim.api.nvim_get_current_buf()
+    local previous_conform = package.loaded.conform
+    local previous_format = package.loaded['util.format']
+    local previous_global = vim.g.autoformat
+    local previous_buffer = vim.b[bufnr].autoformat
+    package.loaded.conform = {
+      formatexpr = function() return 'conform-formatexpr' end,
+    }
+    package.loaded['util.format'] = nil
+
+    local ok, err = xpcall(function()
+      local format = require 'util.format'
+      vim.g.autoformat = false
+      vim.b[bufnr].autoformat = nil
+      h.falsy(format.enabled(bufnr))
+      h.falsy(format.format_on_save(bufnr))
+      h.equal(format.formatexpr(), 'conform-formatexpr')
+
+      format.toggle()
+      h.truthy(vim.g.autoformat)
+      h.deep_equal(format.format_on_save(bufnr), { lsp_format = 'fallback' })
+
+      format.toggle(true)
+      h.equal(vim.b[bufnr].autoformat, false)
+      vim.b[bufnr].autoformat = nil
+      h.truthy(format.enabled(bufnr))
+    end, debug.traceback)
+
+    package.loaded.conform = previous_conform
+    package.loaded['util.format'] = previous_format
+    vim.g.autoformat = previous_global
+    vim.b[bufnr].autoformat = previous_buffer
+    if not ok then error(err, 0) end
+  end)
+
   h.it('uses current Conform fallback policy and the Vue filetype', function()
     local conform = plugin(dofile('lua/plugins/lint_and_format.lua'), 'stevearc/conform.nvim')
     local dependency_text = vim.inspect(conform.dependencies or {})
@@ -107,6 +143,7 @@ h.describe('lint and format policy', function()
 
     local calls = {}
     local previous = package.loaded.conform
+    local previous_util = package.loaded.util
     package.loaded.conform = {
       format = function(opts)
         calls[#calls + 1] = opts
@@ -115,12 +152,14 @@ h.describe('lint and format policy', function()
         calls.setup = opts
       end,
     }
+    package.loaded.util = { format = require 'util.format' }
 
     for _, key in ipairs(conform.keys or {}) do
       if type(key[2]) == 'function' then key[2]() end
     end
     local ok, err = xpcall(conform.config, debug.traceback)
     package.loaded.conform = previous
+    package.loaded.util = previous_util
     if not ok then error(err, 0) end
 
     h.equal(#calls, 2)
@@ -130,5 +169,10 @@ h.describe('lint and format policy', function()
     end
     h.deep_equal(calls.setup.formatters_by_ft.vue, { 'prettierd' })
     h.falsy(calls.setup.formatters_by_ft.vuejs, 'vuejs is not a Neovim filetype')
+    h.equal(type(calls.setup.format_on_save), 'function')
+    local previous_autoformat = vim.g.autoformat
+    vim.g.autoformat = false
+    h.falsy(calls.setup.format_on_save(0), 'format-on-save must remain disabled by default')
+    vim.g.autoformat = previous_autoformat
   end)
 end)
