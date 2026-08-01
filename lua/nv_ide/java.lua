@@ -120,4 +120,23 @@ function M.discover(options)
   }
 end
 
+function M.workspace_id(root, deps)
+  if not root then return nil end
+  deps = deps or {}
+  local realpath = deps.realpath or vim.uv.fs_realpath
+  local abspath = deps.abspath or vim.fs.abspath
+  local absolute = abspath(root)
+  local normalized = vim.fs.normalize(realpath(absolute) or absolute)
+  local name = vim.fs.basename(normalized):gsub('[^%w_.-]', '_')
+  return ('%s-%s'):format(name, vim.fn.sha256(normalized):sub(1, 12))
+end
+
+function M.bundle_patterns(mason)
+  return {
+    vim.fs.joinpath(mason, 'share', 'java-debug-adapter', 'com.microsoft.java.debug.plugin-*.jar'),
+    vim.fs.joinpath(mason, 'share', 'vscode-java-decompiler', 'bundles', '*.jar'),
+    vim.fs.joinpath(mason, 'share', 'java-test', '*.jar'),
+  }
+end
+
 return M
