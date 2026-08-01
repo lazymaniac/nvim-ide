@@ -21,6 +21,19 @@ local function process(result, on_exit)
 end
 
 h.describe('external lazy.nvim manager lifecycle', function()
+  h.it('manages the active LAZY override checkout by default', function()
+    local previous = vim.env.LAZY
+    vim.env.LAZY = '/override/lazy.nvim'
+    local ok, result = xpcall(function()
+      local manager = reload('nv_ide.toolchain.lazy_manager').new {}
+      h.equal(manager.path, '/override/lazy.nvim')
+    end, debug.traceback)
+    vim.env.LAZY = previous
+    if not ok then
+      error(result, 0)
+    end
+  end)
+
   h.it('updates to the newest stable semver tag and records both revisions', function()
     local commands = {}
     local old_commit = string.rep('a', 40)

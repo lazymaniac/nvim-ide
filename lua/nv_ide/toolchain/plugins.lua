@@ -786,7 +786,7 @@ end
 
 function M.bootstrap_lazy(options)
   options = options or {}
-  local path = options.path or vim.fs.joinpath(vim.fn.stdpath 'data', 'lazy', 'lazy.nvim')
+  local path = options.path or vim.env.LAZY or vim.fs.joinpath(vim.fn.stdpath 'data', 'lazy', 'lazy.nvim')
   local stat = options.stat or vim.uv.fs_stat
   local entrypoint = vim.fs.joinpath(path, 'lua', 'lazy', 'init.lua')
   if stat(path) then

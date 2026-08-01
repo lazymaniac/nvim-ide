@@ -55,6 +55,23 @@ local function transaction(options)
 end
 
 h.describe('latest-first plugin update and rollback', function()
+  h.it('bootstraps the active LAZY override instead of an unused default checkout', function()
+    h.with_temp_dir(function(dir)
+      local override = vim.fs.joinpath(dir, 'lazy.nvim')
+      vim.fn.mkdir(vim.fs.joinpath(override, 'lua', 'lazy'), 'p')
+      write(vim.fs.joinpath(override, 'lua', 'lazy', 'init.lua'), 'return {}')
+      local previous = vim.env.LAZY
+      vim.env.LAZY = override
+      local ok, result = xpcall(function()
+        h.equal(reload('nv_ide.toolchain.plugins').bootstrap_lazy(), override)
+      end, debug.traceback)
+      vim.env.LAZY = previous
+      if not ok then
+        error(result, 0)
+      end
+    end)
+  end)
+
   h.it('updates and records the external Lazy manager before fresh-process validation', function()
     h.with_temp_dir(function(dir)
       local lockfile = vim.fs.joinpath(dir, 'lazy-lock.json')
