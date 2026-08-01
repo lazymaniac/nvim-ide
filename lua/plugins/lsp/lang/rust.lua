@@ -43,7 +43,7 @@ return {
               { '<leader>cK', '<cmd>RustLsp hover range<cr>', desc = 'Hover Ranger [cK]', mode = 'v', buffer = bufnr },
             }
             -- you can also put keymaps in here
-            vim.lsp.inlay_hint.enable(true)
+            vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
           end,
           settings = {
             -- rust-analyzer language server configuration
