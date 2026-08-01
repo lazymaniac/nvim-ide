@@ -252,4 +252,51 @@ h.describe('DAP ownership and lazy loading', function()
     package.preload.dap = previous_preload
     if not ok then error(err, 0) end
   end)
+
+  h.it('resolves Neotest Python and Jest from the test project', function()
+    local neotest = plugin(dofile('lua/plugins/tests.lua'), 'nvim-neotest/neotest')
+    local opts = neotest.opts()
+    local previous_dap = package.loaded['util.dap']
+    local previous_project = package.loaded['nv_ide.project']
+    local python_root
+    package.loaded['util.dap'] = {
+      resolve_python = function(options)
+        python_root = options.cwd
+        return '/repo/.venv/bin/python'
+      end,
+    }
+    package.loaded['nv_ide.project'] = {
+      javascript = function(path)
+        if path == '/repo/packages/web/src/example.test.ts' then
+          return {
+            root = '/repo/packages/web',
+            configs = { jest = '/repo/packages/web/jest.config.ts' },
+            executables = { jest = '/repo/packages/web/node_modules/.bin/jest' },
+          }
+        end
+        h.equal(path, '/repo/web/src/fallback.test.js')
+        return { root = '/repo/web', configs = {}, executables = {} }
+      end,
+    }
+
+    local ok, err = xpcall(function()
+      local python = opts.adapters['neotest-python']
+      h.equal(python.python('/repo'), '/repo/.venv/bin/python')
+      h.equal(python_root, '/repo')
+      local jest = opts.adapters['neotest-jest']
+      local path = '/repo/packages/web/src/example.test.ts'
+      h.equal(jest.jestCommand(path), '/repo/packages/web/node_modules/.bin/jest')
+      h.equal(jest.jestConfigFile(path), '/repo/packages/web/jest.config.ts')
+      h.equal(jest.cwd(path), '/repo/packages/web')
+
+      local fallback = '/repo/web/src/fallback.test.js'
+      h.equal(jest.jestCommand(fallback), 'jest')
+      h.equal(jest.jestConfigFile(fallback), '')
+      h.equal(jest.cwd(fallback), '/repo/web')
+    end, debug.traceback)
+
+    package.loaded['util.dap'] = previous_dap
+    package.loaded['nv_ide.project'] = previous_project
+    if not ok then error(err, 0) end
+  end)
 end)
