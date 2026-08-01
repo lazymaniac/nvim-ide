@@ -54,7 +54,7 @@ return {
     -- stylua: ignore
     keys = {
       { '<leader>tt', function() require('neotest').run.run(vim.fn.expand '%') end, desc = 'Run File [tt]', },
-      { '<leader>tT', function() require('neotest').run.run(vim.loop.cwd()) end, desc = 'Run All Test Files [tT]', },
+      { '<leader>tT', function() require('neotest').run.run(vim.uv.cwd()) end, desc = 'Run All Test Files [tT]', },
       { '<leader>tr', function() require('neotest').run.run() end, desc = 'Run Nearest [tr]', },
       { '<leader>tR', function() require("neotest").run.run_last() end, desc = 'Rerun last [tR]', },
       { '<leader>ta', function() require("neotest").run.attach() end, desc = 'Attach to Nearest [ta]', },
@@ -92,7 +92,7 @@ return {
           },
           ['neotest-rspec'] = {
             rspec_cmd = function()
-              return vim.tbl_flatten {
+              return {
                 'bundle',
                 'exec',
                 'rspec',
@@ -114,7 +114,7 @@ return {
           },
           ['neotest-minitest'] = {
             test_cmd = function()
-              return vim.tbl_flatten {
+              return {
                 'bundle',
                 'exec',
                 'ruby',

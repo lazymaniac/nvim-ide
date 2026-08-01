@@ -7,6 +7,14 @@ local function plugin(specs, name)
   error('plugin spec not found: ' .. name)
 end
 
+local function dependency(spec, name)
+  for _, candidate in ipairs(spec.dependencies or {}) do
+    if type(candidate) == 'table' and candidate[1] == name then return candidate end
+    if candidate == name then return candidate end
+  end
+  error('dependency spec not found: ' .. name)
+end
+
 h.describe('AI privacy boundary', function()
   h.it('uses quiet, code-private defaults and disables unchecked project loading', function()
     local spec = plugin(dofile('lua/plugins/ai.lua'), 'olimorris/codecompanion.nvim')
@@ -69,5 +77,36 @@ h.describe('AI privacy boundary', function()
         secure_read = function() return 'return {' end,
       })
     end)
+  end)
+end)
+
+h.describe('language loading boundaries', function()
+  h.it('loads LuaSnip sources only from the LuaSnip config phase', function()
+    local blink = plugin(dofile('lua/plugins/autocompletion.lua'), 'saghen/blink.cmp')
+    local luasnip = dependency(blink, 'L3MON4D3/LuaSnip')
+    h.falsy(luasnip.init, 'LuaSnip loaders must not run during plugin initialization')
+    h.truthy(type(luasnip.config) == 'function')
+
+    local calls = {}
+    local previous = package.loaded['luasnip.loaders.from_vscode']
+    package.loaded['luasnip.loaders.from_vscode'] = {
+      lazy_load = function(options) calls[#calls + 1] = options or {} end,
+    }
+    local ok, err = xpcall(luasnip.config, debug.traceback)
+    package.loaded['luasnip.loaders.from_vscode'] = previous
+    if not ok then error(err, 0) end
+
+    h.equal(#calls, 2)
+    h.equal(calls[2].paths[1], vim.fn.stdpath('config') .. '/snippets')
+  end)
+
+  h.it('binds heavyweight language integrations to their filetypes', function()
+    local flutter = plugin(dofile('lua/plugins/lsp/lang/flutter.lua'), 'nvim-flutter/flutter-tools.nvim')
+    h.truthy(vim.tbl_contains(flutter.ft or {}, 'dart'))
+    h.falsy(flutter.lazy == false)
+
+    local sexp = plugin(dofile('lua/plugins/lsp/lang/clojure.lua'), 'PaterJason/nvim-treesitter-sexp')
+    h.truthy(vim.tbl_contains(sexp.ft or {}, 'clojure'))
+    h.truthy(vim.tbl_contains(sexp.ft or {}, 'fennel'))
   end)
 end)

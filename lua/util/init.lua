@@ -35,7 +35,7 @@ setmetatable(M, {
 })
 
 function M.is_win()
-  return vim.loop.os_uname().sysname:find 'Windows' ~= nil
+  return vim.uv.os_uname().sysname:find 'Windows' ~= nil
 end
 
 function M.has(plugin)
@@ -79,8 +79,8 @@ function M.lazy_notify()
   local orig = vim.notify
   vim.notify = temp
 
-  local timer = vim.loop.new_timer()
-  local check = assert(vim.loop.new_check())
+  local timer = vim.uv.new_timer()
+  local check = assert(vim.uv.new_check())
 
   local replay = function()
     timer:stop()
@@ -160,7 +160,7 @@ function M.get_pkg_path(pkg, path, opts)
   opts.warn = opts.warn == nil and true or opts.warn
   path = path or ""
   local ret = root .. "/packages/" .. pkg .. "/" .. path
-  if opts.warn and not vim.loop.fs_stat(ret) and not require("lazy.core.config").headless() then
+  if opts.warn and not vim.uv.fs_stat(ret) and not require("lazy.core.config").headless() then
     M.warn(
       ("Mason package path not found for **%s**:\n- `%s`\nYou may need to force update the package."):format(pkg, path)
     )

@@ -31,13 +31,12 @@ return {
           {
             'rafamadriz/friendly-snippets',
             event = 'InsertEnter',
-            config = function()
-              require('luasnip.loaders.from_vscode').lazy_load { paths = './snippets' }
-            end,
           },
         },
-        init = function()
-          require('luasnip.loaders.from_vscode').lazy_load {
+        config = function()
+          local loader = require('luasnip.loaders.from_vscode')
+          loader.lazy_load()
+          loader.lazy_load {
             paths = { vim.fn.stdpath 'config' .. '/snippets' },
           }
         end,
