@@ -26,6 +26,18 @@ h.describe('AI privacy boundary', function()
     h.falsy(spec.opts.adapters.http.anthropic, 'remote HTTP adapters must not be enabled globally')
   end)
 
+  h.it('enables structured reasoning from GitHub by default', function()
+    local spec = plugin(dofile('lua/plugins/ai.lua'), 'olimorris/codecompanion.nvim')
+
+    h.equal(
+      dependency(spec, 'lazymaniac/codecompanion-reasoning.nvim'),
+      'lazymaniac/codecompanion-reasoning.nvim'
+    )
+    h.truthy(spec.opts.extensions.reasoning.enabled)
+    h.truthy(spec.opts.extensions.reasoning.opts.auto_attach)
+    h.equal(spec.opts.extensions.reasoning.opts.default_depth, 'deep')
+  end)
+
   h.it('ignores an untrusted project override without evaluating it', function()
     local resolver = require('nv_ide.codecompanion')
     local evaluated = false
