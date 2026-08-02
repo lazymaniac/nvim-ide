@@ -74,4 +74,17 @@ h.describe('Voyager integration', function()
     end
     h.deep_equal(voyager_group, { '<leader>v', group = '+[voyager]' })
   end)
+
+  h.it('locks Voyager to a published main revision', function()
+    local lock = vim.json.decode(table.concat(vim.fn.readfile('lazy-lock.json'), '\n'))
+    local voyager = lock['voyager.nvim']
+    h.truthy(voyager, 'Voyager lock entry is missing')
+    h.equal(voyager.branch, 'main')
+    h.truthy(
+      type(voyager.commit) == 'string'
+        and #voyager.commit == 40
+        and voyager.commit:match('^[0-9a-f]+$') ~= nil,
+      'Voyager lock commit must be a full lowercase Git SHA'
+    )
+  end)
 end)
