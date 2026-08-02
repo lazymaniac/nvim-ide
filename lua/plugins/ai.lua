@@ -21,6 +21,15 @@ local config = {
       },
     },
   },
+  extensions = {
+    reasoning = {
+      enabled = true,
+      opts = {
+        auto_attach = true,
+        default_depth = 'deep',
+      },
+    },
+  },
   interactions = {
     background = {
       adapter = 'ollama',
@@ -157,6 +166,7 @@ return {
     dependencies = {
       'nvim-lua/plenary.nvim',
       'nvim-treesitter/nvim-treesitter',
+      'lazymaniac/codecompanion-reasoning.nvim',
     },
     -- stylua: ignore
     keys = {
