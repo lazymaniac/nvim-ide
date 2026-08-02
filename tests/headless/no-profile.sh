@@ -177,6 +177,27 @@ fi
 nvim --clean --headless -u "$config_root/tests/minimal_init.lua" -i NONE \
   -l "$config_root/tests/headless/bootstrap_smoke.lua" "$smoke_mode"
 
+verify_codecompanion_reasoning_startup_guard() {
+  local log="$smoke_root/codecompanion-reasoning-startup-guard.log"
+  if nvim --headless -u "$config_root/tests/headless/codecompanion_reasoning_failing_init.lua" -i NONE \
+    -l "$config_root/tests/headless/codecompanion_reasoning_runtime.lua" >"$log" 2>&1; then
+    tail -n 200 "$log" >&2
+    printf '%s\n' 'failing init unexpectedly passed CodeCompanion reasoning verification' >&2
+    return 1
+  fi
+  if ! grep -Fq 'Neovim startup failed before CodeCompanion reasoning verification' "$log"; then
+    tail -n 200 "$log" >&2
+    return 1
+  fi
+  if grep -Fq 'CODECOMPANION REASONING PASS' "$log"; then
+    tail -n 200 "$log" >&2
+    return 1
+  fi
+  printf '%s\n' 'CODECOMPANION STARTUP GUARD PASS'
+}
+
+verify_codecompanion_reasoning_startup_guard
+
 prepare_locked_plugins() {
   run_lazy_resolution seed 'LAZY SEED PASS'
   verify_codecompanion_reasoning

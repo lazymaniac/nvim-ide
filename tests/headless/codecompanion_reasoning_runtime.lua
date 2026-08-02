@@ -1,3 +1,6 @@
+local startup_error = vim.v.errmsg
+assert(startup_error == '', 'Neovim startup failed before CodeCompanion reasoning verification: ' .. startup_error)
+
 require('lazy').load { plugins = { 'codecompanion.nvim' } }
 
 local tools = require('codecompanion.config').interactions.chat.tools

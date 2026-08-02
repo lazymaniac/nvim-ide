@@ -350,8 +350,12 @@ do
   for _, needle in ipairs {
     'locked_plugin.lua',
     'lazy_resolution.lua',
+    'codecompanion_reasoning_failing_init.lua',
     'codecompanion_reasoning_runtime.lua',
     'verify_codecompanion_reasoning',
+    'verify_codecompanion_reasoning_startup_guard',
+    'Neovim startup failed before CodeCompanion reasoning verification',
+    'CODECOMPANION STARTUP GUARD PASS',
     'CODECOMPANION REASONING PASS',
     "run_lazy_resolution publish 'LAZY STABLE PASS' 'FRESH STARTUP PASS'",
     'NVIM_TOOLCHAIN_AUTORUN=1',
