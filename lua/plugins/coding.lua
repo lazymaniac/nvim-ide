@@ -3,15 +3,27 @@ return {
   -- [[ CODING HELPERS ]] ---------------------------------------------------------------
 
   {
-    dir = '~/workspace/voyager.nvim/',
-    enabled = false,
+    'lazymaniac/voyager.nvim',
+    branch = 'main',
+    version = false,
+    lazy = false,
+    dependencies = { 'MunifTanjim/nui.nvim' },
     keys = {
-      { '<leader>V', '<cmd>VoyagerOpen<cr>', mode = { 'n' }, desc = 'Open Voyager' },
+      { '<leader>vo', '<cmd>VoyagerOpen<cr>', mode = 'n', desc = 'Open Voyager' },
+      { '<leader>vf', '<cmd>VoyagerFocus<cr>', mode = 'n', desc = 'Focus Voyager' },
+      { '<leader>vs', '<cmd>VoyagerSave<cr>', mode = 'n', desc = 'Save Voyager flow' },
+      { '<leader>vl', '<cmd>VoyagerLoad<cr>', mode = 'n', desc = 'Load Voyager flow' },
+      { '<leader>vq', '<cmd>VoyagerClose<cr>', mode = 'n', desc = 'Close Voyager' },
     },
-    dependencies = {
-      'grapp-dev/nui-components.nvim',
-      dependencies = {
-        'MunifTanjim/nui.nvim',
+    opts = {
+      lsp_keymaps = {
+        definition = 'gd',
+        declaration = false,
+        references = 'gr',
+        implementation = 'gI',
+        type_definition = 'gy',
+        incoming_calls = false,
+        outgoing_calls = false,
       },
     },
   },
