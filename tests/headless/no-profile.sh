@@ -179,6 +179,7 @@ nvim --clean --headless -u "$config_root/tests/minimal_init.lua" -i NONE \
 
 prepare_locked_plugins() {
   run_lazy_resolution seed 'LAZY SEED PASS'
+  verify_codecompanion_reasoning
 }
 
 run_lazy_resolution() {
@@ -198,6 +199,21 @@ run_lazy_resolution() {
     fi
     printf '%s\n' "$marker"
   done
+}
+
+verify_codecompanion_reasoning() {
+  local log="$smoke_root/codecompanion-reasoning.log"
+  if ! LAZY="$plugin_root/lazy.nvim" NVIM_TOOLCHAIN_AUTORUN=0 \
+    nvim --headless -u "$config_root/init.lua" -i NONE \
+      -l "$config_root/tests/headless/codecompanion_reasoning_runtime.lua" >"$log" 2>&1; then
+    tail -n 200 "$log" >&2
+    return 1
+  fi
+  if ! grep -Fq 'CODECOMPANION REASONING PASS' "$log"; then
+    tail -n 200 "$log" >&2
+    return 1
+  fi
+  printf '%s\n' 'CODECOMPANION REASONING PASS'
 }
 
 if [[ "$mode" == "resolve" ]]; then

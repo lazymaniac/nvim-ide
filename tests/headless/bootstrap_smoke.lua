@@ -323,7 +323,7 @@ do
     'checkhealth nv_ide',
     'checkhealth snacks',
     'manifest-fingerprint',
-    'Resolve latest allowed plugins from locked seed',
+    'Resolve latest allowed plugins and verify CodeCompanion reasoning',
     'NV_IDE_SMOKE_LOCK_OUTPUT',
     "NV_IDE_TOOLCHAIN_TIMEOUT_MS: '7200000'",
     'actions/upload-artifact@v4',
@@ -350,6 +350,9 @@ do
   for _, needle in ipairs {
     'locked_plugin.lua',
     'lazy_resolution.lua',
+    'codecompanion_reasoning_runtime.lua',
+    'verify_codecompanion_reasoning',
+    'CODECOMPANION REASONING PASS',
     "run_lazy_resolution publish 'LAZY STABLE PASS' 'FRESH STARTUP PASS'",
     'NVIM_TOOLCHAIN_AUTORUN=1',
     'startup_smoke.lua',

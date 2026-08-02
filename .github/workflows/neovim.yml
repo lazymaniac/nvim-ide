@@ -93,7 +93,7 @@ jobs:
           NV_IDE_SMOKE_ALLOW_INSTALL: '1'
         run: tests/headless/no-profile.sh representative
 
-      - name: Resolve latest allowed plugins from locked seed
+      - name: Resolve latest allowed plugins and verify CodeCompanion reasoning
         env:
           NV_IDE_SMOKE_ALLOW_INSTALL: '1'
         run: tests/headless/no-profile.sh resolve
