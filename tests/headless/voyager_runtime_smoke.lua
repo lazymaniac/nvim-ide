@@ -24,22 +24,19 @@ check(vim.fn.mkdir(smoke_root, 'p') == 1, 'cannot create disposable plugin root'
 local smoke_lock = vim.fs.joinpath(smoke_root, 'lazy-lock.json')
 check(vim.uv.fs_copyfile(vim.fs.joinpath(config_root, 'lazy-lock.json'), smoke_lock), 'cannot copy lockfile')
 
+-- The shared minimal init disables native plugin loading for isolated config tests.
+-- lazy.nvim intentionally returns before setup while this option is disabled.
+vim.opt.loadplugins = true
 require('lazy').setup {
   spec = { voyager },
   defaults = { lazy = false, version = '*' },
   root = vim.fs.joinpath(smoke_root, 'plugins'),
   lockfile = smoke_lock,
-  install = { missing = false },
+  install = { missing = true },
   checker = { enabled = false },
   change_detection = { enabled = false },
   rocks = { enabled = false },
-}
-
-require('lazy.manage').install {
-  wait = true,
-  show = false,
-  lockfile = true,
-  plugins = { 'nui.nvim', 'voyager.nvim' },
+  headless = { process = false, log = false, task = false, colors = false },
 }
 
 local lazy_config = require 'lazy.core.config'
