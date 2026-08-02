@@ -2,7 +2,7 @@ local M = {}
 
 local core = {
   'blankline', 'blink', 'cmp', 'colors', 'defaults', 'devicons', 'git', 'lsp',
-  'mason', 'notify', 'nvcheatsheet', 'nvimtree', 'statusline', 'syntax', 'tbline',
+  'mason', 'nvcheatsheet', 'nvimtree', 'statusline', 'syntax', 'tbline',
   'telescope', 'term', 'treesitter', 'whichkey',
 }
 
