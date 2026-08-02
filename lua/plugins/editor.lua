@@ -151,6 +151,7 @@ return {
         { '<leader>s', group = '+[search]' },
         { '<leader>t', group = '+[tests]' },
         { '<leader>u', group = '+[ui]' },
+        { '<leader>v', group = '+[voyager]' },
         { '<leader>w', group = '+[windows]' },
         { '<leader>x', group = '+[diagnostics/quickfix]' },
         { '<leader>l', group = '+[tools]' },
