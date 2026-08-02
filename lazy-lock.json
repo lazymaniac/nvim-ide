@@ -97,6 +97,7 @@
   "vim-helm": { "branch": "master", "commit": "2c8525fd98e57472769d137317bca83e477858ce" },
   "vim-repeat": { "branch": "master", "commit": "65846025c15494983dafe5e3b46c8f88ab2e9635" },
   "volt": { "branch": "main", "commit": "620de1321f275ec9d80028c68d1b88b409c0c8b1" },
+  "voyager.nvim": { "branch": "main", "commit": "dae82b06f970ed983544642a411f48b0fc66d8d5" },
   "vscode-angular-snippets": { "branch": "main", "commit": "d46d928673f227bc0a134cf710a6e4f6ccd04b14" },
   "which-key.nvim": { "branch": "main", "commit": "3aab2147e74890957785941f0c1ad87d0a44c15a" },
   "wttr.nvim": { "branch": "main", "commit": "8d69e630e41f4ae9307f6f859ad30e7c95a5c92f" }
