@@ -45,4 +45,33 @@ h.describe('Voyager integration', function()
       ['<leader>vq'] = { rhs = '<cmd>VoyagerClose<cr>', mode = 'n', desc = 'Close Voyager' },
     })
   end)
+
+  h.it('registers the Voyager which-key group', function()
+    local which_key = plugin(dofile('lua/plugins/editor.lua'), 'folke/which-key.nvim')
+    local previous = package.loaded['which-key']
+    local added
+    package.loaded['which-key'] = {
+      setup = function() end,
+      add = function(spec)
+        added = spec
+      end,
+    }
+
+    local ok, err = xpcall(function()
+      which_key.config(nil, which_key.opts)
+    end, debug.traceback)
+    package.loaded['which-key'] = previous
+    if not ok then
+      error(err, 0)
+    end
+
+    local voyager_group
+    for _, mapping in ipairs(added or {}) do
+      if mapping[1] == '<leader>v' then
+        voyager_group = mapping
+        break
+      end
+    end
+    h.deep_equal(voyager_group, { '<leader>v', group = '+[voyager]' })
+  end)
 end)
