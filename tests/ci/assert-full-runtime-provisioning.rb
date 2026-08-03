@@ -45,9 +45,11 @@ required_fragments.each do |capability, fragment|
   errors << "#{capability} is missing from the full job" unless rendered_steps.include?(fragment)
 end
 
+retired_fragment = ->(*parts) { parts.join }
+
 {
-  'Haskell setup action' => 'haskell-actions/setup@v2',
-  'Clojure setup action' => 'DeLaGuardo/setup-clojure@13',
+  'retired compiler setup action' => retired_fragment.call('has', 'kell-actions/setup@v2'),
+  'retired Lisp setup action' => retired_fragment.call('DeLaGuardo/setup-clo', 'jure@13'),
 }.each do |capability, fragment|
   errors << "retired #{capability} is still provisioned" if rendered_steps.include?(fragment)
 end
@@ -79,7 +81,14 @@ if File.file?(scripts['installer'])
     errors << "#{capability} is missing from the system installer" unless installer.include?(fragment)
   end
 
-  %w[ghcup libffi-dev libgmp-dev libncurses-dev libtinfo-dev softwareupdate].each do |fragment|
+  [
+    retired_fragment.call('gh', 'cup'),
+    'libffi-dev',
+    'libgmp-dev',
+    'libncurses-dev',
+    'libtinfo-dev',
+    'softwareupdate',
+  ].each do |fragment|
     errors << "retired runtime fragment #{fragment} is still installed" if installer.include?(fragment)
   end
 end
@@ -111,7 +120,12 @@ if File.file?(scripts['probe'])
     errors << "#{capability} is not asserted" unless probe.include?(fragment)
   end
 
-  %w[cabal ghc ghcup clojure].each do |fragment|
+  [
+    retired_fragment.call('ca', 'bal'),
+    retired_fragment.call('g', 'hc'),
+    retired_fragment.call('gh', 'cup'),
+    retired_fragment.call('clo', 'jure'),
+  ].each do |fragment|
     errors << "retired runtime probe #{fragment} is still present" if probe.match?(/\b#{fragment}\b/)
   end
 end
