@@ -117,9 +117,6 @@ h.describe('language loading boundaries', function()
     h.truthy(vim.tbl_contains(flutter.ft or {}, 'dart'))
     h.falsy(flutter.lazy == false)
 
-    local sexp = plugin(dofile('lua/plugins/lsp/lang/clojure.lua'), 'PaterJason/nvim-treesitter-sexp')
-    h.truthy(vim.tbl_contains(sexp.ft or {}, 'clojure'))
-    h.truthy(vim.tbl_contains(sexp.ft or {}, 'fennel'))
   end)
 
   h.it('enables Rust inlay hints only for the attached buffer', function()

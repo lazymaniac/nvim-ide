@@ -127,15 +127,6 @@ h.describe('plugin ownership', function()
     h.truthy(hlslens and has_trigger(hlslens), 'hlslens must remain active')
   end)
 
-  h.it('uses the published Haskell plugin branches', function()
-    local haskell = dofile 'lua/plugins/lsp/lang/haskell.lua'
-    h.equal(plugin(haskell, 'mrcjkb/haskell-tools.nvim').branch, 'main')
-    h.equal(plugin(haskell, 'mrcjkb/haskell-snippets.nvim').branch, 'main')
-
-    local neotest = plugin(dofile 'lua/plugins/tests.lua', 'nvim-neotest/neotest')
-    h.equal(plugin(neotest.dependencies, 'mrcjkb/neotest-haskell').branch, 'main')
-  end)
-
   h.it('uses hlargs only when parameter semantic tokens are unavailable', function()
     local hlargs = plugin(dofile 'lua/plugins/coding.lua', 'm-demare/hlargs.nvim')
     h.truthy(hlargs)

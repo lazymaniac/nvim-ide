@@ -54,7 +54,7 @@ h.describe('DAP ownership and lazy loading', function()
       end,
     }
     local ok, err = xpcall(function()
-      for _, name in ipairs { 'codelldb', 'python', 'delve', 'js', 'kotlin', 'javadbg', 'javatest', 'haskell', 'bash' } do
+      for _, name in ipairs { 'codelldb', 'python', 'delve', 'js', 'kotlin', 'javadbg', 'javatest', 'bash' } do
         (handlers[name] or handlers[1]) { name = name }
       end
     end, debug.traceback)

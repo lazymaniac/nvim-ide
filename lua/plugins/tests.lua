@@ -19,10 +19,6 @@ return {
         branch = 'main',
       },
       {
-        'mrcjkb/neotest-haskell',
-        branch = 'main',
-      },
-      {
         'rcasia/neotest-java',
         branch = 'main',
       },
@@ -71,7 +67,6 @@ return {
           ['neotest-java'] = { ignore_wrapper = false },
           ['rustaceanvim.neotest'] = {},
           ['neotest-go'] = {},
-          ['neotest-haskell'] = {},
           ['neotest-python'] = {
             dap = { justMyCode = false },
             args = { '--log-level', 'DEBUG' },

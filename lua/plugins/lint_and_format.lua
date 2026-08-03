@@ -40,10 +40,8 @@ return {
       lint.linters_by_ft = {
         angular = { 'djlint' },
         ansible = { 'ansible_lint' },
-        clojure = { 'clj-kondo' },
         cmake = { 'cmakelint' },
         go = { 'golangcilint' },
-        haskell = { 'hlint' },
         helm = { 'kube_linter' },
         html = { 'htmlhint' },
         kotlin = { 'ktlint', 'detekt' },
