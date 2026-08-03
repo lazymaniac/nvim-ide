@@ -6,7 +6,7 @@ NV-IDE is a personal, full polyglot Neovim configuration for Java, Go, Rust, web
 
 NV-IDE targets Neovim 0.12 or newer. Git 2.31 or newer, curl, tar, gzip, unzip, ripgrep, Bash, a C compiler, LuaRocks, RubyGems, and Tree-sitter CLI 0.26.1 or newer are required for a complete first run. The full configuration also requires the declared language runtimes; optional terminal programs remain operator-owned. `:checkhealth nv_ide` reports every missing executable, version, capability, and platform-specific repair without exposing credentials.
 
-The versioned runtime floor is Go 1.26, Node.js 24.15, JDK/Javac 21, Python 3.10–3.13 with `venv`, Ruby 3 with development headers, Rust 1.42, GHC 8.10, and Cabal 3.0. The complete inventory also includes Ansible, one Clojure runtime, CMake/Ninja, a container runtime, Dart/Flutter, Maven, Gradle, Kotlin, Lua, R, Scala/SBT, PostgreSQL client tools, and Terraform. These are intentionally not hidden behind profiles.
+The versioned runtime floor is Go 1.26, Node.js 24.15, JDK/Javac 21, Python 3.10–3.13 with `venv`, Ruby 3 with development headers, and Rust 1.42. The complete inventory also includes Ansible, CMake/Ninja, a container runtime, Dart/Flutter, Maven, Gradle, Kotlin, Lua, R, Scala/SBT, PostgreSQL client tools, and Terraform. These are intentionally not hidden behind profiles.
 
 ### macOS with Homebrew
 
@@ -22,17 +22,15 @@ Local clipboard integration uses the built-in `pbcopy` and `pbpaste` commands.
 For the complete runtime inventory, Homebrew users can install current packages and then let health verify the exact versions:
 
 ```sh
-brew install ansible cmake ninja go ghcup openjdk@21 maven gradle node kotlin lua luajit python@3.13 ruby rustup-init scala sbt libpq podman clojure/tools/clojure
+brew install ansible cmake ninja go openjdk@21 maven gradle node kotlin lua luajit python@3.13 ruby rustup-init scala sbt libpq podman
 brew install --cask flutter r
 brew tap hashicorp/tap
 brew install hashicorp/tap/terraform
 gem install bundler
 rustup-init -y
-ghcup install ghc recommended && ghcup set ghc recommended
-ghcup install cabal recommended && ghcup set cabal recommended
 ```
 
-On Apple Silicon, Mason's current `hlint` artifact also needs Rosetta: `softwareupdate --install-rosetta --agree-to-license`. NV-IDE hydrates existing Homebrew keg paths and the standard Cargo, Go, and GHCup user paths for GUI launches; it does not edit shell startup files.
+NV-IDE hydrates existing Homebrew keg paths and the standard Cargo and Go user paths for GUI launches; it does not edit shell startup files.
 
 ### Ubuntu
 
