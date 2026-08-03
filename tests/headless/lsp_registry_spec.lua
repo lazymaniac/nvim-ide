@@ -71,10 +71,6 @@ h.describe('LSP registry', function()
         vtsls = {
           settings = { typescript = { suggest = { completeFunctionCalls = true } } },
         },
-        hls = {
-          managed = false,
-          owner = 'haskell-tools',
-        },
         disabled = {
           enabled = false,
         },
@@ -114,13 +110,11 @@ h.describe('LSP registry', function()
     h.equal(#configured.gopls, 1)
     h.equal(#configured.clangd, 1)
     h.equal(#configured.vtsls, 1)
-    h.falsy(configured.hls, 'externally owned HLS must not be registered centrally')
     h.falsy(configured.disabled, 'disabled servers must not be registered')
     h.falsy(configured.claimed, 'a setup hook returning true owns registration')
     h.equal(enabled.gopls, 1)
     h.equal(enabled.clangd, 1)
     h.equal(enabled.vtsls, 1)
-    h.falsy(enabled.hls)
     h.falsy(enabled.claimed)
     h.equal(hook_calls.claimed, 1)
 
@@ -157,7 +151,6 @@ h.describe('LSP registry', function()
       'plugins.lsp.lang.go',
       'plugins.lsp.lang.clangd',
       'plugins.lsp.lang.typescript',
-      'plugins.lsp.lang.haskell',
     }
     with_restored_modules(modules, function()
       package.loaded.util = {
@@ -180,7 +173,6 @@ h.describe('LSP registry', function()
         'plugins.lsp.lang.go',
         'plugins.lsp.lang.clangd',
         'plugins.lsp.lang.typescript',
-        'plugins.lsp.lang.haskell',
       }
 
       load_registry().setup(opts, {
@@ -211,7 +203,7 @@ h.describe('LSP registry', function()
     h.equal(enabled.vtsls, 1)
     h.equal(extension_calls, 1)
 
-    for _, external in ipairs { 'hls', 'jdtls', 'rust_analyzer' } do
+    for _, external in ipairs { 'jdtls', 'rust_analyzer' } do
       h.falsy(configured[external], external .. ' must remain externally owned')
       h.falsy(enabled[external], external .. ' must never be centrally enabled')
     end
@@ -363,14 +355,6 @@ h.describe('LSP registry', function()
     h.truthy(yamlls)
     h.deep_equal(yamlls.settings.yaml.schemas, schemas)
     h.falsy(yamlls.on_new_config, 'native vim.lsp.config must receive materialized schemas')
-  end)
-
-  h.it('marks HLS as owned by haskell-tools', function()
-    local opts = lsp_opts('plugins.lsp.lang.haskell')
-    local hls = opts and opts.servers and opts.servers.hls
-    h.truthy(hls)
-    h.falsy(hls.managed)
-    h.equal(hls.owner, 'haskell-tools')
   end)
 
   h.it('loads and configures clangd extensions from the clangd hook', function()

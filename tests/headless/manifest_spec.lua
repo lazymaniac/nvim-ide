@@ -6,7 +6,6 @@ local expected_tools = {
   'bash-debug-adapter',
   'beautysh',
   'black',
-  'clj-kondo',
   'cmakelang',
   'cmakelint',
   'codelldb',
@@ -24,8 +23,6 @@ local expected_tools = {
   'golangci-lint',
   'graphql-language-service-cli',
   'hadolint',
-  'haskell-debug-adapter',
-  'hlint',
   'htmlhint',
   'java-debug-adapter',
   'java-test',
@@ -67,7 +64,6 @@ local expected_servers = {
   'ansiblels',
   'bashls',
   'clangd',
-  'clojure_lsp',
   'cmake',
   'cssls',
   'cucumber_language_server',
@@ -78,7 +74,6 @@ local expected_servers = {
   'gradle_ls',
   'groovyls',
   'helm_ls',
-  'hls',
   'html',
   'jdtls',
   'jsonls',
@@ -102,7 +97,6 @@ local expected_parsers = {
   'angular',
   'bash',
   'c',
-  'clojure',
   'cmake',
   'cpp',
   'css',
@@ -120,7 +114,6 @@ local expected_parsers = {
   'gosum',
   'gowork',
   'groovy',
-  'haskell',
   'hcl',
   'helm',
   'html',
@@ -182,15 +175,6 @@ local expected_prerequisites = {
   { id = 'gzip', executables = { 'gzip' }, required = true },
   { id = 'just', executables = { 'just' }, required = false },
   { id = 'lua_package_manager', executables = { 'luarocks' }, required = true },
-  {
-    id = 'mason_hlint_rosetta',
-    executables = { 'arch' },
-    required = true,
-    platform = { os = 'Darwin', arches = { 'arm64', 'aarch64' } },
-    capabilities = {
-      { id = 'x86_64_translation', kind = 'command', command = { 'arch', '-x86_64', '/usr/bin/true' } },
-    },
-  },
   { id = 'ripgrep', executables = { 'rg' }, required = true },
   { id = 'ruby_package_manager', executables = { 'gem' }, required = true },
   { id = 'snacks_image_ghostscript', executables = { 'gs' }, required = false },
@@ -202,7 +186,6 @@ local expected_prerequisites = {
 
 local expected_runtimes = {
   { id = 'ansible', executables = { 'ansible', 'ansible-playbook' } },
-  { id = 'clojure', executables = { 'clojure', 'lein', 'bb' }, any = true },
   { id = 'cmake', executables = { 'cmake', 'ninja' } },
   { id = 'containers', executables = { 'docker', 'podman' }, any = true },
   { id = 'dart', executables = { 'dart', 'flutter' } },
@@ -210,20 +193,6 @@ local expected_runtimes = {
     id = 'go',
     executables = { 'go' },
     version = { command = { 'go', 'version' }, pattern = 'go(%d+%.%d+%.%d+)', minimum = '1.26.0' },
-  },
-  {
-    id = 'haskell',
-    executables = { 'ghcup', 'cabal', 'ghc' },
-    version = { command = { 'ghc', '--numeric-version' }, pattern = '(%d+%.%d+%.%d+)', minimum = '8.10.0' },
-    capabilities = {
-      {
-        id = 'cabal_version',
-        kind = 'command_version',
-        command = { 'cabal', '--numeric-version' },
-        pattern = '(%d+%.%d+%.%d+)',
-        minimum = '3.0.0',
-      },
-    },
   },
   {
     id = 'java',
@@ -352,7 +321,6 @@ local server_packages = {
   angularls = 'angular-language-server',
   ansiblels = 'ansible-language-server',
   bashls = 'bash-language-server',
-  clojure_lsp = 'clojure-lsp',
   cmake = 'cmake-language-server',
   cssls = 'css-lsp',
   cucumber_language_server = 'cucumber-language-server',
@@ -362,7 +330,6 @@ local server_packages = {
   gradle_ls = 'gradle-language-server',
   groovyls = 'groovy-language-server',
   helm_ls = 'helm-ls',
-  hls = 'haskell-language-server',
   html = 'html-lsp',
   jsonls = 'json-lsp',
   kotlin_language_server = 'kotlin-language-server',
@@ -391,9 +358,9 @@ h.describe('complete toolchain manifest', function()
     h.deep_equal(manifest.mason.tools, expected_tools)
     h.deep_equal(manifest.lsp.servers, expected_servers)
     h.deep_equal(manifest.mason.packages, expected_mason())
-    h.equal(#manifest.mason.packages, 91)
+    h.equal(#manifest.mason.packages, 86)
     h.deep_equal(manifest.treesitter.parsers, expected_parsers)
-    h.equal(#manifest.treesitter.parsers, 62)
+    h.equal(#manifest.treesitter.parsers, 60)
   end)
 
   h.it('describes every prerequisite, runtime, external action, and AI dependency exactly', function()

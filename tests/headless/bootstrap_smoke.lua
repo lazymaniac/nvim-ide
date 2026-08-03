@@ -72,8 +72,8 @@ end
 
 local manifest = require 'nv_ide.toolchain.manifest'
 check(manifest.profiles == nil, 'the toolchain must not expose profiles')
-check(#manifest.mason.packages == 91, 'the complete Mason declaration changed unexpectedly')
-check(#manifest.treesitter.parsers == 62, 'the complete parser declaration changed unexpectedly')
+check(#manifest.mason.packages == 86, 'the complete Mason declaration changed unexpectedly')
+check(#manifest.treesitter.parsers == 60, 'the complete parser declaration changed unexpectedly')
 check(type(manifest.fingerprint()) == 'string' and #manifest.fingerprint() == 64, 'manifest fingerprint is invalid')
 
 do
@@ -104,7 +104,6 @@ do
       gopls = { settings = { gopls = { gofumpt = true } } },
       clangd = { cmd = { 'clangd', '--background-index' } },
       vtsls = { settings = { vtsls = { autoUseWorkspaceTsdk = true } } },
-      hls = { managed = false, owner = 'haskell-tools' },
     },
   }, {
     protocol_capabilities = function()
@@ -125,7 +124,6 @@ do
     check(configured[server], server .. ' configuration was not composed')
     check(enabled[server] == 1, server .. ' was not enabled exactly once')
   end
-  check(configured.hls == nil and enabled.hls == nil, 'externally owned HLS was enabled centrally')
 end
 
 do
