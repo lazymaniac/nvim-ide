@@ -33,18 +33,6 @@ install_kotlin() {
   append_path "$install_root/kotlinc/bin"
 }
 
-install_ghcup() {
-  if ! command -v ghcup >/dev/null 2>&1; then
-    curl --proto '=https' --tlsv1.2 --fail --location --retry 4 --silent --show-error \
-      https://get-ghcup.haskell.org | env \
-      BOOTSTRAP_HASKELL_NONINTERACTIVE=1 \
-      BOOTSTRAP_HASKELL_MINIMAL=1 \
-      BOOTSTRAP_HASKELL_INSTALL_NO_STACK=1 \
-      sh
-  fi
-  append_path "$HOME/.ghcup/bin"
-}
-
 install_common_packages() {
   python3 -m pip install --disable-pip-version-check --no-input ansible-core
   gem install bundler --no-document
@@ -61,10 +49,6 @@ case "$RUNNER_OS" in
       curl \
       git \
       gzip \
-      libffi-dev \
-      libgmp-dev \
-      libncurses-dev \
-      libtinfo-dev \
       lua5.4 \
       luarocks \
       maven \
@@ -94,9 +78,6 @@ case "$RUNNER_OS" in
       podman \
       ripgrep
     append_path "$(brew --prefix libpq)/bin"
-    if [[ "$(uname -m)" == arm64 ]] && ! arch -x86_64 /usr/bin/true >/dev/null 2>&1; then
-      sudo softwareupdate --install-rosetta --agree-to-license
-    fi
     ;;
   *)
     printf 'Unsupported GitHub runner OS: %s\n' "$RUNNER_OS" >&2
@@ -106,4 +87,3 @@ esac
 
 install_common_packages
 install_kotlin
-install_ghcup

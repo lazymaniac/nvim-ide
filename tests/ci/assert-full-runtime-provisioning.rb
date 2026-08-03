@@ -20,8 +20,6 @@ required_actions = {
   'Python 3.10-3.13' => 'actions/setup-python@v6',
   'Ruby >= 3' => 'ruby/setup-ruby@v1',
   'Rust' => 'dtolnay/rust-toolchain@stable',
-  'GHC/Cabal' => 'haskell-actions/setup@v2',
-  'Clojure' => 'DeLaGuardo/setup-clojure@13',
   'Scala/sbt' => 'coursier/setup-action@v3',
   'Dart/Flutter' => 'subosito/flutter-action@v2',
   'R' => 'r-lib/actions/setup-r@v2',
@@ -47,6 +45,13 @@ required_fragments.each do |capability, fragment|
   errors << "#{capability} is missing from the full job" unless rendered_steps.include?(fragment)
 end
 
+{
+  'Haskell setup action' => 'haskell-actions/setup@v2',
+  'Clojure setup action' => 'DeLaGuardo/setup-clojure@13',
+}.each do |capability, fragment|
+  errors << "retired #{capability} is still provisioned" if rendered_steps.include?(fragment)
+end
+
 
 scripts = {
   'installer' => File.join(root, 'tests/ci/install-full-system-runtimes.sh'),
@@ -70,16 +75,19 @@ if File.file?(scripts['installer'])
     'Maven' => 'maven',
     'PostgreSQL client' => 'postgresql',
     'Tree-sitter CLI' => 'tree-sitter-cli@0.26.3',
-    'macOS arm64 Rosetta' => 'softwareupdate --install-rosetta',
   }.each do |capability, fragment|
     errors << "#{capability} is missing from the system installer" unless installer.include?(fragment)
+  end
+
+  %w[ghcup libffi-dev libgmp-dev libncurses-dev libtinfo-dev softwareupdate].each do |fragment|
+    errors << "retired runtime fragment #{fragment} is still installed" if installer.include?(fragment)
   end
 end
 
 if File.file?(scripts['probe'])
   probe = File.read(scripts['probe'])
   %w[
-    ansible ansible-playbook bash bundle cabal cc cmake curl dart flutter gem ghc ghcup git go gradle gzip
+    ansible ansible-playbook bash bundle cc cmake curl dart flutter gem git go gradle gzip
     java javac kotlinc lua luarocks mvn ninja node npm psql R rg ruby rustc cargo sbt scala tar
     terraform tree-sitter unzip
   ].each do |executable|
@@ -95,15 +103,16 @@ if File.file?(scripts['probe'])
     'Python < 3.14.0' => 'assert_version_below python3 3.14.0',
     'Ruby >= 3.0.0' => 'assert_version ruby 3.0.0',
     'Rust >= 1.42.0' => 'assert_version rustc 1.42.0',
-    'GHC >= 8.10.0' => 'assert_version ghc 8.10.0',
-    'Cabal >= 3.0.0' => 'assert_version cabal 3.0.0',
     'LuaRocks >= 3.0.0' => 'assert_version luarocks 3.0.0',
     'Tree-sitter CLI >= 0.26.1' => 'assert_version tree-sitter 0.26.1',
     'Python venv capability' => 'python3 -m venv',
     'Ruby development headers' => "RbConfig::CONFIG.fetch('rubyhdrdir')",
-    'macOS arm64 Rosetta capability' => "arch -x86_64 /usr/bin/true",
   }.each do |capability, fragment|
     errors << "#{capability} is not asserted" unless probe.include?(fragment)
+  end
+
+  %w[cabal ghc ghcup clojure].each do |fragment|
+    errors << "retired runtime probe #{fragment} is still present" if probe.match?(/\b#{fragment}\b/)
   end
 end
 

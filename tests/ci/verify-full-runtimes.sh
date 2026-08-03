@@ -19,8 +19,6 @@ version_of() {
     ruby) ruby -e 'print RUBY_VERSION' ;;
     rustc) rustc --version | sed -nE 's/^rustc ([0-9]+(\.[0-9]+){0,2}).*/\1/p' ;;
     cargo) cargo --version | sed -nE 's/^cargo ([0-9]+(\.[0-9]+){0,2}).*/\1/p' ;;
-    ghc) ghc --numeric-version ;;
-    cabal) cabal --numeric-version ;;
     luarocks) luarocks --version | sed -nE '1s/.* ([0-9]+(\.[0-9]+){0,2}).*/\1/p' ;;
     tree-sitter) tree-sitter --version | sed -nE '1s/.* ([0-9]+(\.[0-9]+){0,2}).*/\1/p' ;;
     *)
@@ -80,7 +78,7 @@ assert_version_below() {
 }
 
 for executable in \
-  ansible ansible-playbook bash bundle cabal cc cmake curl dart flutter gem ghc ghcup git go gradle gzip \
+  ansible ansible-playbook bash bundle cc cmake curl dart flutter gem git go gradle gzip \
   java javac kotlinc lua luarocks mvn ninja node npm podman psql python3 R rg ruby rustc cargo sbt \
   scala tar terraform tree-sitter unzip; do
   require_command "$executable"
@@ -95,8 +93,6 @@ assert_version_below python3 3.14.0
 assert_version ruby 3.0.0
 assert_version rustc 1.42.0
 assert_version cargo 1.42.0
-assert_version ghc 8.10.0
-assert_version cabal 3.0.0
 assert_version luarocks 3.0.0
 assert_version tree-sitter 0.26.1
 
@@ -107,13 +103,8 @@ rm -rf "$venv_root"
 
 ruby -rrbconfig -e "header = File.join(RbConfig::CONFIG.fetch('rubyhdrdir'), 'ruby.h'); exit(File.file?(header) ? 0 : 1)"
 
-if [[ "$(uname -s)" == Darwin && "$(uname -m)" == arm64 ]]; then
-  arch -x86_64 /usr/bin/true
-fi
-
 ansible --version
 cmake --version
-clojure -Sdescribe
 dart --version
 flutter --version
 gradle --version
