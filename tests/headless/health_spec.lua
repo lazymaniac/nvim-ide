@@ -312,29 +312,6 @@ h.describe('nv_ide health collection', function()
     h.matches(output, 'rubyhdrdir contains ruby.h')
   end)
 
-  h.it('requires GHC 8.10 and cabal-install 3.0 for the Haskell debug adapter', function()
-    local health = require 'nv_ide.health'
-    local probe = complete_probe {
-      versions = { haskell = '8.8.4', ['haskell:cabal_version'] = '2.4.1' },
-      unsupported_versions = { haskell = true, ['haskell:cabal_version'] = true },
-    }
-    local haskell = find(health.collect(probe).runtimes, 'haskell')
-    h.falsy(haskell.available)
-    h.equal(haskell.minimum_version, '8.10.0')
-    h.equal(haskell.capabilities[1].minimum_version, '3.0.0')
-
-    local messages, reporter = {}, {}
-    for _, level in ipairs { 'start', 'ok', 'info', 'warn', 'error' } do
-      reporter[level] = function(message)
-        messages[#messages + 1] = tostring(message)
-      end
-    end
-    health.check(probe, reporter)
-    local output = table.concat(messages, '\n')
-    h.matches(output, 'GHC 8.8.4 requires >= 8.10.0')
-    h.matches(output, 'cabal-install 2.4.1 requires >= 3.0.0')
-  end)
-
   h.it('parses Java versions emitted exclusively on stderr', function()
     local health = require 'nv_ide.health'
     local status = health.command_version_status({
@@ -363,35 +340,6 @@ h.describe('nv_ide health collection', function()
     local output = vim.inspect(messages)
     h.matches(output, 'NV-IDE requires Neovim >= 0.12.0')
     h.matches(output, 'https://neovim.io/doc/install/')
-  end)
-
-  h.it('requires Rosetta translation only for Mason hlint on Darwin arm64', function()
-    local health = require 'nv_ide.health'
-    local linux = health.collect((complete_probe { os = 'Linux', arch = 'x86_64', unavailable = { arch = true } }))
-    local linux_rosetta = find(linux.prerequisites, 'mason_hlint_rosetta')
-    h.falsy(linux_rosetta.applicable)
-    h.truthy(linux_rosetta.available)
-    h.falsy(linux_rosetta.required)
-
-    local probe = complete_probe {
-      os = 'Darwin',
-      arch = 'arm64',
-      unavailable = { ['mason_hlint_rosetta:x86_64_translation'] = true },
-    }
-    local report = health.collect(probe)
-    local rosetta = find(report.prerequisites, 'mason_hlint_rosetta')
-    h.truthy(rosetta.applicable)
-    h.truthy(rosetta.required)
-    h.falsy(rosetta.available)
-
-    local messages, reporter = {}, {}
-    for _, level in ipairs { 'start', 'ok', 'info', 'warn', 'error' } do
-      reporter[level] = function(message)
-        messages[#messages + 1] = tostring(message)
-      end
-    end
-    health.check(probe, reporter)
-    h.matches(table.concat(messages, '\n'), 'softwareupdate --install-rosetta --agree-to-license')
   end)
 
   h.it('classifies and probes the complete manifest inventory without retaining credential values', function()

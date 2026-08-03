@@ -484,7 +484,6 @@ local PREREQUISITE_FIXES = {
     gzip = 'brew install gzip',
     just = 'brew install just',
     lua_package_manager = 'brew install luarocks',
-    mason_hlint_rosetta = 'softwareupdate --install-rosetta --agree-to-license; verify with: arch -x86_64 /usr/bin/true',
     ripgrep = 'brew install ripgrep',
     ruby_package_manager = 'brew install ruby; add Homebrew Ruby to PATH so gem is available',
     snacks_image_ghostscript = 'brew install ghostscript',
@@ -516,12 +515,10 @@ local PREREQUISITE_FIXES = {
 local RUNTIME_FIXES = {
   Darwin = {
     ansible = 'brew install ansible',
-    clojure = 'brew install clojure/tools/clojure',
     cmake = 'brew install cmake ninja',
     containers = 'brew install podman',
     dart = 'brew install --cask flutter',
     go = 'brew install go; verify that go version reports >= 1.26.0',
-    haskell = 'brew install ghcup; run ghcup install ghc recommended && ghcup set ghc recommended && ghcup install cabal recommended && ghcup set cabal recommended',
     java = 'brew install openjdk@21 maven gradle; ensure java and javac both report >= 21.0.0',
     javascript = 'brew install node; verify that node --version reports >= 24.15.0',
     kotlin = 'brew install kotlin',
@@ -536,12 +533,10 @@ local RUNTIME_FIXES = {
   },
   Linux = {
     ansible = 'Debian/Ubuntu: sudo apt install ansible; Fedora: sudo dnf install ansible; Arch: sudo pacman -S ansible',
-    clojure = 'Debian/Ubuntu: sudo apt install clojure; otherwise use https://clojure.org/guides/install_clojure',
     cmake = 'Debian/Ubuntu: sudo apt install cmake ninja-build; Fedora: sudo dnf install cmake ninja-build; Arch: sudo pacman -S cmake ninja',
     containers = 'Debian/Ubuntu: sudo apt install podman; Fedora: sudo dnf install podman; Arch: sudo pacman -S podman',
     dart = 'asdf plugin add flutter && asdf install flutter latest && asdf set -u flutter latest',
     go = 'Install Go >= 1.26.0 from https://go.dev/doc/install, then verify with: go version',
-    haskell = 'Install GHCup from https://www.haskell.org/ghcup/; then install and select recommended GHC and cabal releases',
     java = 'Debian/Ubuntu: sudo apt install openjdk-21-jdk maven gradle; Fedora: sudo dnf install java-21-openjdk-devel maven gradle; Arch: sudo pacman -S jdk21-openjdk maven gradle; ensure java and javac both report >= 21.0.0',
     javascript = 'Install Node.js >= 24.15.0 with npm from https://nodejs.org/en/download, then verify with: node --version && npm --version',
     kotlin = 'curl -s https://get.sdkman.io | bash && sdk install kotlin',
@@ -827,7 +822,6 @@ local function render_records(reporter, title, records, options)
       local labels = {
         git = 'Git',
         go = 'Go',
-        haskell = 'GHC',
         java = 'Java',
         javascript = 'Node.js',
         python = 'Python',
@@ -846,7 +840,7 @@ local function render_records(reporter, title, records, options)
     end
     for _, capability in ipairs(record.capabilities or {}) do
       if capability.minimum_version and not capability.supported then
-        local labels = { cabal_version = 'cabal-install', cargo_version = 'cargo', javac_version = 'javac' }
+        local labels = { cargo_version = 'cargo', javac_version = 'javac' }
         local requirement = ('%s %s requires >= %s'):format(
           labels[capability.id] or capability.id,
           capability.version or 'version unknown',

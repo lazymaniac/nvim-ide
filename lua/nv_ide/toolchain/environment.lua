@@ -38,7 +38,6 @@ local function candidates(deps)
     deps.home .. '/.local/bin',
     deps.home .. '/.cargo/bin',
     deps.home .. '/go/bin',
-    deps.home .. '/.ghcup/bin',
     deps.home .. '/.asdf/shims',
     deps.data .. '/mason/bin',
   }
