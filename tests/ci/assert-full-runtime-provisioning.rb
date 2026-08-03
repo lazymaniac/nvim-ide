@@ -48,8 +48,8 @@ end
 retired_fragment = ->(*parts) { parts.join }
 
 {
-  'retired compiler setup action' => retired_fragment.call('has', 'kell-actions/setup@v2'),
-  'retired Lisp setup action' => retired_fragment.call('DeLaGuardo/setup-clo', 'jure@13'),
+  'compiler setup action' => retired_fragment.call('has', 'kell-actions/setup@v2'),
+  'Lisp setup action' => retired_fragment.call('DeLaGuardo/setup-clo', 'jure@13'),
 }.each do |capability, fragment|
   errors << "retired #{capability} is still provisioned" if rendered_steps.include?(fragment)
 end
