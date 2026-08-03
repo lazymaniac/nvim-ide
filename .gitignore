@@ -3,3 +3,4 @@ test.sh
 .luarc.json
 nvim
 .worktrees/
+/docs/
