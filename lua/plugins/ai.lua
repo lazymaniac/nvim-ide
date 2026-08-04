@@ -144,7 +144,7 @@ local config = {
     -- If this is false then any default prompt that is marked as containing code
     -- will not be sent to the LLM. Please note that whilst I have made every
     -- effort to ensure no code leakage, using this is at your own risk
-    send_code = false,
+    send_code = true,
     -- Project overrides are loaded through vim.secure.read() below. Keeping
     -- CodeCompanion's direct dofile loader disabled prevents untrusted files
     -- from executing before Neovim records an explicit trust decision.
