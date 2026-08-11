@@ -16,11 +16,11 @@ local function dependency(spec, name)
 end
 
 h.describe('AI privacy boundary', function()
-  h.it('uses quiet, code-private defaults and disables unchecked project loading', function()
+  h.it('uses quiet defaults, allows code sharing, and disables unchecked project loading', function()
     local spec = plugin(dofile('lua/plugins/ai.lua'), 'olimorris/codecompanion.nvim')
 
     h.equal(spec.opts.opts.log_level, 'ERROR')
-    h.falsy(spec.opts.opts.send_code)
+    h.truthy(spec.opts.opts.send_code, 'code sharing with the local-first adapters is enabled by choice')
     h.falsy(spec.opts.opts.per_project_config.enabled)
     h.truthy(spec.opts.adapters.http.ollama, 'the local Ollama adapter must remain available by default')
     h.falsy(spec.opts.adapters.http.anthropic, 'remote HTTP adapters must not be enabled globally')

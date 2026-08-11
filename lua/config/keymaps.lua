@@ -89,8 +89,9 @@ map('i', ',', ',<c-g>u')
 map('i', '.', '.<c-g>u')
 map('i', ';', ';<c-g>u')
 
--- Save file
-map({ 'i', 'x', 'n', 's' }, '<C-s>', '<cmd>w<cr><esc>', { desc = 'Save file <C-s>' })
+-- Save file (leave insert mode first so mode change is never swallowed by autocmds)
+map('i', '<C-s>', '<esc><cmd>w<cr>', { desc = 'Save file <C-s>' })
+map({ 'x', 'n', 's' }, '<C-s>', '<cmd>w<cr><esc>', { desc = 'Save file <C-s>' })
 
 --Keywordprg
 map('n', '<leader>K', '<cmd>norm! K<cr>', { desc = 'Keywordprg [K]' })
