@@ -108,7 +108,7 @@ local function publish(lockfile_path)
     destination = check(vim.env.NV_IDE_SMOKE_LOCK_OUTPUT, 'resolved lockfile output is missing'),
   }
   check(publication.ok, 'fresh startup failed: ' .. table.concat(publication.errors or {}, '; '))
-  vim.api.nvim_out_write 'FRESH STARTUP PASS\n'
+  io.write 'FRESH STARTUP PASS\n'
 end
 
 local action = check(arg[1], 'action is required')
@@ -135,11 +135,11 @@ elseif action == 'update' then
   check_errors 'latest update'
   local resolved = read_json(lockfile_path)
   check(next(resolved) ~= nil, 'latest update produced an empty lockfile')
-  vim.api.nvim_out_write 'LAZY UPDATE PASS\n'
+  io.write 'LAZY UPDATE PASS\n'
   local stable_tag, stable_head = resolve_stable_lazy(resolved)
   write_json(lockfile_path, resolved)
   check(read_json(lockfile_path)['lazy.nvim'].commit == stable_head, 'resolved lockfile did not record lazy.nvim stable head')
-  vim.api.nvim_out_write(('LAZY STABLE PASS %s %s\n'):format(stable_tag, stable_head))
+  io.write(('LAZY STABLE PASS %s %s\n'):format(stable_tag, stable_head))
   publish(lockfile_path)
 elseif action == 'publish' then
   local resolved = read_json(lockfile_path)
@@ -147,12 +147,12 @@ elseif action == 'publish' then
   local stable_tag, stable_head = resolve_stable_lazy(resolved)
   write_json(lockfile_path, resolved)
   check(read_json(lockfile_path)['lazy.nvim'].commit == stable_head, 'resolved lockfile did not record lazy.nvim stable head')
-  vim.api.nvim_out_write(('LAZY STABLE PASS %s %s\n'):format(stable_tag, stable_head))
+  io.write(('LAZY STABLE PASS %s %s\n'):format(stable_tag, stable_head))
   publish(lockfile_path)
 else
   error('lazy resolution smoke: invalid action ' .. action, 0)
 end
 
 if action == 'seed' then
-  vim.api.nvim_out_write 'LAZY SEED PASS\n'
+  io.write 'LAZY SEED PASS\n'
 end

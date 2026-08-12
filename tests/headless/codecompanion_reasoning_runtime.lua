@@ -26,4 +26,4 @@ for _, name in ipairs(expected_tool_names) do
   assert(type(tools[name]) == 'table', name .. ' tool is missing')
   assert(tools[name].path == expected_paths[name], name .. ' tool path differs')
 end
-vim.api.nvim_out_write 'CODECOMPANION REASONING PASS\n'
+io.write 'CODECOMPANION REASONING PASS\n'

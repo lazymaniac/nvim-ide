@@ -136,7 +136,7 @@ h.describe('LSP keymaps', function()
     local keymaps = load_keymaps()
     local callbacks = {}
     local handlers = {
-      ['client/registerCapability'] = function()
+      ['client/registerCapability'] = function(_, _, _)
         callbacks.original = (callbacks.original or 0) + 1
         return 'registered'
       end,
@@ -172,7 +172,7 @@ h.describe('LSP keymaps', function()
     local attached = 0
     local original = 0
     local handlers = {
-      ['client/registerCapability'] = function()
+      ['client/registerCapability'] = function(_, _, _)
         original = original + 1
       end,
     }
@@ -244,11 +244,9 @@ h.describe('LSP keymaps', function()
     end
 
     package.loaded['plugins.lsp.lang.typescript'] = nil
-    local opts = lsp_opts and lsp_opts('plugins.lsp.lang.typescript')
-    if not opts then
-      for _, spec in ipairs(require('plugins.lsp.lang.typescript')) do
-        if spec[1] == 'neovim/nvim-lspconfig' then opts = spec.opts end
-      end
+    local opts
+    for _, spec in ipairs(require('plugins.lsp.lang.typescript')) do
+      if spec[1] == 'neovim/nvim-lspconfig' then opts = spec.opts end
     end
     local mapping
     for _, key in ipairs(opts.servers.vtsls.keys) do

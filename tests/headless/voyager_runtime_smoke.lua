@@ -83,4 +83,4 @@ check(restored_reference.nowait == 1, 'restored gr lost nowait')
 vim.keymap.del('n', 'gr')
 vim.api.nvim_buf_delete(source_buf, { force = true })
 check(vim.fn.delete(smoke_root, 'rf') == 0, 'cannot remove disposable plugin root')
-vim.api.nvim_out_write 'VOYAGER GITHUB SMOKE PASS\n'
+io.write 'VOYAGER GITHUB SMOKE PASS\n'

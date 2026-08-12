@@ -65,7 +65,7 @@ local function isolated_startup_check(root, options)
     assert(gopls.settings.gopls.gofumpt == true, 'gopls settings were not composed')
     assert(vim.tbl_contains(clangd.cmd, '--background-index'), 'clangd command was not composed')
     assert(vtsls.settings.vtsls.autoUseWorkspaceTsdk == true, 'vtsls settings were not composed')
-  end); if not ok then vim.api.nvim_err_writeln(tostring(err)); vim.cmd('cquit 1') end]]
+  end); if not ok then io.stderr:write(tostring(err) .. '\n'); vim.cmd('cquit 1') end]]
   local function command()
     return {
       options.nvim,

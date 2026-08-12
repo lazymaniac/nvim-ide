@@ -302,13 +302,13 @@ h.describe('Java current-class JShell runner', function()
       {
         label = 'save',
         overrides = { save = function() error 'disk full' end },
-        settle = function() end,
+        settle = function(_) end,
         message = 'could not save',
       },
       {
         label = 'request rejected',
         overrides = { request = function() return false end },
-        settle = function() end,
+        settle = function(_) end,
         message = 'request was rejected',
       },
       {

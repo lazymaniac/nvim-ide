@@ -10,8 +10,13 @@ local function default_adapters()
   }
 end
 
+---@class ExternalAdapters
+---@field executable fun(name: string): integer
+---@field notify fun(message: string, level: integer)
+---@field toggle fun(command: string[])
+
 ---@param action {id:string, command:string[]}
----@param adapters? {executable:fun(name:string):integer, notify:fun(message:string, level:integer), toggle:fun(command:string[])}
+---@param adapters? ExternalAdapters
 ---@return fun():boolean
 function M.terminal(action, adapters)
   assert(type(action) == 'table' and type(action.command) == 'table' and action.command[1], 'invalid external action')

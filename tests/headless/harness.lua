@@ -115,7 +115,7 @@ function M.run(specs)
     end, debug.traceback)
     if not ok then
       failed = failed + 1
-      vim.api.nvim_err_writeln(('FAIL %s\n%s'):format(spec, err))
+      io.stderr:write(('FAIL %s\n%s\n'):format(spec, err))
     end
   end
 
@@ -125,15 +125,15 @@ function M.run(specs)
     local ok, err = xpcall(test.body, debug.traceback)
     if ok then
       passed = passed + 1
-      vim.api.nvim_out_write(('PASS %s\n'):format(test.name))
+      io.write(('PASS %s\n'):format(test.name))
     else
       failed = failed + 1
-      vim.api.nvim_err_writeln(('FAIL %s\n%s'):format(test.name, err))
+      io.stderr:write(('FAIL %s\n%s\n'):format(test.name, err))
     end
   end
   active_test = nil
 
-  vim.api.nvim_out_write(('RESULT %d passed, %d failed\n'):format(passed, failed))
+  io.write(('RESULT %d passed, %d failed\n'):format(passed, failed))
   return { total = passed + failed, passed = passed, failed = failed }
 end
 

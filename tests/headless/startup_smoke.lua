@@ -41,7 +41,7 @@ local function verify()
   )
   check(type(update.manager.tag) == 'string' and update.manager.tag:match '^v%d+%.%d+%.%d+$', 'first-run lazy.nvim tag is invalid')
 
-  vim.api.nvim_out_write 'STARTUP AUTORUN PASS\n'
+  io.write 'STARTUP AUTORUN PASS\n'
 end
 
 local function finish()
@@ -49,7 +49,7 @@ local function finish()
   if ok then
     vim.cmd 'qa!'
   else
-    vim.api.nvim_err_writeln(failure)
+    io.stderr:write(failure .. '\n')
     vim.cmd 'cquit 1'
   end
 end

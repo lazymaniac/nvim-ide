@@ -9,23 +9,13 @@ return {
     lazy = false,
     dependencies = { 'MunifTanjim/nui.nvim' },
     keys = {
-      { '<leader>vo', '<cmd>VoyagerOpen<cr>', mode = 'n', desc = 'Open Voyager' },
-      { '<leader>vf', '<cmd>VoyagerFocus<cr>', mode = 'n', desc = 'Focus Voyager' },
-      { '<leader>vs', '<cmd>VoyagerSave<cr>', mode = 'n', desc = 'Save Voyager flow' },
-      { '<leader>vl', '<cmd>VoyagerLoad<cr>', mode = 'n', desc = 'Load Voyager flow' },
-      { '<leader>vq', '<cmd>VoyagerClose<cr>', mode = 'n', desc = 'Close Voyager' },
+      { '<leader>vv', '<cmd>VoyagerOpen<cr>', mode = 'n', desc = 'Open Voyager [vv]' },
+      { '<leader>vf', '<cmd>VoyagerFocus<cr>', mode = 'n', desc = 'Focus Voyager [vf]' },
+      { '<leader>vs', '<cmd>VoyagerSave<cr>', mode = 'n', desc = 'Save Voyager flow [vs]' },
+      { '<leader>vl', '<cmd>VoyagerLoad<cr>', mode = 'n', desc = 'Load Voyager flow [vl]' },
+      { '<leader>vq', '<cmd>VoyagerClose<cr>', mode = 'n', desc = 'Close Voyager [vq]' },
     },
-    opts = {
-      lsp_keymaps = {
-        definition = 'gd',
-        declaration = false,
-        references = 'gr',
-        implementation = 'gI',
-        type_definition = 'gy',
-        incoming_calls = false,
-        outgoing_calls = false,
-      },
-    },
+    opts = {},
   },
 
   -- [fastaction.nvim] - Quickly select actions from a popup menu.
@@ -118,9 +108,9 @@ return {
           },
           quote_char = '"',
           comments = {
-            "#",
+            '#',
             -- "--",
-            "//",
+            '//',
           },
         },
         view = {

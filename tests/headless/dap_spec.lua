@@ -378,7 +378,7 @@ h.describe('DAP ownership and lazy loading', function()
     dap.providers.configs['dap.global'] = function(bufnr)
       return dap.configurations[vim.bo[bufnr].filetype] or {}
     end
-    dap.providers.configs['dap.launch.json'] = function()
+    dap.providers.configs['dap.launch.json'] = function(_)
       return vscode.getconfigs '/unrelated/.vscode/launch.json'
     end
     package.loaded.dap = dap

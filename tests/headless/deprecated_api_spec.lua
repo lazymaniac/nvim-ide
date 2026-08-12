@@ -1,15 +1,22 @@
 local h = require('tests.headless.harness')
 
-local forbidden = {
+-- Deprecated APIs are also banned from the headless suites below, so their
+-- replacements stay uniform between shipped code and the scripts that verify it.
+local deprecated = {
   { needle = 'vim.loop', label = 'vim.loop' },
   { needle = 'vim.diagnostic.goto_next', label = 'vim.diagnostic.goto_next' },
   { needle = 'vim.diagnostic.goto_prev', label = 'vim.diagnostic.goto_prev' },
   { needle = 'vim.tbl_flatten', label = 'vim.tbl_flatten' },
+  { needle = 'nvim_out_write', label = 'nvim_out_write' },
+  { needle = 'nvim_err_write', label = 'nvim_err_write' },
+}
+
+local forbidden = vim.list_extend(vim.deepcopy(deprecated), {
   { needle = '/Users/sebastian', label = 'personal macOS path' },
   { needle = '/home/seba', label = 'personal Linux path' },
   { needle = '/bin/zsh', label = 'forced zsh path' },
   { needle = '~/.config/nvim', label = 'literal Neovim config path' },
-}
+})
 
 local function executable_lua_files()
   local files = vim.fn.glob('lua/**/*.lua', false, true)
@@ -18,19 +25,36 @@ local function executable_lua_files()
   return files
 end
 
-h.describe('Neovim 0.12 portability', function()
-  h.it('contains no deprecated APIs or machine-specific paths in executable Lua', function()
-    local matches = {}
-    for _, path in ipairs(executable_lua_files()) do
-      local lines = vim.fn.readfile(path)
-      for line_number, line in ipairs(lines) do
-        for _, item in ipairs(forbidden) do
-          if line:find(item.needle, 1, true) then
-            matches[#matches + 1] = ('%s:%d: %s'):format(path, line_number, item.label)
-          end
+local function scan(files, needles)
+  local matches = {}
+  for _, path in ipairs(files) do
+    local lines = vim.fn.readfile(path)
+    for line_number, line in ipairs(lines) do
+      for _, item in ipairs(needles) do
+        if line:find(item.needle, 1, true) then
+          matches[#matches + 1] = ('%s:%d: %s'):format(path, line_number, item.label)
         end
       end
     end
+  end
+  return matches
+end
+
+h.describe('Neovim 0.12 portability', function()
+  h.it('contains no deprecated APIs or machine-specific paths in executable Lua', function()
+    local matches = scan(executable_lua_files(), forbidden)
+
+    h.equal(#matches, 0, table.concat(matches, '\n'))
+  end)
+
+  h.it('contains no deprecated APIs in the headless suites', function()
+    local files = {}
+    for _, path in ipairs(vim.fn.glob('tests/**/*.lua', false, true)) do
+      -- This spec stores the banned needles as literals, so it cannot scan itself.
+      if not path:find('deprecated_api_spec.lua', 1, true) then files[#files + 1] = path end
+    end
+    table.sort(files)
+    local matches = scan(files, deprecated)
 
     h.equal(#matches, 0, table.concat(matches, '\n'))
   end)

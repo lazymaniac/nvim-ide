@@ -399,4 +399,4 @@ do
   check(not vim.uv.fs_stat(invalid_artifact), 'incomplete lockfile was published')
 end
 
-vim.api.nvim_out_write(('SMOKE %s PASS\n'):format(mode))
+io.write(('SMOKE %s PASS\n'):format(mode))
