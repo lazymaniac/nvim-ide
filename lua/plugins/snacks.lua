@@ -421,10 +421,8 @@ return {
       { '<leader>lt', terminal('omm'), desc = 'TODO TUI [lt]' },
       { '<leader>lu', terminal('dua'), desc = 'Disk Usage TUI [lu]' },
       { '<leader>lv', terminal('jshell'), desc = 'JShell Terminal [lv]' },
-      { '<c-/>', function() Snacks.terminal() end, desc = 'Toggle Terminal (c-/)', mode = { 'n', 't' } },
-      { '<a-/>', function() Snacks.terminal() end, desc = 'Toggle Terminal (c-/)', mode = { 'n', 't' } },
-      { '<leader>lz', terminal('zellij'), desc = 'Zellij Terminal [lz]' },
-      { '<a-z>', terminal('zellij'), desc = 'Zellij Terminal <a-z>' },
+      { '<c-/>', terminal('zellij'), desc = 'Toggle Terminal (c-/)', mode = { 'n', 't' } },
+      { '<a-/>', terminal('zellij'), desc = 'Toggle Terminal (a-/)', mode = { 'n', 't' } },
     },
     init = function()
       vim.api.nvim_create_autocmd('User', {
