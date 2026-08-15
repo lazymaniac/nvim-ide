@@ -9,7 +9,7 @@ local config = {
         return require('codecompanion.adapters').extend('ollama', {
           schema = {
             model = {
-              default = 'ornith:35b-q8_0',
+              default = 'qwen3.8:27b-mxfp8',
             },
           },
         })
@@ -23,7 +23,7 @@ local config = {
   },
   extensions = {
     reasoning = {
-      enabled = true,
+      enabled = false,
       opts = {
         auto_attach = true,
         default_depth = 'deep',
@@ -39,6 +39,7 @@ local config = {
       adapter = 'ollama',
       opts = {
         completion_provider = 'blink', -- blink|cmp|coc|default
+        system_prompt = '',
       },
       roles = {
         llm = function(adapter)
