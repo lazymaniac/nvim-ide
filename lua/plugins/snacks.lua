@@ -245,8 +245,8 @@ return {
           diagnostics_buffer = { layout = bottom(), filter = { buf = true } },
           explorer = {
             hidden = true,
-            ignored = false,
-            follow = false,
+            ignored = true,
+            follow = true,
             auto_close = true,
             layout = { preset = 'sidebar', preview = false, layout = { position = 'right', width = 60 } },
             formatters = { file = { filename_only = true }, severity = { pos = 'right' } },

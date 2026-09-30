@@ -2,7 +2,7 @@ require('nv_ide.requirements').assert_supported()
 
 if vim.g.neovide then
   -- text
-  vim.o.guifont = 'Maple Mono NF:h13'
+  vim.o.guifont = 'Maple Mono NF:h14'
   vim.g.neovide_text_gamma = 0.8
   vim.g.neovide_text_contrast = 0.9
 
