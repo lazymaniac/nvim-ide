@@ -125,6 +125,7 @@ return {
       setup = {},
     },
     config = function(_, opts)
+      require('plugins.lsp.inlay_hint_guard').setup()
       require('plugins.lsp.keymaps').setup()
       require('plugins.lsp.registry').setup(opts)
       Util.toggle.inlay_hints()
